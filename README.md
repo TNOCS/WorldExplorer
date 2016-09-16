@@ -1,5 +1,5 @@
 # WorldExplorer
-A Hololens application, inspired by MapzenGo, to render 3D worlds as hologram.
+A Hololens application, based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worlds as hologram.
 
 ![Example](http://i.imgur.com/MEwIH56.png)
 

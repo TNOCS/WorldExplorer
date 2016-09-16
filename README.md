@@ -1,6 +1,8 @@
 # WorldExplorer
 A Hololens application, inspired by MapzenGo, to render 3D worlds as hologram.
 
+![Example](http://i.imgur.com/MEwIH56.png)
+
 # Build instructions
 
 - Open project in Unity (for Hololens, of course). 
@@ -16,4 +18,3 @@ World|Tiles|CachedTileManager:
 
 World|Tiles|...Factory
 - Specify the mapping between OSM building|road|etc type, the material to use, and the randomly generated building height (only used if it is missing in OSM).
-

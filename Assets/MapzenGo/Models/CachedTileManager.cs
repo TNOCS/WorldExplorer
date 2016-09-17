@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MapzenGo.Models
 {
-    public class CachedTileManager : TileManager
+    public class CachedTileManager : DynamicTileManager
     {
         private const string RelativeCachePath = "/{0}/";
         protected string CacheFolderPath;

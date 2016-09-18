@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Windows.Speech;
@@ -14,6 +15,8 @@ public class SpeechManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        var world = GameObject.Find("World");
+        if (world == null) throw new System.Exception("Cannot find GameObject world in SpeechManager!");
         keywords.Add("Move North", () => {
             _centerIndicator.localPosition = new Vector3(_centerIndicator.localPosition.x, _centerIndicator.localPosition.y + 1, _centerIndicator.localPosition.z);
         });
@@ -44,7 +47,29 @@ public class SpeechManager : MonoBehaviour
         keywords.Add("Zoom out", () => {
             _centerIndicator.localPosition = new Vector3(_centerIndicator.localPosition.x, _centerIndicator.localPosition.y, _centerIndicator.localPosition.z + 1);
         });
-
+        keywords.Add("Clear cache", () => {
+            var path = Application.temporaryCachePath + "/{0}/";
+            for (var zoom = 0; zoom < 22; zoom++)
+            {
+                var cacheFolderPath = string.Format(path, zoom);
+                if (Directory.Exists(cacheFolderPath)) Directory.Delete(cacheFolderPath);
+            }
+        });
+        const float ScaleGrowShrinkFactor = 1.1F;
+        keywords.Add("Grow map", () => {
+            var s = ScaleGrowShrinkFactor * world.transform.localScale.x;
+            world.transform.localScale = new Vector3(s, s, s);
+        });
+        keywords.Add("Shrink map", () => {
+            var s = 1/ScaleGrowShrinkFactor * world.transform.localScale.x;
+            world.transform.localScale = new Vector3(s, s, s);
+        });
+        keywords.Add("Reset all", () => {
+        });
+        keywords.Add("Increase range", () => {
+        });
+        keywords.Add("Decrease range", () => {
+        });
 
 
         //keywords.Add("Reset world", () =>

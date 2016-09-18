@@ -18,8 +18,8 @@ namespace MapzenGo.Models
 
         protected readonly string _mapzenUrl = "https://vector.mapzen.com/osm/{0}/{1}/{2}/{3}.{4}?api_key={5}";
         [SerializeField] protected string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
-        [SerializeField] protected readonly string _mapzenLayers = "buildings,roads,landuse,water";
         [SerializeField] protected Material MapMaterial;
+        protected string _mapzenLayers = "buildings,roads,landuse,water";
         protected readonly string _mapzenFormat = "json";
         protected Transform TileHost;
 
@@ -35,6 +35,7 @@ namespace MapzenGo.Models
                 MapMaterial = Resources.Load<Material>("Ground");
 
             InitFactories();
+            InitLayers();
 
             var v2 = GM.LatLonToMeters(Latitude, Longitude);
             var tile = GM.MetersToTile(v2, Zoom);
@@ -50,21 +51,7 @@ namespace MapzenGo.Models
 
             var rect = GM.TileBounds(CenterTms, Zoom);
             transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
-            //transform.localPosition = new Vector3(0, 0, -3);
-            //Debug.LogFormat("Local x: {0}", transform.localPosition.x);
-            //Debug.LogFormat("Local y: {0}", transform.localPosition.y);
-            //transform.localPosition = new Vector3(-1200, -1200, -3);
-            //Debug.LogFormat("Local x: {0}", transform.localPosition.x);
-            //Debug.LogFormat("Local y: {0}", transform.localPosition.y);
-            //Debug.LogFormat("Local w: {0}", rect.Width);
-            //Debug.LogFormat("Local h: {0}", rect.Height);
         }
-
-        //public void Update()
-        //{
-        //    transform.localPosition = new Vector3(-10, -10, -3);
-        //    //print(string.Format("(x, y, z) = ({0}, {1}, {2})", transform.localPosition.x, transform.localPosition.y, transform.localPosition.z));
-        //}
 
         private void InitFactories()
         {
@@ -74,6 +61,17 @@ namespace MapzenGo.Models
                 //if ((plugin as Factory).XmlTag != "buildings") continue;
                 _plugins.Add(plugin);
             }
+        }
+
+        private void InitLayers()
+        {
+            var layers = new List<string>();
+            foreach (Factory plugin in _plugins)
+            {
+                if (layers.Contains(plugin.XmlTag)) continue;
+                layers.Add(plugin.XmlTag);
+            }
+            _mapzenLayers = string.Join(",", layers.ToArray());
         }
 
         protected void LoadTiles(Vector2d tms, Vector2d center)

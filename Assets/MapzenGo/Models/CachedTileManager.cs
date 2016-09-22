@@ -7,7 +7,7 @@ namespace MapzenGo.Models
 {
     public class CachedTileManager : DynamicTileManager
     {
-        private const string RelativeCachePath = "/{0}/";
+        private const string RelativeCachePath = "/{0}_{1}/";
         protected string CacheFolderPath;
 
         public override void Start()
@@ -20,7 +20,7 @@ namespace MapzenGo.Models
 
         protected override void LoadTile(Vector2d tileTms, Tile tile)
         {
-            var tilePath = Path.Combine(CacheFolderPath, tileTms.x + "_" + tileTms.y) + ".json";
+            var tilePath = Path.Combine(CacheFolderPath, _mapzenUrl.Replace(',', '_'), tileTms.x + "_" + tileTms.y) + ".json";
             if (File.Exists(tilePath))
             {
                 using (var r = new StreamReader(new FileStream(tilePath, FileMode.Open)))

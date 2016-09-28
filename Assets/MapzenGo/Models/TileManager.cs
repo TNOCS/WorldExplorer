@@ -66,10 +66,12 @@ namespace MapzenGo.Models
         private void InitLayers()
         {
             var layers = new List<string>();
-            foreach (Factory plugin in _plugins)
+            foreach (var plugin in _plugins)
             {
-                if (layers.Contains(plugin.XmlTag)) continue;
-                layers.Add(plugin.XmlTag);
+                var factory = plugin as Factory;
+                if (factory == null) continue;
+                if (layers.Contains(factory.XmlTag)) continue;
+                layers.Add(factory.XmlTag);
             }
             _mapzenLayers = string.Join(",", layers.ToArray());
         }

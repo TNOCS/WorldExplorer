@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.MapzenGo.Models.Plugins;
+using MapzenGo.Models.Plugins;
 using UnityEngine;
 
 namespace MapzenGo.Models.Factories
@@ -9,9 +9,11 @@ namespace MapzenGo.Models.Factories
     public class Factory : Plugin
     {
         public bool MergeMeshes;
+        public bool JustDrawEverythingFam = false;
         public float Order = 1;
         public virtual string XmlTag {get { return ""; } }
         public virtual Func<JSONObject, bool> Query { get; set; }
+        
 
         public virtual void Start()
         {
@@ -27,7 +29,7 @@ namespace MapzenGo.Models.Factories
                 if (!tile.Data.HasField(XmlTag))
                     return;
 
-                var b = CreateLayer(tile.TileCenter, tile.Data[XmlTag]["features"].list);
+                var b = CreateLayer(tile, tile.Data[XmlTag]["features"].list);
                 if (b) //getting a weird error without this, no idea really
                     b.transform.SetParent(tile.transform, false);
             }
@@ -36,7 +38,7 @@ namespace MapzenGo.Models.Factories
                 if (!(tile.Data.HasField(XmlTag) && tile.Data[XmlTag].HasField("features")))
                     return;
 
-                foreach (var entity in tile.Data[XmlTag]["features"].list.Where(x => Query(x)).SelectMany(geo => Create(tile.TileCenter, geo)))
+                foreach (var entity in tile.Data[XmlTag]["features"].list.Where(x => Query(x)).SelectMany(geo => Create(tile, geo)))
                 {
                     if (entity != null)
                     {
@@ -46,12 +48,12 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        protected virtual IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
+        protected virtual IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
         {
             return null;
         }
 
-        protected virtual GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> toList)
+        protected virtual GameObject CreateLayer(Tile tile, List<JSONObject> toList)
         {
             return null;
         }

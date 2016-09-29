@@ -129,6 +129,9 @@ public class JSONObject
     }
     public JSONObject() { }
     #region PARSE
+
+    static Regex isNumber = new Regex(@"^-?[0-9\.]+$"); 
+    
     public JSONObject(string str, bool strict = false)
     {	//create a new JSONObject from a string (this will also create any children, and parse the whole string)
         if (str != null)
@@ -193,7 +196,6 @@ public class JSONObject
                 }
                 else
                 {
-                    Regex isNumber = new Regex(@"^-?[0-9\.]+$"); 
                     if (isNumber.IsMatch(str))
                     {
 #if USEFLOAT
@@ -204,16 +206,6 @@ public class JSONObject
                         type = Type.NUMBER;
                     }
                     else
-//                    try
-//                    {
-//#if USEFLOAT
-//                        n = System.Convert.ToSingle(str);
-//#else
-//						n = System.Convert.ToDouble(str);				 
-//#endif
-//                        type = Type.NUMBER;
-//                    }
-//                    catch (System.FormatException)
                     {
                         int token_tmp = 1;
                         /*

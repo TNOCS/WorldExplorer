@@ -7,13 +7,14 @@ namespace MapzenGo.Models.Enums
 {
     public enum WaterType
     {
+        Unknown,
         Basin,
         Dock,
         Lake,
         Ocean,
         Playa,
         Riverbank,
-        SwimmingPool,
+        Swimming_Pool,
         Water,
     }
 }

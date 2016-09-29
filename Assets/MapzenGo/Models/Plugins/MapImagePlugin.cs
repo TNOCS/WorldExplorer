@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Assets.MapzenGo.Models.Plugins;
 using MapzenGo.Models.Plugins;
 using UniRx;
 using UnityEngine;
@@ -9,7 +8,24 @@ namespace MapzenGo.Models.Plugins
 {
     public class MapImagePlugin : Plugin
     {
-        public string MapImageUrlBase = "http://b.tile.openstreetmap.org/";
+        public enum TileServices
+        {
+            Default,
+            Satellite,
+            Terrain,
+            Toner,
+            Watercolor
+        }
+
+        public TileServices TileService = TileServices.Default;
+
+        private string[] TileServiceUrls = new string[] {
+            "http://b.tile.openstreetmap.org/",
+            "http://b.tile.openstreetmap.us/usgs_large_scale/",
+            "http://tile.stamen.com/terrain-background/",
+            "http://a.tile.stamen.com/toner/",
+            "https://stamen-tiles.a.ssl.fastly.net/watercolor/"
+        };
 
         public override void Create(Tile tile)
         {
@@ -25,13 +41,16 @@ namespace MapzenGo.Models.Plugins
             var rend = go.GetComponent<Renderer>();
             rend.material = tile.Material;
 
-            var url = MapImageUrlBase + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
+            var url = TileServiceUrls[(int)TileService] + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
             ObservableWWW.GetWWW(url).Subscribe(
                 success =>
                 {
-                    rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
-                    rend.material.color = new Color(1f, 1f, 1f, 1f);
-                    success.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
+                    if (rend)
+                    {
+                        rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
+                        rend.material.color = new Color(1f, 1f, 1f, 1f);
+                        success.LoadImageIntoTexture((Texture2D) rend.material.mainTexture);
+                    }
                 },
                 error =>
                 {

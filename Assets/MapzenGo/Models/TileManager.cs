@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Assets.MapzenGo.Models.Plugins;
+using System.Linq;
 using MapzenGo.Helpers;
+using MapzenGo.Models.Factories;
+using MapzenGo.Models.Plugins;
 using UniRx;
 using UnityEngine;
-using MapzenGo.Models.Factories;
 
 namespace MapzenGo.Models
 {
@@ -18,8 +19,8 @@ namespace MapzenGo.Models
 
         protected readonly string _mapzenUrl = "https://vector.mapzen.com/osm/{0}/{1}/{2}/{3}.{4}?api_key={5}";
         [SerializeField] protected string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
+        protected string _mapzenLayers;
         [SerializeField] protected Material MapMaterial;
-        protected string _mapzenLayers = "buildings,roads,landuse,water";
         protected readonly string _mapzenFormat = "json";
         protected Transform TileHost;
 
@@ -53,27 +54,29 @@ namespace MapzenGo.Models
             transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
         }
 
-        private void InitFactories()
+        public virtual void Update()
         {
-            _plugins = new List<Plugin>();
-            foreach (var plugin in GetComponentsInChildren<Plugin>())
-            {
-                //if ((plugin as Factory).XmlTag != "buildings") continue;
-                _plugins.Add(plugin);
-            }
+            
         }
 
         private void InitLayers()
         {
             var layers = new List<string>();
-            foreach (var plugin in _plugins)
+            foreach (var plugin in _plugins.OfType<Factory>())
             {
-                var factory = plugin as Factory;
-                if (factory == null) continue;
-                if (layers.Contains(factory.XmlTag)) continue;
-                layers.Add(factory.XmlTag);
+                if (layers.Contains(plugin.XmlTag)) continue;
+                layers.Add(plugin.XmlTag);
             }
             _mapzenLayers = string.Join(",", layers.ToArray());
+        }
+
+        private void InitFactories()
+        {
+            _plugins = new List<Plugin>();
+            foreach (var plugin in GetComponentsInChildren<Plugin>())
+            {
+                _plugins.Add(plugin);
+            }
         }
 
         protected void LoadTiles(Vector2d tms, Vector2d center)
@@ -109,21 +112,18 @@ namespace MapzenGo.Models
             yield return null;
         }
 
-
         protected virtual void LoadTile(Vector2d tileTms, Tile tile)
         {
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
+            Debug.Log(url);
             ObservableWWW.Get(url)
                 .Subscribe(
                     text => { ConstructTile(text, tile); }, //success
                     exp => Debug.Log("Error fetching -> " + url)); //failure
         }
-        
-        private int tileCount = 0;
+
         protected void ConstructTile(string text, Tile tile)
         {
-            tileCount++;
-            Debug.Log(string.Format("Constructing tile {0} of {1}", tile.TileTms, tileCount));
             var heavyMethod = Observable.Start(() => new JSONObject(text));
 
             heavyMethod.ObserveOnMainThread().Subscribe(mapData =>
@@ -131,7 +131,6 @@ namespace MapzenGo.Models
                 if (!tile) // checks if tile still exists and haven't destroyed yet
                     return;
                 tile.Data = mapData;
-                Debug.Log(string.Format("Processing tile {0}, to go {1}", tile.TileTms, --tileCount));
 
                 foreach (var factory in _plugins)
                 {

@@ -7,15 +7,16 @@ namespace MapzenGo.Models.Enums
 {
     public enum RoadType
     {
+        Unknown,
         Aerialway,
         Exit,
         Ferry,
         Highway,
-        MajorRoad,
-        MinorRoad,
+        Major_Road,
+        Minor_Road,
         Path,
         Piste,
         Racetrack,
-        Rail
+        Rail,
     }
 }

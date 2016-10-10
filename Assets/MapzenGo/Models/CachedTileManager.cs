@@ -12,7 +12,6 @@ namespace MapzenGo.Models
 
         public override void Start()
         {
-            
             CacheFolderPath = string.Format(Application.temporaryCachePath + RelativeCachePath, Zoom);
             if (!Directory.Exists(CacheFolderPath)) Directory.CreateDirectory(CacheFolderPath);
             base.Start();

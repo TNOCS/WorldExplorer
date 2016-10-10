@@ -16,7 +16,7 @@ namespace MapzenGo.Models.Factories
 {
     public class BuildingFactory : Factory
     {
-        [SerializeField] private bool _useTriangulationNet;
+        [SerializeField] protected bool _useTriangulationNet;
         public override string XmlTag { get { return "buildings"; } }
         private HashSet<string> _active = new HashSet<string>();
         [SerializeField] protected BuildingFactorySettings FactorySettings;

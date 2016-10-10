@@ -10,12 +10,15 @@ namespace MapzenGo.Models
     {
         //[SerializeField] private Rect _centerCollider;
         [SerializeField] private int _removeAfter;
-        [SerializeField] private Transform _centerIndicator;
+        //[SerializeField] public Transform _centerIndicator;
         [SerializeField] private bool _keepCentralized;
+
+        private static readonly AppStateSettings appState = AppStateSettings.Instance;
 
         public override void Start()
         {
             base.Start();
+
             _removeAfter = Math.Max(_removeAfter, Range * 2 + 1);
             //var rect = new Vector2(TileSize, TileSize);
             //_centerCollider = new Rect(Vector2.zero - rect / 2 , rect);
@@ -28,11 +31,11 @@ namespace MapzenGo.Models
 
         private void UpdateTiles()
         {
-            if (_centerIndicator.localPosition.x != 0 || _centerIndicator.localPosition.y != 0 || _centerIndicator.localPosition.z != 0) 
+            if (appState.Center.x != 0 || appState.Center.y != 0 || appState.Center.z != 0) 
             {
                 //player movement in TMS tiles: Note the minus in front of the y.
-                var tileDif = new Vector2(_centerIndicator.localPosition.x, -_centerIndicator.localPosition.y);
-                Zoom += (int) _centerIndicator.localPosition.z;
+                var tileDif = new Vector2(appState.Center.x, -appState.Center.y);
+                Zoom += (int) appState.Center.z;
                 //Debug.Log(tileDif);
                 //move locals
                 Centralize(tileDif);
@@ -40,7 +43,7 @@ namespace MapzenGo.Models
                 LoadTiles(CenterTms, CenterInMercator);
                 UnloadTiles(CenterTms);
                 // Reset movement changes
-                _centerIndicator.localPosition = Vector3.zero;
+                appState.Center = Vector3.zero;
             }
         }
 

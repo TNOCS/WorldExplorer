@@ -6,12 +6,12 @@ using MapzenGo.Models.Settings;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MapzenGo.Models
+namespace MapzenGo.Models.Factories
 {
     public class PoiFactory : Factory
     {
-        [SerializeField] private GameObject _labelPrefab;
-        [SerializeField] private GameObject _container;
+        [SerializeField] protected GameObject _labelPrefab;
+        [SerializeField] protected GameObject _container;
         public override string XmlTag { get { return "pois"; } }
         [SerializeField] protected PoiFactorySettings FactorySettings;
         public override void Start()

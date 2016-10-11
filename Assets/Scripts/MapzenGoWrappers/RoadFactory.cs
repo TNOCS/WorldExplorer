@@ -11,12 +11,12 @@ public class RoadFactory : MapzenGo.Models.Factories.RoadFactory {
         MergeMeshes = true;
         var rfs = new RoadFactorySettings();
 
-        rfs.DefaultRoad = createRoadSettings(RoadType.Unknown, 2, "RoadMaterial/Road");
+        rfs.DefaultRoad = createRoadSettings(RoadType.Unknown, 3, "RoadMaterial/Road");
 
         rfs.SettingsRoad = new List<RoadSettings> {
-            createRoadSettings(RoadType.Highway, 6, "RoadMaterial/Highway"),
-            createRoadSettings(RoadType.Major_Road, 4, "RoadMaterial/MajorRoad"),
-            createRoadSettings(RoadType.Minor_Road, 2, "RoadMaterial/MinorRoad"),
+            createRoadSettings(RoadType.Highway, 10, "RoadMaterial/Highway"),
+            createRoadSettings(RoadType.Major_Road, 8, "RoadMaterial/MajorRoad"),
+            createRoadSettings(RoadType.Minor_Road, 6, "RoadMaterial/MinorRoad"),
             createRoadSettings(RoadType.Path, 1, "RoadMaterial/Path"),
             createRoadSettings(RoadType.Rail, 2, "RoadMaterial/Rail"),
         };

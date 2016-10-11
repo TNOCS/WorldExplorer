@@ -10,6 +10,7 @@ namespace MapzenGo.Models
     {
         //[SerializeField] private Rect _centerCollider;
         [SerializeField] private int _removeAfter;
+        //[SerializeField] public Transform _centerIndicator;
         [SerializeField] private bool _keepCentralized;
 
         private static readonly AppStateSettings appState = AppStateSettings.Instance;
@@ -23,9 +24,8 @@ namespace MapzenGo.Models
             //_centerCollider = new Rect(Vector2.zero - rect / 2 , rect);
         }
 
-        public override void Update()
+        void Update()
         {
-            base.Update();
             UpdateTiles();
         }
 

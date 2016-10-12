@@ -6,8 +6,7 @@ using UnityEngine.Windows.Speech;
 
 public class SpeechManager : MonoBehaviour
 {
-    [SerializeField]
-    private Transform _centerIndicator;
+    private static readonly AppStateSettings appState = AppStateSettings.Instance;
 
     KeywordRecognizer keywordRecognizer = null;
     Dictionary<string, System.Action> keywords = new Dictionary<string, System.Action>();
@@ -18,34 +17,34 @@ public class SpeechManager : MonoBehaviour
         var world = GameObject.Find("World");
         if (world == null) throw new System.Exception("Cannot find GameObject world in SpeechManager!");
         keywords.Add("Move North", () => {
-            _centerIndicator.localPosition = new Vector3(_centerIndicator.localPosition.x, _centerIndicator.localPosition.y + 1, _centerIndicator.localPosition.z);
+            appState.Center = new Vector3(appState.Center.x, appState.Center.y + 1, appState.Center.z);
         });
         keywords.Add("Move South", () => {
-            _centerIndicator.localPosition = new Vector3(_centerIndicator.localPosition.x, _centerIndicator.localPosition.y - 1, _centerIndicator.localPosition.z);
+            appState.Center = new Vector3(appState.Center.x, appState.Center.y - 1, appState.Center.z);
         });
         keywords.Add("Move East", () => {
-            _centerIndicator.localPosition = new Vector3(_centerIndicator.localPosition.x - 1, _centerIndicator.localPosition.y, _centerIndicator.localPosition.z);
+            appState.Center = new Vector3(appState.Center.x - 1, appState.Center.y, appState.Center.z);
         });
         keywords.Add("Move West", () => {
-            _centerIndicator.localPosition = new Vector3(_centerIndicator.localPosition.x + 1, _centerIndicator.localPosition.y, _centerIndicator.localPosition.z);
+            appState.Center = new Vector3(appState.Center.x + 1, appState.Center.y, appState.Center.z);
         });
         keywords.Add("Move South East", () => {
-            _centerIndicator.localPosition = new Vector3(_centerIndicator.localPosition.x - 1, _centerIndicator.localPosition.y - 1, _centerIndicator.localPosition.z);
+            appState.Center = new Vector3(appState.Center.x - 1, appState.Center.y - 1, appState.Center.z);
         });
         keywords.Add("Move South West", () => {
-            _centerIndicator.localPosition = new Vector3(_centerIndicator.localPosition.x + 1, _centerIndicator.localPosition.y - 1, _centerIndicator.localPosition.z);
+            appState.Center = new Vector3(appState.Center.x + 1, appState.Center.y - 1, appState.Center.z);
         });
         keywords.Add("Move North East", () => {
-            _centerIndicator.localPosition = new Vector3(_centerIndicator.localPosition.x - 1, _centerIndicator.localPosition.y + 1, _centerIndicator.localPosition.z);
+            appState.Center = new Vector3(appState.Center.x - 1, appState.Center.y + 1, appState.Center.z);
         });
         keywords.Add("Move North West", () => {
-            _centerIndicator.localPosition = new Vector3(_centerIndicator.localPosition.x + 1, _centerIndicator.localPosition.y + 1, _centerIndicator.localPosition.z);
+            appState.Center = new Vector3(appState.Center.x + 1, appState.Center.y + 1, appState.Center.z);
         });
         keywords.Add("Zoom in", () => {
-            _centerIndicator.localPosition = new Vector3(_centerIndicator.localPosition.x, _centerIndicator.localPosition.y, _centerIndicator.localPosition.z + 1);
+            appState.Center = new Vector3(appState.Center.x, appState.Center.y, appState.Center.z + 1);
         });
         keywords.Add("Zoom out", () => {
-            _centerIndicator.localPosition = new Vector3(_centerIndicator.localPosition.x, _centerIndicator.localPosition.y, _centerIndicator.localPosition.z + 1);
+            appState.Center = new Vector3(appState.Center.x, appState.Center.y, appState.Center.z + 1);
         });
         keywords.Add("Clear cache", () => {
             var path = Application.temporaryCachePath + "/{0}/";

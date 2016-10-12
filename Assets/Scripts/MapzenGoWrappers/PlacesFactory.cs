@@ -13,6 +13,15 @@ public class PlacesFactory : MapzenGo.Models.Factories.PlacesFactory
 
         var pfs = new PlacesFactorySettings();
         pfs.DefaultPlace = createPlaceSettings(PlaceType.Unknown, 16, Color.white, Color.black);
+        pfs.SettingsPlace = new System.Collections.Generic.List<PlaceSettings> {
+            createPlaceSettings(PlaceType.Borough, 12, Color.white, Color.black),
+            createPlaceSettings(PlaceType.Suburb, 12, Color.white, Color.black),
+            createPlaceSettings(PlaceType.Neighbourhood, 12, Color.white, Color.black),
+            createPlaceSettings(PlaceType.Village, 14, Color.white, Color.black),
+            createPlaceSettings(PlaceType.Town, 14, Color.white, Color.black),
+            createPlaceSettings(PlaceType.City, 16, Color.white, Color.black)
+        };
+
         FactorySettings = pfs;
 
         base.Start();

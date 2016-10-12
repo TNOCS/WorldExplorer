@@ -20,6 +20,7 @@ public class Initialize : MonoBehaviour {
         #region UI
 
         var ui = new GameObject("UI"); // Placeholder (root element in UI tree)
+        ui.transform.localScale = new Vector3(0.001F, 0.001F, 0.001F);
 
         var place = new GameObject("PlaceContainer");
         AddRectTransformToGameObject(place);
@@ -40,6 +41,10 @@ public class Initialize : MonoBehaviour {
         buildings.transform.parent = factories.transform;
         var buildingFactory = buildings.AddComponent<BuildingFactory>();
 
+        var flatBuildings = new GameObject("FlatBuildingFactory");
+        flatBuildings.transform.parent = factories.transform;
+        var flatBuildingFactory = flatBuildings.AddComponent<FlatBuildingFactory>();
+
         var roads = new GameObject("RoadFactory");
         roads.transform.parent = factories.transform;
         var roadFactory = roads.AddComponent<RoadFactory>();
@@ -48,6 +53,10 @@ public class Initialize : MonoBehaviour {
         water.transform.parent = factories.transform;
         var waterFactory = water.AddComponent<WaterFactory>();
 
+        var boundary = new GameObject("BoundaryFactory");
+        boundary.transform.parent = factories.transform;
+        var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
+
         var landuse = new GameObject("LanduseFactory");
         landuse.transform.parent = factories.transform;
         var landuseFactory = landuse.AddComponent<LanduseFactory>();
@@ -55,6 +64,10 @@ public class Initialize : MonoBehaviour {
         var places = new GameObject("PlacesFactory");
         places.transform.parent = factories.transform;
         var placesFactory = places.AddComponent<PlacesFactory>();
+
+        var pois = new GameObject("PoiFactory");
+        pois.transform.parent = factories.transform;
+        var poisFactory = pois.AddComponent<PoiFactory>();
 
         #endregion
 
@@ -76,7 +89,6 @@ public class Initialize : MonoBehaviour {
         var rt = go.AddComponent<RectTransform>();
         rt.offsetMin = new Vector2(0, 0);
         rt.offsetMax = new Vector2(0, 0);
-        //rt.anchoredPosition = new Vector2(0, 0);
         rt.anchorMin = new Vector2(0, 0);
         rt.anchorMax = new Vector2(1, 1);
     }

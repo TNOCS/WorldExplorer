@@ -18,7 +18,7 @@ public class RoadFactory : MapzenGo.Models.Factories.RoadFactory {
             createRoadSettings(RoadType.Major_Road, 8, "RoadMaterial/MajorRoad"),
             createRoadSettings(RoadType.Minor_Road, 6, "RoadMaterial/MinorRoad"),
             createRoadSettings(RoadType.Path, 1, "RoadMaterial/Path"),
-            createRoadSettings(RoadType.Rail, 2, "RoadMaterial/Rail"),
+            createRoadSettings(RoadType.Rail, 2, "RoadMaterial/Rail")
         };
 
         FactorySettings = rfs;

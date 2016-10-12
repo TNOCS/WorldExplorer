@@ -1,19 +1,17 @@
 ﻿using UnityEngine;
-using System.Collections;
 using MapzenGo.Models.Settings;
 using MapzenGo.Models.Enums;
 
-public class BuildingFactory : MapzenGo.Models.Factories.BuildingFactory {
+public class FlatBuildingFactory : MapzenGo.Models.Factories.FlatBuildingFactory
+{
 
-	// Use this for initialization
-	public override void Start () {
-        Order = 2;
-        MergeMeshes = true;
+    // Use this for initialization
+    public override void Start()
+    {
         _useTriangulationNet = true;
-        
+        MergeMeshes = true;
+        Order = 1;
 
-        //var appState = AppStateSettings.Instance;
-        //FactorySettings = appState.BuildingFactorySettings;
         var bfs = new BuildingFactorySettings();
         bfs.DefaultBuilding = createBuildingSettings(BuildingType.Unknown, 3, 6, "Default");
 
@@ -26,8 +24,8 @@ public class BuildingFactory : MapzenGo.Models.Factories.BuildingFactory {
         };
 
         FactorySettings = bfs;
-        base.Start();	
-	}	
+        base.Start();
+    }
 
     protected BuildingSettings createBuildingSettings(BuildingType type, int min, int max, string material)
     {

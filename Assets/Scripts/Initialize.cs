@@ -65,9 +65,9 @@ public class Initialize : MonoBehaviour {
         places.transform.parent = factories.transform;
         var placesFactory = places.AddComponent<PlacesFactory>();
 
-        var pois = new GameObject("PoiFactory");
-        pois.transform.parent = factories.transform;
-        var poisFactory = pois.AddComponent<PoiFactory>();
+        // var pois = new GameObject("PoiFactory");
+        // pois.transform.parent = factories.transform;
+        // var poisFactory = pois.AddComponent<PoiFactory>();
 
         #endregion
 

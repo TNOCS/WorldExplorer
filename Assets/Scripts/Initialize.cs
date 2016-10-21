@@ -16,11 +16,12 @@ public class Initialize : MonoBehaviour {
         world.transform.parent = terrain.transform;
 
         var tm = world.AddComponent<CachedTileManager>();
-        tm.Latitude = 51.45179F;
-        tm.Longitude = 5.481454F;
-        tm.Range = 2;
-        tm.Zoom = 17;
-        tm.TileSize = 100;
+        var iv = appState.Config.InitalView;
+        tm.Latitude = iv.Lat;
+        tm.Longitude = iv.Lon;
+        tm.Range = iv.Range;
+        tm.Zoom = iv.Zoom;
+        tm.TileSize = iv.TileSize;
         tm._key = "vector-tiles-dB21RAF";
 
         #region UI

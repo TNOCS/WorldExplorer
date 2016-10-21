@@ -44,18 +44,20 @@ public class ViewState
 {
     public void FromJson(JSONObject json)
     {
-        Lat = json.GetDouble("Lat");
-        Lon = json.GetDouble("Lon");
-        Zoom = json.GetDouble("Zoom");
-        Scale = json.GetDouble("Scale");
-        Range = json.GetDouble("Range");
+        Lat = json.GetFloat("Lat");
+        Lon = json.GetFloat("Lon");
+        Zoom = json.GetInt("Zoom");
+        Scale = json.GetInt("Scale");
+        Range = json.GetInt("Range");
+        TileSize = json.GetInt("TileSize");
     }
 
-    public double Lat { get; set; }
-    public double Lon { get; set; }
-    public double Zoom { get; set; }
-    public double Scale { get; set; }
-    public double Range { get; set; }
+    public float Lat { get; set; }
+    public float Lon { get; set; }
+    public int Zoom { get; set; }
+    public int Scale { get; set; }
+    public int Range { get; set; }
+    public int TileSize { get; set; }
 
     // center
     // scale
@@ -102,6 +104,18 @@ public static class JsonHelpers
     public static double GetDouble(this JSONObject json, string key, double defaultValue = 0)
     {
         if (json && json.HasField(key) && json[key].IsNumber) return json[key].n;
+        return defaultValue;
+    }
+
+    public static int GetInt(this JSONObject json, string key, int defaultValue = 0)
+    {
+        if (json && json.HasField(key) && json[key].IsNumber) return (int)json[key].n;
+        return defaultValue;
+    }
+
+    public static float GetFloat(this JSONObject json, string key, float defaultValue = 0f)
+    {
+        if (json && json.HasField(key) && json[key].IsNumber) return (float)json[key].n;
         return defaultValue;
     }
 

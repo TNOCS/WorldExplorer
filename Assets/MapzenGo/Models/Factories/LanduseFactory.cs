@@ -72,39 +72,43 @@ namespace MapzenGo.Models.Factories
             var _meshes = new Dictionary<LanduseKind, MeshData>();
             foreach (var geo in items.Where(x => Query(x)))
             {
-                var kind = geo["properties"]["kind"].str.ConvertToLanduseType();
-                if (!FactorySettings.HasSettingsFor(kind) && !JustDrawEverythingFam)
-                    continue;
-
-                var typeSettings = FactorySettings.GetSettingsFor<LanduseSettings>(kind);
-                if (!_meshes.ContainsKey(kind))
-                    _meshes.Add(kind, new MeshData());
-
-                //foreach (var bb in geo["geometry"]["coordinates"].list)
-                //{
-                var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
-                var count = bb.list.Count - 1;
-
-                if (count < 3)
-                    continue;
-
-                var inp = new InputGeometry(count);
-
-                for (int i = 0; i < count; i++)
+                if (geo["properties"]["kind"] != null)
                 {
-                    var c = bb.list[i];
-                    var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = dotMerc - tile.Rect.Center;
-                    inp.AddPoint(localMercPos.x, localMercPos.y);
-                    inp.AddSegment(i, (i + 1) % count);
-                }
+                    var kind = geo["properties"]["kind"].str.ConvertToLanduseType();
+                    if (!FactorySettings.HasSettingsFor(kind) && !JustDrawEverythingFam)
+                        continue;
 
-                CreateMesh(inp, _meshes[kind]);
 
-                if (_meshes[kind].Vertices.Count > 64000)
-                {
-                    CreateGameObject(kind, _meshes[kind], main.transform);
-                    _meshes[kind] = new MeshData();
+                    var typeSettings = FactorySettings.GetSettingsFor<LanduseSettings>(kind);
+                    if (!_meshes.ContainsKey(kind))
+                        _meshes.Add(kind, new MeshData());
+
+                    //foreach (var bb in geo["geometry"]["coordinates"].list)
+                    //{
+                    var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
+                    var count = bb.list.Count - 1;
+
+                    if (count < 3)
+                        continue;
+
+                    var inp = new InputGeometry(count);
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        var c = bb.list[i];
+                        var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
+                        var localMercPos = dotMerc - tile.Rect.Center;
+                        inp.AddPoint(localMercPos.x, localMercPos.y);
+                        inp.AddSegment(i, (i + 1) % count);
+                    }
+
+                    CreateMesh(inp, _meshes[kind]);
+
+                    if (_meshes[kind].Vertices.Count > 64000)
+                    {
+                        CreateGameObject(kind, _meshes[kind], main.transform);
+                        _meshes[kind] = new MeshData();
+                    }
                 }
                 //}
             }

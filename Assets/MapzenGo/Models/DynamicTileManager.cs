@@ -12,7 +12,7 @@ namespace MapzenGo.Models
         [SerializeField] private int _removeAfter;
         [SerializeField] private bool _keepCentralized;
 
-        private static readonly AppStateSettings appState = AppStateSettings.Instance;
+        private static readonly AppState appState = AppState.Instance;
 
         public override void Start()
         {

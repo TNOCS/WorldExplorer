@@ -1,0 +1,1 @@
+﻿{ "Layers": [ { "Title" : "base", "Type" : "tilelayer", "Enabled" : true}], "TileServer": "", "MqttServer": "192.168.1.49", "MqttPort" : "1883", "InitalView": { "Lat" : 4.3}}

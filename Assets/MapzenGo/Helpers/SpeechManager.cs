@@ -6,7 +6,7 @@ using UnityEngine.Windows.Speech;
 
 public class SpeechManager : MonoBehaviour
 {
-    private static readonly AppStateSettings appState = AppStateSettings.Instance;
+    private static readonly AppState appState = AppState.Instance;
 
     KeywordRecognizer keywordRecognizer = null;
     Dictionary<string, System.Action> keywords = new Dictionary<string, System.Action>();

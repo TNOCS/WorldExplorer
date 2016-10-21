@@ -6,9 +6,15 @@ public class Initialize : MonoBehaviour {
     private GameObject world;
 	// Use this for initialization
 	void Start () {
-        var appState = AppStateSettings.Instance;
+        var appState = AppState.Instance;
+        appState.LoadConfig();
 
+        var terrain = GameObject.Find("terrain");
+    
 		world = new GameObject("World");
+       // world.transform.position = new Vector3(0f, 0.21f, 0f);
+        world.transform.parent = terrain.transform;
+
         var tm = world.AddComponent<CachedTileManager>();
         tm.Latitude = 51.45179F;
         tm.Longitude = 5.481454F;
@@ -96,6 +102,6 @@ public class Initialize : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        world.transform.localScale = new Vector3(0.001F, 0.001F, 0.001F);
+       // world.transform.localScale = new Vector3(0.001F, 0.001F, 0.001F);
     }
 }

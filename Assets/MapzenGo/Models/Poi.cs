@@ -24,10 +24,18 @@ namespace MapzenGo.Models
 
         public void Update()
         {
-            if(_target == null)
+            if (_target == null)
                 Destroy(gameObject);
             else
-                transform.position = Camera.main.WorldToScreenPoint(_target.position);
+            {
+               
+                transform.position = _target.position;// new 
+              //  transform.position = Camera.main.WorldToScreenPoint(_target.position);//old
+                transform.localPosition = new Vector3(0, _target.localPosition.y+10, 0);
+                // RJ Turn the Pois according to the camera
+                transform.parent = _target.transform;
+               transform.rotation = Quaternion.LookRotation(-Camera.main.transform.forward, Camera.main.transform.up);
+            }
         }
     }
 }

@@ -72,9 +72,12 @@ namespace MapzenGo.Models.Factories
             var _meshes = new Dictionary<LanduseKind, MeshData>();
             foreach (var geo in items.Where(x => Query(x)))
             {
-                var kind = geo["properties"]["kind"].str.ConvertToLanduseType();
+                LanduseKind kind = LanduseKind.Unknown;
+                if (geo["properties"]["kind"] != null)
+                    kind = geo["properties"]["kind"].str.ConvertToLanduseType();
                 if (!FactorySettings.HasSettingsFor(kind) && !JustDrawEverythingFam)
                     continue;
+
 
                 var typeSettings = FactorySettings.GetSettingsFor<LanduseSettings>(kind);
                 if (!_meshes.ContainsKey(kind))
@@ -106,8 +109,9 @@ namespace MapzenGo.Models.Factories
                     CreateGameObject(kind, _meshes[kind], main.transform);
                     _meshes[kind] = new MeshData();
                 }
-                //}
             }
+            //}
+
 
             foreach (var group in _meshes)
             {

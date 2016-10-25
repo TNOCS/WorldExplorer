@@ -244,7 +244,17 @@ namespace MapzenGo.Models.Factories
             var mesh = go.AddComponent<MeshFilter>().mesh;
             go.AddComponent<MeshRenderer>();
             mesh.vertices = data.Vertices.ToArray();
-            mesh.triangles = data.Indices.ToArray();
+            // check if the indices values do not refer to an none excisting index in vertices
+            var indices = data.Indices.ToArray();
+            bool error = false;
+            for (int i = 0; i < indices.Length && !error; i++)
+            {
+                error = indices[i] > mesh.vertices.Length;
+            }
+
+            //RJ: Possible  error in source? mesh triangles values are bigger than vertices lenght causing a potential  out of bounds
+            if (!error)
+                mesh.triangles = indices;
             mesh.SetUVs(0, data.UV);
             mesh.RecalculateNormals();
             go.GetComponent<MeshRenderer>().material = FactorySettings.GetSettingsFor<BuildingSettings>(kind).Material;

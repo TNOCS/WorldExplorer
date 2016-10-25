@@ -2,16 +2,44 @@
 using MapzenGo.Models;
 using MapzenGo.Models.Plugins;
 
-public class Initialize : MonoBehaviour {
+public class Initialize : MonoBehaviour
+{
     private GameObject world;
-	// Use this for initialization
-	void Start () {
-        var appState = AppState.Instance;
-        appState.LoadConfig();
+    // Use this for initialization
+    private GameObject spatialMapping;
+    public GameObject _cursorFab;
+    private GameObject cursor;
+    public float _latitude = 53.298482F;
+    public float _longitude = 5.070756F;
+    public int _range = 4;
+    public int _zoom = 17;
+    public int _TitleSize = 100;
+    void includeAnchorMovingScript()
+    {
 
-        var terrain = GameObject.Find("terrain");
+        var gazeGesture = world.AddComponent<GazeGestureManager>();
+        var AnchorPlacemant = world.AddComponent<TapToPlaceParent>();
+        spatialMapping = new GameObject("Spatial Mapping");
+        spatialMapping.AddComponent<UnityEngine.VR.WSA.SpatialMappingCollider>();
+        spatialMapping.AddComponent<UnityEngine.VR.WSA.SpatialMappingRenderer>();
+
+        var _spatial = spatialMapping.AddComponent<SpatialMapping>();
+        _spatial.DrawMaterial = Resources.Load("Wireframe", typeof(Material)) as Material;
+
+        cursor = (GameObject)Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
+        cursor.name = "Cursor";
+        var t = cursor.GetComponentInChildren<Transform>().Find("CursorMesh");
+
+        var r = t.GetComponent<MeshRenderer>();
+        r.enabled = true;
+
+
+
+    }
+    void Start()
+    {
     
-		world = new GameObject("World");
+        world = new GameObject("World");
        // world.transform.position = new Vector3(0f, 0.21f, 0f);
         world.transform.parent = terrain.transform;
 
@@ -24,11 +52,13 @@ public class Initialize : MonoBehaviour {
         tm.TileSize = iv.TileSize;
         tm._key = "vector-tiles-dB21RAF";
 
+        includeAnchorMovingScript();
+
+
         #region UI
 
         var ui = new GameObject("UI"); // Placeholder (root element in UI tree)
-        ui.transform.localScale = new Vector3(0.001F, 0.001F, 0.001F);
-
+        ui.transform.parent = world.transform;
         var place = new GameObject("PlaceContainer");
         AddRectTransformToGameObject(place);
         place.transform.parent = ui.transform;
@@ -72,9 +102,9 @@ public class Initialize : MonoBehaviour {
         places.transform.parent = factories.transform;
         var placesFactory = places.AddComponent<PlacesFactory>();
 
-        // var pois = new GameObject("PoiFactory");
-        // pois.transform.parent = factories.transform;
-        // var poisFactory = pois.AddComponent<PoiFactory>();
+        var pois = new GameObject("PoiFactory");
+        pois.transform.parent = factories.transform;
+        var poisFactory = pois.AddComponent<PoiFactory>();
 
         #endregion
 

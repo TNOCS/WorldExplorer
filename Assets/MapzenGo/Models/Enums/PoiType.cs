@@ -117,6 +117,7 @@ namespace Assets.MapzenGo.Models.Enums
         Fitness,
         Florist,
         FoodBank,
+		Forest,
         Ford,
         Fort,
         Foundation,

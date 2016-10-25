@@ -26,6 +26,8 @@ public class PoiFactory : MapzenGo.Models.Factories.PoiFactory {
             createPoiSettings(PoiType.Airport, "Textures/poi_icons_18@2x_19"),
             createPoiSettings(PoiType.Toys, "Textures/poi_icons_18@2x_20"),
             createPoiSettings(PoiType.Playground, "Textures/poi_icons_18@2x_32"),
+            createPoiSettings(PoiType.Forest, "Textures/poi_icons_18@2x_111"),
+
             createPoiSettings(PoiType.Zoo, "Textures/poi_icons_18@2x_65"),
             createPoiSettings(PoiType.Museum, "Textures/poi_icons_18@2x_67"),
             createPoiSettings(PoiType.Parking, "Textures/poi_icons_18@2x_81"),

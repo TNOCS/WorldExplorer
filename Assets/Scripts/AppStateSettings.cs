@@ -6,7 +6,8 @@ using System.Collections.Generic;
 
 public class AppState : Singleton<AppState>
 {
-    protected AppState() { } // guarantee this will be always a singleton only - can't use the constructor!
+    protected AppState() {
+    } // guarantee this will be always a singleton only - can't use the constructor!
     
     public Vector3 Center { get; set; }
     public CachedTileManager TileManager { get; set; }

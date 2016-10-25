@@ -6,14 +6,14 @@ using UnityEngine.Windows.Speech;
 
 public class SpeechManager : MonoBehaviour
 {
-    private static readonly AppState appState = AppState.Instance;
-
+    
     KeywordRecognizer keywordRecognizer = null;
     Dictionary<string, System.Action> keywords = new Dictionary<string, System.Action>();
 
     // Use this for initialization
     void Start()
     {
+        AppState appState = AppState.Instance;
         var world = GameObject.Find("World");
         if (world == null) throw new System.Exception("Cannot find GameObject world in SpeechManager!");
         keywords.Add("Move North", () => {

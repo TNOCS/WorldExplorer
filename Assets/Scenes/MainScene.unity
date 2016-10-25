@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44692558, g: 0.49678743, b: 0.57508624, a: 1}
+  m_IndirectSpecularColor: {r: 0.44692492, g: 0.4967869, b: 0.57508546, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -172,7 +172,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1078205176}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -186,15 +186,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1078205176}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4429b002abb50e4aa3e2fad0c3a8615, type: 3}
+  m_Script: {fileID: 11500000, guid: db9e75eca6c2283419dbff40b68ffbc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cursorFab: {fileID: 154114, guid: c8685776cafe5d24493303e077fffcfb, type: 2}
-  _latitude: 53.29848
-  _longitude: 5.070756
-  _range: 4
-  _zoom: 17
-  _TitleSize: 100
+  _cursorFab: {fileID: 154114, guid: 3d36822bbe4f6634eba3ba9cf2488b4c, type: 2}
+  _latitude: 0
+  _longitude: 0
+  _range: 0
+  _zoom: 0
+  _TitleSize: 0
 --- !u!1 &2074234625
 GameObject:
   m_ObjectHideFlags: 0

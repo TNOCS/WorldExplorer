@@ -12,7 +12,7 @@ namespace MapzenGo.Models
         [SerializeField] private int _removeAfter;
         [SerializeField] private bool _keepCentralized;
 
-        private static readonly AppState appState = AppState.Instance;
+       
 
         public override void Start()
         {
@@ -31,6 +31,7 @@ namespace MapzenGo.Models
 
         private void UpdateTiles()
         {
+            AppState appState = AppState.Instance;
             if (appState.Center.x != 0 || appState.Center.y != 0 || appState.Center.z != 0) 
             {
                 //player movement in TMS tiles: Note the minus in front of the y.

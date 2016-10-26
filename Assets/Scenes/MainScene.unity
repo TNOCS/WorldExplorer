@@ -189,12 +189,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e64a39a1570448d409dd9caa4e275825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cursorFab: {fileID: 154114, guid: c43db847839e9c64c9002785f977b549, type: 2}
+  _cursorFab: {fileID: 154114, guid: c8685776cafe5d24493303e077fffcfb, type: 2}
   _latitude: 53.29848
   _longitude: 5.070756
   _range: 4
   _zoom: 17
   _TitleSize: 100
+  json: '{   "type": "FeatureCollection",   "features": [     {       "geometry":
+    {         "type": "Point",         "coordinates": [           5.070362091064453,           53.295336751980656         ]       },       "type":
+    "Feature",       "properties": {         "kind": "forest",         "area": 35879,         "source":
+    "openstreetmap.org",         "min_zoom": 14,         "tier": 2,         "id":
+    119757239       }     },     {       "geometry": {         "type": "Point",         "coordinates":
+    [           5.072250366210937,           53.29523415150025         ]       },       "type":
+    "Feature",       "properties": {         "kind": "forest",         "area": 1651,         "source":
+    "openstreetmap.org",         "min_zoom": 14,         "tier": 2,         "id":
+    119757777       }     },     {       "geometry": {         "type": "Point",         "coordinates":
+    [           5.066671371459961,           53.29469549493482         ]       },       "type":
+    "Feature",       "properties": {         "marker-color": "#7e7e7e",         "marker-size":
+    "medium",         "marker-symbol": "circle-stroked",         "kind": "app-622",         "area":
+    18729,         "source": "openstreetmap.org",         "min_zoom": 14,         "tier":
+    2,         "id": 119758146,         "App6_id": 1       }     },     {       "geometry":
+    {         "type": "Point",         "coordinates": [           5.068731307983398,           53.29497764922103         ]       },       "type":
+    "Feature",       "properties": {         "kind": "bus_stop",         "name": "Eureka",         "source":
+    "openstreetmap.org",         "min_zoom": 17,         "operator": "TCR",         "id":
+    2833355779       }     }   ] }'
 --- !u!1 &2074234625
 GameObject:
   m_ObjectHideFlags: 0

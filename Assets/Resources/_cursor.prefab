@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 470424}
-  - 114: {fileID: 114000010793289580}
+  - 114: {fileID: 114000012599362482}
   m_Layer: 0
   m_Name: _cursor
   m_TagString: Untagged
@@ -73,7 +73,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 641a75d6ce62ba9489e2567f3ea7ad38, type: 2}
+  - {fileID: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -111,7 +111,7 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 154114}
   m_IsPrefabParent: 1
---- !u!114 &114000010793289580
+--- !u!114 &114000012599362482
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -119,6 +119,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 154114}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06939a07558eb8a4882301b5c715c07c, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e568fe2944c05c468cdb86e7014f14a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

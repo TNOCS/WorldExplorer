@@ -326,12 +326,14 @@ public class SymbolFactory : MonoBehaviour
         var main = new GameObject("Symbols");
 
         main.transform.SetParent(this.gameObject.transform, true);
-
+        string baseUrl = "http://gamelab.tno.nl/Missieprep/";
         if (geoJson.features != null)
             foreach (Feature c in geoJson.features)
             {
-                StartCoroutine(Sprite1(c));
-     
+               
+                StartCoroutine(Sprite1(c, baseUrl) );
+
+
             }
         //   this.gameObject.transform.position = new Vector3(-geoJson.center.x * scale, -0.5f, -geoJson.center.z * scale);
 
@@ -341,12 +343,14 @@ public class SymbolFactory : MonoBehaviour
 
     }
 
-    IEnumerator Sprite1(Feature c)
+    IEnumerator Sprite1(Feature c,string baseUrl)
     {
- 
-
-        WWW www = new WWW("http://gamelab.tno.nl/Missieprep/liaise.png");
+        if (c.properties["symbol"] == null)
+          yield  return null;
+         string web = baseUrl + c.properties["symbol"].ToString().Replace(@"""","");
+        WWW www = new WWW(web);
         yield return www;
+
         var go = new GameObject("Symbol");
         var symbol = go.AddComponent<Symbol>();
         go.name = "symbol-" + c.properties["id"];

@@ -186,10 +186,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1078205176}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4429b002abb50e4aa3e2fad0c3a8615, type: 3}
+  m_Script: {fileID: 11500000, guid: e64a39a1570448d409dd9caa4e275825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cursorFab: {fileID: 154114, guid: c8685776cafe5d24493303e077fffcfb, type: 2}
+  _cursorFab: {fileID: 154114, guid: c43db847839e9c64c9002785f977b549, type: 2}
   _latitude: 53.29848
   _longitude: 5.070756
   _range: 4

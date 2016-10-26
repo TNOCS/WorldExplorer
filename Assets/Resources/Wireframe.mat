@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Wireframe
-  m_Shader: {fileID: 4800000, guid: 3fadb0c87a0b40e4894d6b006fa6f0dc, type: 3}
+  m_Shader: {fileID: 4800000, guid: ca3fb5d848d3bc64397a5fab9b4dc5ca, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1

@@ -1,0 +1,20 @@
+﻿{
+    "Layers": [
+        {
+            "Title": "base",
+            "Type": "tilelayer",
+            "Enabled": true
+        }
+    ],
+    "TileServer": "",
+    "MqttServer": "192.168.1.49",
+    "MqttPort": "1883",
+    "InitalView": {
+        "Lat": 53.298055,
+        "Lon": 5.062009,
+        "Zoom": 17,
+        "TileSize": 100,
+        "Range": 2,
+        "Scale": 1
+    }
+}

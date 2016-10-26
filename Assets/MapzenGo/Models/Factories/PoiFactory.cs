@@ -36,7 +36,7 @@ namespace MapzenGo.Models.Factories
                     if (entity != null)
                     {
                         entity.transform.SetParent(_container.transform, true);
-                        entity.transform.localScale = new Vector3(30, 30, 0);
+                        entity.transform.localScale = new Vector3(100, 100, 0);
                         // scale from the poi
                         //  entity.transform.localScale = Vector3.one * 3 / tile.transform.lossyScale.x;
 

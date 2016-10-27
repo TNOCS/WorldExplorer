@@ -51,7 +51,6 @@ public class PoiFactory : MapzenGo.Models.Factories.PoiFactory {
     {
         var ps = new PoiSettings();
         ps.Type = type;
-        //  ps.Sprite = Resources.Load("", typeof())
         ps.Sprite = SpriteRepository.GetSpriteFromSheet(path);
         return ps;
     }

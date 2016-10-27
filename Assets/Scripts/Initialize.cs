@@ -54,7 +54,7 @@ public class Initialize : MonoBehaviour
 
         AddTerrain();
 
-        
+
 
     }
 
@@ -76,8 +76,9 @@ public class Initialize : MonoBehaviour
         _terrain.transform.parent = terrain.transform;
         //GameObject _terrain = table.transform.FindChild("Location Terrain").gameObject;
         //_terrain.transform.localPosition = new Vector3(0, 1f, 0);
-        _terrain.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-        
+        //_terrain.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+        //_terrain.transform.localPosition = new Vector3(0.001875073f, 16.34f, 0.153019f);
+        // _terrain.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
         world = new GameObject("World");
         world.transform.position = new Vector3(0f, 0.5f, 0f);
 
@@ -153,6 +154,18 @@ public class Initialize : MonoBehaviour
         //var _symbolicInitHandler = world.AddComponent<SymbolFactory>();
         //_symbolicInitHandler.geojson = json;
         //_symbolicInitHandler.AddSymbols();
+        var _symbolicInitHandler = new GameObject("SymbolFactory");
+        _symbolicInitHandler.transform.localScale = terrain.transform.localScale;
+        //_symbolicInitHandler.transform.parent = factories.transform;
+        var symbolFactory = _symbolicInitHandler.AddComponent<SymbolFactory>();
+        symbolFactory.geojson = json;
+        symbolFactory.zoom = iv.Zoom;
+        symbolFactory.Latitude = iv.Lat;
+        symbolFactory.Longitude = iv.Lon;
+        symbolFactory.TileSize = iv.TileSize;
+        symbolFactory.Range = iv.Range;
+        symbolFactory.AddSymbols();
+
         #endregion
 
         #region TILE PLUGINS
@@ -181,6 +194,6 @@ public class Initialize : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       // world.transform.localScale = new Vector3(0.001F, 0.001F, 0.001F);
+        // world.transform.localScale = new Vector3(0.001F, 0.001F, 0.001F);
     }
 }

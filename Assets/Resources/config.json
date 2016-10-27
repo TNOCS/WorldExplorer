@@ -14,7 +14,7 @@
         "Lon": 5.103300,
         "Zoom": 17,
         "TileSize": 100,
-        "Range": 5,
+        "Range": 10,
         "Scale": 1
     }
 }

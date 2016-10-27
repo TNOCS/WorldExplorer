@@ -10,6 +10,9 @@ using System;
 
 using UnityEngine.Windows.Speech;
 using Assets.Scripts.App6;
+using MapzenGo.Helpers;
+using MapzenGo.Models;
+using Assets.Scripts.MapzenGoWrappers;
 
 public class SymbolFactory : MonoBehaviour
 {
@@ -18,28 +21,6 @@ public class SymbolFactory : MonoBehaviour
 
     [SerializeField]
     public string geojson;
-
-
-
-    public delegate void DoVoiceCommand(VoiceCommand c);
-
-
-
-    public class VoiceCommand
-
-    {
-
-        public string Command { get; set; }
-
-        public DoVoiceCommand Action { get; set; }
-
-    }
-
-
-
-    private List<VoiceCommand> voiceCommands;
-
-
 
 
 
@@ -74,7 +55,8 @@ public class SymbolFactory : MonoBehaviour
         public Dictionary<string, object> properties { get; set; }
 
         public Geometry geometry { get; set; }
-        public Vector3 point { get; set; }
+        public Vector2d tilePoint { get; set; }
+        public JSONObject cor { get; set; }
 
     }
 
@@ -100,44 +82,21 @@ public class SymbolFactory : MonoBehaviour
 
 
 
-    private const int EarthRadius = 6378137;
+    [SerializeField]
+    public float Latitude = 39.921864f;
+    [SerializeField]
+    public float Longitude = 32.818442f;
+    [SerializeField]
+    public int zoom;
+    [SerializeField]
+    public int Range;
+    [SerializeField]
+    public float TileSize = 100;
 
-
-
-    private const double OriginShift = 2 * Math.PI * EarthRadius / 2;
-
-
-
-    public static Vector2d LatLonToMeters(Vector2d v)
-
-    {
-
-        return LatLonToMeters(v.x, v.y);
-
-    }
-
-
-
-    //Converts given lat/lon in WGS84 Datum to XY in Spherical Mercator EPSG:900913
-
-    public static Vector2d LatLonToMeters(double lat, double lon)
-
-    {
-
-        var p = new Vector2d();
-
-        p.x = (lon * OriginShift / 180);
-
-        p.y = (Math.Log(Math.Tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180));
-
-        p.y = (p.y * OriginShift / 180);
-
-        return new Vector2d(p.x, p.y);
-
-    }
-
-
-
+    protected Transform symbolHost;
+    //  protected Dictionary<Vector2d, Tile> Tiles;
+    protected Vector2d CenterTms; //tms tile coordinate
+    protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
     private GeoJson loadGeoJson(string text)
 
     {
@@ -180,7 +139,8 @@ public class SymbolFactory : MonoBehaviour
 
                     break;
                 case "Point":
-                    f.point = parsePoint(f.geometry.coordinates);
+                    f.tilePoint = parseTile(f.geometry.coordinates);
+                    f.cor = f.geometry.coordinates;
                     break;
 
             }
@@ -213,102 +173,14 @@ public class SymbolFactory : MonoBehaviour
         if (geoJson.features[0].geometry.vectors != null)
             geoJson.center = geoJson.features[0].geometry.vectors[0];
         else
-            geoJson.center = geoJson.features[0].point;
+            geoJson.center = new Vector3((float)geoJson.features[0].tilePoint.x, 0, (float)geoJson.features[0].tilePoint.y);
 
 
         return geoJson;
 
     }
-
-
-
-    #region voicecommands
-    void InitVoiceCommands()
-
-    {
-
-
-
-        voiceCommands = new List<VoiceCommand>();
-
-
-
-        var go = gameObject.transform;
-
-        foreach (Transform c in go)
-
-        {
-
-            var vcHide = new VoiceCommand();
-
-            vcHide.Command = "Hide " + c.name;
-
-            vcHide.Action = (VoiceCommand command) =>
-
-            {
-
-                c.gameObject.SetActive(false);
-
-            };
-
-            voiceCommands.Add(vcHide);
-
-
-
-            var vcShow = new VoiceCommand();
-
-            vcShow.Command = "Show " + c.name;
-
-            vcShow.Action = (VoiceCommand command) =>
-
-            {
-
-                c.gameObject.SetActive(true);
-
-            };
-
-            voiceCommands.Add(vcShow);
-
-
-
-        }
-
-
-
-        KeywordRecognizer recognizer = new KeywordRecognizer(voiceCommands.Select(k => k.Command).ToArray());
-
-        recognizer.OnPhraseRecognized += Recognizer_OnPhraseRecognized;
-
-        recognizer.Start();
-
-
-
-    }
-
-
-
-    private void Recognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
-
-    {
-
-        foreach (var vc in voiceCommands)
-
-        {
-
-            if (vc.Command == args.text)
-
-            {
-
-                vc.Action(vc);
-
-            }
-
-        }
-
-    }
-
-    #endregion
-
+    private Vector3 center;
+    protected Dictionary<Vector2d, Tile> SymbolTiles;
     public void AddSymbols()
 
     {
@@ -318,105 +190,112 @@ public class SymbolFactory : MonoBehaviour
         var geoJson = loadGeoJson(encodedString);
 
 
-
+        SymbolTiles = new Dictionary<Vector2d, Tile>();
         // setText(geoJson.features.Count + " features");
+        symbolHost = new GameObject("symbolTiles").transform;
+        symbolHost.SetParent(transform, false);
+
+        var v2 = GM.LatLonToMeters(Latitude, Longitude);
+        var tile = GM.MetersToTile(v2, zoom);
+
+        //center of main symbolholder object
+        CenterTms = tile;
+        //bouding box
+        CenterInMercator = GM.TileBounds(CenterTms, zoom).Center;
+
+        CreateSymbolTiles(CenterTms, CenterInMercator);
 
 
 
-        var main = new GameObject("Symbols");
-
-        main.transform.SetParent(this.gameObject.transform, true);
-        string baseUrl = "http://gamelab.tno.nl/Missieprep/";
-        if (geoJson.features != null)
-            foreach (Feature c in geoJson.features)
-            {
-               
-                StartCoroutine(Sprite1(c, baseUrl) );
-
-
-            }
-        //   this.gameObject.transform.position = new Vector3(-geoJson.center.x * scale, -0.5f, -geoJson.center.z * scale);
-
-        //      main.transform.Rotate(new Vector3(0.9f, 0, 0));
-        //   this.gameObject.transform.localScale = new Vector3(scale, scale, scale);
-
+        // set symbol holder scale
+        var rect = GM.TileBounds(CenterTms, zoom);
+        transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
+        center = rect.Center.ToVector3();
 
     }
 
-    IEnumerator Sprite1(Feature c,string baseUrl)
+
+    private void CreateSymbolTiles(Vector2d CenterTms, Vector2d CenterInMercator)
+    {
+
+        string baseUrl = "http://gamelab.tno.nl/Missieprep/";
+        if (geoJson.features != null)
+        {
+            for (int i = -Range; i <= Range; i++)
+            {
+                for (int j = -Range; j <= Range; j++)
+                {
+                    var v = new Vector2d(CenterTms.x + i, CenterTms.y + j);
+                    if (SymbolTiles.ContainsKey(v))
+                        continue;
+                    var rect = GM.TileBounds(v, zoom);
+                    var tile = new GameObject("symboltile-" + v.x + "-" + v.y).AddComponent<Tile>();
+                  
+                    tile.Zoom = zoom;
+                    tile.TileTms = v;
+                    tile.TileCenter = rect.Center;
+                    // tile.Material = MapMaterial;
+                    tile.Rect = GM.TileBounds(v, zoom);
+
+                    SymbolTiles.Add(v, tile);
+                    tile.transform.position = (rect.Center - CenterInMercator).ToVector3();
+                    tile.transform.SetParent(symbolHost, false);
+                  
+
+                }
+            }
+            foreach (Feature c in geoJson.features)
+                   {
+
+
+                    StartCoroutine(Sprite1(c, baseUrl,CenterTms,CenterInMercator));
+
+
+                 }
+        }
+
+    }
+
+
+    IEnumerator Sprite1(Feature c, string baseUrl, Vector2d tms, Vector2d centerInMercator)
     {
         if (c.properties["symbol"] == null)
-          yield  return null;
-         string web = baseUrl + c.properties["symbol"].ToString().Replace(@"""","");
+            yield return null;
+        string web = baseUrl + c.properties["symbol"].ToString().Replace(@"""", "");
         WWW www = new WWW(web);
         yield return www;
 
-        var go = new GameObject("Symbol");
-        var symbol = go.AddComponent<Symbol>();
-        go.name = "symbol-" + c.properties["id"];
-        var sprite = go.AddComponent<SpriteRenderer>();
-        sprite.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-        var dotMerc = c.point;
-        ///  var localMercPos = dotMerc - tile.Rect.Center;
-        ///   go.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
-        go.transform.position = dotMerc;
-        symbol.Stick(this.transform);
+
+        if (SymbolTiles.ContainsKey(c.tilePoint))
+        {
+            var tile = SymbolTiles[c.tilePoint];
+
+        
+
+            var go = new GameObject("Symbol");
+         //   var rect = GM.TileBounds(c.tilePoint, zoom);
+            var dotMerc = GM.LatLonToMeters(c.cor[1].f, c.cor[0].f);
+            var localMercPos = dotMerc - tile.Rect.Center;
+            go.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
+
+            var target = new GameObject("symbol-Target");
+            target.transform.position = localMercPos.ToVector3();
+            target.transform.SetParent(tile.transform, false);
+
+            var symbol = go.AddComponent<Symbol>();
+            go.name = "symbol-" + c.properties["id"];
+            var sprite = go.AddComponent<SpriteRenderer>();
+            sprite.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+
+
+            ///  var localMercPos = dotMerc - tile.Rect.Center;
+            ///   go.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
+
+            symbol.Stick(target.transform);
+            symbol.transform.SetParent(target.transform, true);
+
+        }
     }
-
-
-
-
-    //protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
-    //{
-    //    var kind = geo["properties"]["kind"].str.ConvertToPoiType();
-
-    //    if (!FactorySettings.HasSettingsFor(kind))
-    //        yield break;
-
-    //    var typeSettings = FactorySettings.GetSettingsFor<PoiSettings>(kind);
-
-    //    var go = new GameObject("Poi"); //Instantiate(_labelPrefab);
-    //    var poi = go.AddComponent<Poi>();
-    //    go.name = "poi-" + tile.name;
-    //    //RJ added spriteRenderer
-    //    var sprite = go.AddComponent<SpriteRenderer>();
-    //    sprite.sprite = typeSettings.Sprite;
-    //    //RJ DELETE? Sprite as 3d objects works better and Image doesn't work either?
-    //    //poi.GetComponentInChildren<Image>().sprite = typeSettings.Sprite;
-
-
-    //    //if (geo["properties"].HasField("name"))
-    //    //    go.GetComponentInChildren<TextMesh>().text = geo["properties"]["name"].str;
-    //    var c = geo["geometry"]["coordinates"];
-    //    var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-    //    var localMercPos = dotMerc - tile.Rect.Center;
-    //    go.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
-    //    var target = new GameObject("poiTarget");
-    //    var targetScript = target.AddComponent<targetForPoi>();
-    //    target.transform.position = localMercPos.ToVector3();
-    //    target.transform.SetParent(tile.transform, false);
-    //    poi.Stick(target.transform);
-    //    poi.transform.SetParent(target.transform, true);
-
-    //    SetProperties(geo, poi, typeSettings);
-    //    targetScript.Name = (poi.Name != null) ? poi.Name : poi.name;
-    //    targetScript.Kind = poi.Kind;
-    //    targetScript.Properties = geo["properties"].ToString();
-    //    yield return poi;
-    //}
-
-    //private static void SetProperties(JSONObject geo, Poi poi, PoiSettings typeSettings)
-    //{
-    //    poi.Id = geo["properties"]["id"].ToString();
-    //    if (geo["properties"].HasField("name"))
-    //        poi.Name = geo["properties"]["name"].str;
-    //    poi.Type = geo["type"].str;
-    //    poi.Kind = geo["properties"]["kind"].str;
-    //    // poi.name = "poi";
-    //}
-
-
-
 
     List<Vector3> parseMultiPolygon(JSONObject coords)
 
@@ -456,8 +335,8 @@ public class SymbolFactory : MonoBehaviour
 
             var lon = float.Parse(p.list[0].ToString());
 
-            var mp = LatLonToMeters(new Vector2d(lat, lon));
-
+            var mp = GM.LatLonToMeters(new Vector2d(lat, lon));
+           
             result.Add(new Vector3((float)mp.x, 0, (float)mp.y));
 
         }
@@ -468,9 +347,9 @@ public class SymbolFactory : MonoBehaviour
 
     }
 
-    Vector3 parsePoint(JSONObject coords)
+    Vector2d parseTile(JSONObject coords)
     {
-        Vector3 result = new Vector3();
+        Vector2d result = new Vector2d();
 
         if (coords == null) return result;
 
@@ -480,10 +359,10 @@ public class SymbolFactory : MonoBehaviour
 
         var lon = float.Parse(coords.list[0].ToString());
 
-        var mp = LatLonToMeters(new Vector2d(lat, lon));
+        var mp = GM.LatLonToMeters(new Vector2d(lat, lon));
 
-        result = new Vector3((float)mp.x, 0, (float)mp.y);
-
+        mp = GM.MetersToTile(mp, zoom);
+        result = mp;//new Vector3((float)mp.x, 0, (float)mp.y);
         return result;
     }
 

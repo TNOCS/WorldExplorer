@@ -61,23 +61,25 @@ public class Initialize : MonoBehaviour
     protected void AddTerrain()
     {
         terrain = new GameObject("Terrain");
+        terrain.transform.position = new Vector3(0f, 0f, 2f);
+
 
         Vector3 pos = new Vector3(0f, 0f, 0f);
 
         #region table
 
         GameObject _table = Resources.Load<GameObject>("table");
-        terrain.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
+        terrain.transform.localScale = new Vector3(0.002f, 0.002f, 0.002f);
         //GameObject table = (GameObject)Instantiate(_table, terrain.transform);
         //table.transform.localScale = new Vector3(200f, 200f, 200f);
         var _terrain = new GameObject("MapTerrain");
         _terrain.transform.parent = terrain.transform;
         //GameObject _terrain = table.transform.FindChild("Location Terrain").gameObject;
-        //_terrain.transform.localPosition = new Vector3(0.001875073f, 16.34f, 0.153019f);
-       // _terrain.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
+        //_terrain.transform.localPosition = new Vector3(0, 1f, 0);
+        _terrain.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
         
         world = new GameObject("World");
-        //world.transform.position = new Vector3(0f, 0.21f, 0f);
+        world.transform.position = new Vector3(0f, 0.5f, 0f);
 
         world.transform.parent = _terrain.transform;
 
@@ -148,9 +150,9 @@ public class Initialize : MonoBehaviour
         var poisFactory = pois.AddComponent<PoiFactory>();
 
 
-        var _symbolicInitHandler = world.AddComponent<SymbolFactory>();
-        _symbolicInitHandler.geojson = json;
-        _symbolicInitHandler.AddSymbols();
+        //var _symbolicInitHandler = world.AddComponent<SymbolFactory>();
+        //_symbolicInitHandler.geojson = json;
+        //_symbolicInitHandler.AddSymbols();
         #endregion
 
         #region TILE PLUGINS

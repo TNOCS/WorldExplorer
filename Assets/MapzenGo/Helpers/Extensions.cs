@@ -122,6 +122,7 @@ namespace MapzenGo.Helpers
             {"florist", PoiType.Florist},
             {"food_bank", PoiType.FoodBank},
             {"ford", PoiType.Ford},
+            {"forest", PoiType.Forest},
             {"fort", PoiType.Fort},
             {"foundation", PoiType.Foundation},
             {"fuel", PoiType.Fuel},

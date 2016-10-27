@@ -29,8 +29,7 @@ namespace MapzenGo.Models
             else
             {
                
-                transform.position = _target.position;// new 
-              //  transform.position = Camera.main.WorldToScreenPoint(_target.position);//old
+                transform.position = _target.position;
                 transform.localPosition = new Vector3(0, _target.localPosition.y+10, 0);
                 // RJ Turn the Pois according to the camera
                 transform.parent = _target.transform;

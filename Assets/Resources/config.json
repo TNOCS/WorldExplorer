@@ -10,11 +10,11 @@
     "MqttServer": "192.168.1.49",
     "MqttPort": "1883",
     "InitalView": {
-        "Lat": 53.298055,
-        "Lon": 5.062009,
+        "Lat": 52.458591,
+        "Lon": 5.103300,
         "Zoom": 17,
         "TileSize": 100,
-        "Range": 2,
+        "Range": 5,
         "Scale": 1
     }
 }

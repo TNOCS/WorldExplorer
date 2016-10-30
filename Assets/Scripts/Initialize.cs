@@ -8,20 +8,18 @@ public class Initialize : MonoBehaviour
     private GameObject terrain;
     // Use this for initialization
     private GameObject spatialMapping;
-    public GameObject _cursorFab;
+    private GameObject _cursorFab;
     private GameObject cursor;
     private AppState appState;
 
-
-    public float _latitude = 53.298482F;
-    public float _longitude = 5.070756F;
-    public int _range = 4;
-    public int _zoom = 17;
-    public int _TitleSize = 100;
+    private float _latitude;
+    private float _longitude;
+    private int _range;
+    private int _zoom;
+    //private int _TitleSize = 100;
     public string json = "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.070362091064453,           53.295336751980656         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
     void includeAnchorMovingScript()
     {
-
         var gazeGesture = terrain.AddComponent<GazeGestureManager>();
         var AnchorPlacemant = terrain.AddComponent<TapToPlaceParent>();
         spatialMapping = new GameObject("Spatial Mapping");
@@ -31,6 +29,7 @@ public class Initialize : MonoBehaviour
         var _spatial = spatialMapping.AddComponent<SpatialMapping>();
         _spatial.DrawMaterial = Resources.Load("Wireframe", typeof(Material)) as Material;
 
+        _cursorFab = Resources.Load("_cursor") as GameObject;
         cursor = (GameObject)Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
         cursor.name = "Cursor";
         var t = cursor.GetComponentInChildren<Transform>().Find("CursorMesh");
@@ -122,17 +121,17 @@ public class Initialize : MonoBehaviour
         water.transform.parent = factories.transform;
         var waterFactory = water.AddComponent<WaterFactory>();
 
-        //var boundary = new GameObject("BoundaryFactory");
-        //boundary.transform.parent = factories.transform;
-        //var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
+        var boundary = new GameObject("BoundaryFactory");
+        boundary.transform.parent = factories.transform;
+        var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
 
-        //var landuse = new GameObject("LanduseFactory");
-        //landuse.transform.parent = factories.transform;
-        //var landuseFactory = landuse.AddComponent<LanduseFactory>();
+        var landuse = new GameObject("LanduseFactory");
+        landuse.transform.parent = factories.transform;
+        var landuseFactory = landuse.AddComponent<LanduseFactory>();
 
-        //var places = new GameObject("PlacesFactory");
-        //places.transform.parent = factories.transform;
-        //var placesFactory = places.AddComponent<PlacesFactory>();
+        var places = new GameObject("PlacesFactory");
+        places.transform.parent = factories.transform;
+        var placesFactory = places.AddComponent<PlacesFactory>();
 
         var pois = new GameObject("PoiFactory");
         pois.transform.parent = factories.transform;

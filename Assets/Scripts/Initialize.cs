@@ -48,20 +48,13 @@ public class Initialize : MonoBehaviour
     {
         appState = AppState.Instance;
 
-
-
-        //foreach (GameObject go in Cars)
-        //{
-        //    go.GetComponent<MeshFilter>().mesh = carMesh;
-        //}
-
-
         // get config
         appState.LoadConfig();
         
         AddTerrain();
 
 
+        // includeAnchorMovingScript();
 
     }
 
@@ -69,12 +62,10 @@ public class Initialize : MonoBehaviour
     {
         var iv = appState.Config.InitalView;
 
-        terrain = new GameObject("terrain");
-        terrain.transform.position = new Vector3(0f, 0f, 0f);
-        
+        #region create map & terrain
 
-        // terrain.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
-        Vector3 pos = new Vector3(0f, 0f, 0f);
+        terrain = new GameObject("terrain");
+        terrain.transform.position = new Vector3(0f, 0f, 0f);        
 
         table = GameObject.CreatePrimitive(PrimitiveType.Cube);
         table.transform.position = new Vector3(0f, 0f, 3f);
@@ -85,25 +76,16 @@ public class Initialize : MonoBehaviour
         var map = new GameObject("Map");
         map.transform.parent = table.transform;
         map.transform.localPosition = new Vector3(0f, 0.5f, 0f);
-
-
-        //  _terrain.transform.localPosition = new Vector3(0.001875073f, 16.34f, 0.153019f);
+        
         var mapScale = mapScales[iv.Range-1];
         map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
-        //terrain.transform.position = new Vector3(0f, 0.3f, 2f);
 
+        #endregion       
+
+        #region init map
 
         world = new GameObject("World");
-        // world.transform.localScale= new Vector3(0.0005f, 0.0005f, 0.0005f);
-
-
         world.transform.parent = map.transform;
-
-       // includeAnchorMovingScript();
-
-
-
-
 
         // init map
         var tm = world.AddComponent<TileManager>();
@@ -114,7 +96,7 @@ public class Initialize : MonoBehaviour
         tm.TileSize = iv.TileSize;
         tm._key = "vector-tiles-dB21RAF";
 
-
+        #endregion
 
         #region UI
 

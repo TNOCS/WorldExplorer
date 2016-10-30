@@ -1,7 +1,11 @@
 ﻿{
     "Layers": [
         {
-            "Title": "base",
+            "Title": "Flooding",
+            "Url": "http://134.221.20.239:8101/2102363017",
+            "VoiceCommand": "flooding",
+            "UseTransparency": true,
+            "Height": 1.1,
             "Type": "tilelayer",
             "Enabled": true
         }
@@ -10,8 +14,8 @@
     "MqttServer": "192.168.1.49",
     "MqttPort": "1883",
     "InitalView": {
-        "Lat": 52.458591,
-        "Lon": 5.103300,
+        "Lat": 52.412557,
+        "Lon": 5.044641,
         "Zoom": 17,
         "TileSize": 100,
         "Range": 3,

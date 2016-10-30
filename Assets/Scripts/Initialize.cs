@@ -11,7 +11,8 @@ public class Initialize : MonoBehaviour
     public GameObject _cursorFab;
     private GameObject cursor;
     private AppState appState;
-
+    private GameObject table;
+    float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
 
     public float _latitude = 53.298482F;
     public float _longitude = 5.070756F;
@@ -31,13 +32,15 @@ public class Initialize : MonoBehaviour
         var _spatial = spatialMapping.AddComponent<SpatialMapping>();
         _spatial.DrawMaterial = Resources.Load("Wireframe", typeof(Material)) as Material;
 
-        cursor = (GameObject)Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
-        cursor.name = "Cursor";
-        var t = cursor.GetComponentInChildren<Transform>().Find("CursorMesh");
+        if (_cursorFab)
+        {
+            cursor = (GameObject)Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
+            cursor.name = "Cursor";
+            var t = cursor.GetComponentInChildren<Transform>().Find("CursorMesh");
 
-        var r = t.GetComponent<MeshRenderer>();
-        r.enabled = true;
-
+            var r = t.GetComponent<MeshRenderer>();
+            r.enabled = true;
+        }
 
 
     }
@@ -52,6 +55,10 @@ public class Initialize : MonoBehaviour
         //    go.GetComponent<MeshFilter>().mesh = carMesh;
         //}
 
+
+        // get config
+        appState.LoadConfig();
+        
         AddTerrain();
 
 
@@ -60,35 +67,46 @@ public class Initialize : MonoBehaviour
 
     protected void AddTerrain()
     {
-        terrain = new GameObject("Terrain");
+        var iv = appState.Config.InitalView;
+
+        terrain = new GameObject("terrain");
         terrain.transform.position = new Vector3(0f, 0f, 2f);
+        
 
-
+        // terrain.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
         Vector3 pos = new Vector3(0f, 0f, 0f);
 
-        #region table
+        table = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        table.transform.position = new Vector3(0F, 0F, 0f);
+        table.transform.localScale = new Vector3(iv.TableSize, iv.TableHeight, iv.TableSize);
+        table.transform.parent = terrain.transform;
 
-        GameObject _table = Resources.Load<GameObject>("table");
-        terrain.transform.localScale = new Vector3(0.002f, 0.002f, 0.002f);
-        //GameObject table = (GameObject)Instantiate(_table, terrain.transform);
-        //table.transform.localScale = new Vector3(200f, 200f, 200f);
-        var _terrain = new GameObject("MapTerrain");
-        _terrain.transform.parent = terrain.transform;
-        //GameObject _terrain = table.transform.FindChild("Location Terrain").gameObject;
-        //_terrain.transform.localPosition = new Vector3(0, 1f, 0);
-        //_terrain.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-        //_terrain.transform.localPosition = new Vector3(0.001875073f, 16.34f, 0.153019f);
-        // _terrain.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
+
+        var map = new GameObject("Map");
+        map.transform.parent = table.transform;
+        map.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+
+
+        //  _terrain.transform.localPosition = new Vector3(0.001875073f, 16.34f, 0.153019f);
+        var mapScale = mapScales[iv.Range-1];
+        map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
+        terrain.transform.position = new Vector3(0f, 0.3f, 2f);
+
+
         world = new GameObject("World");
-        world.transform.position = new Vector3(0f, 0.5f, 0f);
+        // world.transform.localScale= new Vector3(0.0005f, 0.0005f, 0.0005f);
 
-        world.transform.parent = _terrain.transform;
 
-        #endregion    
+        world.transform.parent = map.transform;
 
-        var tm = world.AddComponent<CachedTileManager>();
-        appState.LoadConfig();
-        var iv = appState.Config.InitalView;
+        includeAnchorMovingScript();
+
+
+
+
+
+        // init map
+        var tm = world.AddComponent<TileManager>();
         tm.Latitude = iv.Lat;
         tm.Longitude = iv.Lon;
         tm.Range = iv.Range;
@@ -96,7 +114,6 @@ public class Initialize : MonoBehaviour
         tm.TileSize = iv.TileSize;
         tm._key = "vector-tiles-dB21RAF";
 
-        includeAnchorMovingScript();
 
 
         #region UI
@@ -194,6 +211,7 @@ public class Initialize : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // world.transform.localScale = new Vector3(0.001F, 0.001F, 0.001F);
+        //world.transform.localScale = new Vector3(0.001F, 0.001F, 0.001F);
+        world.transform.localPosition = new Vector3(0,0,0);
     }
 }

@@ -43,28 +43,30 @@ public class Layer
 
 public class ViewState
 {
-    public void FromJson(JSONObject json)
-    {
-        Lat = json.GetFloat("Lat");
-        Lon = json.GetFloat("Lon");
-        Zoom = json.GetInt("Zoom");
-        Scale = json.GetInt("Scale");
-        Range = json.GetInt("Range");
-        TileSize = json.GetInt("TileSize");
+   
+        public void FromJson(JSONObject json)
+        {
+            Lat = json.GetFloat("Lat");
+            Lon = json.GetFloat("Lon");
+            Zoom = json.GetInt("Zoom");
+            Scale = json.GetInt("Scale");
+            Range = json.GetInt("Range");
+            TileSize = json.GetInt("TileSize");
+            TableSize = json.GetFloat("TableSize");
+            TableHeight = json.GetFloat("TableHeight");
+        }
+
+        public float Lat { get; set; }
+        public float Lon { get; set; }
+        public int Zoom { get; set; }
+        public int Scale { get; set; }
+        public int Range { get; set; }
+        public int TileSize { get; set; }
+        public float TableSize { get; set; }
+        public float TableHeight { get; set; }
+
     }
 
-    public float Lat { get; set; }
-    public float Lon { get; set; }
-    public int Zoom { get; set; }
-    public int Scale { get; set; }
-    public int Range { get; set; }
-    public int TileSize { get; set; }
-
-    // center
-    // scale
-    // zoom
-    // range
-}
 
 public class AppConfig
 {

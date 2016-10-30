@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44692558, g: 0.49678743, b: 0.57508624, a: 1}
+  m_IndirectSpecularColor: {r: 0.44692492, g: 0.4967869, b: 0.57508546, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -102,7 +102,7 @@ GameObject:
   - 92: {fileID: 1078205179}
   - 124: {fileID: 1078205178}
   - 81: {fileID: 1078205177}
-  - 114: {fileID: 1078205182}
+  - 114: {fileID: 1078205183}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -178,7 +178,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
---- !u!114 &1078205182
+--- !u!114 &1078205183
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -192,7 +192,7 @@ MonoBehaviour:
   _cursorFab: {fileID: 154114, guid: 3d36822bbe4f6634eba3ba9cf2488b4c, type: 2}
   _latitude: 53.29848
   _longitude: 5.070756
-  _range: 10
+  _range: 4
   _zoom: 17
   _TitleSize: 100
   json: "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\":

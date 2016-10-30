@@ -11,7 +11,8 @@ public class PlacesFactory : MapzenGo.Models.Factories.PlacesFactory
         _labelPrefab = Resources.Load("Place", typeof(GameObject)) as GameObject;
         _container = GameObject.Find("PlaceContainer");
 
-        var pfs = new PlacesFactorySettings();
+        var pfs = ScriptableObject.CreateInstance("PlacesFactorySettings") as PlacesFactorySettings;
+
         pfs.DefaultPlace = createPlaceSettings(PlaceType.Unknown, 16, Color.white, Color.black);
         pfs.SettingsPlace = new System.Collections.Generic.List<PlaceSettings> {
             createPlaceSettings(PlaceType.Borough, 12, Color.white, Color.black),

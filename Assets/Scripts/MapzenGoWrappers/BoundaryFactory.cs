@@ -8,8 +8,9 @@ public class BoundaryFactory : MapzenGo.Models.Factories.BoundaryFactory {
 		MergeMeshes = true;
 		Order = 5;
 
-		var bfs = new BoundaryFactorySettings();
-		bfs.DefaultBoundary = createBoundarySettings(BoundaryType.Unknown, 1, "Default");
+        var bfs = ScriptableObject.CreateInstance("BoundaryFactorySettings") as BoundaryFactorySettings;
+
+        bfs.DefaultBoundary = createBoundarySettings(BoundaryType.Unknown, 1, "Default");
 
 		bfs.SettingsBoundary = new System.Collections.Generic.List<BoundarySettings> {
             createBoundarySettings(BoundaryType.City_Wall, 1, "Default"),

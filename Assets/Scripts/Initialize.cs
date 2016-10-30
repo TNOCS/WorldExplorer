@@ -34,18 +34,12 @@ public class Initialize : MonoBehaviour
         cursor = (GameObject)Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
         cursor.name = "Cursor";
         var t = cursor.GetComponentInChildren<Transform>().Find("CursorMesh");
-
         var r = t.GetComponent<MeshRenderer>();
         r.enabled = true;
-
-
-
     }
     void Start()
     {
         appState = AppState.Instance;
-
-
 
         //foreach (GameObject go in Cars)
         //{
@@ -53,23 +47,17 @@ public class Initialize : MonoBehaviour
         //}
 
         AddTerrain();
-
-
-
     }
 
     protected void AddTerrain()
     {
         terrain = new GameObject("Terrain");
-        terrain.transform.position = new Vector3(0f, 0f, 2f);
-
-
-        Vector3 pos = new Vector3(0f, 0f, 0f);
+        terrain.transform.position = new Vector3(0f, 0f, 1f);
 
         #region table
 
         GameObject _table = Resources.Load<GameObject>("table");
-        terrain.transform.localScale = new Vector3(0.002f, 0.002f, 0.002f);
+        terrain.transform.localScale = new Vector3(1f, 1f, 1f);
         //GameObject table = (GameObject)Instantiate(_table, terrain.transform);
         //table.transform.localScale = new Vector3(200f, 200f, 200f);
         var _terrain = new GameObject("MapTerrain");
@@ -78,9 +66,9 @@ public class Initialize : MonoBehaviour
         //_terrain.transform.localPosition = new Vector3(0, 1f, 0);
         //_terrain.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
         //_terrain.transform.localPosition = new Vector3(0.001875073f, 16.34f, 0.153019f);
-        // _terrain.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
+        _terrain.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         world = new GameObject("World");
-        world.transform.position = new Vector3(0f, 0.5f, 0f);
+        //world.transform.position = new Vector3(0f, 0.5f, 0f);
 
         world.transform.parent = _terrain.transform;
 
@@ -134,17 +122,17 @@ public class Initialize : MonoBehaviour
         water.transform.parent = factories.transform;
         var waterFactory = water.AddComponent<WaterFactory>();
 
-        var boundary = new GameObject("BoundaryFactory");
-        boundary.transform.parent = factories.transform;
-        var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
+        //var boundary = new GameObject("BoundaryFactory");
+        //boundary.transform.parent = factories.transform;
+        //var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
 
-        var landuse = new GameObject("LanduseFactory");
-        landuse.transform.parent = factories.transform;
-        var landuseFactory = landuse.AddComponent<LanduseFactory>();
+        //var landuse = new GameObject("LanduseFactory");
+        //landuse.transform.parent = factories.transform;
+        //var landuseFactory = landuse.AddComponent<LanduseFactory>();
 
-        var places = new GameObject("PlacesFactory");
-        places.transform.parent = factories.transform;
-        var placesFactory = places.AddComponent<PlacesFactory>();
+        //var places = new GameObject("PlacesFactory");
+        //places.transform.parent = factories.transform;
+        //var placesFactory = places.AddComponent<PlacesFactory>();
 
         var pois = new GameObject("PoiFactory");
         pois.transform.parent = factories.transform;
@@ -177,6 +165,11 @@ public class Initialize : MonoBehaviour
         mapImage.transform.parent = tilePlugins.transform;
         var mapImagePlugin = mapImage.AddComponent<MapImagePlugin>();
         mapImagePlugin.TileService = MapImagePlugin.TileServices.Default;
+
+        var tileLayer = new GameObject("TileLayer");
+        tileLayer.transform.parent = tilePlugins.transform;
+        var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
+        tileLayerPlugin.tileLayers = appState.Config.Layers;
 
         #endregion
 

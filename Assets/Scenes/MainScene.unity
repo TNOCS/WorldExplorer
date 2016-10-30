@@ -99,6 +99,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 607155681}
   - 108: {fileID: 607155680}
+  - 114: {fileID: 1078205183}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged

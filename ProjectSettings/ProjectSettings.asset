@@ -4,13 +4,13 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 8
-  productGUID: e73cb38b407a3434683de2a5cc4dcfae
+  productGUID: 7450e8f9a823a9e4299d126f47759bff
   AndroidProfiler: 0
   defaultScreenOrientation: 4
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: TNO
+  companyName: DefaultCompany
   productName: WorldExplorer
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}

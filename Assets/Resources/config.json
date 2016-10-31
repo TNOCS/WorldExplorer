@@ -14,8 +14,8 @@
     "MqttServer": "192.168.1.49",
     "MqttPort": "1883",
     "InitalView": {
-        "Lat": 52.412557,
-        "Lon": 5.044641,
+        "Lat": 52.079585,
+        "Lon": 4.312157,
         "Zoom": 17,
         "TileSize": 100,
         "Range": 3,

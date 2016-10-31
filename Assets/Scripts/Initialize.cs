@@ -72,7 +72,6 @@ public class Initialize : MonoBehaviour
         map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
         #endregion       
-
         #region init map
 
         world = new GameObject("World");
@@ -112,9 +111,9 @@ public class Initialize : MonoBehaviour
         buildings.transform.SetParent(factories.transform, false);
         var buildingFactory = buildings.AddComponent<BuildingFactory>();
 
-        var flatBuildings = new GameObject("FlatBuildingFactory");
-        flatBuildings.transform.SetParent(factories.transform, false);
-        var flatBuildingFactory = flatBuildings.AddComponent<FlatBuildingFactory>();
+        //var flatBuildings = new GameObject("FlatBuildingFactory");
+        //flatBuildings.transform.SetParent(factories.transform, false);
+        //var flatBuildingFactory = flatBuildings.AddComponent<FlatBuildingFactory>();
 
         var roads = new GameObject("RoadFactory");
         roads.transform.SetParent(factories.transform, false);
@@ -124,17 +123,17 @@ public class Initialize : MonoBehaviour
         water.transform.SetParent(factories.transform, false);
         var waterFactory = water.AddComponent<WaterFactory>();
 
-        var boundary = new GameObject("BoundaryFactory");
-        boundary.transform.SetParent(factories.transform, false);
-        var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
+        //var boundary = new GameObject("BoundaryFactory");
+        //boundary.transform.SetParent(factories.transform, false);
+        //var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
 
-        var landuse = new GameObject("LanduseFactory");
-        landuse.transform.SetParent(factories.transform, false);
-        var landuseFactory = landuse.AddComponent<LanduseFactory>();
+        //var landuse = new GameObject("LanduseFactory");
+        //landuse.transform.SetParent(factories.transform, false);
+        //var landuseFactory = landuse.AddComponent<LanduseFactory>();
 
-        var places = new GameObject("PlacesFactory");
-        places.transform.SetParent(factories.transform, false);
-        var placesFactory = places.AddComponent<PlacesFactory>();
+        //var places = new GameObject("PlacesFactory");
+        //places.transform.SetParent(factories.transform, false);
+        //var placesFactory = places.AddComponent<PlacesFactory>();
 
         var pois = new GameObject("PoiFactory");
         pois.transform.SetParent(factories.transform, false);
@@ -168,10 +167,10 @@ public class Initialize : MonoBehaviour
         var mapImagePlugin = mapImage.AddComponent<MapImagePlugin>();
         mapImagePlugin.TileService = MapImagePlugin.TileServices.Default;
 
-        var tileLayer = new GameObject("TileLayer");
-        tileLayer.transform.SetParent(tilePlugins.transform, false);
-        var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
-        tileLayerPlugin.tileLayers = appState.Config.Layers;
+        //var tileLayer = new GameObject("TileLayer");
+        //tileLayer.transform.SetParent(tilePlugins.transform, false);
+        //var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
+        //tileLayerPlugin.tileLayers = appState.Config.Layers;
 
         #endregion
 

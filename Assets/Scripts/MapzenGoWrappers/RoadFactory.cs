@@ -9,7 +9,7 @@ public class RoadFactory : MapzenGo.Models.Factories.RoadFactory {
 	public override void Start () {
         Order = 1;
         MergeMeshes = true;
-        var rfs = new RoadFactorySettings();
+        var rfs = ScriptableObject.CreateInstance("RoadFactorySettings") as RoadFactorySettings;
 
         rfs.DefaultRoad = createRoadSettings(RoadType.Unknown, 3, "RoadMaterial/Road");
 

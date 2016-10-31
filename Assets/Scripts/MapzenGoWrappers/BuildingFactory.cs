@@ -10,11 +10,12 @@ public class BuildingFactory : MapzenGo.Models.Factories.BuildingFactory {
         Order = 2;
         MergeMeshes = true;
         _useTriangulationNet = true;
-        
+
 
         //var appState = AppStateSettings.Instance;
         //FactorySettings = appState.BuildingFactorySettings;
-        var bfs = new BuildingFactorySettings();
+        var bfs = ScriptableObject.CreateInstance("BuildingFactorySettings") as BuildingFactorySettings;
+        //var bfs = new BuildingFactorySettings();
         bfs.DefaultBuilding = createBuildingSettings(BuildingType.Unknown, 3, 6, "Default");
 
         bfs.SettingsBuildings = new System.Collections.Generic.List<BuildingSettings> {

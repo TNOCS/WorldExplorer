@@ -11,7 +11,7 @@ public class LanduseFactory : MapzenGo.Models.Factories.LanduseFactory
     {
         Order = 1.5F;
         MergeMeshes = true;
-        var lfs = new LanduseFactorySettings();
+        var lfs = ScriptableObject.CreateInstance("LanduseFactorySettings") as LanduseFactorySettings;
 
         //lfs.DefaultLanduse = createLanduseSettings(LanduseKind.Unknown, "Default");
 

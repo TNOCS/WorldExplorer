@@ -12,7 +12,7 @@ public class FlatBuildingFactory : MapzenGo.Models.Factories.FlatBuildingFactory
         MergeMeshes = true;
         Order = 1;
 
-        var bfs = new BuildingFactorySettings();
+        var bfs = ScriptableObject.CreateInstance("BuildingFactorySettings") as BuildingFactorySettings;
         bfs.DefaultBuilding = createBuildingSettings(BuildingType.Unknown, 3, 6, "Default");
 
         bfs.SettingsBuildings = new System.Collections.Generic.List<BuildingSettings> {

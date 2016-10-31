@@ -99,7 +99,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 607155681}
   - 108: {fileID: 607155680}
-  - 114: {fileID: 1078205183}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -193,6 +192,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2035550, guid: b84b73491ac53a34095000876132a211, type: 2}
+      propertyPath: near clip plane
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2035550, guid: b84b73491ac53a34095000876132a211, type: 2}
+      propertyPath: far clip plane
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b84b73491ac53a34095000876132a211, type: 2}
   m_IsPrefabParent: 0
@@ -236,12 +243,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db9e75eca6c2283419dbff40b68ffbc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cursorFab: {fileID: 154114, guid: 3d36822bbe4f6634eba3ba9cf2488b4c, type: 2}
-  _latitude: 53.29848
-  _longitude: 5.070756
-  _range: 4
-  _zoom: 17
-  _TitleSize: 100
   json: "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\":
     {         \"type\": \"Point\",         \"coordinates\": [           5.070362091064453,
     \          53.295336751980656         ]       },       \"type\": \"Feature\",

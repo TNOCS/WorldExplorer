@@ -10,7 +10,8 @@ public class PoiFactory : MapzenGo.Models.Factories.PoiFactory {
         _labelPrefab = Resources.Load("Poi", typeof(GameObject)) as GameObject;
         _container = GameObject.Find("PoiContainer");
 
-        var pfs = new PoiFactorySettings();
+        var pfs = ScriptableObject.CreateInstance("PoiFactorySettings") as PoiFactorySettings;
+
         pfs.DefaultPoi = createPoiSettings(PoiType.Unknown, "Textures/poi_icons_18@2x_139");
 
         pfs.SettingsPoi = new System.Collections.Generic.List<PoiSettings> {

@@ -54,6 +54,20 @@ namespace MapzenGo.Models
             transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
         }
 
+        public void UpdateView()
+        {
+            var v2 = GM.LatLonToMeters(Latitude, Longitude);
+            var tile = GM.MetersToTile(v2, Zoom);
+
+            CenterTms = tile;
+            CenterInMercator = GM.TileBounds(CenterTms, Zoom).Center;
+
+            LoadTiles(CenterTms, CenterInMercator);
+
+            var rect = GM.TileBounds(CenterTms, Zoom);
+            transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
+        }
+
         public virtual void Update()
         {
             

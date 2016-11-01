@@ -11,8 +11,8 @@
         }
     ],
     "TileServer": "",
-    "MqttServer": "192.168.1.49",
-    "MqttPort": "1883",
+    "MqttServer": "cool3.sensorlab.tno.nl",
+    "MqttPort": "8026",
     "InitalView": {
         "Lat": 52.079585,
         "Lon": 4.312157,

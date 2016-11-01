@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using MapzenGo.Models;
 using MapzenGo.Models.Plugins;
+using System;
+using System.Text;
 
 public class Initialize : MonoBehaviour
 {
@@ -40,11 +42,70 @@ public class Initialize : MonoBehaviour
 
     void Start()
     {
+        var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
+
         appState = AppState.Instance;
         appState.LoadConfig();
         
         AddTerrain();
+#if (NETFX_CORE)
+        InitMqtt();
+#endif
         // includeAnchorMovingScript();
+    }
+#if (NETFX_CORE)
+    protected void InitMqtt()
+    {
+        var client = new uPLibrary.Networking.M2Mqtt.MqttClient(appState.Config.MqttServer, int.Parse(appState.Config.MqttPort), false);
+        try
+        {
+            client.Connect("holoclient");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error connecting to mqtt");
+        }
+        if (client.IsConnected)
+        {
+            // register to message received 
+            client.MqttMsgPublishReceived += (sender, e) =>
+            {                
+                UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                {
+                    var msg = Encoding.UTF8.GetString(e.Message);
+                    switch (e.Topic)
+                    {
+                        case "view":
+                            setView(msg);
+                            break;
+                    }
+                    GameObject _3dText = GameObject.Find("tbTemp");
+                    _3dText.GetComponent<TextMesh>().text = msg;
+                });
+            };
+
+            //// subscribe to the topic "/home/temperature" with QoS 2 
+            client.Subscribe(new string[] { "view" }, new byte[] { uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+        }
+
+    }
+#endif
+
+    protected void setView(string msg)
+    {
+        var view = new JSONObject(msg);
+        var iv = appState.Config.InitalView;
+        iv.Lat = view.GetFloat("Lat");
+        iv.Lon = view.GetFloat("Lon");
+        iv.Zoom = view.GetInt("Zoom");
+        if (appState.TileManager)
+        {
+            appState.TileManager.Latitude = iv.Lat;
+            appState.TileManager.Longitude = iv.Lon;
+            appState.TileManager.Zoom = iv.Zoom;
+
+            appState.TileManager.Start();
+        }
     }
 
     protected void AddTerrain()
@@ -85,6 +146,8 @@ public class Initialize : MonoBehaviour
         tm.Zoom = iv.Zoom;
         tm.TileSize = iv.TileSize;
         tm._key = "vector-tiles-dB21RAF";
+        
+        appState.TileManager = tm;
 
         #endregion
 

@@ -13,13 +13,14 @@ using Assets.Scripts.App6;
 using MapzenGo.Helpers;
 using MapzenGo.Models;
 using Assets.Scripts.MapzenGoWrappers;
+using MapzenGo.Helpers.VectorD;
 
 public class SymbolFactory : MonoBehaviour
 {
 
 
 
- 
+
 
 
     [System.Serializable]
@@ -85,7 +86,122 @@ public class SymbolFactory : MonoBehaviour
     protected Transform symbolHost;
     protected Vector2d CenterTms; //tms tile coordinate
     protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
+    private Vector3 center;
+    protected List<Vector2d> SymbolTiles;
+    /// <summary>
+    /// Build the symbol layer
+    /// </summary>
+    public void AddSymbols()
+    {
 
+        string encodedString = geojson;
+
+        var geoJson = loadGeoJson(encodedString);
+
+
+        SymbolTiles = new List<Vector2d>();
+        // setText(geoJson.features.Count + " features");
+        var v2 = GM.LatLonToMeters(Latitude, Longitude);
+        var tile = GM.MetersToTile(v2, zoom);
+
+        //center of main symbolholder object
+        CenterTms = tile;
+        //bouding box
+        CenterInMercator = GM.TileBounds(CenterTms, zoom).Center;
+
+        CreateSymbolTiles(CenterTms, CenterInMercator);
+        // set symbol holder scale
+        var rect = GM.TileBounds(CenterTms, zoom);
+        transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
+        center = rect.Center.ToVector3();
+
+    }
+
+
+    private void CreateSymbolTiles(Vector2d CenterTms, Vector2d CenterInMercator)
+    {
+
+        string baseUrl = "http://gamelab.tno.nl/Missieprep/";
+        if (geoJson.features != null)
+        {
+            for (int i = -Range; i <= Range; i++)
+            {
+                for (int j = -Range; j <= Range; j++)
+                {
+                    ///Make an Dicionary of displayed titels as to check later if a symbol should be rendered.
+                    var v = new Vector2d(CenterTms.x + i, CenterTms.y + j);
+                    if (SymbolTiles.Contains(v))
+                        continue;
+                    var rect = GM.TileBounds(v, zoom);
+                    SymbolTiles.Add(v);
+                }
+            }
+
+            //fill newly created tiles with symbols if present
+            foreach (Feature c in geoJson.features)
+            {
+                StartCoroutine(createSymbols(c, baseUrl));
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// Loads the image data from the web and creates a symbol
+    /// </summary>
+    /// <param name="c">the GEOJSON point</param>
+    /// <param name="baseUrl"> link to the baselocation of the images</param>
+    /// <returns></returns>
+    IEnumerator createSymbols(Feature c, string baseUrl)
+    {
+        if (c.properties["symbol"] == null)
+            yield return null;
+        string web = baseUrl + c.properties["symbol"].ToString().Replace(@"""", "");
+        WWW www = new WWW(web);
+        yield return www;
+
+        // Check if the point is  in the displayed tile area if so continue
+        if (SymbolTiles.Contains(c.tilePoint))
+        {
+
+            var go = new GameObject("Symbol");
+            var dotMerc = GM.LatLonToMeters(c.cor[1].f, c.cor[0].f);
+            var localMercPos = (dotMerc - CenterInMercator);
+            go.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
+
+            var target = new GameObject("symbol-Target");
+            target.transform.position = localMercPos.ToVector3();
+            target.transform.SetParent(transform, false);
+
+            var symbol = go.AddComponent<Symbol>();
+            go.name = "symbol-" + c.properties["id"];
+            var sprite = go.AddComponent<SpriteRenderer>();
+            sprite.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+            symbol.Stick(target.transform);
+            symbol.transform.SetParent(target.transform, true);
+            go.transform.localScale = new Vector3(10, 10);
+        }
+
+
+    }
+    Vector2d parseTile(JSONObject coords)
+    {
+        Vector2d result = new Vector2d();
+
+        if (coords == null) return result;
+
+
+
+        var lat = float.Parse(coords.list[1].ToString());
+
+        var lon = float.Parse(coords.list[0].ToString());
+
+        var mp = GM.LatLonToMeters(new Vector2d(lat, lon));
+
+        mp = GM.MetersToTile(mp, zoom);
+        result = mp;
+        return result;
+    }
     /// <summary>
     /// Parse GEO JSON text to Object
     /// </summary>
@@ -150,134 +266,6 @@ public class SymbolFactory : MonoBehaviour
         return geoJson;
 
     }
-    private Vector3 center;
-    protected Dictionary<Vector2d, Tile> SymbolTiles;
-    /// <summary>
-    /// Build the symbol layer
-    /// </summary>
-    public void AddSymbols()
-    {
-
-        string encodedString = geojson;
-
-        var geoJson = loadGeoJson(encodedString);
-
-
-        SymbolTiles = new Dictionary<Vector2d, Tile>();
-        // setText(geoJson.features.Count + " features");
-        symbolHost = new GameObject("SymbolLayer").transform;
-        symbolHost.SetParent(transform, false);
-
-        var v2 = GM.LatLonToMeters(Latitude, Longitude);
-        var tile = GM.MetersToTile(v2, zoom);
-
-        //center of main symbolholder object
-        CenterTms = tile;
-        //bouding box
-        CenterInMercator = GM.TileBounds(CenterTms, zoom).Center;
-
-        CreateSymbolTiles(CenterTms, CenterInMercator);
-        // set symbol holder scale
-        var rect = GM.TileBounds(CenterTms, zoom);
-        transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
-        center = rect.Center.ToVector3();
-
-    }
-
-
-    private void CreateSymbolTiles(Vector2d CenterTms, Vector2d CenterInMercator)
-    {
-
-        string baseUrl = "http://gamelab.tno.nl/Missieprep/";
-        if (geoJson.features != null)
-        {
-            for (int i = -Range; i <= Range; i++)
-            {
-                for (int j = -Range; j <= Range; j++)
-                {
-                    var v = new Vector2d(CenterTms.x + i, CenterTms.y + j);
-                    if (SymbolTiles.ContainsKey(v))
-                        continue;
-                    var rect = GM.TileBounds(v, zoom);
-                    var tile = new GameObject("symbol-tile-" + v.x + "-" + v.y).AddComponent<Tile>();
-
-                    tile.Zoom = zoom;
-                    tile.TileTms = v;
-                    tile.TileCenter = rect.Center;
-                    tile.Rect = GM.TileBounds(v, zoom);
-                    SymbolTiles.Add(v, tile);
-                    tile.transform.position = (rect.Center - CenterInMercator).ToVector3();
-                    tile.transform.SetParent(symbolHost, false);
-
-
-                }
-            }
-
-            //fill newly created tiles with symbols if present
-            foreach (Feature c in geoJson.features)
-            {
-                StartCoroutine(createSymbols(c, baseUrl));
-            }
-        }
-
-    }
-
-    /// <summary>
-    /// Loads the image data from the web and creates a symbol
-    /// </summary>
-    /// <param name="c">the GEOJSON point</param>
-    /// <param name="baseUrl"> link to the baselocation of the images</param>
-    /// <returns></returns>
-    IEnumerator createSymbols(Feature c, string baseUrl)
-    {
-        if (c.properties["symbol"] == null)
-            yield return null;
-        string web = baseUrl + c.properties["symbol"].ToString().Replace(@"""", "");
-        WWW www = new WWW(web);
-        yield return www;
-
-        // Check if the point is  in the displayed tile area if so continue
-        if (SymbolTiles.ContainsKey(c.tilePoint))
-        {
-            var tile = SymbolTiles[c.tilePoint];
-            var go = new GameObject("Symbol");
-            var dotMerc = GM.LatLonToMeters(c.cor[1].f, c.cor[0].f);
-            var localMercPos = dotMerc - tile.Rect.Center;
-            go.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
-
-            var target = new GameObject("symbol-Target");
-            target.transform.position = localMercPos.ToVector3();
-            target.transform.SetParent(tile.transform, false);
-
-            var symbol = go.AddComponent<Symbol>();
-            go.name = "symbol-" + c.properties["id"];
-            var sprite = go.AddComponent<SpriteRenderer>();
-            sprite.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-            symbol.Stick(target.transform);
-            symbol.transform.SetParent(target.transform, true);
-        }
-
-        
-    }
-    Vector2d parseTile(JSONObject coords)
-    {
-        Vector2d result = new Vector2d();
-
-        if (coords == null) return result;
-
-
-
-        var lat = float.Parse(coords.list[1].ToString());
-
-        var lon = float.Parse(coords.list[0].ToString());
-
-        var mp = GM.LatLonToMeters(new Vector2d(lat, lon));
-
-        mp = GM.MetersToTile(mp, zoom);
-        result = mp;
-        return result;
-    }
-
 
 
 

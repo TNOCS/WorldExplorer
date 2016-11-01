@@ -8,12 +8,18 @@ public class Initialize : MonoBehaviour
 {
     private GameObject world;
     private GameObject terrain;
+    private GameObject table;
+
+
+    private GameObject Layers;
+    private GameObject SymbolMap;
+    private GameObject Symboltable;
     // Use this for initialization
     private GameObject spatialMapping;
     private GameObject _cursorFab;
     private GameObject cursor;
     private AppState appState;
-    private GameObject table;
+
     float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
     public string json = "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.070362091064453,           53.295336751980656         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
 
@@ -46,12 +52,12 @@ public class Initialize : MonoBehaviour
 
         appState = AppState.Instance;
         appState.LoadConfig();
-        
+
         AddTerrain();
 #if (NETFX_CORE)
         InitMqtt();
 #endif
-        // includeAnchorMovingScript();
+        includeAnchorMovingScript();
     }
 #if (NETFX_CORE)
     protected void InitMqtt()
@@ -115,7 +121,8 @@ public class Initialize : MonoBehaviour
         #region create map & terrain
 
         terrain = new GameObject("terrain");
-        terrain.transform.position = new Vector3(0f, 0f, 0f);        
+        terrain.transform.position = new Vector3(0f, 0f, 0f);
+
 
         table = GameObject.CreatePrimitive(PrimitiveType.Cube);
         table.transform.position = new Vector3(0f, 0f, 3f);
@@ -146,7 +153,7 @@ public class Initialize : MonoBehaviour
         tm.Zoom = iv.Zoom;
         tm.TileSize = iv.TileSize;
         tm._key = "vector-tiles-dB21RAF";
-        
+
         appState.TileManager = tm;
 
         #endregion
@@ -167,6 +174,7 @@ public class Initialize : MonoBehaviour
 
         #region FACTORIES
 
+        #region defaultfactories
         var factories = new GameObject("Factories");
         factories.transform.SetParent(world.transform, false);
 
@@ -201,22 +209,24 @@ public class Initialize : MonoBehaviour
         var pois = new GameObject("PoiFactory");
         pois.transform.SetParent(factories.transform, false);
         var poisFactory = pois.AddComponent<PoiFactory>();
+        #endregion
 
 
-        //var _symbolicInitHandler = world.AddComponent<SymbolFactory>();
-        //_symbolicInitHandler.geojson = json;
-        //_symbolicInitHandler.AddSymbols();
-        //var _symbolicInitHandler = new GameObject("SymbolFactory");
-        //_symbolicInitHandler.transform.localScale = terrain.transform.localScale;
-        ////_symbolicInitHandler.transform.SetParent(factories.transform, false);
-        //var symbolFactory = _symbolicInitHandler.AddComponent<SymbolFactory>();
-        //symbolFactory.geojson = json;
-        //symbolFactory.zoom = iv.Zoom;
-        //symbolFactory.Latitude = iv.Lat;
-        //symbolFactory.Longitude = iv.Lon;
-        //symbolFactory.TileSize = iv.TileSize;
-        //symbolFactory.Range = iv.Range;
-        //symbolFactory.AddSymbols();
+        SymbolMap = new GameObject("Layers");
+        SymbolMap.transform.SetParent(table.transform);
+        SymbolMap.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+        SymbolMap.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
+
+        var Symbolworld = new GameObject("Symbols");
+        Symbolworld.transform.SetParent(SymbolMap.transform, false);
+        var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
+        symbolFactory.geojson = json;
+        symbolFactory.zoom = iv.Zoom;
+        symbolFactory.Latitude = iv.Lat;
+        symbolFactory.Longitude = iv.Lon;
+        symbolFactory.TileSize = iv.TileSize;
+        symbolFactory.Range = iv.Range;
+        symbolFactory.AddSymbols();
 
         #endregion
 

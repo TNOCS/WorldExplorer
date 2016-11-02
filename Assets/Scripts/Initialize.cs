@@ -55,9 +55,9 @@ public class Initialize : MonoBehaviour
 
         AddTerrain();
 #if (NETFX_CORE)
-        InitMqtt();
+        //InitMqtt();
 #endif
-        includeAnchorMovingScript();
+       // includeAnchorMovingScript();
     }
 #if (NETFX_CORE)
     protected void InitMqtt()
@@ -125,7 +125,7 @@ public class Initialize : MonoBehaviour
 
 
         table = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        table.transform.position = new Vector3(0f, 0f, 3f);
+        table.transform.position = new Vector3(0f, 0f, 4f);
         table.transform.localScale = new Vector3(iv.TableSize, iv.TableHeight, iv.TableSize);
         table.transform.SetParent(terrain.transform, false);
 
@@ -138,6 +138,8 @@ public class Initialize : MonoBehaviour
         if (i > mapScales.Length) i = mapScales.Length;
         var mapScale = mapScales[i - 1];
         map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
+
+        
 
         #endregion       
         #region init map
@@ -155,6 +157,8 @@ public class Initialize : MonoBehaviour
         tm._key = "vector-tiles-dB21RAF";
 
         appState.TileManager = tm;
+
+      
 
         #endregion
 
@@ -181,6 +185,8 @@ public class Initialize : MonoBehaviour
         var buildings = new GameObject("BuildingFactory");
         buildings.transform.SetParent(factories.transform, false);
         var buildingFactory = buildings.AddComponent<BuildingFactory>();
+
+
 
         //var flatBuildings = new GameObject("FlatBuildingFactory");
         //flatBuildings.transform.SetParent(factories.transform, false);
@@ -264,7 +270,7 @@ public class Initialize : MonoBehaviour
         if (world != null)
         {
             //world.transform.localScale = new Vector3(0.001F, 0.001F, 0.001F);
-            world.transform.localPosition = new Vector3(0, 0, 0);
+            //world.transform.localPosition = new Vector3(0, 0, 0);
         }
     }
 }

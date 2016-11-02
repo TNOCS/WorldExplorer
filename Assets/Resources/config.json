@@ -14,11 +14,11 @@
     "MqttServer": "cool3.sensorlab.tno.nl",
     "MqttPort": "8026",
     "InitalView": {
-        "Lat": 52.079585,
-        "Lon": 4.312157,
+        "Lat": 53.294950,
+        "Lon": 5.068851,
         "Zoom": 17,
         "TileSize": 100,
-        "Range": 3,
+        "Range": 5,
       "Scale": 1,
        "TableSize": 1,
       "TableHeight" :  1 

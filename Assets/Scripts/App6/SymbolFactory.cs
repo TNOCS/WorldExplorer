@@ -14,7 +14,7 @@ using MapzenGo.Helpers;
 using MapzenGo.Models;
 using Assets.Scripts.MapzenGoWrappers;
 using MapzenGo.Helpers.VectorD;
-
+using UnityEngine.UI;
 public class SymbolFactory : MonoBehaviour
 {
 
@@ -70,6 +70,7 @@ public class SymbolFactory : MonoBehaviour
     public string geojson;
     private GeoJson geoJson = new GeoJson();
 
+    public string baseUrl;
     #region tilemangerproperties
     [SerializeField]
     public float Latitude = 39.921864f;
@@ -84,9 +85,14 @@ public class SymbolFactory : MonoBehaviour
     #endregion
     //parent object (layer)
     protected Transform symbolHost;
+    protected GameObject _symbolInfo;
     protected Vector2d CenterTms; //tms tile coordinate
     protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
     private Vector3 center;
+    void Awake()
+    {
+        _symbolInfo = Resources.Load("_symbolInfo") as GameObject;
+    }
     protected List<Vector2d> SymbolTiles;
     /// <summary>
     /// Build the symbol layer
@@ -121,7 +127,6 @@ public class SymbolFactory : MonoBehaviour
     private void CreateSymbolTiles(Vector2d CenterTms, Vector2d CenterInMercator)
     {
 
-        string baseUrl = "http://gamelab.tno.nl/Missieprep/";
         if (geoJson.features != null)
         {
             for (int i = -Range; i <= Range; i++)
@@ -164,22 +169,53 @@ public class SymbolFactory : MonoBehaviour
         if (SymbolTiles.Contains(c.tilePoint))
         {
 
-            var go = new GameObject("Symbol");
-            var dotMerc = GM.LatLonToMeters(c.cor[1].f, c.cor[0].f);
-            var localMercPos = (dotMerc - CenterInMercator);
-            go.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
 
-            var target = new GameObject("symbol-Target");
-            target.transform.position = localMercPos.ToVector3();
-            target.transform.SetParent(transform, false);
+            if (_symbolInfo)
+            {
+                string symbolname = "symbol-" + c.properties["id"];
+                var target = new GameObject("Symbol-target");
 
-            var symbol = go.AddComponent<Symbol>();
-            go.name = "symbol-" + c.properties["id"];
-            var sprite = go.AddComponent<SpriteRenderer>();
-            sprite.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-            symbol.Stick(target.transform);
-            symbol.transform.SetParent(target.transform, true);
-            go.transform.localScale = new Vector3(10, 10);
+
+                var symbol = new GameObject("Symbol");
+                symbol.name = symbolname;
+                var dotMerc = GM.LatLonToMeters(c.cor[1].f, c.cor[0].f);
+                var localMercPos = (dotMerc - CenterInMercator);
+                symbol.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
+
+                // var target = new GameObject("symbol-Target");
+                target.transform.position = localMercPos.ToVector3();
+                target.transform.SetParent(transform, false);
+                var sprite = symbol.AddComponent<SpriteRenderer>();
+                sprite.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                var symbolCom = symbol.AddComponent<Symbol>();
+                symbolCom.Stick(target.transform);
+
+                symbol.transform.SetParent(target.transform, true);
+                symbol.transform.localScale = new Vector3(10, 10);
+
+                if (c.properties["stats"] != null)
+                {
+                    
+                    var info = (GameObject)Instantiate(_symbolInfo);
+                    var canvas = info.GetComponent<Canvas>();
+
+                    canvas.worldCamera = Camera.main;
+                    info.transform.SetParent(target.transform, false);
+                    canvas.transform.localScale = new Vector3(50, 100);
+                    canvas.transform.localPosition = new Vector3(25, 70, 0);
+                    var bar = canvas.transform.FindChild("bar");
+                    bar.localScale = new Vector3(100, 100);
+                    var BarFill = bar.FindChild("Bar-Background").FindChild("Bar-Fill").gameObject.GetComponentInChildren<Image>().fillAmount= 90;//calculate fill stat value
+
+
+                    // Image voor balk:
+                    //var ICO = bar.transform.FindChild("ICO").gameObject.GetComponent<Image>();
+                    //  ICO.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+
+                }
+
+
+            }
         }
 
 

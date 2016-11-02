@@ -45,13 +45,16 @@ public class Initialize : MonoBehaviour
             r.enabled = true;
         }
     }
-
-    void Start()
+    void Awake()
     {
         var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
 
         appState = AppState.Instance;
         appState.LoadConfig();
+    }
+    void Start()
+    {
+       
 
         AddTerrain();
 #if (NETFX_CORE)
@@ -226,7 +229,8 @@ public class Initialize : MonoBehaviour
         var Symbolworld = new GameObject("Symbols");
         Symbolworld.transform.SetParent(SymbolMap.transform, false);
         var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
-        symbolFactory.geojson = json;
+        symbolFactory.baseUrl= "http://gamelab.tno.nl/Missieprep/";
+        symbolFactory.geojson = "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.070362091064453,           53.295336751980656         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }"; 
         symbolFactory.zoom = iv.Zoom;
         symbolFactory.Latitude = iv.Lat;
         symbolFactory.Longitude = iv.Lon;

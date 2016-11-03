@@ -16,31 +16,31 @@ public class PoiFactory : MapzenGo.Models.Factories.PoiFactory {
 
         pfs.SettingsPoi = new System.Collections.Generic.List<PoiSettings> {
             createPoiSettings(PoiType.Library, "Textures/poi_icons_18@2x_0"),
-            createPoiSettings(PoiType.TramStop, "Textures/poi_icons_18@2x_15"),
+            //createPoiSettings(PoiType.TramStop, "Textures/poi_icons_18@2x_15"),
             createPoiSettings(PoiType.Station, "Textures/poi_icons_18@2x_9"),
             createPoiSettings(PoiType.Hospital, "Textures/poi_icons_18@2x_4"),
             createPoiSettings(PoiType.Police, "Textures/poi_icons_18@2x_5"),
             createPoiSettings(PoiType.FireStation, "Textures/poi_icons_18@2x_7"),
-            createPoiSettings(PoiType.Hotel, "Textures/poi_icons_18@2x_16"),
-            createPoiSettings(PoiType.BusStop, "Textures/poi_icons_18@2x_17"),
-            createPoiSettings(PoiType.FerryTerminal, "Textures/poi_icons_18@2x_18"),
-            createPoiSettings(PoiType.Airport, "Textures/poi_icons_18@2x_19"),
-            createPoiSettings(PoiType.Toys, "Textures/poi_icons_18@2x_20"),
-            createPoiSettings(PoiType.Playground, "Textures/poi_icons_18@2x_32"),
-            createPoiSettings(PoiType.Forest, "Textures/poi_icons_18@2x_111"),
+            //createPoiSettings(PoiType.Hotel, "Textures/poi_icons_18@2x_16"),
+            //createPoiSettings(PoiType.BusStop, "Textures/poi_icons_18@2x_17"),
+            //createPoiSettings(PoiType.FerryTerminal, "Textures/poi_icons_18@2x_18"),
+            //createPoiSettings(PoiType.Airport, "Textures/poi_icons_18@2x_19"),
+            //createPoiSettings(PoiType.Toys, "Textures/poi_icons_18@2x_20"),
+            //(PoiType.Playground, "Textures/poi_icons_18@2x_32"),
+            //createPoiSettings(PoiType.Forest, "Textures/poi_icons_18@2x_111"),
 
             createPoiSettings(PoiType.Zoo, "Textures/poi_icons_18@2x_65"),
             createPoiSettings(PoiType.Museum, "Textures/poi_icons_18@2x_67"),
             createPoiSettings(PoiType.Parking, "Textures/poi_icons_18@2x_81"),
-            createPoiSettings(PoiType.Atm, "Textures/poi_icons_18@2x_86"),
-            createPoiSettings(PoiType.PostBox, "Textures/poi_icons_18@2x_95"),
-            createPoiSettings(PoiType.Pub, "Textures/poi_icons_18@2x_93"),
-            createPoiSettings(PoiType.Restaurant, "Textures/poi_icons_18@2x_42"),
-            createPoiSettings(PoiType.Stadium, "Textures/poi_icons_18@2x_76"),
-            createPoiSettings(PoiType.Cinema, "Textures/poi_icons_18@2x_105"),
+            //createPoiSettings(PoiType.Atm, "Textures/poi_icons_18@2x_86"),
+            //createPoiSettings(PoiType.PostBox, "Textures/poi_icons_18@2x_95"),
+            //createPoiSettings(PoiType.Pub, "Textures/poi_icons_18@2x_93"),
+            //createPoiSettings(PoiType.Restaurant, "Textures/poi_icons_18@2x_42"),
+            //createPoiSettings(PoiType.Stadium, "Textures/poi_icons_18@2x_76"),
+            //createPoiSettings(PoiType.Cinema, "Textures/poi_icons_18@2x_105"),
             createPoiSettings(PoiType.University, "Textures/poi_icons_18@2x_107"),
-            createPoiSettings(PoiType.Gas, "Textures/poi_icons_18@2x_109"),
-            createPoiSettings(PoiType.Information, "Textures/poi_icons_18@2x_118")
+            //createPoiSettings(PoiType.Gas, "Textures/poi_icons_18@2x_109"),
+            //createPoiSettings(PoiType.Information, "Textures/poi_icons_18@2x_118")
         };
 
         FactorySettings = pfs;

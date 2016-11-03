@@ -12,8 +12,17 @@
     }
   ],
   "Views": [
+     {
+      "Name" : "Detail",
+      "Lat": 52.458125,
+      "Lon": 5.109840,
+      "Zoom": 17,
+      "TileSize": 100,
+      "Range": 2,
+      "Scale": 1
+    },
     {
-      "Name" : "Overview",
+      "Name": "Overview",
       "Lat": 52.458125,
       "Lon": 5.109840,
       "Zoom": 12,
@@ -21,13 +30,11 @@
       "Range": 2,
       "Scale": 1
     }
-  ]
-
-  ,
+  ],
     "TileServer": "",
     "MqttServer": "cool3.sensorlab.tno.nl",
   "MqttPort": "8026",
-  "InitialView": "Overview",
+  "InitialView": "Detail",
   "Table": {
     "TableSize": 1.5,
     "TableHeight": 1.3

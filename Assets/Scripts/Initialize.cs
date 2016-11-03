@@ -52,15 +52,38 @@ public class Initialize : MonoBehaviour
         appState.Speech = new Assets.Scripts.SpeechManager();
 
         AddTerrain();
-#if (NETFX_CORE)
+        InitViews();
+
+        #if (NETFX_CORE)
         //InitMqtt();
-#endif
+        #endif
         includeAnchorMovingScript();
      
         appState.Speech.Init();
     }
 
-#if (NETFX_CORE)
+    void InitViews()
+    {
+        appState.Speech.Keywords.Add("Zoom out", () => {
+            appState.Center = new Vector3(appState.Center.x, appState.Center.y, appState.Center.z + 1);
+           // appState.TileManager.UpdateTiles();
+        });
+
+        appState.Config.Views.ForEach(v =>
+        {
+            appState.Speech.Keywords.Add("Switch to " + v.Name, () =>
+            {
+                appState.TileManager.Latitude = v.Lat;
+                appState.TileManager.Longitude = v.Lon;
+                appState.TileManager.Zoom = v.Zoom;
+                appState.TileManager.Range = v.Range;
+                appState.TileManager.Start();
+            });
+        });
+
+    }
+
+    #if (NETFX_CORE)
     protected void InitMqtt()
     {
         var client = new uPLibrary.Networking.M2Mqtt.MqttClient(appState.Config.MqttServer, int.Parse(appState.Config.MqttPort), false);

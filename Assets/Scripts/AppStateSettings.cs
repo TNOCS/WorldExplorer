@@ -76,7 +76,7 @@ namespace Assets.Scripts
 
             Views = new List<ViewState>();
             var vs = json["Views"];
-            for (var l = 0; l < ll.Count; l++)
+            for (var l = 0; l < vs.Count; l++)
             {
                 var view = new ViewState();
                 view.FromJson(vs[l]);

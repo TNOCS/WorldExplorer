@@ -193,7 +193,7 @@ public class SymbolFactory : MonoBehaviour
                 symbol.transform.SetParent(target.transform, true);
                 symbol.transform.localScale = new Vector3(10, 10);
 
-                if (c.properties["stats"] != null)
+                if (c !=null && c.properties.ContainsKey("stats") && c.properties["stats"] != null)
                 {
                     
                     var info = (GameObject)Instantiate(_symbolInfo);

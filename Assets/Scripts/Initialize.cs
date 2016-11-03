@@ -3,19 +3,14 @@ using MapzenGo.Models;
 using MapzenGo.Models.Plugins;
 using System;
 using System.Text;
+using Assets.Scripts;
+using Assets.Scripts.Utils;
 
 public class Initialize : MonoBehaviour
 {
-    private GameObject world;
-    private GameObject terrain;
-    private GameObject table;
-
-
-    private GameObject Layers;
+    
     private GameObject SymbolMap;
-    private GameObject Symboltable;
     // Use this for initialization
-    private GameObject spatialMapping;
     private GameObject _cursorFab;
     private GameObject cursor;
     private AppState appState;
@@ -35,33 +30,36 @@ public class Initialize : MonoBehaviour
         //_spatial.DrawMaterial = Resources.Load("Wireframe", typeof(Material)) as Material;
 
         _cursorFab = Resources.Load("_cursor") as GameObject;
-        if (_cursorFab)
-        {
+        
             cursor = (GameObject)Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
             cursor.name = "Cursor";
             var t = cursor.GetComponentInChildren<Transform>().Find("CursorMesh");
 
             var r = t.GetComponent<MeshRenderer>();
             r.enabled = true;
-        }
+        
     }
     void Awake()
     {
-        //var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
+        var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
 
         appState = AppState.Instance;
         appState.LoadConfig();
     }
     void Start()
     {
-       
+        appState.Camera = gameObject;
+        appState.Speech = new Assets.Scripts.SpeechManager();
 
         AddTerrain();
 #if (NETFX_CORE)
         //InitMqtt();
 #endif
-       // includeAnchorMovingScript();
+        includeAnchorMovingScript();
+     
+        appState.Speech.Init();
     }
+
 #if (NETFX_CORE)
     protected void InitMqtt()
     {
@@ -85,7 +83,7 @@ public class Initialize : MonoBehaviour
                     switch (e.Topic)
                     {
                         case "view":
-                            setView(msg);
+                            SetView(msg);
                             break;
                     }
                     GameObject _3dText = GameObject.Find("tbTemp");
@@ -100,7 +98,7 @@ public class Initialize : MonoBehaviour
     }
 #endif
 
-    protected void setView(string msg)
+    protected void SetView(string msg)
     {
         var view = new JSONObject(msg);
         var iv = appState.Config.InitalView;
@@ -120,21 +118,27 @@ public class Initialize : MonoBehaviour
     protected void AddTerrain()
     {
         var iv = appState.Config.InitalView;
+        var t = appState.Config.Table;
 
         #region create map & terrain
 
-        terrain = new GameObject("terrain");
-        terrain.transform.position = new Vector3(0f, 0f, 0f);
+        appState.Terrain = new GameObject("terrain");
+        appState.Terrain.transform.position = new Vector3(0f, 0f, 0f);
 
 
-        table = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        table.transform.position = new Vector3(0f, 0f, 4f);
-        table.transform.localScale = new Vector3(iv.TableSize, iv.TableHeight, iv.TableSize);
-        table.transform.SetParent(terrain.transform, false);
+        appState.Table = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        appState.Table.transform.position = new Vector3(0f, 0.7f, 0f);
+        appState.Table.transform.localScale = new Vector3(t.TableSize, t.TableHeight, t.TableSize);
+        appState.Table.transform.SetParent(appState.Terrain.transform, false);
+
+        appState.Speech.Keywords.Add("Center Table", () => {
+            appState.Table.transform.position = new Vector3(gameObject.transform.position.x,0.7f, gameObject.transform.position.z);            
+            //appState.Center = new Vector3(appState.Center.x, appState.Center.y, appState.Center.z + 1);
+        });
 
 
         var map = new GameObject("Map");
-        map.transform.SetParent(table.transform);
+        map.transform.SetParent(appState.Table.transform);
         map.transform.localPosition = new Vector3(0f, 0.5f, 0f);
 
         var i = iv.Range;
@@ -142,16 +146,16 @@ public class Initialize : MonoBehaviour
         var mapScale = mapScales[i - 1];
         map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
-        
 
-        #endregion       
+
+        #endregion
         #region init map
 
-        world = new GameObject("World");
-        world.transform.SetParent(map.transform, false);
+        appState.World = new GameObject("World");
+        appState.World.transform.SetParent(map.transform, false);
 
         // init map
-        var tm = world.AddComponent<CachedTileManager>();
+        var tm = appState.World.AddComponent<CachedTileManager>();
         tm.Latitude = iv.Lat;
         tm.Longitude = iv.Lon;
         tm.Range = iv.Range;
@@ -168,7 +172,7 @@ public class Initialize : MonoBehaviour
         #region UI
 
         var ui = new GameObject("UI"); // Placeholder (root element in UI tree)
-        ui.transform.SetParent(world.transform, false);
+        ui.transform.SetParent(appState.World.transform, false);
         var place = new GameObject("PlaceContainer");
         AddRectTransformToGameObject(place);
         place.transform.SetParent(ui.transform, false);
@@ -183,7 +187,7 @@ public class Initialize : MonoBehaviour
 
         #region defaultfactories
         var factories = new GameObject("Factories");
-        factories.transform.SetParent(world.transform, false);
+        factories.transform.SetParent(appState.World.transform, false);
 
         var buildings = new GameObject("BuildingFactory");
         buildings.transform.SetParent(factories.transform, false);
@@ -221,39 +225,39 @@ public class Initialize : MonoBehaviour
         #endregion
 
 
-        //SymbolMap = new GameObject("Layers");
-        //SymbolMap.transform.SetParent(table.transform);
-        //SymbolMap.transform.localPosition = new Vector3(0f, 0.5f, 0f);
-        //SymbolMap.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
+        SymbolMap = new GameObject("Layers");
+        SymbolMap.transform.SetParent(appState.Table.transform);
+        SymbolMap.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+        SymbolMap.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
-        //var Symbolworld = new GameObject("Symbols");
-        //Symbolworld.transform.SetParent(SymbolMap.transform, false);
-        //var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
-        //symbolFactory.baseUrl= "http://gamelab.tno.nl/Missieprep/";
-        //symbolFactory.geojson = "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.070362091064453,           53.295336751980656         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }"; 
-        //symbolFactory.zoom = iv.Zoom;
-        //symbolFactory.Latitude = iv.Lat;
-        //symbolFactory.Longitude = iv.Lon;
-        //symbolFactory.TileSize = iv.TileSize;
-        //symbolFactory.Range = iv.Range;
-        //symbolFactory.AddSymbols();
+        var Symbolworld = new GameObject("Symbols");
+        Symbolworld.transform.SetParent(SymbolMap.transform, false);
+        var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
+        symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
+        symbolFactory.geojson = "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.109840,           52.458125         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
+        symbolFactory.zoom = iv.Zoom;
+        symbolFactory.Latitude = iv.Lat;
+        symbolFactory.Longitude = iv.Lon;
+        symbolFactory.TileSize = iv.TileSize;
+        symbolFactory.Range = iv.Range;
+        symbolFactory.AddSymbols();
 
         #endregion
 
         #region TILE PLUGINS
 
         var tilePlugins = new GameObject("TilePlugins");
-        tilePlugins.transform.SetParent(world.transform, false);
+        tilePlugins.transform.SetParent(appState.World.transform, false);
 
         var mapImage = new GameObject("MapImage");
         mapImage.transform.SetParent(tilePlugins.transform, false);
         var mapImagePlugin = mapImage.AddComponent<MapImagePlugin>();
         mapImagePlugin.TileService = MapImagePlugin.TileServices.Default;
 
-        //var tileLayer = new GameObject("TileLayer");
-        //tileLayer.transform.SetParent(tilePlugins.transform, false);
-        //var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
-        //tileLayerPlugin.tileLayers = appState.Config.Layers;
+        var tileLayer = new GameObject("TileLayer");
+        tileLayer.transform.SetParent(tilePlugins.transform, false);
+        var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
+        tileLayerPlugin.tileLayers = appState.Config.Layers;
 
         #endregion
 
@@ -271,10 +275,6 @@ public class Initialize : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (world != null)
-        {
-            //world.transform.localScale = new Vector3(0.001F, 0.001F, 0.001F);
-            //world.transform.localPosition = new Vector3(0, 0, 0);
-        }
+        
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Scripts;
+using Assets.Scripts.Classes;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 

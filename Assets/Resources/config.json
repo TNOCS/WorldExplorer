@@ -1,26 +1,35 @@
 ﻿{
-    "Layers": [
-        {
-            "Title": "Flooding",
-            "Url": "http://134.221.20.239:8101/2102363017",
-            "VoiceCommand": "flooding",
-            "UseTransparency": true,
-            "Height": 1.1,
-            "Type": "tilelayer",
-            "Enabled": true
-        }
-    ],
+  "Layers": [
+    {
+      "Title": "Flooding",
+      "Url2": "http://134.221.20.239:8101/2102363017",
+      "Url": "http://d.basemaps.cartocdn.com/light_nolabels",
+      "VoiceCommand": "flooding",
+      "UseTransparency": true,
+      "Height": 1.1,
+      "Type": "tilelayer",
+      "Enabled": true
+    }
+  ],
+  "Views": [
+    {
+      "Name" : "Overview",
+      "Lat": 52.458125,
+      "Lon": 5.109840,
+      "Zoom": 12,
+      "TileSize": 100,
+      "Range": 2,
+      "Scale": 1
+    }
+  ]
+
+  ,
     "TileServer": "",
     "MqttServer": "cool3.sensorlab.tno.nl",
-    "MqttPort": "8026",
-    "InitalView": {
-        "Lat": 52.079585,
-        "Lon": 4.312157,
-        "Zoom": 17,
-        "TileSize": 100,
-        "Range": 3,
-      "Scale": 1,
-       "TableSize": 1,
-      "TableHeight" :  1 
-    }
+  "MqttPort": "8026",
+  "InitialView": "Overview",
+  "Table": {
+    "TableSize": 1.5,
+    "TableHeight": 1.3
+  }
 }

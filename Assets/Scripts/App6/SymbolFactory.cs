@@ -159,6 +159,7 @@ public class SymbolFactory : MonoBehaviour
     /// <returns></returns>
     IEnumerator createSymbols(Feature c, string baseUrl)
     {
+        yield return null;
         if (c.properties["symbol"] == null)
             yield return null;
         string web = baseUrl + c.properties["symbol"].ToString().Replace(@"""", "");

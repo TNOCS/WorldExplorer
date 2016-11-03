@@ -25,14 +25,14 @@ public class Initialize : MonoBehaviour
 
     void includeAnchorMovingScript()
     {
-        var gazeGesture = terrain.AddComponent<GazeGestureManager>();
-        var AnchorPlacemant = terrain.AddComponent<TapToPlaceParent>();
-        spatialMapping = new GameObject("Spatial Mapping");
-        spatialMapping.AddComponent<UnityEngine.VR.WSA.SpatialMappingCollider>();
-        spatialMapping.AddComponent<UnityEngine.VR.WSA.SpatialMappingRenderer>();
+        //var gazeGesture = terrain.AddComponent<GazeGestureManager>();
+        //var AnchorPlacemant = terrain.AddComponent<TapToPlaceParent>();
+        //spatialMapping = new GameObject("Spatial Mapping");
+        //spatialMapping.AddComponent<UnityEngine.VR.WSA.SpatialMappingCollider>();
+        //spatialMapping.AddComponent<UnityEngine.VR.WSA.SpatialMappingRenderer>();
 
-        var _spatial = spatialMapping.AddComponent<SpatialMapping>();
-        _spatial.DrawMaterial = Resources.Load("Wireframe", typeof(Material)) as Material;
+        //var _spatial = spatialMapping.AddComponent<SpatialMapping>();
+        //_spatial.DrawMaterial = Resources.Load("Wireframe", typeof(Material)) as Material;
 
         _cursorFab = Resources.Load("_cursor") as GameObject;
         if (_cursorFab)
@@ -47,7 +47,7 @@ public class Initialize : MonoBehaviour
     }
     void Awake()
     {
-        var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
+        //var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
 
         appState = AppState.Instance;
         appState.LoadConfig();
@@ -221,22 +221,22 @@ public class Initialize : MonoBehaviour
         #endregion
 
 
-        SymbolMap = new GameObject("Layers");
-        SymbolMap.transform.SetParent(table.transform);
-        SymbolMap.transform.localPosition = new Vector3(0f, 0.5f, 0f);
-        SymbolMap.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
+        //SymbolMap = new GameObject("Layers");
+        //SymbolMap.transform.SetParent(table.transform);
+        //SymbolMap.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+        //SymbolMap.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
-        var Symbolworld = new GameObject("Symbols");
-        Symbolworld.transform.SetParent(SymbolMap.transform, false);
-        var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
-        symbolFactory.baseUrl= "http://gamelab.tno.nl/Missieprep/";
-        symbolFactory.geojson = "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.070362091064453,           53.295336751980656         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }"; 
-        symbolFactory.zoom = iv.Zoom;
-        symbolFactory.Latitude = iv.Lat;
-        symbolFactory.Longitude = iv.Lon;
-        symbolFactory.TileSize = iv.TileSize;
-        symbolFactory.Range = iv.Range;
-        symbolFactory.AddSymbols();
+        //var Symbolworld = new GameObject("Symbols");
+        //Symbolworld.transform.SetParent(SymbolMap.transform, false);
+        //var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
+        //symbolFactory.baseUrl= "http://gamelab.tno.nl/Missieprep/";
+        //symbolFactory.geojson = "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.070362091064453,           53.295336751980656         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }"; 
+        //symbolFactory.zoom = iv.Zoom;
+        //symbolFactory.Latitude = iv.Lat;
+        //symbolFactory.Longitude = iv.Lon;
+        //symbolFactory.TileSize = iv.TileSize;
+        //symbolFactory.Range = iv.Range;
+        //symbolFactory.AddSymbols();
 
         #endregion
 

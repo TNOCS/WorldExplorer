@@ -151,7 +151,7 @@ namespace UniRx
                     }
 #endif
 
-                    ENQUEUE:
+                ENQUEUE:
                     editorQueueWorker.Enqueue(_ => ConsumeEnumerator(routine), null); // next update
                 }
             }
@@ -550,7 +550,7 @@ namespace UniRx
                     {
                         return false;
                     }
-                }, 
+                },
                 ex => unhandledExceptionCallback(ex));
 
             while (true)
@@ -575,7 +575,7 @@ namespace UniRx
                     {
                         return false;
                     }
-                }, 
+                },
                 ex => unhandledExceptionCallback(ex));
 
             while (true)

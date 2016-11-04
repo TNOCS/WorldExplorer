@@ -1,22 +1,67 @@
 ﻿{
   "Layers": [
     {
-      "Title": "Flooding",
+      "Title": "Topo Layer",
       "Url2": "http://134.221.20.239:8101/2102363017",
       "Url": "http://d.basemaps.cartocdn.com/light_nolabels",
-      "VoiceCommand": "flooding",
+      "VoiceCommand": "topo layer",
       "UseTransparency": true,
       "Height": 1.1,
       "Type": "tilelayer",
+      "Enabled": true,
+      "Group" : "baselayer"
+    },
+    {
+      "Title": "Satellite",
+      "Url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile",
+      "VoiceCommand": "satellite layer",
+      "UseTransparency": true,
+      "Height": 1.1,
+      "Type": "tilelayer",
+      "Enabled": false,
+      "Group": "baselayer"
+    },
+    {
+      "Title": "Police",
+      "Url": "http://134.221.20.241:3000/api/layers/politie.actual",
+      "IconUrl": "http://134.221.20.241:3000/images/politie.png",
+      "VoiceCommand": "police",
+      "UseTransparency": true,
+      "Height": 1.1,
+      "Type": "geojson",
       "Enabled": true
+    },
+
+    {
+      "Title": "Ambulance",
+      "Url": "http://134.221.20.241:3000/api/layers/ambulanceposten.actual",
+      "IconUrl": "http://134.221.20.241:3000/images/ambulanceposten.png",
+      "VoiceCommand": "ambulance",
+      "UseTransparency": true,
+      "Height": 1.1,
+      "Type": "geojson",
+      "Enabled": true
+    },
+
+    {
+      "Title": "Pumps",
+      "Url": "  http://134.221.20.241:3000/api/layers/pumps.actual",
+      "IconUrl": "http://134.221.20.241:3000/images/pomp.png",
+      "VoiceCommand": "ambulance",
+      "UseTransparency": true,
+      "Height": 1.1,
+      "Type": "geojson",
+      "Enabled": false
     }
+  
+  
   ],
   "Views": [
      {
       "Name" : "Detail",
-      "Lat": 52.458125,
-      "Lon": 5.109840,
-      "Zoom": 17,
+      "Lat": 52.453924, 
+      "Lon": 5.047512,
+      "Zoom": 16,
       "TileSize": 100,
       "Range": 2,
       "Scale": 1
@@ -37,6 +82,6 @@
   "InitialView": "Detail",
   "Table": {
     "TableSize": 1.5,
-    "TableHeight": 1.3
+    "TableHeight": 1.5
   }
 }

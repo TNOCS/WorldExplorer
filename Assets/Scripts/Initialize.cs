@@ -5,6 +5,8 @@ using System;
 using System.Text;
 using Assets.Scripts;
 using Assets.Scripts.Utils;
+using System.Linq;
+using UniRx;
 
 public class Initialize : MonoBehaviour
 {
@@ -226,21 +228,21 @@ public class Initialize : MonoBehaviour
         roads.transform.SetParent(factories.transform, false);
         var roadFactory = roads.AddComponent<RoadFactory>();
 
-        var water = new GameObject("WaterFactory");
-        water.transform.SetParent(factories.transform, false);
-        var waterFactory = water.AddComponent<WaterFactory>();
+        //var water = new GameObject("WaterFactory");
+        //water.transform.SetParent(factories.transform, false);
+        //var waterFactory = water.AddComponent<WaterFactory>();
 
         //var boundary = new GameObject("BoundaryFactory");
         //boundary.transform.SetParent(factories.transform, false);
         //var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
 
-        //var landuse = new GameObject("LanduseFactory");
-        //landuse.transform.SetParent(factories.transform, false);
-        //var landuseFactory = landuse.AddComponent<LanduseFactory>();
+        var landuse = new GameObject("LanduseFactory");
+        landuse.transform.SetParent(factories.transform, false);
+        var landuseFactory = landuse.AddComponent<LanduseFactory>();
 
-        //var places = new GameObject("PlacesFactory");
-        //places.transform.SetParent(factories.transform, false);
-        //var placesFactory = places.AddComponent<PlacesFactory>();
+        var places = new GameObject("PlacesFactory");
+        places.transform.SetParent(factories.transform, false);
+        var placesFactory = places.AddComponent<PlacesFactory>();
 
         var pois = new GameObject("PoiFactory");
         pois.transform.SetParent(factories.transform, false);
@@ -253,17 +255,41 @@ public class Initialize : MonoBehaviour
         SymbolMap.transform.localPosition = new Vector3(0f, 0.5f, 0f);
         SymbolMap.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
+
+
         var Symbolworld = new GameObject("Symbols");
         Symbolworld.transform.SetParent(SymbolMap.transform, false);
-        var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
-        symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
-        symbolFactory.geojson = "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.109840,           52.458125         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
-        symbolFactory.zoom = iv.Zoom;
-        symbolFactory.Latitude = iv.Lat;
-        symbolFactory.Longitude = iv.Lon;
-        symbolFactory.TileSize = iv.TileSize;
-        symbolFactory.Range = iv.Range;
-        symbolFactory.AddSymbols();
+
+        appState.Config.Layers.ForEach(l =>
+        {
+            if (l.Type == "geojson" && l.Enabled)
+            {
+                ObservableWWW.GetWWW(l.Url).Subscribe(
+                           success =>
+                           {
+                               var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
+                               symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
+
+                               symbolFactory.geojson = success.text;  //"{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.109840,           52.458125         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
+                               symbolFactory.zoom = iv.Zoom;
+                               symbolFactory.Latitude = iv.Lat;
+                               symbolFactory.Longitude = iv.Lon;
+                               symbolFactory.TileSize = iv.TileSize;
+                               symbolFactory.Layer = l;
+                               symbolFactory.Range = iv.Range;
+                               symbolFactory.AddSymbols();
+                               
+                               
+                           },
+                           error =>
+                           {
+                               Debug.Log(error);
+                           }
+                       );
+                
+            }
+        });
+        
 
         #endregion
 

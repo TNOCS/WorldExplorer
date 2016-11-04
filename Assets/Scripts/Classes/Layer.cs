@@ -26,6 +26,8 @@ namespace Assets.Scripts.Classes
             VoiceCommand = json.GetString("VoiceCommand");
             UseTransparency = json.GetBoolean("UseTransparency");
             Height = json.GetFloat("Height");
+            Group = json.GetString("Group");
+            IconUrl = json.GetString("IconUrl");
         }
 
         public string Title { get; set; }
@@ -47,6 +49,16 @@ namespace Assets.Scripts.Classes
         /// Rendering height of the layer
         /// </summary>
         public float Height { get; set; }
+
+        /// <summary>
+        /// Url of the image being used
+        /// </summary>
+        public string IconUrl { get; set; }
+
+        /// <summary>
+        /// Name of layer group, only one layer can be active in a group
+        /// </summary>
+        public string Group { get; set; }
     }
 
 }

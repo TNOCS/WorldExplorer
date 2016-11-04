@@ -15,6 +15,9 @@ using MapzenGo.Models;
 using Assets.Scripts.MapzenGoWrappers;
 using MapzenGo.Helpers.VectorD;
 using UnityEngine.UI;
+using Assets.Scripts.Utils;
+using Assets.Scripts.Classes;
+
 public class SymbolFactory : MonoBehaviour
 {
 
@@ -41,6 +44,7 @@ public class SymbolFactory : MonoBehaviour
     {
 
         public string type { get; set; }
+        public string id { get; set; }
         public Dictionary<string, object> properties { get; set; }
         public Geometry geometry { get; set; }
         public Vector2d tilePoint { get; set; }
@@ -70,6 +74,8 @@ public class SymbolFactory : MonoBehaviour
     public string geojson;
     private GeoJson geoJson = new GeoJson();
 
+    public Layer Layer { get; set; }
+
     public string baseUrl;
     #region tilemangerproperties
     [SerializeField]
@@ -89,6 +95,7 @@ public class SymbolFactory : MonoBehaviour
     protected Vector2d CenterTms; //tms tile coordinate
     protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
     private Vector3 center;
+
     void Awake()
     {
         _symbolInfo = Resources.Load("_symbolInfo") as GameObject;
@@ -145,7 +152,7 @@ public class SymbolFactory : MonoBehaviour
             //fill newly created tiles with symbols if present
             foreach (Feature c in geoJson.features)
             {
-                StartCoroutine(createSymbols(c, baseUrl));
+                StartCoroutine(createSymbols(c));
             }
         }
 
@@ -157,12 +164,12 @@ public class SymbolFactory : MonoBehaviour
     /// <param name="c">the GEOJSON point</param>
     /// <param name="baseUrl"> link to the baselocation of the images</param>
     /// <returns></returns>
-    IEnumerator createSymbols(Feature c, string baseUrl)
+    IEnumerator createSymbols(Feature c)
     {
-        yield return null;
-        if (c.properties["symbol"] == null)
-            yield return null;
-        string web = baseUrl + c.properties["symbol"].ToString().Replace(@"""", "");
+
+        //if (!c.properties.ContainsKey("symbol"))
+        //    yield return null;
+        string web = Layer.IconUrl; // "http://134.221.20.241:3000/images/pomp.png"; // baseUrl + c.properties["symbol"].ToString().Replace(@"""", "");
         WWW www = new WWW(web);
         yield return www;
 
@@ -173,7 +180,9 @@ public class SymbolFactory : MonoBehaviour
 
             if (_symbolInfo)
             {
-                string symbolname = "symbol-" + c.properties["id"];
+                var id = c.id;
+                if (string.IsNullOrEmpty(id)) id = Guid.NewGuid().ToString();
+                string symbolname = "symbol-" + id;
                 var target = new GameObject("Symbol-target");
 
 
@@ -182,6 +191,8 @@ public class SymbolFactory : MonoBehaviour
                 var dotMerc = GM.LatLonToMeters(c.cor[1].f, c.cor[0].f);
                 var localMercPos = (dotMerc - CenterInMercator);
                 symbol.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
+
+                    
 
                 // var target = new GameObject("symbol-Target");
                 target.transform.position = localMercPos.ToVector3();
@@ -192,7 +203,13 @@ public class SymbolFactory : MonoBehaviour
                 symbolCom.Stick(target.transform);
 
                 symbol.transform.SetParent(target.transform, true);
-                symbol.transform.localScale = new Vector3(10, 10);
+                symbol.transform.localScale = new Vector3(30, 30);
+                symbol.transform.localPosition = new Vector3(0, 60f, 0);
+                
+                GameObject instance = Instantiate(Resources.Load("cone", typeof(GameObject)), target.transform) as GameObject;
+                instance.transform.localPosition = new Vector3(10f, 10f, 10f);
+                instance.transform.localScale = new Vector3(20f, 20f, 20f);
+                //instance.transform.localRotation = new Quaternion(0f, 0f, 180f,0f);
 
                 if (c !=null && c.properties.ContainsKey("stats") && c.properties["stats"] != null)
                 {
@@ -256,6 +273,7 @@ public class SymbolFactory : MonoBehaviour
         {
             JSONObject feature = features[fid];
             var f = new Feature();
+            f.id = feature.GetString("id");
             f.geometry = new Geometry();
             f.geometry.type = feature["geometry"]["type"].ToString().Replace("\"", "");
             f.geometry.coordinates = feature["geometry"]["coordinates"];

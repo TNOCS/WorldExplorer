@@ -33,6 +33,7 @@ namespace MapzenGo.Models.Plugins
                         go.localPosition += new Vector3(0, tileLayer.Height, 0);
                         var rend = go.GetComponent<Renderer>();
                         rend.material = tile.Material;
+                        
 
                         var url = string.Format("{0}/{1}/{2}/{3}.png", tileLayer.Url, tile.Zoom, tile.TileTms.x, tile.TileTms.y);
                         ObservableWWW.GetWWW(url).Subscribe(

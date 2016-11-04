@@ -10,6 +10,16 @@
       "Type": "tilelayer",
       "Enabled": true,
       "Group" : "baselayer"
+    },{
+      "Title": "Flooding",
+      "Url2": "http://134.221.20.239:8101/2102363017",
+      "Url": "http://134.221.20.239:8101/40954558,40954557,40954556/",
+      "VoiceCommand": "topo layer",
+      "UseTransparency": true,
+      "Height": 1.2,
+      "Type": "tilelayer",
+      "Enabled": false
+      
     },
     {
       "Title": "Satellite",

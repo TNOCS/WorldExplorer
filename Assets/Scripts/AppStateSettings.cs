@@ -68,10 +68,7 @@ namespace Assets.Scripts
             Table.transform.localScale = new Vector3(t.TableSize, t.TableHeight, t.TableSize);
             Table.transform.SetParent(Terrain.transform, false);
 
-            Speech.Keywords.Add("Center Table", () => {
-                Table.transform.position = new Vector3(gameObject.transform.position.x, 0.7f, gameObject.transform.position.z);
-                //Center = new Vector3(Center.x, Center.y, Center.z + 1);
-            });
+         
 
             Map = new GameObject("Map");
             Map.transform.SetParent(Table.transform);

@@ -54,13 +54,23 @@ public class Initialize : MonoBehaviour
         
         appState.AddTerrain();
         InitViews();
+        InitSpeech();
 
-        #if (NETFX_CORE)
-        //InitMqtt();
+
+#if (NETFX_CORE)
+        InitMqtt();
         #endif
         includeAnchorMovingScript();
      
         appState.Speech.Init();
+    }
+
+    void InitSpeech()
+    {
+        appState.Speech.Keywords.Add("Center Table", () => {
+            appState.Table.transform.position = new Vector3(gameObject.transform.position.x, 0.7f, gameObject.transform.position.z);
+            //Center = new Vector3(Center.x, Center.y, Center.z + 1);
+        });
     }
 
     void InitViews()

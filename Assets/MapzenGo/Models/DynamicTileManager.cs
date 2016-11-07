@@ -11,7 +11,8 @@ namespace MapzenGo.Models
     {
         //[SerializeField] private Rect _centerCollider;
         [SerializeField] private int _removeAfter;
-        [SerializeField] private bool _keepCentralized;
+        [SerializeField]
+        private bool _keepCentralized = false;
 
        
 
@@ -58,13 +59,14 @@ namespace MapzenGo.Models
             CenterTms += tileDif.ToVector2d();
             if (_keepCentralized)
             {
+                var dif = TileSize / 1200f;
                 foreach (var tile in Tiles.Values)
                 {
-                    tile.transform.position -= new Vector3(tileDif.x * TileSize, 0, -tileDif.y * TileSize);
+                    tile.transform.position -= new Vector3(tileDif.x * dif, 0, -tileDif.y * dif);
                 }
 
                 CenterInMercator = GM.TileBounds(CenterTms, Zoom).Center;
-                var difInUnity = new Vector3(tileDif.x * TileSize, 0, -tileDif.y * TileSize);
+                var difInUnity = new Vector3(tileDif.x * dif, 0, -tileDif.y * dif);
                 Camera.main.transform.position -= difInUnity;
             }
             else

@@ -2,11 +2,11 @@
   "Layers": [
     {
       "Title": "Topo Layer",
-      "Url2": "http://134.221.20.239:8101/2102363017",
-      "Url": "http://d.basemaps.cartocdn.com/light_nolabels",
+      "Url2": "http://134.221.20.239:8101/2102363017/{z}/{x}/{y}.png",
+      "Url": "http://d.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
       "VoiceCommand": "topo layer",
       "UseTransparency": true,
-      "Height": 1.1,
+      "Height": 1.2,
       "Type": "tilelayer",
       "Enabled": true,
       "Group" : "baselayer"
@@ -16,17 +16,17 @@
       "Url": "http://134.221.20.239:8101/40954558,40954557,40954556/",
       "VoiceCommand": "topo layer",
       "UseTransparency": true,
-      "Height": 1.2,
+      "Height": 1.1,
       "Type": "tilelayer",
-      "Enabled": false
+      "Enabled": true
       
     },
     {
       "Title": "Satellite",
-      "Url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile",
+      "Url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{x}/{y}",
       "VoiceCommand": "satellite layer",
       "UseTransparency": true,
-      "Height": 1.1,
+      "Height": 1.2,
       "Type": "tilelayer",
       "Enabled": false,
       "Group": "baselayer"
@@ -54,11 +54,14 @@
     },
 
     {
-      "Title": "Pumps",
-      "Url": "  http://134.221.20.241:3000/api/layers/pumps.actual",
-      "IconUrl": "http://134.221.20.241:3000/images/pomp.png",
+      "Title": "Gps",
+      "Url2": "http://217.169.227.210:3000/api/layers/gps.actual",
+      "Url" :  "http://tnopresenter.nl/arnoud/test.json",
+      "IconUrl": "http://217.169.227.210:3000/images/gps/{role}.png",
       "VoiceCommand": "ambulance",
       "UseTransparency": true,
+      "Refresh": 10,
+      "Scale" : 94,
       "Height": 1.1,
       "Type": "geojson",
       "Enabled": false
@@ -74,22 +77,24 @@
       "Zoom": 16,
       "TileSize": 100,
       "Range": 2,
-      "Scale": 1
+      "Scale": 1,
+      "Layers" :  ["Police","Ambulance"]
     },
     {
-      "Name": "Overview",
-      "Lat": 52.458125,
-      "Lon": 5.109840,
-      "Zoom": 12,
+      "Name": "Vlasakkers",
+      "Lat": 52.144168,
+      "Lon": 5.337196,
+      "Zoom": 16,
       "TileSize": 100,
       "Range": 2,
-      "Scale": 1
+      "Scale": 1,
+      "Layers" :  ["Gps"]
     }
   ],
     "TileServer": "",
     "MqttServer": "cool3.sensorlab.tno.nl",
   "MqttPort": "8026",
-  "InitialView": "Detail",
+  "InitialView": "Vlasakkers",
   "Table": {
     "TableSize": 1.5,
     "TableHeight": 1.5

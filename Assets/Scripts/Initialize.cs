@@ -75,20 +75,13 @@ public class Initialize : MonoBehaviour
 
     void InitViews()
     {
-        appState.Speech.Keywords.Add("Zoom out", () => {
-            appState.Center = new Vector3(appState.Center.x, appState.Center.y, appState.Center.z + 1);
-           // appState.TileManager.UpdateTiles();
-        });
-
+       
         appState.Config.Views.ForEach(v =>
         {
             appState.Speech.Keywords.Add("Switch to " + v.Name, () =>
             {
-                appState.TileManager.Latitude = v.Lat;
-                appState.TileManager.Longitude = v.Lon;
-                appState.TileManager.Zoom = v.Zoom;
-                appState.TileManager.Range = v.Range;
-                appState.TileManager.Start();
+                appState.Config.InitalView = v;
+                appState.ResetMap();
             });
         });
 
@@ -152,13 +145,19 @@ public class Initialize : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("c"))
+        if (Input.GetKeyDown("1"))
         {
-            Destroy(appState.World);
-            appState.Config.InitalView = appState.Config.Views[1];
-            appState.InitMap();
-            //appState.Center = new Vector3(appState.Center.x, appState.Center.y + 1, appState.Center.z);
-            //Debug.Log("DDDDDDDDD!!!!!!!!!!");
+            appState.Config.InitalView = appState.Config.Views[0];
+            appState.ResetMap();
         }
+        if (Input.GetKeyDown("2"))
+        {
+            appState.Config.InitalView = appState.Config.Views[1];
+            appState.ResetMap();
+        }
+
+        //appState.Center = new Vector3(appState.Center.x, appState.Center.y + 1, appState.Center.z);
+        //Debug.Log("DDDDDDDDD!!!!!!!!!!");
+    
     }
 }

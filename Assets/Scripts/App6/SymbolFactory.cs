@@ -17,6 +17,7 @@ using MapzenGo.Helpers.VectorD;
 using UnityEngine.UI;
 using Assets.Scripts.Utils;
 using Assets.Scripts.Classes;
+using System.Text.RegularExpressions;
 
 public class SymbolFactory : MonoBehaviour
 {
@@ -111,6 +112,28 @@ public class SymbolFactory : MonoBehaviour
 
         var geoJson = loadGeoJson(encodedString);
 
+        // create tag
+
+        //SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+        //SerializedProperty tagsProp = tagManager.FindProperty("tags");
+        //SerializedProperty layersProp = tagManager.FindProperty("layers");
+        //string s = "layer-" + Layer.Title;
+
+        //bool found = false;
+        //for (int i = 0; i < tagsProp.arraySize; i++)
+        //{
+        //    SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
+        //    if (t.stringValue.Equals(s)) { found = true; break; }
+        //}
+
+        //if (!found)
+        //{
+        //    tagsProp.InsertArrayElementAtIndex(0);
+        //    SerializedProperty n = tagsProp.GetArrayElementAtIndex(0);
+        //    n.stringValue = s;
+        //}
+
+
 
         SymbolTiles = new List<Vector2d>();
         // setText(geoJson.features.Count + " features");
@@ -169,7 +192,24 @@ public class SymbolFactory : MonoBehaviour
 
         //if (!c.properties.ContainsKey("symbol"))
         //    yield return null;
+        
         string web = Layer.IconUrl; // "http://134.221.20.241:3000/images/pomp.png"; // baseUrl + c.properties["symbol"].ToString().Replace(@"""", "");
+        if (Layer.IconUrl.IndexOf("{")>=0)
+        {
+            Regex re = new Regex(@"(.*){(.*)}(.*)");
+            MatchCollection mc = re.Matches(Layer.IconUrl);            
+            foreach (Match m in mc)
+            {
+                if (m.Groups.Count>2)
+                {
+                    var prop = m.Groups[2].Value;
+                    if (c.properties.ContainsKey(prop))
+                    {
+                        web = Layer.IconUrl.Replace("{" + prop + "}", c.properties[prop].ToString());
+                    }
+                }                
+            }
+        }
         WWW www = new WWW(web);
         yield return www;
 
@@ -184,7 +224,8 @@ public class SymbolFactory : MonoBehaviour
                 if (string.IsNullOrEmpty(id)) id = Guid.NewGuid().ToString();
                 string symbolname = "symbol-" + id;
                 var target = new GameObject("Symbol-target");
-
+                var tag = "layer-" + Layer.Title;
+                //target.tag = tag;
 
                 var symbol = new GameObject("Symbol");
                 symbol.name = symbolname;
@@ -198,12 +239,14 @@ public class SymbolFactory : MonoBehaviour
                 target.transform.position = localMercPos.ToVector3();
                 target.transform.SetParent(transform, false);
                 var sprite = symbol.AddComponent<SpriteRenderer>();
-                sprite.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                var w = www.texture.width;
+                var h = www.texture.height;
+                sprite.sprite = Sprite.Create(www.texture, new Rect(0, 0,w, h), new Vector2(0, 0));
                 var symbolCom = symbol.AddComponent<Symbol>();
                 symbolCom.Stick(target.transform);
 
                 symbol.transform.SetParent(target.transform, true);
-                symbol.transform.localScale = new Vector3(30, 30);
+                symbol.transform.localScale = new Vector3(Layer.Scale, Layer.Scale);
                 symbol.transform.localPosition = new Vector3(0, 60f, 0);
                 
                 GameObject instance = Instantiate(Resources.Load("cone", typeof(GameObject)), target.transform) as GameObject;
@@ -303,10 +346,8 @@ public class SymbolFactory : MonoBehaviour
             f.properties = new Dictionary<string, object>();
 
             foreach (var s in feature["properties"].keys)
-
             {
-
-                f.properties[s] = feature["properties"][s];
+                f.properties[s] = feature["properties"][s].str;
 
             }
 

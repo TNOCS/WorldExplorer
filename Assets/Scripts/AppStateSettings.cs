@@ -52,6 +52,13 @@ namespace Assets.Scripts
             Config.FromJson(test);
         }
 
+        public void ResetMap()
+        {
+            DoDeleteAll(World);
+            DoDeleteAll(SymbolMap);
+            InitMap();
+        }
+
         public void AddTerrain()
         {
             var iv = Config.InitalView;
@@ -154,9 +161,9 @@ namespace Assets.Scripts
             places.transform.SetParent(factories.transform, false);
             var placesFactory = places.AddComponent<PlacesFactory>();
 
-            var pois = new GameObject("PoiFactory");
-            pois.transform.SetParent(factories.transform, false);
-            var poisFactory = pois.AddComponent<PoiFactory>();
+            //var pois = new GameObject("PoiFactory");
+            //pois.transform.SetParent(factories.transform, false);
+            //var poisFactory = pois.AddComponent<PoiFactory>();
             #endregion
 
 
@@ -170,35 +177,36 @@ namespace Assets.Scripts
             var Symbolworld = new GameObject("Symbols");
             Symbolworld.transform.SetParent(SymbolMap.transform, false);
 
-            Config.Layers.ForEach(l =>
+            iv.Layers.ForEach(layer =>
             {
-                if (l.Type == "geojson" && l.Enabled)
+                var l = Config.Layers.FirstOrDefault(k => k.Title == layer && k.Type == "geojson");
+                if (l != null)
                 {
                     ObservableWWW.GetWWW(l.Url).Subscribe(
-                               success =>
-                               {
-                                   var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
-                                   symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
+                        success =>
+                        {
+                            var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
+                            symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
 
-                                   symbolFactory.geojson = success.text;  //"{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.109840,           52.458125         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
-                               symbolFactory.zoom = iv.Zoom;
-                                   symbolFactory.Latitude = iv.Lat;
-                                   symbolFactory.Longitude = iv.Lon;
-                                   symbolFactory.TileSize = iv.TileSize;
-                                   symbolFactory.Layer = l;
-                                   symbolFactory.Range = iv.Range;
-                                   symbolFactory.AddSymbols();
-
-
-                               },
-                               error =>
-                               {
-                                   Debug.Log(error);
-                               }
-                           );
+                            symbolFactory.geojson = success.text;  //"{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.109840,           52.458125         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
+                            symbolFactory.zoom = iv.Zoom;
+                            symbolFactory.Latitude = iv.Lat;
+                            symbolFactory.Longitude = iv.Lon;
+                            symbolFactory.TileSize = iv.TileSize;
+                            symbolFactory.Layer = l;
+                            symbolFactory.Range = iv.Range;
+                            symbolFactory.AddSymbols();                            
+                        },
+                        error =>
+                        {
+                            Debug.Log(error);
+                        }
+                    );
 
                 }
             });
+            
+           
 
 
             #endregion
@@ -223,6 +231,23 @@ namespace Assets.Scripts
 
         }
 
+        public void DoDeleteAll(GameObject Holder)
+        {
+            //Holder.transform.DetachChildren();
+            Destroy(Holder);
+            return;
+            while (Holder.transform.childCount > 0)
+            {
+                var childs = Holder.transform.transform.childCount;
+                for (var i = 0; i<= childs - 1; i++)
+                {
+                    var go = Holder.transform.transform.GetChild(i).gameObject;
+                    DoDeleteAll(go);                   
+                }
+            }
+            Destroy(Holder);
+        }
+
 
 
         protected void AddRectTransformToGameObject(GameObject go)
@@ -241,53 +266,6 @@ namespace Assets.Scripts
 
 
 
-    public class AppConfig
-    {
-
-        public AppConfig()
-        {
-            //this.Layers = new List<Layer>();
-        }
-
-        public void FromJson(JSONObject json)
-        {
-            TileServer = json.GetString("TileServer");
-            MqttServer = json.GetString("MqttServer");
-            MqttPort = json.GetString("MqttPort");
-
-
-            Layers = new List<Layer>();
-            var ll = json["Layers"];
-            for (var l = 0; l < ll.Count; l++)
-            {
-                var layer = new Layer();
-                layer.FromJson(ll[l]);
-                Layers.Add(layer);
-            }
-
-            Views = new List<ViewState>();
-            var vs = json["Views"];
-            for (var l = 0; l < vs.Count; l++)
-            {
-                var view = new ViewState();
-                view.FromJson(vs[l]);
-                Views.Add(view);
-            }
-
-            InitalView = new ViewState();
-            InitalView = Views.FirstOrDefault(v => v.Name == json.GetString("InitialView"));
-            Table = new Table();
-            Table.FromJson(json["Table"]);
-
-        }
-
-        public List<Layer> Layers { get; set; }
-        public string TileServer { get; set; }
-        public string MqttServer { get; set; }
-        public string MqttPort { get; set; }
-        public List<ViewState> Views { get; set; }
-        public Table Table { get; set; }
-        public ViewState InitalView { get; set; }
-    }
+    
 
 }

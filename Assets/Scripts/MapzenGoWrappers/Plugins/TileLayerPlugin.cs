@@ -35,7 +35,9 @@ namespace MapzenGo.Models.Plugins
                         rend.material = tile.Material;
                         
 
-                        var url = string.Format("{0}/{1}/{2}/{3}.png", tileLayer.Url, tile.Zoom, tile.TileTms.x, tile.TileTms.y);
+                       // var url = string.Format("{0}/{1}/{2}/{3}.png", tileLayer.Url, tile.Zoom, tile.TileTms.x, tile.TileTms.y);
+                        var url = tileLayer.Url.Replace("{z}", tile.Zoom.ToString()).Replace("{x}", tile.TileTms.x.ToString()).Replace("{y}", tile.TileTms.y.ToString());
+
                         ObservableWWW.GetWWW(url).Subscribe(
                             success =>
                             {

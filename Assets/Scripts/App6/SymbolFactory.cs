@@ -93,9 +93,11 @@ public class SymbolFactory : MonoBehaviour
     //parent object (layer)
     protected Transform symbolHost;
     protected GameObject _symbolInfo;
+    
     protected Vector2d CenterTms; //tms tile coordinate
     protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
     private Vector3 center;
+    private System.Threading.Timer refreshTimer;
 
     void Awake()
     {
@@ -105,7 +107,31 @@ public class SymbolFactory : MonoBehaviour
     /// <summary>
     /// Build the symbol layer
     /// </summary>
-    public void AddSymbols()
+    public void InitLayer()
+    {
+      
+        AddLayer();
+        //if (Layer.Refresh > 0)
+        //{
+        //    var interval = Layer.Refresh * 1000;
+        //    refreshTimer = new System.Threading.Timer((d) =>
+        //    {
+        //        RemoveLayer();
+        //        AddLayer();
+
+        //    }, null, interval, interval);
+
+        //}
+
+    }
+
+    private void RemoveLayer()
+    {
+
+    }
+    
+
+    private void AddLayer()
     {
 
         string encodedString = geojson;
@@ -150,7 +176,6 @@ public class SymbolFactory : MonoBehaviour
         var rect = GM.TileBounds(CenterTms, zoom);
         transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
         center = rect.Center.ToVector3();
-
     }
 
 
@@ -184,43 +209,22 @@ public class SymbolFactory : MonoBehaviour
     /// <summary>
     /// Loads the image data from the web and creates a symbol
     /// </summary>
-    /// <param name="c">the GEOJSON point</param>
+    /// <param name="f">the GEOJSON point</param>
     /// <param name="baseUrl"> link to the baselocation of the images</param>
     /// <returns></returns>
-    IEnumerator createSymbols(Feature c)
-    {
-
-        //if (!c.properties.ContainsKey("symbol"))
-        //    yield return null;
+    IEnumerator createSymbols(Feature f)
+    {       
+        string web = GetIconUrl(f);
         
-        string web = Layer.IconUrl; // "http://134.221.20.241:3000/images/pomp.png"; // baseUrl + c.properties["symbol"].ToString().Replace(@"""", "");
-        if (Layer.IconUrl.IndexOf("{")>=0)
-        {
-            Regex re = new Regex(@"(.*){(.*)}(.*)");
-            MatchCollection mc = re.Matches(Layer.IconUrl);            
-            foreach (Match m in mc)
-            {
-                if (m.Groups.Count>2)
-                {
-                    var prop = m.Groups[2].Value;
-                    if (c.properties.ContainsKey(prop))
-                    {
-                        web = Layer.IconUrl.Replace("{" + prop + "}", c.properties[prop].ToString());
-                    }
-                }                
-            }
-        }
         WWW www = new WWW(web);
         yield return www;
 
         // Check if the point is  in the displayed tile area if so continue
-        if (SymbolTiles.Contains(c.tilePoint))
-        {
-
-
+        if (SymbolTiles.Contains(f.tilePoint))
+        {            
             if (_symbolInfo)
             {
-                var id = c.id;
+                var id = f.id;
                 if (string.IsNullOrEmpty(id)) id = Guid.NewGuid().ToString();
                 string symbolname = "symbol-" + id;
                 var target = new GameObject("Symbol-target");
@@ -229,12 +233,10 @@ public class SymbolFactory : MonoBehaviour
 
                 var symbol = new GameObject("Symbol");
                 symbol.name = symbolname;
-                var dotMerc = GM.LatLonToMeters(c.cor[1].f, c.cor[0].f);
+                var dotMerc = GM.LatLonToMeters(f.cor[1].f, f.cor[0].f);
                 var localMercPos = (dotMerc - CenterInMercator);
                 symbol.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
-
-                    
-
+                
                 // var target = new GameObject("symbol-Target");
                 target.transform.position = localMercPos.ToVector3();
                 target.transform.SetParent(transform, false);
@@ -251,12 +253,11 @@ public class SymbolFactory : MonoBehaviour
                 
                 GameObject instance = Instantiate(Resources.Load("cone", typeof(GameObject)), target.transform) as GameObject;
                 instance.transform.localPosition = new Vector3(10f, 10f, 10f);
-                instance.transform.localScale = new Vector3(20f, 20f, 20f);
+                instance.transform.localScale = new Vector3(30f, 30f, 30f);
                 //instance.transform.localRotation = new Quaternion(0f, 0f, 180f,0f);
 
-                if (c !=null && c.properties.ContainsKey("stats") && c.properties["stats"] != null)
-                {
-                    
+                if (false && f !=null)
+                {                    
                     var info = (GameObject)Instantiate(_symbolInfo);
                     var canvas = info.GetComponent<Canvas>();
 
@@ -281,6 +282,30 @@ public class SymbolFactory : MonoBehaviour
 
 
     }
+
+    private string GetIconUrl(Feature c)
+    {
+        string web = Layer.IconUrl; // "http://134.221.20.241:3000/images/pomp.png"; // baseUrl + c.properties["symbol"].ToString().Replace(@"""", "");
+
+        if (Layer.IconUrl.IndexOf("{") >= 0)
+        {
+            Regex re = new Regex(@"(.*){(.*)}(.*)");
+            MatchCollection mc = re.Matches(Layer.IconUrl);
+            foreach (Match m in mc)
+            {
+                if (m.Groups.Count > 2)
+                {
+                    var prop = m.Groups[2].Value;
+                    if (c.properties.ContainsKey(prop))
+                    {
+                        web = Layer.IconUrl.Replace("{" + prop + "}", c.properties[prop].ToString());
+                    }
+                }
+            }
+        }
+        return web;
+    }
+
     Vector2d parseTile(JSONObject coords)
     {
         Vector2d result = new Vector2d();

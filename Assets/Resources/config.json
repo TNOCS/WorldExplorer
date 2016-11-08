@@ -18,7 +18,7 @@
       "UseTransparency": true,
       "Height": 1.1,
       "Type": "tilelayer",
-      "Enabled": true
+      "Enabled": false
       
     },
     {
@@ -38,6 +38,7 @@
       "VoiceCommand": "police",
       "UseTransparency": true,
       "Height": 1.1,
+       "Scale" : 60,
       "Type": "geojson",
       "Enabled": true
     },
@@ -49,6 +50,8 @@
       "VoiceCommand": "ambulance",
       "UseTransparency": true,
       "Height": 1.1,
+      "Refresh": 10,
+       "Scale" : 90,
       "Type": "geojson",
       "Enabled": true
     },
@@ -61,7 +64,7 @@
       "VoiceCommand": "ambulance",
       "UseTransparency": true,
       "Refresh": 10,
-      "Scale" : 94,
+      "Scale" : 120,
       "Height": 1.1,
       "Type": "geojson",
       "Enabled": false
@@ -94,7 +97,7 @@
     "TileServer": "",
     "MqttServer": "cool3.sensorlab.tno.nl",
   "MqttPort": "8026",
-  "InitialView": "Vlasakkers",
+  "InitialView": "Detail",
   "Table": {
     "TableSize": 1.5,
     "TableHeight": 1.5

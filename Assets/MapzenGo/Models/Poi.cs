@@ -29,7 +29,7 @@ namespace MapzenGo.Models
             else
             {
                 transform.position = _target.position;
-                transform.localPosition = new Vector3(-10f, _target.localPosition.y + 80f, 10f);
+                transform.localPosition = new Vector3(-15f, _target.localPosition.y + 110f, 15f);
                 // RJ Turn the Pois according to the camera
                 //transform.parent = _target.transform;
                 transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward, Camera.main.transform.up);

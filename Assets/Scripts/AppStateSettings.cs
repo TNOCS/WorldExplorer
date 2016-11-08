@@ -20,7 +20,7 @@ namespace Assets.Scripts
         public GameObject Table;
         public GameObject Camera;
         public GameObject Map;
-        public GameObject SymbolMap;
+        public GameObject Layers;
 
         public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
 
@@ -54,8 +54,13 @@ namespace Assets.Scripts
 
         public void ResetMap()
         {
+            Config.Layers.ForEach(l =>
+            {
+                DestroyGeojsonLayer(l);                
+            });
+
             DoDeleteAll(World);
-            DoDeleteAll(SymbolMap);
+            DoDeleteAll(Layers);
             InitMap();
         }
 
@@ -93,9 +98,7 @@ namespace Assets.Scripts
             if (i > mapScales.Length) i = mapScales.Length;
             var mapScale = mapScales[i - 1];
             Map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
-
-
-
+            
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);
 
@@ -109,7 +112,6 @@ namespace Assets.Scripts
             tm._key = "vector-tiles-dB21RAF";
 
             TileManager = tm;
-
 
             #region UI
 
@@ -167,47 +169,19 @@ namespace Assets.Scripts
             #endregion
 
 
-            SymbolMap = new GameObject("Layers");
-            SymbolMap.transform.SetParent(Table.transform);
-            SymbolMap.transform.localPosition = new Vector3(0f, 0.5f, 0f);
-            SymbolMap.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
-
-
-
-            var Symbolworld = new GameObject("Symbols");
-            Symbolworld.transform.SetParent(SymbolMap.transform, false);
+            Layers = new GameObject("Layers");
+            Layers.transform.SetParent(Table.transform);
+            Layers.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+            Layers.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
             iv.Layers.ForEach(layer =>
             {
                 var l = Config.Layers.FirstOrDefault(k => k.Title == layer && k.Type == "geojson");
                 if (l != null)
                 {
-                    ObservableWWW.GetWWW(l.Url).Subscribe(
-                        success =>
-                        {
-                            var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
-                            symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
-
-                            symbolFactory.geojson = success.text;  //"{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.109840,           52.458125         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
-                            symbolFactory.zoom = iv.Zoom;
-                            symbolFactory.Latitude = iv.Lat;
-                            symbolFactory.Longitude = iv.Lon;
-                            symbolFactory.TileSize = iv.TileSize;
-                            symbolFactory.Layer = l;
-                            symbolFactory.Range = iv.Range;
-                            symbolFactory.AddSymbols();                            
-                        },
-                        error =>
-                        {
-                            Debug.Log(error);
-                        }
-                    );
-
+                   InitGeojsonLayer(l);
                 }
             });
-            
-           
-
 
             #endregion
 
@@ -216,10 +190,10 @@ namespace Assets.Scripts
             var tilePlugins = new GameObject("TilePlugins");
             tilePlugins.transform.SetParent(World.transform, false);
 
-            var mapImage = new GameObject("MapImage");
-            mapImage.transform.SetParent(tilePlugins.transform, false);
-            var mapImagePlugin = mapImage.AddComponent<MapImagePlugin>();
-            mapImagePlugin.TileService = MapImagePlugin.TileServices.Default;
+            //var mapImage = new GameObject("MapImage");
+            //mapImage.transform.SetParent(tilePlugins.transform, false);
+            //var mapImagePlugin = mapImage.AddComponent<MapImagePlugin>();
+            //mapImagePlugin.TileService = MapImagePlugin.TileServices.Default;
 
             var tileLayer = new GameObject("TileLayer");
             tileLayer.transform.SetParent(tilePlugins.transform, false);
@@ -228,7 +202,86 @@ namespace Assets.Scripts
 
             #endregion
 
+        }
 
+        public void DestroyGeojsonLayer(Layer l)
+        {
+            if (l._refreshTimer != null)
+            {
+                l._refreshTimer.Dispose();
+                l._refreshTimer = null;
+            }
+            if (l._active) RemoveGeojsonLayer(l);
+        }
+
+        public void InitGeojsonLayer(Layer l)
+        {
+            AddGeojsonLayer(l);
+
+            //Speech.Keywords.Add("Show " + l.VoiceCommand, () =>
+            //{
+            //    AddGeojsonLayer(l);
+            //});
+            //Speech.Keywords.Add("Hide " + l.VoiceCommand, () =>
+            //{
+            //    RemoveGeojsonLayer(l);                
+            //});
+
+            if (l.Refresh > 0)
+            {
+                var interval = l.Refresh * 1000;
+                l._refreshTimer = new System.Threading.Timer(RefreshLayer, l, interval, interval);
+            }
+        }
+
+        public void RefreshLayer(object d)
+        {
+            var l = (Layer)d;
+            
+                if (l._active)
+                {
+                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    {
+                        RemoveGeojsonLayer(l);
+                        AddGeojsonLayer(l);
+                    });
+                }            
+        }
+
+        public void RemoveGeojsonLayer(Layer l)
+        {
+            Destroy(l._object);
+            l._active = false;
+        }
+
+        public void AddGeojsonLayer(Layer l)
+        {
+            if (l._active) return;
+            var iv = Config.InitalView;
+            ObservableWWW.GetWWW(l.Url).Subscribe(
+                success =>
+                {
+                    var layerObject = new GameObject("Layer-" + l.Title);
+                    layerObject.transform.SetParent(Layers.transform, false);
+                    l._object = layerObject;
+                    l._active = true;
+
+                    var symbolFactory = layerObject.AddComponent<SymbolFactory>();
+                    //symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
+                    symbolFactory.geojson = success.text;  //"{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.109840,           52.458125         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
+                    symbolFactory.zoom = iv.Zoom;
+                    symbolFactory.Latitude = iv.Lat;
+                    symbolFactory.Longitude = iv.Lon;
+                    symbolFactory.TileSize = iv.TileSize;
+                    symbolFactory.Layer = l;
+                    symbolFactory.Range = iv.Range;
+                    symbolFactory.InitLayer();
+                },
+                error =>
+                {
+                    Debug.Log(error);
+                }
+            );
         }
 
         public void DoDeleteAll(GameObject Holder)

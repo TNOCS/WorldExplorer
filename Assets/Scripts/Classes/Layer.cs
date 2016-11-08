@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using UnityEngine;
 
 namespace Assets.Scripts.Classes
 {
@@ -31,6 +33,10 @@ namespace Assets.Scripts.Classes
             Scale = json.GetInt("Scale", 30);
             if (json.HasField("Refresh")) Refresh = json.GetInt("Refresh");
         }
+
+        public bool _active { get; set; }
+        public GameObject _object { get; set; }
+        public Timer _refreshTimer { get; set; }
 
         public string Title { get; set; }
         public string Type { get; set; }

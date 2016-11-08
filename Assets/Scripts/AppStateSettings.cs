@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using MapzenGo.Models.Settings;
 using MapzenGo.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +9,8 @@ using UniRx;
 
 namespace Assets.Scripts
 {
-
     public class AppState : Singleton<AppState>
     {
-
         public GameObject World;
         public GameObject Terrain;
         public GameObject Table;
@@ -23,7 +19,6 @@ namespace Assets.Scripts
         public GameObject SymbolMap;
 
         public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
-
 
         protected AppState()
         {
@@ -43,8 +38,6 @@ namespace Assets.Scripts
 
         public void LoadConfig()
         {
-
-
             var targetFile = Resources.Load<TextAsset>("config");
             var test = new JSONObject(targetFile.text);
 
@@ -54,7 +47,7 @@ namespace Assets.Scripts
 
         public void AddTerrain()
         {
-            var iv = Config.InitalView;
+            //var iv = Config.InitalView;
             var t = Config.Table;
 
             #region create map & terrain
@@ -87,8 +80,6 @@ namespace Assets.Scripts
             var mapScale = mapScales[i - 1];
             Map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
-
-
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);
 
@@ -102,7 +93,6 @@ namespace Assets.Scripts
             tm._key = "vector-tiles-dB21RAF";
 
             TileManager = tm;
-
 
             #region UI
 
@@ -127,8 +117,6 @@ namespace Assets.Scripts
             var buildings = new GameObject("BuildingFactory");
             buildings.transform.SetParent(factories.transform, false);
             var buildingFactory = buildings.AddComponent<BuildingFactory>();
-
-
 
             //var flatBuildings = new GameObject("FlatBuildingFactory");
             //flatBuildings.transform.SetParent(factories.transform, false);
@@ -157,15 +145,13 @@ namespace Assets.Scripts
             var pois = new GameObject("PoiFactory");
             pois.transform.SetParent(factories.transform, false);
             var poisFactory = pois.AddComponent<PoiFactory>();
-            #endregion
 
+            #endregion
 
             SymbolMap = new GameObject("Layers");
             SymbolMap.transform.SetParent(Table.transform);
             SymbolMap.transform.localPosition = new Vector3(0f, 0.5f, 0f);
             SymbolMap.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
-
-
 
             var Symbolworld = new GameObject("Symbols");
             Symbolworld.transform.SetParent(SymbolMap.transform, false);
@@ -179,27 +165,22 @@ namespace Assets.Scripts
                                {
                                    var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
                                    symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
-
                                    symbolFactory.geojson = success.text;  //"{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.109840,           52.458125         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
-                               symbolFactory.zoom = iv.Zoom;
+                                   symbolFactory.zoom = iv.Zoom;
                                    symbolFactory.Latitude = iv.Lat;
                                    symbolFactory.Longitude = iv.Lon;
                                    symbolFactory.TileSize = iv.TileSize;
                                    symbolFactory.Layer = l;
                                    symbolFactory.Range = iv.Range;
                                    symbolFactory.AddSymbols();
-
-
                                },
                                error =>
                                {
                                    Debug.Log(error);
                                }
                            );
-
                 }
             });
-
 
             #endregion
 
@@ -219,11 +200,7 @@ namespace Assets.Scripts
             tileLayerPlugin.tileLayers = Config.Layers;
 
             #endregion
-
-
         }
-
-
 
         protected void AddRectTransformToGameObject(GameObject go)
         {
@@ -233,28 +210,19 @@ namespace Assets.Scripts
             rt.anchorMin = new Vector2(0, 0);
             rt.anchorMax = new Vector2(1, 1);
         }
-
-
     }
-
-
-
-
 
     public class AppConfig
     {
-
         public AppConfig()
         {
             //this.Layers = new List<Layer>();
         }
-
         public void FromJson(JSONObject json)
         {
             TileServer = json.GetString("TileServer");
             MqttServer = json.GetString("MqttServer");
             MqttPort = json.GetString("MqttPort");
-
 
             Layers = new List<Layer>();
             var ll = json["Layers"];
@@ -278,7 +246,6 @@ namespace Assets.Scripts
             InitalView = Views.FirstOrDefault(v => v.Name == json.GetString("InitialView"));
             Table = new Table();
             Table.FromJson(json["Table"]);
-
         }
 
         public List<Layer> Layers { get; set; }
@@ -289,5 +256,4 @@ namespace Assets.Scripts
         public Table Table { get; set; }
         public ViewState InitalView { get; set; }
     }
-
 }

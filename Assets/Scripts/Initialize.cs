@@ -16,8 +16,69 @@ public class Initialize : MonoBehaviour
     private GameObject _cursorFab;
     private GameObject cursor;
     private AppState appState;
-
-    public string json = "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.070362091064453,           53.295336751980656         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
+    public string json = @"{
+""type"": ""FeatureCollection"",
+""features"": [{
+    ""geometry"": {
+    ""type"": ""Point"",
+    ""coordinates"": [5.070362091064453, 53.295336751980656]
+},  ""type"": ""Feature"",
+    ""properties"": {
+        ""kind"": ""forest"",
+        ""area"": 35879,
+        ""source"": ""openstreetmap.org"",
+        ""min_zoom"": 14,
+        ""tier"": 2,
+        ""id"": 119757239, 		
+        ""symbol"": ""liaise.png""
+    }
+}, {
+    ""geometry"": {
+        ""type"": ""Point"",
+        ""coordinates"": [5.072250366210937, 53.29523415150025]
+    },
+    ""type"": ""Feature"",
+    ""properties"": {
+        ""kind"": ""forest"",
+        ""area"": 1651,
+        ""source"": ""openstreetmap.org"",
+        ""min_zoom"": 14,
+        ""tier"": 2,
+        ""id"": 119757777, 		
+        ""symbol"": ""counterattack_fire.png""
+    }
+}, {
+    ""geometry"": {
+        ""type"": ""Point"",
+        ""coordinates"": [5.066671371459961, 53.29469549493482]
+    }, ""type"": ""Feature"",
+        ""properties"": {
+            ""marker-color"": ""#7e7e7e"",
+            ""marker-size"": ""medium"",
+            ""marker-symbol"": ""circle-stroked"",
+            ""kind"": ""app-622"",
+            ""area"": 18729,
+            ""source"": ""openstreetmap.org"",
+            ""min_zoom"": 14,
+            ""tier"": 2,
+            ""id"": 119758146,
+            ""symbol"": ""warrant_served.png""
+    }
+}, {
+    ""geometry"": {
+        ""type"": ""Point"",
+        ""coordinates"": [5.068731307983398, 53.29497764922103]
+    }, ""type"": ""Feature"",
+        ""properties"": {
+            ""kind"": ""bus_stop"",
+            ""name"": ""Eureka"",
+            ""source"": ""openstreetmap.org"",
+            ""min_zoom"": 17,
+            ""operator"": ""TCR"",
+            ""id"": 2833355779, 		
+            ""symbol"": ""activity.png""
+    }
+}]}";
 
     void includeAnchorMovingScript()
     {
@@ -59,7 +120,7 @@ public class Initialize : MonoBehaviour
 
 #if (NETFX_CORE)
         InitMqtt();
-        #endif
+#endif
         includeAnchorMovingScript();
      
         appState.Speech.Init();
@@ -67,6 +128,11 @@ public class Initialize : MonoBehaviour
 
     void InitSpeech()
     {
+        appState.Speech.Keywords.Add("Zoom out", () => {
+            appState.Center = new Vector3(appState.Center.x, appState.Center.y, appState.Center.z + 1);
+            // appState.TileManager.UpdateTiles();
+        });
+
         appState.Speech.Keywords.Add("Center Table", () => {
             appState.Table.transform.position = new Vector3(gameObject.transform.position.x, 0.7f, gameObject.transform.position.z);
             //Center = new Vector3(Center.x, Center.y, Center.z + 1);
@@ -75,11 +141,6 @@ public class Initialize : MonoBehaviour
 
     void InitViews()
     {
-        appState.Speech.Keywords.Add("Zoom out", () => {
-            appState.Center = new Vector3(appState.Center.x, appState.Center.y, appState.Center.z + 1);
-           // appState.TileManager.UpdateTiles();
-        });
-
         appState.Config.Views.ForEach(v =>
         {
             appState.Speech.Keywords.Add("Switch to " + v.Name, () =>
@@ -91,10 +152,9 @@ public class Initialize : MonoBehaviour
                 appState.TileManager.Start();
             });
         });
-
     }
 
-    #if (NETFX_CORE)
+#if (NETFX_CORE)
     protected void InitMqtt()
     {
         var client = new uPLibrary.Networking.M2Mqtt.MqttClient(appState.Config.MqttServer, int.Parse(appState.Config.MqttPort), false);
@@ -144,7 +204,6 @@ public class Initialize : MonoBehaviour
             appState.TileManager.Latitude = iv.Lat;
             appState.TileManager.Longitude = iv.Lon;
             appState.TileManager.Zoom = iv.Zoom;
-
             appState.TileManager.Start();
         }
     }

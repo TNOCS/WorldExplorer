@@ -43,17 +43,6 @@
     },
 
     {
-      "Title": "Ambulance",
-      "Url": "http://134.221.20.241:3000/api/layers/ambulanceposten.actual",
-      "IconUrl": "http://134.221.20.241:3000/images/ambulanceposten.png",
-      "VoiceCommand": "ambulance",
-      "UseTransparency": true,
-      "Height": 1.1,
-      "Type": "geojson",
-      "Enabled": true
-    },
-
-    {
       "Title": "Pumps",
       "Url": "  http://134.221.20.241:3000/api/layers/pumps.actual",
       "IconUrl": "http://134.221.20.241:3000/images/pomp.png",
@@ -72,15 +61,6 @@
       "Lat": 52.453924, 
       "Lon": 5.047512,
       "Zoom": 16,
-      "TileSize": 100,
-      "Range": 2,
-      "Scale": 1
-    },
-    {
-      "Name": "Overview",
-      "Lat": 52.458125,
-      "Lon": 5.109840,
-      "Zoom": 12,
       "TileSize": 100,
       "Range": 2,
       "Scale": 1

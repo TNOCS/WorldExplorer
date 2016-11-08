@@ -46,6 +46,7 @@ public class SymbolFactory : MonoBehaviour
         public string type { get; set; }
         public string id { get; set; }
         public Dictionary<string, object> properties { get; set; }
+        public List<Dictionary<string, object>> Stats { get; set; }
         public Geometry geometry { get; set; }
         public Vector2d tilePoint { get; set; }
         // lat lon
@@ -192,7 +193,7 @@ public class SymbolFactory : MonoBehaviour
                 var localMercPos = (dotMerc - CenterInMercator);
                 symbol.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
 
-                    
+
 
                 // var target = new GameObject("symbol-Target");
                 target.transform.position = localMercPos.ToVector3();
@@ -205,38 +206,49 @@ public class SymbolFactory : MonoBehaviour
                 symbol.transform.SetParent(target.transform, true);
                 symbol.transform.localScale = new Vector3(30, 30);
                 symbol.transform.localPosition = new Vector3(0, 60f, 0);
-                
+
                 GameObject instance = Instantiate(Resources.Load("cone", typeof(GameObject)), target.transform) as GameObject;
                 instance.transform.localPosition = new Vector3(10f, 10f, 10f);
                 instance.transform.localScale = new Vector3(20f, 20f, 20f);
                 //instance.transform.localRotation = new Quaternion(0f, 0f, 180f,0f);
 
-                if (c !=null && c.properties.ContainsKey("stats") && c.properties["stats"] != null)
+                if (c != null)
                 {
-                    
-                    var info = (GameObject)Instantiate(_symbolInfo);
-                    var canvas = info.GetComponent<Canvas>();
+                    if (c.Stats != null)
+                        for (int i = 0; i < c.Stats.Count; i++)
+                        {
 
-                    canvas.worldCamera = Camera.main;
-                    info.transform.SetParent(target.transform, false);
-                    canvas.transform.localScale = new Vector3(50, 100);
-                    canvas.transform.localPosition = new Vector3(25, 70, 0);
-                    var bar = canvas.transform.FindChild("bar");
-                    bar.localScale = new Vector3(100, 100);
-                    var BarFill = bar.FindChild("Bar-Background").FindChild("Bar-Fill").gameObject.GetComponentInChildren<Image>().fillAmount= 90;//calculate fill stat value
+                            switch (c.Stats[i]["type"].ToString().Replace(@"""", ""))
+                            {
+                                default:
+                                    break;
+                                case "bar":
+                                    var info = (GameObject)Instantiate(_symbolInfo);
+                                    var canvas = info.GetComponent<Canvas>();
+
+                                    canvas.worldCamera = Camera.main;
+                                    info.transform.SetParent(target.transform, false);
+                                    canvas.transform.localScale = new Vector3(5, 10);
+                                    canvas.transform.localPosition = new Vector3(0, 180, 0);
+                                    var bar = canvas.transform.FindChild("bar");
+                                    bar.localScale = new Vector3(100, 100);
+                                    var BarFill = bar.FindChild("Bar-Background").FindChild("Bar-Fill").gameObject.GetComponentInChildren<Image>().fillAmount = (float.Parse(c.Stats[i]["value"].ToString().Replace(@"""", "")) / float.Parse(c.Stats[i]["maxValue"].ToString().Replace(@"""", "")));//calculate fill stat value
 
 
-                    // Image voor balk:
-                    //var ICO = bar.transform.FindChild("ICO").gameObject.GetComponent<Image>();
-                    //  ICO.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                                    // Image voor balk:
+                                    var ICO = bar.transform.FindChild("ICO").gameObject.GetComponent<Image>();
+                                    ICO.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                                    break;
+
+                            }
+
+
+                        }
+
 
                 }
-
-
             }
         }
-
-
     }
     Vector2d parseTile(JSONObject coords)
     {
@@ -302,13 +314,32 @@ public class SymbolFactory : MonoBehaviour
 
             f.properties = new Dictionary<string, object>();
 
-            foreach (var s in feature["properties"].keys)
-
+            if (feature["properties"].keys != null)
             {
 
-                f.properties[s] = feature["properties"][s];
+                foreach (var s in feature["properties"].keys)
 
+                {
+
+                    f.properties[s] = feature["properties"][s];
+                    if (s == "stats")
+                    {
+                        var x = new JSONObject(feature["properties"][s].ToString());
+                        f.Stats = new List<Dictionary<string, object>>();
+                        for (int i = 0; i < x.Count; i++)
+                        {
+                            var statDic = new Dictionary<string, object>();
+                            foreach (var item in x[i].keys)
+                            {
+                                statDic.Add(item, x[i][item]);
+                            }
+                            f.Stats.Add(statDic);
+                        }
+
+                    }
+                }
             }
+
 
             geoJson.features.Add(f);
 

@@ -266,9 +266,9 @@ namespace Assets.Scripts
             //var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
             //tileLayerPlugin.tileLayers = Config.Layers;
 
-            #endregion
+            //#endregion
         }
-        }
+
         public void DestroyGeojsonLayer(Layer l)
         {
             Speech.RemoveKeyword(ShowLayerSpeech + l.VoiceCommand);

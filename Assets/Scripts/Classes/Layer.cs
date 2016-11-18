@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using UnityEngine;
 
 namespace Assets.Scripts.Classes
 {
@@ -28,7 +30,13 @@ namespace Assets.Scripts.Classes
             Height = json.GetFloat("Height");
             Group = json.GetString("Group");
             IconUrl = json.GetString("IconUrl");
+            Scale = json.GetInt("Scale", 30);
+            if (json.HasField("Refresh")) Refresh = json.GetInt("Refresh");
         }
+
+        public bool _active { get; set; }
+        public GameObject _object { get; set; }
+        public Timer _refreshTimer { get; set; }
 
         public string Title { get; set; }
         public string Type { get; set; }
@@ -56,9 +64,19 @@ namespace Assets.Scripts.Classes
         public string IconUrl { get; set; }
 
         /// <summary>
+        /// Scale of the icon
+        /// </summary>
+        public int Scale { get; set; }
+
+        /// <summary>
         /// Name of layer group, only one layer can be active in a group
         /// </summary>
         public string Group { get; set; }
+
+        /// <summary>
+        /// Interval in seconds to refresh layer
+        /// </summary>
+        public int Refresh { get; set; }
     }
 
 }

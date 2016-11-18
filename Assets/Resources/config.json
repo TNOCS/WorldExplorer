@@ -1,33 +1,30 @@
 ﻿{
   "Layers": [
     {
-      "Title": "Topo Layer",
-      "Url2": "http://134.221.20.239:8101/2102363017",
-      "Url": "http://d.basemaps.cartocdn.com/light_nolabels",
-      "VoiceCommand": "topo layer",
+      "Title": "TopoLayer",
+      "Url2": "http://134.221.20.239:8101/2102363017/{z}/{x}/{y}.png",
+      "Url": "http://d.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+      "VoiceCommand": "street map",
       "UseTransparency": true,
-      "Height": 1.1,
-      "Type": "tilelayer",
-      "Enabled": true,
+      "Height": 0.9,
+      "Type": "tilelayer",     
       "Group" : "baselayer"
     },{
       "Title": "Flooding",
       "Url2": "http://134.221.20.239:8101/2102363017",
       "Url": "http://134.221.20.239:8101/40954558,40954557,40954556/",
-      "VoiceCommand": "topo layer",
+      "VoiceCommand": "flooding",
       "UseTransparency": true,
-      "Height": 1.2,
-      "Type": "tilelayer",
-      "Enabled": false
+      "Height": 1.1,
+      "Type": "tilelayer"      
     },
     {
       "Title": "Satellite",
-      "Url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile",
-      "VoiceCommand": "satellite layer",
+      "Url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      "VoiceCommand": "satellite",
       "UseTransparency": true,
-      "Height": 1.1,
+      "Height": 0.9,
       "Type": "tilelayer",
-      "Enabled": false,
       "Group": "baselayer"
     },
     {
@@ -37,35 +34,80 @@
       "VoiceCommand": "police",
       "UseTransparency": true,
       "Height": 1.1,
+       "Scale" : 60,
       "Type": "geojson",
       "Enabled": true
     },
+
     {
-      "Title": "Pumps",
-      "Url": "  http://134.221.20.241:3000/api/layers/pumps.actual",
-      "IconUrl": "http://134.221.20.241:3000/images/pomp.png",
+      "Title": "Ambulance",
+      "Url": "http://134.221.20.241:3000/api/layers/ambulanceposten.actual",
+      "IconUrl": "http://134.221.20.241:3000/images/ambulanceposten.png",
       "VoiceCommand": "ambulance",
       "UseTransparency": true,
       "Height": 1.1,
+      "Refresh": 10,
+       "Scale" : 90,
+      "Type": "geojson",
+      "Enabled": true
+    },
+
+    {
+      "Title": "Gps",
+      "Url": "http://217.169.227.210:3000/api/layers/gps.actual",
+      "Url1" :  "http://tnopresenter.nl/arnoud/test.json",
+      "IconUrl": "http://217.169.227.210:3000/images/gps/{role}.png",
+      "VoiceCommand": "gps",
+      "UseTransparency": true,
+      "Refresh": 10,
+      "Scale" : 120,
+      "Height": 1.1,
       "Type": "geojson",
       "Enabled": false
-    }
+    }  
   ],
   "Views": [
-     {
+    {
+      "Name": "Water",
+      "Lat": 52.453924,
+      "Lon": 5.047512,
+      "Zoom": 16,
+      "TileSize": 100,
+      "Range": 2,
+      "Scale": 1,
+      "Mapzen": [ "buildings", "roads", "landuse", "pois" ],
+      "Layers": [ "Police", "Ambulance" ],
+      "TileLayers": [ "TopoLayer" ]
+    },
+    {
       "Name" : "Detail",
       "Lat": 52.453924, 
       "Lon": 5.047512,
-      "Zoom": 15,
+      "Zoom": 17,
       "TileSize": 100,
       "Range": 2,
-      "Scale": 1
+      "Scale": 1,
+      "Mapzen" :  ["buildings","roads","landuse","water","pois"],
+      "Layers": [ "Police", "Ambulance" ],
+      "TileLayers" :  ["TopoLayer"]
+    },
+    {
+      "Name": "Military",
+      "Lat": 52.144168,
+      "Lon": 5.337196,
+      "Zoom": 16,
+      "TileSize": 100,
+      "Range": 2,
+      "Scale": 1,
+      "Mapzen" :  ["buildings","roads","landuse","water"],
+      "Layers": [ "Gps" ],
+      "TileLayers" :  ["Satellite"]
     }
   ],
     "TileServer": "",
     "MqttServer": "cool3.sensorlab.tno.nl",
   "MqttPort": "8026",
-  "InitialView": "Detail",
+  "InitialView": "Water",
   "Table": {
     "TableSize": 1.5,
     "TableHeight": 1.5

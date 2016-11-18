@@ -20,7 +20,7 @@ namespace MapzenGo.Models
         protected override void LoadTile(Vector2d tileTms, Tile tile)
         {
             var tilePath = Path.Combine(CacheFolderPath, _mapzenLayers.Replace(',', '_') + "_" + tileTms.x + "_" + tileTms.y) + ".json";
-            Debug.Log(tilePath);
+            //Debug.Log(tilePath);
             if (File.Exists(tilePath))
             {
                 using (var r = new StreamReader(new FileStream(tilePath, FileMode.Open)))

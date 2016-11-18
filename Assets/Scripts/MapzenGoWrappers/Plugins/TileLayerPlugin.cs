@@ -16,14 +16,12 @@ namespace MapzenGo.Models.Plugins
 
             foreach (var tileLayer in tileLayers)
             {
-                if (tileLayer.Type == "tilelayer")
-                {
+                
                     //AppState.Instance.Speech.Keywords.Add("Enable " + tileLayer.VoiceCommand, () =>
                     // {
                     //     if (tileLayer.Group())
                     // });
-                    if (tileLayer.Enabled)
-                    {
+                   
                         var go = GameObject.CreatePrimitive(PrimitiveType.Quad).transform;
                         go.name = "tilelayer-" + tileLayer.Title;
                         go.SetParent(tile.transform, false);
@@ -35,7 +33,9 @@ namespace MapzenGo.Models.Plugins
                         rend.material = tile.Material;
                         
 
-                        var url = string.Format("{0}/{1}/{2}/{3}.png", tileLayer.Url, tile.Zoom, tile.TileTms.x, tile.TileTms.y);
+                       // var url = string.Format("{0}/{1}/{2}/{3}.png", tileLayer.Url, tile.Zoom, tile.TileTms.x, tile.TileTms.y);
+                        var url = tileLayer.Url.Replace("{z}", tile.Zoom.ToString()).Replace("{x}", tile.TileTms.x.ToString()).Replace("{y}", tile.TileTms.y.ToString());
+                Debug.Log(url);
                         ObservableWWW.GetWWW(url).Subscribe(
                             success =>
                             {
@@ -51,9 +51,9 @@ namespace MapzenGo.Models.Plugins
                             }
                         );
                     }
-                }
+                
                     
-            }
+            
         }
 
     }

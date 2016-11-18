@@ -6,17 +6,24 @@ using Assets.Scripts.Classes;
 using Assets.Scripts.Utils;
 using MapzenGo.Models.Plugins;
 using UniRx;
+using System;
+using Assets.MapzenGo.Models.Enums;
 
 namespace Assets.Scripts
 {
     public class AppState : Singleton<AppState>
     {
+        public const string ShowLayerSpeech = "Show ";
+        public const string HideLayerSpeech = "Show ";
+        public const string ToggleSpeech = "Toggle ";
+
+
         public GameObject World;
         public GameObject Terrain;
         public GameObject Table;
         public GameObject Camera;
         public GameObject Map;
-        public GameObject SymbolMap;
+        public GameObject Layers;
 
         public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
 
@@ -31,9 +38,27 @@ namespace Assets.Scripts
         public ViewState State { get; set; }
         public SpeechManager Speech { get; set; }
 
+        public List<string> MapzenTags = new List<string>(new string[] { "buildings", "water", "roads", "pois", "landuse" });
+
         public void Init()
         {
             Speech = new SpeechManager();
+                     
+        }
+
+        private void ToggleMapzen(string tag)
+        {
+           
+            if (Config==null || Config.InitalView==null) return;
+            if (Config.InitalView.Mapzen.Contains(tag))
+            {
+                Config.InitalView.Mapzen.Remove(tag);
+            }
+            else
+            {
+                Config.InitalView.Mapzen.Add(tag);
+            }
+            ResetMap();
         }
 
         public void LoadConfig()
@@ -43,6 +68,26 @@ namespace Assets.Scripts
 
             Config = new AppConfig();
             Config.FromJson(test);
+        }
+
+        public void ResetMap()
+        {
+            Config.Layers.ForEach(l =>
+            {
+                DestroyGeojsonLayer(l);                
+            });
+
+            foreach (var tl in Config.Layers)
+            {
+                if (tl.Type.ToLower() == "tilelayer")
+                {
+                    Speech.RemoveKeyword(ShowLayerSpeech + tl.VoiceCommand);
+                };
+            }
+                
+            DoDeleteAll(World);
+            DoDeleteAll(Layers);
+            InitMap();
         }
 
         public void AddTerrain()
@@ -73,11 +118,17 @@ namespace Assets.Scripts
         {
             var iv = Config.InitalView;
 
+            //Enum.GetNames(typeof(PoiType)).ToList().ForEach(pt =>
+            //{
+            //    if (!MapzenTags.Contains(pt)) MapzenTags.Add(pt);
+            //});
+
             var i = iv.Range;
             if (i > mapScales.Length) i = mapScales.Length;
             var mapScale = mapScales[i - 1];
             Map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
+            MapzenTags.ForEach(k => Speech.AddKeyword(ToggleSpeech + k, () => ToggleMapzen(k)));
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);
 
@@ -112,71 +163,65 @@ namespace Assets.Scripts
             var factories = new GameObject("Factories");
             factories.transform.SetParent(World.transform, false);
 
-            var buildings = new GameObject("BuildingFactory");
-            buildings.transform.SetParent(factories.transform, false);
-            var buildingFactory = buildings.AddComponent<BuildingFactory>();
-
+            if (iv.Mapzen.Contains("buildings"))
+            {
+                var buildings = new GameObject("BuildingFactory");
+                buildings.transform.SetParent(factories.transform, false);
+                var buildingFactory = buildings.AddComponent<BuildingFactory>();
+            }
             //var flatBuildings = new GameObject("FlatBuildingFactory");
             //flatBuildings.transform.SetParent(factories.transform, false);
             //var flatBuildingFactory = flatBuildings.AddComponent<FlatBuildingFactory>();
 
-            var roads = new GameObject("RoadFactory");
-            roads.transform.SetParent(factories.transform, false);
-            var roadFactory = roads.AddComponent<RoadFactory>();
+            if (iv.Mapzen.Contains("roads"))
+            {
 
-            //var water = new GameObject("WaterFactory");
-            //water.transform.SetParent(factories.transform, false);
-            //var waterFactory = water.AddComponent<WaterFactory>();
+                var roads = new GameObject("RoadFactory");
+                roads.transform.SetParent(factories.transform, false);
+                var roadFactory = roads.AddComponent<RoadFactory>();
+            }
 
+            if (iv.Mapzen.Contains("buildings"))
+            {
+                var water = new GameObject("WaterFactory");
+                water.transform.SetParent(factories.transform, false);
+                var waterFactory = water.AddComponent<WaterFactory>();
+            }
             //var boundary = new GameObject("BoundaryFactory");
             //boundary.transform.SetParent(factories.transform, false);
             //var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
 
-            var landuse = new GameObject("LanduseFactory");
-            landuse.transform.SetParent(factories.transform, false);
-            var landuseFactory = landuse.AddComponent<LanduseFactory>();
+            if (iv.Mapzen.Contains("landuse"))
+            {
+                var landuse = new GameObject("LanduseFactory");
+                landuse.transform.SetParent(factories.transform, false);
+                var landuseFactory = landuse.AddComponent<LanduseFactory>();
+            }
 
             var places = new GameObject("PlacesFactory");
             places.transform.SetParent(factories.transform, false);
             var placesFactory = places.AddComponent<PlacesFactory>();
 
-            var pois = new GameObject("PoiFactory");
-            pois.transform.SetParent(factories.transform, false);
-            var poisFactory = pois.AddComponent<PoiFactory>();
+            if (iv.Mapzen.Contains("pois"))
+            {
+                var pois = new GameObject("PoiFactory");
+                pois.transform.SetParent(factories.transform, false);
+                var poisFactory = pois.AddComponent<PoiFactory>();
+            }
 
             #endregion
 
-            SymbolMap = new GameObject("Layers");
-            SymbolMap.transform.SetParent(Table.transform);
-            SymbolMap.transform.localPosition = new Vector3(0f, 0.5f, 0f);
-            SymbolMap.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
+            Layers = new GameObject("Layers");
+            Layers.transform.SetParent(Table.transform);
+            Layers.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+            Layers.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
-            var Symbolworld = new GameObject("Symbols");
-            Symbolworld.transform.SetParent(SymbolMap.transform, false);
-
-            Config.Layers.ForEach(l =>
+            iv.Layers.ForEach(layer =>
             {
-                if (l.Type == "geojson" && l.Enabled)
+                var l = Config.Layers.FirstOrDefault(k => k.Title == layer && k.Type == "geojson");
+                if (l != null)
                 {
-                    ObservableWWW.GetWWW(l.Url).Subscribe(
-                               success =>
-                               {
-                                   var symbolFactory = Symbolworld.AddComponent<SymbolFactory>();
-                                   symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
-                                   symbolFactory.geojson = success.text;  //"{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.109840,           52.458125         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
-                                   symbolFactory.zoom = iv.Zoom;
-                                   symbolFactory.Latitude = iv.Lat;
-                                   symbolFactory.Longitude = iv.Lon;
-                                   symbolFactory.TileSize = iv.TileSize;
-                                   symbolFactory.Layer = l;
-                                   symbolFactory.Range = iv.Range;
-                                   symbolFactory.AddSymbols();
-                               },
-                               error =>
-                               {
-                                   Debug.Log(error);
-                               }
-                           );
+                    InitGeojsonLayer(l);
                 }
             });
 
@@ -186,13 +231,6 @@ namespace Assets.Scripts
 
             var tilePlugins = new GameObject("TilePlugins");
             tilePlugins.transform.SetParent(World.transform, false);
-
-
-            var terrainImage = new GameObject("TerrainImage");
-            terrainImage.transform.SetParent(tilePlugins.transform, false);
-            var terrainImagePlugin = terrainImage.AddComponent<TerrainHeightPlugin>();
-            terrainImagePlugin.TileService = TerrainHeightPlugin.TileServices.Default;
-
 
             //var mapImage = new GameObject("MapImage");
             //mapImage.transform.SetParent(tilePlugins.transform, false);
@@ -204,8 +242,127 @@ namespace Assets.Scripts
             //var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
             //tileLayerPlugin.tileLayers = Config.Layers;
 
+            var terrainImage = new GameObject("TerrainImage");
+            terrainImage.transform.SetParent(tilePlugins.transform, false);
+            var terrainImagePlugin = terrainImage.AddComponent<TerrainHeightPlugin>();
+            terrainImagePlugin.TileService = TerrainHeightPlugin.TileServices.Default;
+
+            foreach(var tl in Config.Layers.Where(k => { return k.Type.ToLower() == "tilelayer"; }))
+            {
+                Speech.AddKeyword(ShowLayerSpeech + tl.VoiceCommand, () => {
+                    
+                    if (tl.Group!=null)
+                    {
+                        var ll = Config.Layers.Where(k => k.Type.ToLower() == "tilelayer" && k.Group == tl.Group).Select(k => k.Title);
+                        iv.TileLayers = iv.TileLayers.Where(k => !ll.Contains(k)).ToList();
+                        iv.TileLayers.Add(tl.Title);                      
+                        ResetMap();
+                    }
+                });
+            }
+
+            #endregion
+            //tileLayer.transform.SetParent(tilePlugins.transform, false);
+            //var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
+            //tileLayerPlugin.tileLayers = Config.Layers;
+
             #endregion
         }
+        }
+        public void DestroyGeojsonLayer(Layer l)
+        {
+            Speech.RemoveKeyword(ShowLayerSpeech + l.VoiceCommand);
+            Speech.RemoveKeyword(HideLayerSpeech + l.VoiceCommand);
+            if (l._refreshTimer != null)
+            {
+                l._refreshTimer.Dispose();
+                l._refreshTimer = null;
+            }
+            if (l._active) RemoveGeojsonLayer(l);
+        }
+
+        public void InitGeojsonLayer(Layer l)
+        {
+            AddGeojsonLayer(l);
+            Speech.AddKeyword(ShowLayerSpeech + l.VoiceCommand, () =>
+            {
+                AddGeojsonLayer(l);
+            });
+            Speech.AddKeyword(HideLayerSpeech + l.VoiceCommand, () =>
+            {
+                RemoveGeojsonLayer(l);
+            });
+            if (l.Refresh > 0)
+            {
+                var interval = l.Refresh * 1000;
+                l._refreshTimer = new System.Threading.Timer(RefreshLayer, l, interval, interval);
+            }
+        }
+        public void RefreshLayer(object d)
+        {
+            var l = (Layer)d;
+            
+                if (l._active)
+                {
+                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    {
+                        RemoveGeojsonLayer(l);
+                        AddGeojsonLayer(l);
+                    });
+                }            
+        }
+        public void RemoveGeojsonLayer(Layer l)
+        {
+            Destroy(l._object);
+            l._active = false;
+        }
+
+        public void AddGeojsonLayer(Layer l)
+        {
+            if (l._active) return;
+            var iv = Config.InitalView;
+            ObservableWWW.GetWWW(l.Url).Subscribe(
+                success =>
+                {
+                    var layerObject = new GameObject("Layer-" + l.Title);
+                    layerObject.transform.SetParent(Layers.transform, false);
+                    l._object = layerObject;
+                    l._active = true;
+                    var symbolFactory = layerObject.AddComponent<SymbolFactory>();
+                    //symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
+                    symbolFactory.geojson = success.text;  //"{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.109840,           52.458125         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
+                    symbolFactory.zoom = iv.Zoom;
+                    symbolFactory.Latitude = iv.Lat;
+                    symbolFactory.Longitude = iv.Lon;
+                    symbolFactory.TileSize = iv.TileSize;
+                    symbolFactory.Layer = l;
+                    symbolFactory.Range = iv.Range;
+                    symbolFactory.InitLayer();
+                },
+                error =>
+                {
+                    Debug.Log(error);
+                }
+            );
+        }
+
+        public void DoDeleteAll(GameObject Holder)
+        {
+            //Holder.transform.DetachChildren();
+            Destroy(Holder);
+            return;
+            while (Holder.transform.childCount > 0)
+            {
+                var childs = Holder.transform.transform.childCount;
+                for (var i = 0; i<= childs - 1; i++)
+                {
+                    var go = Holder.transform.transform.GetChild(i).gameObject;
+                    DoDeleteAll(go);                   
+                }
+            }
+            Destroy(Holder);
+        }
+
 
         protected void AddRectTransformToGameObject(GameObject go)
         {
@@ -215,50 +372,13 @@ namespace Assets.Scripts
             rt.anchorMin = new Vector2(0, 0);
             rt.anchorMax = new Vector2(1, 1);
         }
+
+
     }
 
-    public class AppConfig
-    {
-        public AppConfig()
-        {
-            //this.Layers = new List<Layer>();
-        }
-        public void FromJson(JSONObject json)
-        {
-            TileServer = json.GetString("TileServer");
-            MqttServer = json.GetString("MqttServer");
-            MqttPort = json.GetString("MqttPort");
 
-            Layers = new List<Layer>();
-            var ll = json["Layers"];
-            for (var l = 0; l < ll.Count; l++)
-            {
-                var layer = new Layer();
-                layer.FromJson(ll[l]);
-                Layers.Add(layer);
-            }
 
-            Views = new List<ViewState>();
-            var vs = json["Views"];
-            for (var l = 0; l < vs.Count; l++)
-            {
-                var view = new ViewState();
-                view.FromJson(vs[l]);
-                Views.Add(view);
-            }
 
-            InitalView = new ViewState();
-            InitalView = Views.FirstOrDefault(v => v.Name == json.GetString("InitialView"));
-            Table = new Table();
-            Table.FromJson(json["Table"]);
-        }
 
-        public List<Layer> Layers { get; set; }
-        public string TileServer { get; set; }
-        public string MqttServer { get; set; }
-        public string MqttPort { get; set; }
-        public List<ViewState> Views { get; set; }
-        public Table Table { get; set; }
-        public ViewState InitalView { get; set; }
-    }
+    
 }

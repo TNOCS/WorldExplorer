@@ -16,11 +16,13 @@ namespace MapzenGo.Models.Factories
 {
     public class BuildingFactory : Factory
     {
-        [SerializeField] protected bool _useTriangulationNet;
+        [SerializeField]
+        protected bool _useTriangulationNet;
         public override string XmlTag { get { return "buildings"; } }
         private HashSet<string> _active = new HashSet<string>();
-        [SerializeField] protected BuildingFactorySettings FactorySettings;
-        private TriangleNet.Mesh _mesh; 
+        [SerializeField]
+        protected BuildingFactorySettings FactorySettings;
+        private TriangleNet.Mesh _mesh;
 
         public override void Start()
         {
@@ -52,10 +54,10 @@ namespace MapzenGo.Models.Factories
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
                     var localMercPos = dotMerc - tile.Rect.Center;
 
-                    if (localMercPos.x < minx) minx = (float) localMercPos.x;
-                    if (localMercPos.y < miny) miny = (float) localMercPos.y;
-                    if (localMercPos.x > maxx) maxx = (float) localMercPos.x;
-                    if (localMercPos.y > maxy) maxy = (float) localMercPos.y;
+                    if (localMercPos.x < minx) minx = (float)localMercPos.x;
+                    if (localMercPos.y < miny) miny = (float)localMercPos.y;
+                    if (localMercPos.x > maxx) maxx = (float)localMercPos.x;
+                    if (localMercPos.y > maxy) maxy = (float)localMercPos.y;
 
                     buildingCorners.Add(localMercPos.ToVector3());
                 }
@@ -84,8 +86,6 @@ namespace MapzenGo.Models.Factories
                 mesh.SetUVs(0, tb.UV);
                 mesh.RecalculateNormals();
 
-                
-
                 yield return building;
                 //}
             }
@@ -93,7 +93,6 @@ namespace MapzenGo.Models.Factories
 
         protected override GameObject CreateLayer(Tile tile, List<JSONObject> items)
         {
-
             var main = new GameObject("Buildings Layer");
             var finalList = new Dictionary<BuildingType, MeshData>();
             var openList = new Dictionary<BuildingType, MeshData>();
@@ -147,7 +146,7 @@ namespace MapzenGo.Models.Factories
                 //create mesh, actually just to get vertice&indices
                 //filling last two parameters, horrible call yea
                 CreateMesh(buildingCorners, minHeight, height, typeSettings, openList[kind], new Vector2(minx, miny), new Vector2(maxx - minx, maxy - miny));
-                
+
                 //unity cant handle more than 65k on single mesh
                 //so we'll finish current and start a new one
                 if (openList[kind].Vertices.Count > 64000)
@@ -178,7 +177,7 @@ namespace MapzenGo.Models.Factories
             }
             return main;
         }
-        
+
         private float GetHeights(JSONObject geo, float min, float max)
         {
             var height = 0f;
@@ -224,16 +223,15 @@ namespace MapzenGo.Models.Factories
             building.Type = geo["type"].str;
             building.SortKey = (int)geo["properties"]["sort_key"].f;
             building.Kind = typeSettings.Type.ToString();
-            building.Type = typeSettings.Type.ToString();
+            // building.Type = typeSettings.Type.ToString();
             building.GetComponent<MeshRenderer>().material = typeSettings.Material;
         }
 
         private void CreateMesh(List<Vector3> corners, float min_height, float height, BuildingSettings typeSettings, MeshData data, Vector2 min, Vector2 size)
         {
-            var vertsStartCount = _useTriangulationNet 
+            var vertsStartCount = _useTriangulationNet
                     ? CreateRoofTriangulation(corners, height, data)
                     : CreateRoofClass(corners, height, data);
-
 
             foreach (var c in corners)
             {
@@ -314,7 +312,7 @@ namespace MapzenGo.Models.Factories
             {
                 var v = corners[i];
                 inp.AddPoint(v.x, v.z);
-                inp.AddSegment(i, (i + 1)%corners.Count);
+                inp.AddSegment(i, (i + 1) % corners.Count);
             }
             _mesh.Behavior.Algorithm = TriangulationAlgorithm.SweepLine;
             _mesh.Behavior.Quality = true;

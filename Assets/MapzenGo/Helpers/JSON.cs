@@ -134,33 +134,39 @@ public class JSONObject
     
     public JSONObject(string str, bool strict = false)
     {	//create a new JSONObject from a string (this will also create any children, and parse the whole string)
-        if (str != null)
+        if (str == null)
         {
-            str = str.Trim(WHITESPACE);
-            if (strict)
+            type = Type.NULL;
+            return;
+        }
+        str = str.Trim(WHITESPACE);
+        if (str.Length == 0)
+        {
+            type = Type.NULL;
+            return;
+        }
+        if (strict)
+        {
+            if (str[0] != '[' && str[0] != '{')
             {
-                if (str[0] != '[' && str[0] != '{')
-                {
-                    type = Type.NULL;
-                    Debug.LogWarning("Improper (strict) JSON formatting.  First character must be [ or {");
-                    return;
-                }
+                type = Type.NULL;
+                Debug.LogWarning("Improper (strict) JSON formatting.  First character must be [ or {");
+                return;
             }
-            if (str.Length > 0)
-            {
-                if (string.Compare(str, "true", true) == 0)
-                {
-                    type = Type.BOOL;
-                    b = true;
-                }
-                else if (string.Compare(str, "false", true) == 0)
-                {
-                    type = Type.BOOL;
-                    b = false;
-                }
-                else if (string.Compare(str, "null", true) == 0)
-                {
-                    type = Type.NULL;
+        }
+        if (string.Compare(str, "true", true) == 0)
+        {
+            type = Type.BOOL;
+            b = true;
+        }
+        else if (string.Compare(str, "false", true) == 0)
+        {
+            type = Type.BOOL;
+            b = false;
+        }
+        else if (string.Compare(str, "null", true) == 0)
+        {
+            type = Type.NULL;
 #if USEFLOAT
                 }
                 else if (str == INFINITY)
@@ -178,124 +184,126 @@ public class JSONObject
                     type = Type.NUMBER;
                     n = float.NaN;
 #else
-				} else if(str == INFINITY) {
-					type = Type.NUMBER;
-					n = double.PositiveInfinity;
-				} else if(str == NEGINFINITY) {
-					type = Type.NUMBER;
-					n = double.NegativeInfinity;
-				} else if(str == NaN) {
-					type = Type.NUMBER;
-					n = double.NaN;
+        }
+        else if (str == INFINITY)
+        {
+            type = Type.NUMBER;
+            n = double.PositiveInfinity;
+        }
+        else if (str == NEGINFINITY)
+        {
+            type = Type.NUMBER;
+            n = double.NegativeInfinity;
+        }
+        else if (str == NaN)
+        {
+            type = Type.NUMBER;
+            n = double.NaN;
 #endif
-                }
-                else if (str[0] == '"')
-                {
-                    type = Type.STRING;
-                    this.str = str.Substring(1, str.Length - 2);
-                }
-                else
-                {
-                    if (isNumber.IsMatch(str))
-                    {
+        }
+        else if (str[0] == '"')
+        {
+            type = Type.STRING;
+            this.str = str.Substring(1, str.Length - 2);
+        }
+        else
+        {
+            if (isNumber.IsMatch(str))
+            {
 #if USEFLOAT
-                        n = System.Convert.ToSingle(str);
+                n = System.Convert.ToSingle(str);
 #else
-                        n = System.Convert.ToDouble(str);
+                n = System.Convert.ToDouble(str);
 #endif
-                        type = Type.NUMBER;
-                    }
-                    else
+                type = Type.NUMBER;
+            }
+            else
+            {
+                int token_tmp = 1;
+                /*
+                 * Checking for the following formatting (www.json.org)
+                 * object - {"field1":value,"field2":value}
+                 * array - [value,value,value]
+                 * value - string	- "string"
+                 *		 - number	- 0.0
+                 *		 - bool		- true -or- false
+                 *		 - null		- null
+                 */
+                int offset = 0;
+                switch (str[offset])
+                {
+                    case '{':
+                        type = Type.OBJECT;
+                        keys = new List<string>();
+                        list = new List<JSONObject>();
+                        break;
+                    case '[':
+                        type = JSONObject.Type.ARRAY;
+                        list = new List<JSONObject>();
+                        break;
+                    default:
+                        type = Type.NULL;
+                        Debug.LogWarning("improper JSON formatting:" + str);
+                        return;
+                }
+                string propName = "";
+                bool openQuote = false;
+                bool inProp = false;
+                int depth = 0;
+                while (++offset < str.Length)
+                {
+                    if (System.Array.IndexOf<char>(WHITESPACE, str[offset]) > -1)
+                        continue;
+                    if (str[offset] == '\"')
                     {
-                        int token_tmp = 1;
-                        /*
-                         * Checking for the following formatting (www.json.org)
-                         * object - {"field1":value,"field2":value}
-                         * array - [value,value,value]
-                         * value - string	- "string"
-                         *		 - number	- 0.0
-                         *		 - bool		- true -or- false
-                         *		 - null		- null
-                         */
-                        int offset = 0;
-                        switch (str[offset])
+                        if (openQuote)
                         {
-                            case '{':
-                                type = Type.OBJECT;
-                                keys = new List<string>();
-                                list = new List<JSONObject>();
-                                break;
-                            case '[':
-                                type = JSONObject.Type.ARRAY;
-                                list = new List<JSONObject>();
-                                break;
-                            default:
-                                type = Type.NULL;
-                                Debug.LogWarning("improper JSON formatting:" + str);
-                                return;
+                            if (!inProp && depth == 0 && type == Type.OBJECT)
+                                propName = str.Substring(token_tmp + 1, offset - token_tmp - 1);
+                            openQuote = false;
                         }
-                        string propName = "";
-                        bool openQuote = false;
-                        bool inProp = false;
-                        int depth = 0;
-                        while (++offset < str.Length)
+                        else
                         {
-                            if (System.Array.IndexOf<char>(WHITESPACE, str[offset]) > -1)
-                                continue;
-                            if (str[offset] == '\"')
-                            {
-                                if (openQuote)
-                                {
-                                    if (!inProp && depth == 0 && type == Type.OBJECT)
-                                        propName = str.Substring(token_tmp + 1, offset - token_tmp - 1);
-                                    openQuote = false;
-                                }
-                                else
-                                {
-                                    if (depth == 0 && type == Type.OBJECT)
-                                        token_tmp = offset;
-                                    openQuote = true;
-                                }
-                            }
-                            if (openQuote)
-                                continue;
-                            if (type == Type.OBJECT && depth == 0)
-                            {
-                                if (str[offset] == ':')
-                                {
-                                    token_tmp = offset + 1;
-                                    inProp = true;
-                                }
-                            }
+                            if (depth == 0 && type == Type.OBJECT)
+                                token_tmp = offset;
+                            openQuote = true;
+                        }
+                    }
+                    if (openQuote)
+                        continue;
+                    if (type == Type.OBJECT && depth == 0)
+                    {
+                        if (str[offset] == ':')
+                        {
+                            token_tmp = offset + 1;
+                            inProp = true;
+                        }
+                    }
 
-                            if (str[offset] == '[' || str[offset] == '{')
-                            {
-                                depth++;
-                            }
-                            else if (str[offset] == ']' || str[offset] == '}')
-                            {
-                                depth--;
-                            }
-                            //if  (encounter a ',' at top level)  || a closing ]/}
-                            if ((str[offset] == ',' && depth == 0) || depth < 0)
-                            {
-                                inProp = false;
-                                string inner = str.Substring(token_tmp, offset - token_tmp).Trim(WHITESPACE);
-                                if (inner.Length > 0)
-                                {
-                                    if (type == Type.OBJECT)
-                                        keys.Add(propName);
-                                    list.Add(new JSONObject(inner));
-                                }
-                                token_tmp = offset + 1;
-                            }
+                    if (str[offset] == '[' || str[offset] == '{')
+                    {
+                        depth++;
+                    }
+                    else if (str[offset] == ']' || str[offset] == '}')
+                    {
+                        depth--;
+                    }
+                    //if  (encounter a ',' at top level)  || a closing ]/}
+                    if ((str[offset] == ',' && depth == 0) || depth < 0)
+                    {
+                        inProp = false;
+                        string inner = str.Substring(token_tmp, offset - token_tmp).Trim(WHITESPACE);
+                        if (inner.Length > 0)
+                        {
+                            if (type == Type.OBJECT)
+                                keys.Add(propName);
+                            list.Add(new JSONObject(inner));
                         }
+                        token_tmp = offset + 1;
                     }
                 }
             }
-            else type = Type.NULL;
         }
-        else type = Type.NULL;	//If the string is missing, this is a null
     }
     #endregion
     public bool IsNumber { get { return type == Type.NUMBER; } }

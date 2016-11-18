@@ -10,8 +10,8 @@ using UniRx;
 
 public class Initialize : MonoBehaviour
 {
-    
-   
+
+
     // Use this for initialization
     private GameObject _cursorFab;
     private GameObject cursor;
@@ -92,15 +92,15 @@ public class Initialize : MonoBehaviour
         //_spatial.DrawMaterial = Resources.Load("Wireframe", typeof(Material)) as Material;
 
         _cursorFab = Resources.Load("_cursor") as GameObject;
-        
-            cursor = (GameObject)Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
-            cursor.name = "Cursor";
-            var t = cursor.GetComponentInChildren<Transform>().Find("CursorMesh");
 
-            var r = t.GetComponent<MeshRenderer>();
-            r.enabled = true;
-        
+        cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
+        cursor.name = "Cursor";
+        var t = cursor.GetComponentInChildren<Transform>().Find("CursorMesh");
+
+        var r = t.GetComponent<MeshRenderer>();
+        r.enabled = true;
     }
+
     void Awake()
     {
         var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
@@ -108,11 +108,12 @@ public class Initialize : MonoBehaviour
         appState = AppState.Instance;
         appState.LoadConfig();
     }
+
     void Start()
     {
         appState.Camera = gameObject;
         appState.Speech = new Assets.Scripts.SpeechManager();
-        
+
         appState.AddTerrain();
         InitViews();
         InitSpeech();
@@ -122,18 +123,20 @@ public class Initialize : MonoBehaviour
         InitMqtt();
 #endif
         includeAnchorMovingScript();
-     
+
         appState.Speech.Init();
     }
 
     void InitSpeech()
     {
-        appState.Speech.Keywords.Add("Zoom out", () => {
+        appState.Speech.Keywords.Add("Zoom out", () =>
+        {
             appState.Center = new Vector3(appState.Center.x, appState.Center.y, appState.Center.z + 1);
             // appState.TileManager.UpdateTiles();
         });
 
-        appState.Speech.Keywords.Add("Center Table", () => {
+        appState.Speech.Keywords.Add("Center Table", () =>
+        {
             appState.Table.transform.position = new Vector3(gameObject.transform.position.x, 0.7f, gameObject.transform.position.z);
             //Center = new Vector3(Center.x, Center.y, Center.z + 1);
         });

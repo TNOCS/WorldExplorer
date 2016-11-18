@@ -35,7 +35,7 @@ public class BuildingFactory : MapzenGo.Models.Factories.BuildingFactory {
         var bs = new BuildingSettings();
         bs.Type = type;
         bs.Material = (Material)Resources.Load(material, typeof(Material));
-        bs.MinimumBuildingHeight = 20;
+        bs.MinimumBuildingHeight = 5;
         bs.MaximumBuildingHeight = 40;
         bs.IsVolumetric = true;
         return bs;

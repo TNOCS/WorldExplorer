@@ -8,12 +8,19 @@ using Assets.Scripts.Classes;
 using Assets.Scripts.Utils;
 using MapzenGo.Models.Plugins;
 using UniRx;
+using System;
+using Assets.MapzenGo.Models.Enums;
 
 namespace Assets.Scripts
 {
 
     public class AppState : Singleton<AppState>
     {
+
+        public const string ShowLayerSpeech = "Show ";
+        public const string HideLayerSpeech = "Show ";
+        public const string ToggleSpeech = "Toggle ";
+
 
         public GameObject World;
         public GameObject Terrain;
@@ -36,9 +43,27 @@ namespace Assets.Scripts
         public ViewState State { get; set; }
         public SpeechManager Speech { get; set; }
 
+        public List<string> MapzenTags = new List<string>(new string[] { "buildings", "water", "roads", "pois", "landuse" });
+
         public void Init()
         {
             Speech = new SpeechManager();
+                     
+        }
+
+        private void ToggleMapzen(string tag)
+        {
+           
+            if (Config==null || Config.InitalView==null) return;
+            if (Config.InitalView.Mapzen.Contains(tag))
+            {
+                Config.InitalView.Mapzen.Remove(tag);
+            }
+            else
+            {
+                Config.InitalView.Mapzen.Add(tag);
+            }
+            ResetMap();
         }
 
         public void LoadConfig()
@@ -59,6 +84,14 @@ namespace Assets.Scripts
                 DestroyGeojsonLayer(l);                
             });
 
+            foreach (var tl in Config.Layers)
+            {
+                if (tl.Type.ToLower() == "tilelayer")
+                {
+                    Speech.RemoveKeyword(ShowLayerSpeech + tl.VoiceCommand);
+                };
+            }
+                
             DoDeleteAll(World);
             DoDeleteAll(Layers);
             InitMap();
@@ -94,11 +127,18 @@ namespace Assets.Scripts
         {
             var iv = Config.InitalView;
 
+            //Enum.GetNames(typeof(PoiType)).ToList().ForEach(pt =>
+            //{
+            //    if (!MapzenTags.Contains(pt)) MapzenTags.Add(pt);
+            //});
+
             var i = iv.Range;
             if (i > mapScales.Length) i = mapScales.Length;
             var mapScale = mapScales[i - 1];
             Map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
-            
+
+            MapzenTags.ForEach(k => Speech.AddKeyword(ToggleSpeech + k, () => ToggleMapzen(k)));
+
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);
 
@@ -133,40 +173,54 @@ namespace Assets.Scripts
             var factories = new GameObject("Factories");
             factories.transform.SetParent(World.transform, false);
 
-            var buildings = new GameObject("BuildingFactory");
-            buildings.transform.SetParent(factories.transform, false);
-            var buildingFactory = buildings.AddComponent<BuildingFactory>();
-
+            if (iv.Mapzen.Contains("buildings"))
+            {
+                var buildings = new GameObject("BuildingFactory");
+                buildings.transform.SetParent(factories.transform, false);
+                var buildingFactory = buildings.AddComponent<BuildingFactory>();
+            }
 
 
             //var flatBuildings = new GameObject("FlatBuildingFactory");
             //flatBuildings.transform.SetParent(factories.transform, false);
             //var flatBuildingFactory = flatBuildings.AddComponent<FlatBuildingFactory>();
 
-            var roads = new GameObject("RoadFactory");
-            roads.transform.SetParent(factories.transform, false);
-            var roadFactory = roads.AddComponent<RoadFactory>();
+            if (iv.Mapzen.Contains("roads"))
+            {
 
-            //var water = new GameObject("WaterFactory");
-            //water.transform.SetParent(factories.transform, false);
-            //var waterFactory = water.AddComponent<WaterFactory>();
+                var roads = new GameObject("RoadFactory");
+                roads.transform.SetParent(factories.transform, false);
+                var roadFactory = roads.AddComponent<RoadFactory>();
+            }
 
+            if (iv.Mapzen.Contains("buildings"))
+            {
+                var water = new GameObject("WaterFactory");
+                water.transform.SetParent(factories.transform, false);
+                var waterFactory = water.AddComponent<WaterFactory>();
+            }
             //var boundary = new GameObject("BoundaryFactory");
             //boundary.transform.SetParent(factories.transform, false);
             //var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
 
-            var landuse = new GameObject("LanduseFactory");
-            landuse.transform.SetParent(factories.transform, false);
-            var landuseFactory = landuse.AddComponent<LanduseFactory>();
+            if (iv.Mapzen.Contains("landuse"))
+            {
+                var landuse = new GameObject("LanduseFactory");
+                landuse.transform.SetParent(factories.transform, false);
+                var landuseFactory = landuse.AddComponent<LanduseFactory>();
+            }
 
             var places = new GameObject("PlacesFactory");
             places.transform.SetParent(factories.transform, false);
             var placesFactory = places.AddComponent<PlacesFactory>();
 
-            //var pois = new GameObject("PoiFactory");
-            //pois.transform.SetParent(factories.transform, false);
-            //var poisFactory = pois.AddComponent<PoiFactory>();
-            #endregion
+            if (iv.Mapzen.Contains("pois"))
+            {
+                var pois = new GameObject("PoiFactory");
+                pois.transform.SetParent(factories.transform, false);
+                var poisFactory = pois.AddComponent<PoiFactory>();
+            }
+                #endregion
 
 
             Layers = new GameObject("Layers");
@@ -179,7 +233,7 @@ namespace Assets.Scripts
                 var l = Config.Layers.FirstOrDefault(k => k.Title == layer && k.Type == "geojson");
                 if (l != null)
                 {
-                   InitGeojsonLayer(l);
+                    InitGeojsonLayer(l);
                 }
             });
 
@@ -198,7 +252,21 @@ namespace Assets.Scripts
             var tileLayer = new GameObject("TileLayer");
             tileLayer.transform.SetParent(tilePlugins.transform, false);
             var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
-            tileLayerPlugin.tileLayers = Config.Layers;
+            tileLayerPlugin.tileLayers = Config.Layers.Where(k => { return iv.TileLayers.Contains(k.Title) && k.Type.ToLower() == "tilelayer"; }).ToList();
+
+            foreach(var tl in Config.Layers.Where(k => { return k.Type.ToLower() == "tilelayer"; }))
+            {
+                Speech.AddKeyword(ShowLayerSpeech + tl.VoiceCommand, () => {
+                    
+                    if (tl.Group!=null)
+                    {
+                        var ll = Config.Layers.Where(k => k.Type.ToLower() == "tilelayer" && k.Group == tl.Group).Select(k => k.Title);
+                        iv.TileLayers = iv.TileLayers.Where(k => !ll.Contains(k)).ToList();
+                        iv.TileLayers.Add(tl.Title);                      
+                        ResetMap();
+                    }
+                });
+            }
 
             #endregion
 
@@ -206,6 +274,9 @@ namespace Assets.Scripts
 
         public void DestroyGeojsonLayer(Layer l)
         {
+            Speech.RemoveKeyword(ShowLayerSpeech + l.VoiceCommand);
+            Speech.RemoveKeyword(HideLayerSpeech + l.VoiceCommand);
+
             if (l._refreshTimer != null)
             {
                 l._refreshTimer.Dispose();
@@ -218,14 +289,15 @@ namespace Assets.Scripts
         {
             AddGeojsonLayer(l);
 
-            //Speech.Keywords.Add("Show " + l.VoiceCommand, () =>
-            //{
-            //    AddGeojsonLayer(l);
-            //});
-            //Speech.Keywords.Add("Hide " + l.VoiceCommand, () =>
-            //{
-            //    RemoveGeojsonLayer(l);                
-            //});
+            Speech.AddKeyword(ShowLayerSpeech + l.VoiceCommand, () =>
+            {
+                AddGeojsonLayer(l);
+            });
+
+            Speech.AddKeyword(HideLayerSpeech + l.VoiceCommand, () =>
+            {
+                RemoveGeojsonLayer(l);
+            });
 
             if (l.Refresh > 0)
             {

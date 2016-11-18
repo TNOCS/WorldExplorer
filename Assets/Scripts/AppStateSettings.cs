@@ -55,17 +55,15 @@ namespace Assets.Scripts
             Terrain = new GameObject("terrain");
             Terrain.transform.position = new Vector3(0f, 0f, 0f);
 
-
             Table = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            //Table.name = "Table";
             Table.transform.position = new Vector3(0f, 0.7f, 0f);
             Table.transform.localScale = new Vector3(t.TableSize, t.TableHeight, t.TableSize);
             Table.transform.SetParent(Terrain.transform, false);
 
-         
-
             Map = new GameObject("Map");
             Map.transform.SetParent(Table.transform);
-            Map.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+            Map.transform.localPosition = new Vector3(0f, 0.5001f, 0f);
 
             #endregion
             InitMap();
@@ -189,15 +187,22 @@ namespace Assets.Scripts
             var tilePlugins = new GameObject("TilePlugins");
             tilePlugins.transform.SetParent(World.transform, false);
 
-            var mapImage = new GameObject("MapImage");
-            mapImage.transform.SetParent(tilePlugins.transform, false);
-            var mapImagePlugin = mapImage.AddComponent<MapImagePlugin>();
-            mapImagePlugin.TileService = MapImagePlugin.TileServices.Default;
 
-            var tileLayer = new GameObject("TileLayer");
-            tileLayer.transform.SetParent(tilePlugins.transform, false);
-            var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
-            tileLayerPlugin.tileLayers = Config.Layers;
+            var terrainImage = new GameObject("TerrainImage");
+            terrainImage.transform.SetParent(tilePlugins.transform, false);
+            var terrainImagePlugin = terrainImage.AddComponent<TerrainHeightPlugin>();
+            terrainImagePlugin.TileService = TerrainHeightPlugin.TileServices.Default;
+
+
+            //var mapImage = new GameObject("MapImage");
+            //mapImage.transform.SetParent(tilePlugins.transform, false);
+            //var mapImagePlugin = mapImage.AddComponent<MapImagePlugin>();
+            //mapImagePlugin.TileService = MapImagePlugin.TileServices.Default;
+
+            //var tileLayer = new GameObject("TileLayer");
+            //tileLayer.transform.SetParent(tilePlugins.transform, false);
+            //var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
+            //tileLayerPlugin.tileLayers = Config.Layers;
 
             #endregion
         }

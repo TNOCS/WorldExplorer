@@ -7,16 +7,17 @@
       "VoiceCommand": "street map",
       "UseTransparency": true,
       "Height": 0.9,
-      "Type": "tilelayer",     
-      "Group" : "baselayer"
-    },{
+      "Type": "tilelayer",
+      "Group": "baselayer"
+    },
+    {
       "Title": "Flooding",
       "Url2": "http://134.221.20.239:8101/2102363017",
       "Url": "http://134.221.20.239:8101/40954558,40954557,40954556/",
       "VoiceCommand": "flooding",
       "UseTransparency": true,
       "Height": 1.1,
-      "Type": "tilelayer"      
+      "Type": "tilelayer"
     },
     {
       "Title": "Satellite",
@@ -34,7 +35,7 @@
       "VoiceCommand": "police",
       "UseTransparency": true,
       "Height": 1.1,
-       "Scale" : 60,
+      "Scale": 60,
       "Type": "geojson",
       "Enabled": true
     },
@@ -47,7 +48,7 @@
       "UseTransparency": true,
       "Height": 1.1,
       "Refresh": 10,
-       "Scale" : 90,
+      "Scale": 90,
       "Type": "geojson",
       "Enabled": true
     },
@@ -55,41 +56,89 @@
     {
       "Title": "Gps",
       "Url": "http://217.169.227.210:3000/api/layers/gps.actual",
-      "Url1" :  "http://tnopresenter.nl/arnoud/test.json",
+      "Url1": "http://tnopresenter.nl/arnoud/test.json",
       "IconUrl": "http://217.169.227.210:3000/images/gps/{role}.png",
       "VoiceCommand": "gps",
       "UseTransparency": true,
       "Refresh": 10,
-      "Scale" : 120,
+      "Scale": 120,
       "Height": 1.1,
       "Type": "geojson",
       "Enabled": false
-    }  
+    }
   ],
   "Views": [
     {
-      "Name": "Water",
-      "Lat": 52.453924,
-      "Lon": 5.047512,
-      "Zoom": 16,
+      "Name": "School",
+      "Lat": 51.480699,
+      "Lon": 5.450737,
+      "Zoom": 17,
       "TileSize": 100,
       "Range": 2,
       "Scale": 1,
-      "Mapzen": [ "buildings", "roads", "landuse", "pois" ],
+      "Mapzen": [ "buildings", "water", "roads", "pois" ],
+      "Layers": [],
+      "TileLayers": [ "TopoLayer" ]
+    },
+    {
+      "Name": "Lhasa",
+      "Lat": 29.641547,
+      "Lon": 91.112160,
+      "Zoom": 14,
+      "TileSize": 100,
+      "Range": 2,
+      "Scale": 1,
+      "Mapzen": [ "buildings", "water", "roads", "landuse", "pois" ],
+      "Layers": [],
+      "TileLayers": [ "TopoLayer" ]
+    },
+    {
+      "Name": "Caves",
+      "Lat": 50.862444,
+      "Lon": 5.828960,
+      "Zoom": 14,
+      "TileSize": 100,
+      "Range": 2,
+      "Scale": 1,
+      "Mapzen": [ "buildings", "water", "roads", "landuse", "pois" ],
+      "Layers": [],
+      "TileLayers": [ "TopoLayer" ]
+    },
+    {
+      "Name": "Venlo",
+      "Lat": 51.355980,
+      "Lon": 6.186556,
+      "Zoom": 14,
+      "TileSize": 100,
+      "Range": 2,
+      "Scale": 1,
+      "Mapzen": [ "buildings", "water", "roads", "landuse", "pois" ],
       "Layers": [ "Police", "Ambulance" ],
       "TileLayers": [ "TopoLayer" ]
     },
     {
-      "Name" : "Detail",
-      "Lat": 52.453924, 
+      "Name": "Water",
+      "Lat": 52.453924,
+      "Lon": 5.047512,
+      "Zoom": 15,
+      "TileSize": 100,
+      "Range": 2,
+      "Scale": 1,
+      "Mapzen": [ "buildings", "water", "roads", "landuse", "pois" ],
+      "Layers": [ "Police", "Ambulance" ],
+      "TileLayers": [ "TopoLayer" ]
+    },
+    {
+      "Name": "Detail",
+      "Lat": 52.453924,
       "Lon": 5.047512,
       "Zoom": 17,
       "TileSize": 100,
       "Range": 2,
       "Scale": 1,
-      "Mapzen" :  ["buildings","roads","landuse","water","pois"],
+      "Mapzen": [ "buildings", "water", "roads", "landuse", "water", "pois" ],
       "Layers": [ "Police", "Ambulance" ],
-      "TileLayers" :  ["TopoLayer"]
+      "TileLayers": [ "TopoLayer" ]
     },
     {
       "Name": "Military",
@@ -99,15 +148,15 @@
       "TileSize": 100,
       "Range": 2,
       "Scale": 1,
-      "Mapzen" :  ["buildings","roads","landuse","water"],
+      "Mapzen": [ "buildings", "water", "roads", "landuse", "water" ],
       "Layers": [ "Gps" ],
-      "TileLayers" :  ["Satellite"]
+      "TileLayers": [ "Satellite" ]
     }
   ],
-    "TileServer": "",
-    "MqttServer": "cool3.sensorlab.tno.nl",
+  "TileServer": "",
+  "MqttServer": "cool3.sensorlab.tno.nl",
   "MqttPort": "8026",
-  "InitialView": "Water",
+  "InitialView": "School",
   "Table": {
     "TableSize": 1.5,
     "TableHeight": 1.5

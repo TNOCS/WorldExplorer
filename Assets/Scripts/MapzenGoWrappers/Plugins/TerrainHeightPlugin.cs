@@ -21,7 +21,7 @@ namespace MapzenGo.Models.Plugins
         [SerializeField]
         protected string _key = "mapzen-9ePDqgc";
         private string[] TileServiceUrls = new string[] {
-            "http://tile.stamen.com/terrain-background/",
+            "http://b.tile.openstreetmap.org/",
             "https://geodata1.nationaalgeoregister.nl/luchtfoto/wmts/luchtfoto_png/nltilingschema/",
             "http://b.tile.openstreetmap.org/",
             "http://b.tile.openstreetmap.us/usgs_large_scale/",
@@ -38,14 +38,14 @@ namespace MapzenGo.Models.Plugins
                       tile.TileTms.y + ".png?api_key=" + _key;
 
             ObservableWWW.GetWWW(url).Subscribe(
-                    success =>
-                    {
-                        CreateMesh(tile, success);
-                    },
-                    error =>
-                    {
-                        Debug.Log(url + " - " + error);
-                    });
+                success =>
+                {
+                    CreateMesh(tile, success);
+                },
+                error =>
+                {
+                    Debug.Log(url + " - " + error);
+                });
         }
 
         private void CreateMesh(Tile tile, WWW terrarium)
@@ -122,9 +122,10 @@ namespace MapzenGo.Models.Plugins
 
         private float GetTerrariumHeight(Color c)
         {
-            var h = (c.r * 256 * 256 + c.g * 256 + c.b) - 32768;
-            Debug.Log(string.Format("Height: {0}", h));
-            return h;
+            return (c.r * 65536 + c.g * 256 + c.b) - 32768;
+            //var h = (c.r * 256 * 256 + c.g * 256 + c.b) - 32768;
+            //Debug.Log(string.Format("Height: {0}", h));
+            //return h;
         }
     }
 }

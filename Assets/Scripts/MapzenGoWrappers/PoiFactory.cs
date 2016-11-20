@@ -17,6 +17,7 @@ public class PoiFactory : MapzenGo.Models.Factories.PoiFactory {
 
         pfs.SettingsPoi = new System.Collections.Generic.List<PoiSettings> {
             createPoiSettings(PoiType.Library, "Textures/poi_icons_18@2x_0"),
+            createPoiSettings(PoiType.School, "Textures/poi_icons_18@2x_107"),
             //createPoiSettings(PoiType.TramStop, "Textures/poi_icons_18@2x_15"),
             createPoiSettings(PoiType.Station, "Textures/poi_icons_18@2x_9"),
             createPoiSettings(PoiType.Hospital, "Textures/poi_icons_18@2x_4"),

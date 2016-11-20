@@ -232,7 +232,7 @@ namespace Assets.Scripts
             var tilePlugins = new GameObject("TilePlugins");
             tilePlugins.transform.SetParent(World.transform, false);
 
-            if (iv.Zoom <= 15)
+            if (iv.Zoom <= 14)
             {
                 // We could use the terrain model
                 var terrainImage = new GameObject("TerrainImage");

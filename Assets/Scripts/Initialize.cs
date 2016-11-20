@@ -1,12 +1,5 @@
 ﻿using UnityEngine;
-using MapzenGo.Models;
-using MapzenGo.Models.Plugins;
-using System;
-using System.Text;
 using Assets.Scripts;
-using Assets.Scripts.Utils;
-using System.Linq;
-using UniRx;
 
 public class Initialize : MonoBehaviour
 {
@@ -191,7 +184,6 @@ public class Initialize : MonoBehaviour
         }
 
     }
-#endif
 
     protected void SetView(string msg)
     {
@@ -208,23 +200,17 @@ public class Initialize : MonoBehaviour
             appState.TileManager.Start();
         }
     }
+#endif
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("1"))
+        for (var i = 0; i < Mathf.Min(8, appState.Config.Views.Count); i++)
         {
-            appState.Config.InitalView = appState.Config.Views[0];
+            if (!Input.GetKeyDown(string.Format("{0}", i + 1))) continue;
+            appState.Config.InitalView = appState.Config.Views[i];
             appState.ResetMap();
+            return;
         }
-        if (Input.GetKeyDown("2"))
-        {
-            appState.Config.InitalView = appState.Config.Views[1];
-            appState.ResetMap();
-        }
-
-        //appState.Center = new Vector3(appState.Center.x, appState.Center.y + 1, appState.Center.z);
-        //Debug.Log("DDDDDDDDD!!!!!!!!!!");
-    
     }
 }

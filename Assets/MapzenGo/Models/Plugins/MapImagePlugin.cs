@@ -37,7 +37,7 @@ namespace MapzenGo.Models.Plugins
             go.localScale = new Vector3((float)tile.Rect.Width, (float)tile.Rect.Width, 1);
             go.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
             go.localPosition = Vector3.zero;
-            go.localPosition -= new Vector3(0, 1, 0);
+            //go.localPosition -= new Vector3(0, 1, 0);
             var rend = go.GetComponent<Renderer>();
             rend.material = tile.Material;
 
@@ -57,7 +57,6 @@ namespace MapzenGo.Models.Plugins
                 {
                     Debug.Log(error);
                 });
-
         }
     }
 }

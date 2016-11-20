@@ -1,15 +1,10 @@
 ﻿using Assets.Scripts.Utils;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Assets.Scripts.Classes
 {
-
     public class ViewState
     {
-
         public void FromJson(JSONObject json)
         {
             Name = json.GetString("Name");

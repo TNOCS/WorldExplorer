@@ -43,12 +43,10 @@ namespace Assets.Scripts
         public void Init()
         {
             Speech = new SpeechManager();
-                     
         }
 
         private void ToggleMapzen(string tag)
         {
-           
             if (Config==null || Config.InitalView==null) return;
             if (Config.InitalView.Mapzen.Contains(tag))
             {
@@ -101,7 +99,7 @@ namespace Assets.Scripts
             Terrain.transform.position = new Vector3(0f, 0f, 0f);
 
             Table = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            //Table.name = "Table";
+            Table.name = "Table";
             Table.transform.position = new Vector3(0f, 0.7f, 0f);
             Table.transform.localScale = new Vector3(t.TableSize, t.TableHeight, t.TableSize);
             Table.transform.SetParent(Terrain.transform, false);
@@ -175,13 +173,12 @@ namespace Assets.Scripts
 
             if (iv.Mapzen.Contains("roads"))
             {
-
                 var roads = new GameObject("RoadFactory");
                 roads.transform.SetParent(factories.transform, false);
                 var roadFactory = roads.AddComponent<RoadFactory>();
             }
 
-            if (iv.Mapzen.Contains("buildings"))
+            if (iv.Mapzen.Contains("water"))
             {
                 var water = new GameObject("WaterFactory");
                 water.transform.SetParent(factories.transform, false);
@@ -211,19 +208,22 @@ namespace Assets.Scripts
 
             #endregion
 
-            Layers = new GameObject("Layers");
-            Layers.transform.SetParent(Table.transform);
-            Layers.transform.localPosition = new Vector3(0f, 0.5f, 0f);
-            Layers.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
-
-            iv.Layers.ForEach(layer =>
+            if (iv.Layers.Any())
             {
-                var l = Config.Layers.FirstOrDefault(k => k.Title == layer && k.Type == "geojson");
-                if (l != null)
+                Layers = new GameObject("Layers");
+                Layers.transform.SetParent(Table.transform);
+                Layers.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+                Layers.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
+
+                iv.Layers.ForEach(layer =>
                 {
-                    InitGeojsonLayer(l);
-                }
-            });
+                    var l = Config.Layers.FirstOrDefault(k => k.Title == layer && k.Type == "geojson");
+                    if (l != null)
+                    {
+                        InitGeojsonLayer(l);
+                    }
+                });
+            }
 
             #endregion
 
@@ -232,32 +232,38 @@ namespace Assets.Scripts
             var tilePlugins = new GameObject("TilePlugins");
             tilePlugins.transform.SetParent(World.transform, false);
 
-            //var mapImage = new GameObject("MapImage");
-            //mapImage.transform.SetParent(tilePlugins.transform, false);
-            //var mapImagePlugin = mapImage.AddComponent<MapImagePlugin>();
-            //mapImagePlugin.TileService = MapImagePlugin.TileServices.Default;
+            if (iv.Zoom <= 15)
+            {
+                // We could use the terrain model
+                var terrainImage = new GameObject("TerrainImage");
+                terrainImage.transform.SetParent(tilePlugins.transform, false);
+                var terrainImagePlugin = terrainImage.AddComponent<TerrainHeightPlugin>();
+                terrainImagePlugin.TileService = TerrainHeightPlugin.TileServices.Default;
+            }
+            else
+            {
+                var mapImage = new GameObject("MapImage");
+                mapImage.transform.SetParent(tilePlugins.transform, false);
+                var mapImagePlugin = mapImage.AddComponent<MapImagePlugin>();
+                mapImagePlugin.TileService = MapImagePlugin.TileServices.Default;
 
-            //var tileLayer = new GameObject("TileLayer");
-            //tileLayer.transform.SetParent(tilePlugins.transform, false);
-            //var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
-            //tileLayerPlugin.tileLayers = Config.Layers;
-
-            var terrainImage = new GameObject("TerrainImage");
-            terrainImage.transform.SetParent(tilePlugins.transform, false);
-            var terrainImagePlugin = terrainImage.AddComponent<TerrainHeightPlugin>();
-            terrainImagePlugin.TileService = TerrainHeightPlugin.TileServices.Default;
+                //if (iv.Layers.Count > 0)
+                //{
+                //    var tileLayer = new GameObject("TileLayer");
+                //    tileLayer.transform.SetParent(tilePlugins.transform, false);
+                //    var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
+                //    tileLayerPlugin.tileLayers = Config.Layers;
+                //}
+            }
 
             foreach(var tl in Config.Layers.Where(k => { return k.Type.ToLower() == "tilelayer"; }))
             {
                 Speech.AddKeyword(ShowLayerSpeech + tl.VoiceCommand, () => {
-                    
-                    if (tl.Group!=null)
-                    {
-                        var ll = Config.Layers.Where(k => k.Type.ToLower() == "tilelayer" && k.Group == tl.Group).Select(k => k.Title);
-                        iv.TileLayers = iv.TileLayers.Where(k => !ll.Contains(k)).ToList();
-                        iv.TileLayers.Add(tl.Title);                      
-                        ResetMap();
-                    }
+                    if (tl.Group == null) return;
+                    var ll = Config.Layers.Where(k => k.Type.ToLower() == "tilelayer" && k.Group == tl.Group).Select(k => k.Title);
+                    iv.TileLayers = iv.TileLayers.Where(k => !ll.Contains(k)).ToList();
+                    iv.TileLayers.Add(tl.Title);                      
+                    ResetMap();
                 });
             }
 
@@ -363,7 +369,6 @@ namespace Assets.Scripts
             Destroy(Holder);
         }
 
-
         protected void AddRectTransformToGameObject(GameObject go)
         {
             var rt = go.AddComponent<RectTransform>();
@@ -372,13 +377,5 @@ namespace Assets.Scripts
             rt.anchorMin = new Vector2(0, 0);
             rt.anchorMax = new Vector2(1, 1);
         }
-
-
     }
-
-
-
-
-
-    
 }

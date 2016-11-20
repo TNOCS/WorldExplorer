@@ -39,7 +39,7 @@ namespace Assets.Scripts.Classes
                 Views.Add(view);
             }
 
-            InitalView = new ViewState();
+            // InitalView = new ViewState();
             InitalView = Views.FirstOrDefault(v => v.Name == json.GetString("InitialView"));
             Table = new Table();
             Table.FromJson(json["Table"]);

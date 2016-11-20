@@ -81,6 +81,18 @@
       "TileLayers": [ "TopoLayer" ]
     },
     {
+      "Name": "City center",
+      "Lat": 51.439232,
+      "Lon": 5.478346,
+      "Zoom": 17,
+      "TileSize": 100,
+      "Range": 2,
+      "Scale": 1,
+      "Mapzen": [ "buildings", "water", "roads", "pois" ],
+      "Layers": [],
+      "TileLayers": [ "TopoLayer" ]
+    },
+    {
       "Name": "Lhasa",
       "Lat": 29.641547,
       "Lon": 91.112160,

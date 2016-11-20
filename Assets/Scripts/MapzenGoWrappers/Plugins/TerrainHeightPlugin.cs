@@ -9,6 +9,8 @@ namespace MapzenGo.Models.Plugins
         public enum TileServices
         {
             Default,
+            Luchtfoto,
+            Osm,
             Satellite,
             Terrain,
             Toner,
@@ -19,6 +21,8 @@ namespace MapzenGo.Models.Plugins
         [SerializeField]
         protected string _key = "mapzen-9ePDqgc";
         private string[] TileServiceUrls = new string[] {
+            "http://tile.stamen.com/terrain-background/",
+            "https://geodata1.nationaalgeoregister.nl/luchtfoto/wmts/luchtfoto_png/nltilingschema/",
             "http://b.tile.openstreetmap.org/",
             "http://b.tile.openstreetmap.us/usgs_large_scale/",
             "http://tile.stamen.com/terrain-background/",
@@ -47,34 +51,50 @@ namespace MapzenGo.Models.Plugins
         private void CreateMesh(Tile tile, WWW terrarium)
         {
             var url = TileServiceUrls[(int)TileService] + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
-            var sampleCount = 3;
+            const int sampleCount = 3;
             var tex = new Texture2D(256, 256);
             terrarium.LoadImageIntoTexture(tex);
 
             ObservableWWW.GetWWW(url).Subscribe(
                 success =>
                 {
-                    var go = new GameObject();
+                    var go = new GameObject("TerrainHeight");
                     var mesh = go.AddComponent<MeshFilter>().mesh;
                     var rend = go.AddComponent<MeshRenderer>();
                     var verts = new List<Vector3>();
 
+                    // When sampleCount == 3, compute 9 points: the four corners, the center, and the four midpoints along the side
+                    // vertices are (all at the appropriate y = height):
+                    // 0) minX, minY 
+                    // 1) minX, halfY 
+                    // 2) minX, maxY
+                    // 3) halfX, minY 
+                    // 4) halfX, halfY 
+                    // 5) halfX, maxY
+                    // 6) maxX, minY 
+                    // 7) maxX, halfY 
+                    // 8) maxX, maxY
                     for (float x = 0; x < sampleCount; x++)
                     {
                         for (float y = 0; y < sampleCount; y++)
                         {
+                            // Lerp: Linearly interpolates between left and right corner.
                             var xx = Mathf.Lerp((float)tile.Rect.Min.x, (float)(tile.Rect.Min.x + tile.Rect.Size.x), x / (sampleCount - 1));
                             var yy = Mathf.Lerp((float)tile.Rect.Min.y, (float)(tile.Rect.Min.y + tile.Rect.Size.y), y / (sampleCount - 1));
-
+                            // Clamp: Clamps value between min and max and returns value.
+                            var px = (int)Mathf.Clamp((x / (sampleCount - 1) * 256), 0, 255);           // 0, 128, 255
+                            var py = (int)Mathf.Clamp((256 - (y / (sampleCount - 1) * 256)), 0, 255);   // 255, 128, 0
+                            // Compute relative vector with respect to the origin
                             verts.Add(new Vector3(
                                 (float)(xx - tile.Rect.Center.x),
-                                GetTerrariumHeight(tex.GetPixel((int)Mathf.Clamp((x / (sampleCount - 1) * 256), 0, 255), (int)Mathf.Clamp((256 - (y / (sampleCount - 1) * 256)), 0, 255))),
+                                GetTerrariumHeight(tex.GetPixel(px, py)),
                                 (float)(yy - tile.Rect.Center.y)));
                         }
                     }
 
                     mesh.SetVertices(verts);
-                    mesh.triangles = new int[] { 0,3,4,0,4,1,1,4,5,1,5,2,3,6,7,3,7,4,4,7,8,4,8,5 };
+                    // Create a mesh
+                    mesh.triangles = new int[] { 0, 3, 4, 0, 4, 1, 1, 4, 5, 1, 5, 2, 3, 6, 7, 3, 7, 4, 4, 7, 8, 4, 8, 5 };
                     mesh.SetUVs(0, new List<Vector2>()
                     {
                         new Vector2(0, 1),
@@ -102,8 +122,9 @@ namespace MapzenGo.Models.Plugins
 
         private float GetTerrariumHeight(Color c)
         {
-            //return (c.r * 256 + c.g + c.b / 256) - 32768;
-            return (c.r * 256 * 256 + c.g * 256 + c.b) - 32768;
+            var h = (c.r * 256 * 256 + c.g * 256 + c.b) - 32768;
+            Debug.Log(string.Format("Height: {0}", h));
+            return h;
         }
     }
 }

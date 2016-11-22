@@ -32,6 +32,15 @@ namespace Assets.Scripts
             }
         }
 
+        public void AddKeyword(string speech, Action action)
+        {
+            if (!Keywords.ContainsKey(speech)) Keywords.Add(speech, action);
+        }
+
+        public void RemoveKeyword(string speech)
+        {
+            if (Keywords.ContainsKey(speech)) Keywords.Remove(speech);
+        }
 
     }
 }

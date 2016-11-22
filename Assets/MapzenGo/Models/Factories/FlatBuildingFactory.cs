@@ -90,6 +90,7 @@ namespace MapzenGo.Models.Factories
 
             foreach (var geo in items.Where(x => Query(x)))
             {
+                if (!geo["properties"].HasField("id")) continue;
                 var key = geo["properties"]["id"].ToString();
                 if (_active.Contains(key))
                     continue;

@@ -13,7 +13,7 @@ public class FlatBuildingFactory : MapzenGo.Models.Factories.FlatBuildingFactory
         Order = 1;
 
         var bfs = ScriptableObject.CreateInstance("BuildingFactorySettings") as BuildingFactorySettings;
-        bfs.DefaultBuilding = createBuildingSettings(BuildingType.Unknown, 3, 6, "Default");
+        bfs.DefaultBuilding = createBuildingSettings(BuildingType.Unknown, 13, 16, "Default");
 
         bfs.SettingsBuildings = new System.Collections.Generic.List<BuildingSettings> {
             createBuildingSettings(BuildingType.Hospital, 3, 16, "Hospital"),
@@ -32,8 +32,8 @@ public class FlatBuildingFactory : MapzenGo.Models.Factories.FlatBuildingFactory
         var bs = new BuildingSettings();
         bs.Type = type;
         bs.Material = (Material)Resources.Load(material, typeof(Material));
-        bs.MinimumBuildingHeight = min;
-        bs.MaximumBuildingHeight = max;
+        bs.MinimumBuildingHeight = 20;
+        bs.MaximumBuildingHeight = 50;
         bs.IsVolumetric = true;
         return bs;
     }

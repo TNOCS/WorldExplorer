@@ -19,11 +19,13 @@ public class BuildingFactory : MapzenGo.Models.Factories.BuildingFactory {
         bfs.DefaultBuilding = createBuildingSettings(BuildingType.Unknown, 3, 6, "Default");
 
         bfs.SettingsBuildings = new System.Collections.Generic.List<BuildingSettings> {
-            createBuildingSettings(BuildingType.Hospital, 3, 16, "Hospital"),
-            createBuildingSettings(BuildingType.Residential, 3, 8, "Residential"),
+            createBuildingSettings(BuildingType.Hospital, 16, 16, "Hospital"),
+            createBuildingSettings(BuildingType.School, 10, 10, "University"),
+            createBuildingSettings(BuildingType.Residential, 7, 7, "Residential"),
             createBuildingSettings(BuildingType.Industrial, 4, 8, "Industrial"),
+            createBuildingSettings(BuildingType.Retail, 4, 10, "Commercial"),
             createBuildingSettings(BuildingType.Commercial, 4, 10, "Commercial"),
-            createBuildingSettings(BuildingType.University, 4, 8, "University")
+            createBuildingSettings(BuildingType.University, 12, 12, "University")
         };
 
         FactorySettings = bfs;
@@ -32,11 +34,12 @@ public class BuildingFactory : MapzenGo.Models.Factories.BuildingFactory {
 
     protected BuildingSettings createBuildingSettings(BuildingType type, int min, int max, string material)
     {
+        const int EXAGERATION_FACTOR = 2;
         var bs = new BuildingSettings();
         bs.Type = type;
         bs.Material = (Material)Resources.Load(material, typeof(Material));
-        bs.MinimumBuildingHeight = min;
-        bs.MaximumBuildingHeight = max;
+        bs.MinimumBuildingHeight = EXAGERATION_FACTOR * min;
+        bs.MaximumBuildingHeight = EXAGERATION_FACTOR * max;
         bs.IsVolumetric = true;
         return bs;
     }

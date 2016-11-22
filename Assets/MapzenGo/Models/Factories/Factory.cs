@@ -24,20 +24,16 @@ namespace MapzenGo.Models.Factories
         {
             base.Create(tile);
 
+            if (!(tile.Data.HasField(XmlTag) && tile.Data[XmlTag].HasField("features"))) return;
+
             if (MergeMeshes)
             {
-                if (!tile.Data.HasField(XmlTag))
-                    return;
-
                 var b = CreateLayer(tile, tile.Data[XmlTag]["features"].list);
                 if (b) //getting a weird error without this, no idea really
                     b.transform.SetParent(tile.transform, false);
             }
             else
             {
-                if (!(tile.Data.HasField(XmlTag) && tile.Data[XmlTag].HasField("features")))
-                    return;
-
                 foreach (var entity in tile.Data[XmlTag]["features"].list.Where(x => Query(x)).SelectMany(geo => Create(tile, geo)))
                 {
                     if (entity != null)

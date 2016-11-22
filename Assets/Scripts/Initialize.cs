@@ -1,23 +1,77 @@
 ﻿using UnityEngine;
-using MapzenGo.Models;
-using MapzenGo.Models.Plugins;
-using System;
-using System.Text;
 using Assets.Scripts;
-using Assets.Scripts.Utils;
-using System.Linq;
-using UniRx;
 
 public class Initialize : MonoBehaviour
 {
-    
-   
+
+
     // Use this for initialization
     private GameObject _cursorFab;
     private GameObject cursor;
     private AppState appState;
-
-    public string json = "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.070362091064453,           53.295336751980656         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757239, 		 \"symbol\": \"liaise.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.072250366210937,           53.29523415150025         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\": 1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119757777, 		 \"symbol\": \"counterattack_fire.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.066671371459961,           53.29469549493482         ]       },       \"type\": \"Feature\",       \"properties\": {         \"marker-color\": \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",         \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\": \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103         ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\": \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",         \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779, 		 \"symbol\": \"activity.png\"       }     }   ] }";
+    public string json = @"{
+""type"": ""FeatureCollection"",
+""features"": [{
+    ""geometry"": {
+    ""type"": ""Point"",
+    ""coordinates"": [5.070362091064453, 53.295336751980656]
+},  ""type"": ""Feature"",
+    ""properties"": {
+        ""kind"": ""forest"",
+        ""area"": 35879,
+        ""source"": ""openstreetmap.org"",
+        ""min_zoom"": 14,
+        ""tier"": 2,
+        ""id"": 119757239, 		
+        ""symbol"": ""liaise.png""
+    }
+}, {
+    ""geometry"": {
+        ""type"": ""Point"",
+        ""coordinates"": [5.072250366210937, 53.29523415150025]
+    },
+    ""type"": ""Feature"",
+    ""properties"": {
+        ""kind"": ""forest"",
+        ""area"": 1651,
+        ""source"": ""openstreetmap.org"",
+        ""min_zoom"": 14,
+        ""tier"": 2,
+        ""id"": 119757777, 		
+        ""symbol"": ""counterattack_fire.png""
+    }
+}, {
+    ""geometry"": {
+        ""type"": ""Point"",
+        ""coordinates"": [5.066671371459961, 53.29469549493482]
+    }, ""type"": ""Feature"",
+        ""properties"": {
+            ""marker-color"": ""#7e7e7e"",
+            ""marker-size"": ""medium"",
+            ""marker-symbol"": ""circle-stroked"",
+            ""kind"": ""app-622"",
+            ""area"": 18729,
+            ""source"": ""openstreetmap.org"",
+            ""min_zoom"": 14,
+            ""tier"": 2,
+            ""id"": 119758146,
+            ""symbol"": ""warrant_served.png""
+    }
+}, {
+    ""geometry"": {
+        ""type"": ""Point"",
+        ""coordinates"": [5.068731307983398, 53.29497764922103]
+    }, ""type"": ""Feature"",
+        ""properties"": {
+            ""kind"": ""bus_stop"",
+            ""name"": ""Eureka"",
+            ""source"": ""openstreetmap.org"",
+            ""min_zoom"": 17,
+            ""operator"": ""TCR"",
+            ""id"": 2833355779, 		
+            ""symbol"": ""activity.png""
+    }
+}]}";
 
     void includeAnchorMovingScript()
     {
@@ -31,15 +85,15 @@ public class Initialize : MonoBehaviour
         //_spatial.DrawMaterial = Resources.Load("Wireframe", typeof(Material)) as Material;
 
         _cursorFab = Resources.Load("_cursor") as GameObject;
-        
-            cursor = (GameObject)Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
-            cursor.name = "Cursor";
-            var t = cursor.GetComponentInChildren<Transform>().Find("CursorMesh");
 
-            var r = t.GetComponent<MeshRenderer>();
-            r.enabled = true;
-        
+        cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
+        cursor.name = "Cursor";
+        var t = cursor.GetComponentInChildren<Transform>().Find("CursorMesh");
+
+        var r = t.GetComponent<MeshRenderer>();
+        r.enabled = true;
     }
+
     void Awake()
     {
         var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
@@ -47,11 +101,12 @@ public class Initialize : MonoBehaviour
         appState = AppState.Instance;
         appState.LoadConfig();
     }
+
     void Start()
     {
         appState.Camera = gameObject;
         appState.Speech = new Assets.Scripts.SpeechManager();
-        
+
         appState.AddTerrain();
         InitViews();
         InitSpeech();
@@ -59,15 +114,22 @@ public class Initialize : MonoBehaviour
 
 #if (NETFX_CORE)
         InitMqtt();
-        #endif
+#endif
         includeAnchorMovingScript();
-     
+
         appState.Speech.Init();
     }
 
     void InitSpeech()
     {
-        appState.Speech.Keywords.Add("Center Table", () => {
+        appState.Speech.Keywords.Add("Zoom out", () =>
+        {
+            appState.Center = new Vector3(appState.Center.x, appState.Center.y, appState.Center.z + 1);
+            // appState.TileManager.UpdateTiles();
+        });
+
+        appState.Speech.Keywords.Add("Center Table", () =>
+        {
             appState.Table.transform.position = new Vector3(gameObject.transform.position.x, 0.7f, gameObject.transform.position.z);
             //Center = new Vector3(Center.x, Center.y, Center.z + 1);
         });
@@ -75,26 +137,18 @@ public class Initialize : MonoBehaviour
 
     void InitViews()
     {
-        appState.Speech.Keywords.Add("Zoom out", () => {
-            appState.Center = new Vector3(appState.Center.x, appState.Center.y, appState.Center.z + 1);
-           // appState.TileManager.UpdateTiles();
-        });
-
+       
         appState.Config.Views.ForEach(v =>
         {
             appState.Speech.Keywords.Add("Switch to " + v.Name, () =>
             {
-                appState.TileManager.Latitude = v.Lat;
-                appState.TileManager.Longitude = v.Lon;
-                appState.TileManager.Zoom = v.Zoom;
-                appState.TileManager.Range = v.Range;
-                appState.TileManager.Start();
+                appState.Config.InitalView = v;
+                appState.ResetMap();
             });
         });
-
     }
 
-    #if (NETFX_CORE)
+#if (NETFX_CORE)
     protected void InitMqtt()
     {
         var client = new uPLibrary.Networking.M2Mqtt.MqttClient(appState.Config.MqttServer, int.Parse(appState.Config.MqttPort), false);
@@ -130,7 +184,6 @@ public class Initialize : MonoBehaviour
         }
 
     }
-#endif
 
     protected void SetView(string msg)
     {
@@ -144,21 +197,20 @@ public class Initialize : MonoBehaviour
             appState.TileManager.Latitude = iv.Lat;
             appState.TileManager.Longitude = iv.Lon;
             appState.TileManager.Zoom = iv.Zoom;
-
             appState.TileManager.Start();
         }
     }
+#endif
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("c"))
+        for (var i = 0; i < Mathf.Min(8, appState.Config.Views.Count); i++)
         {
-            Destroy(appState.World);
-            appState.Config.InitalView = appState.Config.Views[1];
-            appState.InitMap();
-            //appState.Center = new Vector3(appState.Center.x, appState.Center.y + 1, appState.Center.z);
-            //Debug.Log("DDDDDDDDD!!!!!!!!!!");
+            if (!Input.GetKeyDown(string.Format("{0}", i + 1))) continue;
+            appState.Config.InitalView = appState.Config.Views[i];
+            appState.ResetMap();
+            return;
         }
     }
 }

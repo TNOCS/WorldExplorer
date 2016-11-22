@@ -89,6 +89,7 @@ namespace MapzenGo.Models.Factories
             target.transform.position = localMercPos.ToVector3();
             target.transform.SetParent(tile.transform, false);
             poi.Stick(target.transform);
+            poi.transform.localScale = new Vector3(.2f, .2f, .2f);
             poi.transform.SetParent(target.transform, true);
 
             SetProperties(geo, poi, typeSettings);

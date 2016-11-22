@@ -306,10 +306,10 @@ namespace UniRx
                 {
                     dispatcher.queueWorker.Enqueue(_ =>
                     {
-                        var distpacher2 = Instance;
-                        if (distpacher2 != null)
+                        var dispacher = Instance;
+                        if (dispacher != null)
                         {
-                            distpacher2.StartCoroutine_Auto(routine);
+                            (dispacher as MonoBehaviour).StartCoroutine(routine);
                         }
                     }, null);
                 }
@@ -364,7 +364,7 @@ namespace UniRx
             var dispatcher = Instance;
             if (dispatcher != null)
             {
-                return dispatcher.StartCoroutine_Auto(routine);
+                return (dispatcher as MonoBehaviour).StartCoroutine(routine);
             }
             else
             {
@@ -484,9 +484,9 @@ namespace UniRx
                 mainThreadToken = new object();
                 initialized = true;
 
-                StartCoroutine_Auto(RunUpdateMicroCoroutine());
-                StartCoroutine_Auto(RunFixedUpdateMicroCoroutine());
-                StartCoroutine_Auto(RunEndOfFrameMicroCoroutine());
+                StartCoroutine(RunUpdateMicroCoroutine());
+                StartCoroutine(RunFixedUpdateMicroCoroutine());
+                StartCoroutine(RunEndOfFrameMicroCoroutine());
 
                 // Added for consistency with Initialize()
                 DontDestroyOnLoad(gameObject);

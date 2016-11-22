@@ -93,6 +93,7 @@ public class SymbolFactory : MonoBehaviour
     //parent object (layer)
     protected Transform symbolHost;
     protected GameObject _symbolInfo;
+    protected GameObject _bar;
     protected Vector2d CenterTms; //tms tile coordinate
     protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
     private Vector3 center;
@@ -100,6 +101,7 @@ public class SymbolFactory : MonoBehaviour
     void Awake()
     {
         _symbolInfo = Resources.Load("_symbolInfo") as GameObject;
+        _bar = Resources.Load("_bar") as GameObject;
     }
     protected List<Vector2d> SymbolTiles;
     /// <summary>
@@ -215,6 +217,15 @@ public class SymbolFactory : MonoBehaviour
                 if (c != null)
                 {
                     if (c.Stats != null)
+                    {
+                      
+                        var info = (GameObject)Instantiate(_symbolInfo);
+                        var canvas = info.GetComponent<Canvas>();
+                        canvas.worldCamera = Camera.main;
+                        info.transform.SetParent(target.transform, false);
+                        canvas.transform.localScale = new Vector3(5, 10);
+                        canvas.transform.localPosition = new Vector3(0, 180, 0);
+                        int count = 0;
                         for (int i = 0; i < c.Stats.Count; i++)
                         {
 
@@ -223,30 +234,30 @@ public class SymbolFactory : MonoBehaviour
                                 default:
                                     break;
                                 case "bar":
-                                    var info = (GameObject)Instantiate(_symbolInfo);
-                                    var canvas = info.GetComponent<Canvas>();
 
-                                    canvas.worldCamera = Camera.main;
-                                    info.transform.SetParent(target.transform, false);
-                                    canvas.transform.localScale = new Vector3(5, 10);
-                                    canvas.transform.localPosition = new Vector3(0, 180, 0);
-                                    var bar = canvas.transform.FindChild("bar");
-                                    bar.localScale = new Vector3(100, 100);
-                                    var BarFill = bar.FindChild("Bar-Background").FindChild("Bar-Fill").gameObject.GetComponentInChildren<Image>().fillAmount = (float.Parse(c.Stats[i]["value"].ToString().Replace(@"""", "")) / float.Parse(c.Stats[i]["maxValue"].ToString().Replace(@"""", "")));//calculate fill stat value
+
+
+                                    var bar = (GameObject)Instantiate(_bar);
+                                    bar.transform.parent = info.transform;
+                                    bar.transform.localScale = new Vector3(100, 100);
+                                    var BarFill = bar.transform.FindChild("Bar-Background").FindChild("Bar-Fill").gameObject.GetComponentInChildren<Image>().fillAmount = (float.Parse(c.Stats[i]["value"].ToString().Replace(@"""", "")) / float.Parse(c.Stats[i]["maxValue"].ToString().Replace(@"""", "")));//calculate fill stat value
 
 
                                     // Image voor balk:
                                     var ICO = bar.transform.FindChild("ICO").gameObject.GetComponent<Image>();
                                     ICO.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                                    count++;
                                     break;
 
                             }
 
 
                         }
-
+                        canvas.transform.localPosition = new Vector3(canvas.transform.localPosition.x, canvas.transform.localPosition.y+(count-1)*36.66f, canvas.transform.localPosition.z);
+                    }
 
                 }
+
             }
         }
     }

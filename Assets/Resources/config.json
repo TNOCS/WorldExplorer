@@ -142,14 +142,14 @@
     },
     {
       "Name": "Detail",
-      "Lat": 52.453924,
-      "Lon": 5.047512,
+      "Lat": 52.4587,
+      "Lon":5.0431,
       "Zoom": 17,
       "TileSize": 100,
       "Range": 2,
       "Scale": 1,
       "Mapzen": [ "buildings", "water", "roads", "landuse", "water", "pois" ],
-      "Layers": [ "Police", "Ambulance" ],
+      "Layers": [ "Police" ],
       "TileLayers": [ "TopoLayer" ]
     },
     {
@@ -168,7 +168,7 @@
   "TileServer": "",
   "MqttServer": "cool3.sensorlab.tno.nl",
   "MqttPort": "8026",
-  "InitialView": "School",
+  "InitialView": "Detail",
   "Table": {
     "TableSize": 1.5,
     "TableHeight": 1.5

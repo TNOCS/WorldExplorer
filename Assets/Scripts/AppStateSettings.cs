@@ -227,16 +227,17 @@ namespace Assets.Scripts
             Layers.transform.SetParent(Table.transform);
             Layers.transform.localPosition = new Vector3(0f, 0.5f, 0f);
             Layers.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
-
             iv.Layers.ForEach(layer =>
             {
                 var l = Config.Layers.FirstOrDefault(k => k.Title == layer && k.Type == "geojson");
                 if (l != null)
                 {
+                    
                     InitGeojsonLayer(l);
                 }
             });
 
+           
             #endregion
 
             #region TILE PLUGINS
@@ -271,7 +272,7 @@ namespace Assets.Scripts
             #endregion
 
         }
-
+   
         public void DestroyGeojsonLayer(Layer l)
         {
             Speech.RemoveKeyword(ShowLayerSpeech + l.VoiceCommand);
@@ -334,6 +335,7 @@ namespace Assets.Scripts
                 success =>
                 {
                     var layerObject = new GameObject("Layer-" + l.Title);
+
                     layerObject.transform.SetParent(Layers.transform, false);
                     l._object = layerObject;
                     l._active = true;

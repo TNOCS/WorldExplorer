@@ -217,19 +217,14 @@ public class SymbolFactory : MonoBehaviour
     /// <param name="baseUrl"> link to the baselocation of the images</param>
     /// <returns></returns>
     IEnumerator createSymbols(Feature f)
-
-
-
-
-
     {
         string web;
-        if (!c.properties.ContainsKey("symbol"))
+        if (!f.properties.ContainsKey("symbol"))
         {
-            string web = GetIconUrl(f);
+            web = GetIconUrl(f);
         }
         else
-            web = baseUrl + c.properties["symbol"].ToString().Replace(@"""", "");
+            web = baseUrl + f.properties["symbol"].ToString().Replace(@"""", "");
 
 
         WWW www = new WWW(web);
@@ -237,9 +232,6 @@ public class SymbolFactory : MonoBehaviour
 
         // Check if the point is  in the displayed tile area if so continue
         if (SymbolTiles.Contains(f.tilePoint))
-
-
-
         {
             if (_symbolInfo)
             {
@@ -247,20 +239,26 @@ public class SymbolFactory : MonoBehaviour
                 var id = f.id;
                 if (string.IsNullOrEmpty(id)) id = Guid.NewGuid().ToString();
                 string symbolname = "symbol-" + id;
-                var target = new GameObject("Symbol-target");
+                var target = new GameObject("Symbol-target-" + f.tilePoint.ToString());
+                var target_collider = target.AddComponent<BoxCollider>();
+                target_collider.size = new Vector3(Layer.Scale, Layer.Scale + Layer.Scale / 4, Layer.Scale);
+                target_collider.center = new Vector3(Layer.Scale / 4, Layer.Scale + Layer.Scale / 4);
+                target.tag = "symbol";
+                target_collider.isTrigger = true;
+                var targetHandler = target.AddComponent<SymbolTargetHandler>();
 
-                var tag = "layer-" + Layer.Title;
+                var targetGui = new GameObject("targetGui-" + f.tilePoint.ToString());
+                targetGui.transform.SetParent(target.transform);
+                targetHandler.gui = targetGui;
+                
                 //target.tag = tag;
 
                 var symbol = new GameObject("Symbol");
+
                 symbol.name = symbolname;
                 var dotMerc = GM.LatLonToMeters(f.cor[1].f, f.cor[0].f);
                 var localMercPos = (dotMerc - CenterInMercator);
                 symbol.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
-
-
-
-
                 // var target = new GameObject("symbol-Target");
                 target.transform.position = localMercPos.ToVector3();
                 target.transform.SetParent(transform, false);
@@ -281,74 +279,45 @@ public class SymbolFactory : MonoBehaviour
                 instance.transform.localScale = new Vector3(30f, 30f, 30f);
                 //instance.transform.localRotation = new Quaternion(0f, 0f, 180f,0f);
 
-                if (c != null)
+
+                if (f.Stats != null)
                 {
-                    if (c != null)
+
+                    var info = (GameObject)Instantiate(_symbolInfo);
+                    var canvas = info.GetComponent<Canvas>();
+                    canvas.worldCamera = Camera.main;
+                    info.transform.SetParent(targetGui.transform, false);
+                    canvas.transform.localScale = new Vector3(5, 10);
+                    canvas.transform.localPosition = new Vector3(0, 180, 0);
+                    int count = 0;
+                    for (int i = 0; i < f.Stats.Count; i++)
+
                     {
-                        if (c.Stats != null)
 
-
-
+                        switch (f.Stats[i]["type"].ToString().Replace(@"""", ""))
                         {
+                            default:
+                                break;
+                            case "bar":
+                                var bar = (GameObject)Instantiate(_bar);
+                                bar.transform.parent = info.transform;
+                                bar.transform.localScale = new Vector3(100, 100);
+                                var BarFill = bar.transform.FindChild("Bar-Background").FindChild("Bar-Fill").gameObject.GetComponentInChildren<Image>().fillAmount = (float.Parse(f.Stats[i]["value"].ToString().Replace(@"""", "")) / float.Parse(f.Stats[i]["maxValue"].ToString().Replace(@"""", "")));//calculate fill stat value
 
-                            var info = (GameObject)Instantiate(_symbolInfo);
-                            var canvas = info.GetComponent<Canvas>();
-                            canvas.worldCamera = Camera.main;
-                            info.transform.SetParent(target.transform, false);
-                            canvas.transform.localScale = new Vector3(5, 10);
-                            canvas.transform.localPosition = new Vector3(0, 180, 0);
-                            int count = 0;
-                            for (int i = 0; i < c.Stats.Count; i++)
+                                // Image voor balk:
+                                var ICO = bar.transform.FindChild("ICO").gameObject.GetComponent<Image>();
+                                ICO.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
+                                count++;
+                                break;
 
-                            {
-
-                                switch (c.Stats[i]["type"].ToString().Replace(@"""", ""))
-                                {
-                                    default:
-                                        break;
-                                    case "bar":
-
-
-
-                                        var bar = (GameObject)Instantiate(_bar);
-                                        bar.transform.parent = info.transform;
-                                        bar.transform.localScale = new Vector3(100, 100);
-                                        var BarFill = bar.transform.FindChild("Bar-Background").FindChild("Bar-Fill").gameObject.GetComponentInChildren<Image>().fillAmount = (float.Parse(c.Stats[i]["value"].ToString().Replace(@"""", "")) / float.Parse(c.Stats[i]["maxValue"].ToString().Replace(@"""", "")));//calculate fill stat value
-
-
-
-
-
-
-
-
-
-
-                                        // Image voor balk:
-                                        var ICO = bar.transform.FindChild("ICO").gameObject.GetComponent<Image>();
-                                        ICO.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
-                                        count++;
-                                        break;
-
-                                }
-
-
-
-
-
-                            }
-                            canvas.transform.localPosition = new Vector3(canvas.transform.localPosition.x, canvas.transform.localPosition.y + (count - 1) * 36.66f, canvas.transform.localPosition.z);
                         }
-
                     }
-
-
+                    canvas.transform.localPosition = new Vector3(canvas.transform.localPosition.x, canvas.transform.localPosition.y + (count - 1) * 36.66f, canvas.transform.localPosition.z);
                 }
+                targetGui.SetActive(false);
             }
-
-
         }
-
+    }
     private string GetIconUrl(Feature c)
     {
         string web = Layer.IconUrl; // "http://134.221.20.241:3000/images/pomp.png"; // baseUrl + c.properties["symbol"].ToString().Replace(@"""", "");
@@ -417,15 +386,11 @@ public class SymbolFactory : MonoBehaviour
             {
 
                 case "MultiPolygon":
-
                     // f.geometry.vectors = parsePolygon(f.geometry.coordinates.list[0]);
-
                     break;
 
                 case "Polygon":
-
                     // f.geometry.vectors = parsePolygon(f.geometry.coordinates);
-
                     break;
                 case "Point":
                     f.tilePoint = parseTile(f.geometry.coordinates);

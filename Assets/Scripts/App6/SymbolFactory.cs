@@ -100,13 +100,18 @@ public class SymbolFactory : MonoBehaviour
     protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
     private Vector3 center;
     private System.Threading.Timer refreshTimer;
-
+    protected List<GameObject> SymbolGuis;
     void Awake()
     {
         _symbolInfo = Resources.Load("_symbolInfo") as GameObject;
         _bar = Resources.Load("_bar") as GameObject;
     }
     protected List<Vector2d> SymbolTiles;
+    private void Start()
+    {
+        SymbolGuis = new List<GameObject>();
+       
+    }
     /// <summary>
     /// Build the symbol layer
     /// </summary>
@@ -275,7 +280,7 @@ public class SymbolFactory : MonoBehaviour
 
 
                 GameObject instance = Instantiate(Resources.Load("cone", typeof(GameObject)), target.transform) as GameObject;
-                instance.transform.localPosition = new Vector3(10f, 10f, 10f);
+                instance.name = "cone";                instance.transform.localPosition = new Vector3(10f, 10f, 10f);
                 instance.transform.localScale = new Vector3(30f, 30f, 30f);
                 //instance.transform.localRotation = new Quaternion(0f, 0f, 180f,0f);
 
@@ -284,6 +289,7 @@ public class SymbolFactory : MonoBehaviour
                 {
 
                     var info = (GameObject)Instantiate(_symbolInfo);
+                    SymbolGuis.Add(info);
                     var canvas = info.GetComponent<Canvas>();
                     canvas.worldCamera = Camera.main;
                     info.transform.SetParent(targetGui.transform, false);
@@ -447,8 +453,10 @@ public class SymbolFactory : MonoBehaviour
 
     void Update()
     {
-
-
+       foreach( var c in SymbolGuis)
+        {
+            c.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward, Camera.main.transform.up);
+        }
 
     }
 

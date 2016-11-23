@@ -67,68 +67,73 @@ public class Cursor : MonoBehaviour
             // Rotate the cursor to hug the surface of the hologram.
             this.transform.rotation =
                 Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
-           
 
 
-            
-                if (hitInfo.transform.gameObject.tag == "symbol")
-                {
 
-                    if (prevTarget == null)
-                        hitInfo.transform.gameObject.GetComponent<SymbolTargetHandler>().ToggleGUI();
-                    else
-                        if (prevTarget != hitInfo.transform.gameObject)
-                    {
-                        prevTarget.GetComponent<SymbolTargetHandler>().ToggleGUI();
-                        hitInfo.transform.gameObject.GetComponent<SymbolTargetHandler>().ToggleGUI();
-                    }
-                    prevTarget = hitInfo.transform.gameObject;
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                    FocusedObject = prevTarget;
-                    FocusedObject.BroadcastMessage("OnSelect");
-                }
-                }
+
+            if (hitInfo.transform.gameObject.tag == "symbol")
+            {
+
+                if (prevTarget == null)
+                    hitInfo.transform.gameObject.GetComponent<SymbolTargetHandler>().Show();
                 else
+                    if (prevTarget != hitInfo.transform.gameObject)
                 {
-                    if (prevTarget != null)
-                    {
-                        prevTarget.GetComponent<SymbolTargetHandler>().ToggleGUI();
-                        prevTarget = null;
-                    }
+                    prevTarget.GetComponent<SymbolTargetHandler>().Hide();
+                    hitInfo.transform.gameObject.GetComponent<SymbolTargetHandler>().Show();
                 }
-            
+                prevTarget = hitInfo.transform.gameObject;
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (oldFocusObject != hitInfo.transform.gameObject)
+                        FocusedObject = hitInfo.transform.gameObject;
+                    else
+                        FocusedObject = null;
+
+                }
+            }
+            else
+            {
+                if (prevTarget != null)
+                {
+                    prevTarget.GetComponent<SymbolTargetHandler>().Hide();
+                    prevTarget = null;
+                }
+            }
+
 
         }
         else
-        {
-
-            //System.Collections.Generic.List<RaycastResult> hitGuiInfo = new System.Collections.Generic.List<RaycastResult>();
-            //PointerEventData pointer = new PointerEventData(EventSystem.current);
-            //EventSystem.current.RaycastAll(pointer, hitGuiInfo);
-            //// GraphicRaycaster gr = 
-            //t = true;
-            //meshRenderer.enabled = true;
-
-            //if (hitGuiInfo.Count > 0)
-            //{
-            //    foreach (var go in hitGuiInfo)
-            //    {
-            //        Debug.Log(go.gameObject.name, go.gameObject);
-            //    }
-            //}
-
-            //    else
-            // If the raycast did not hit a hologram, hide the cursor mesh.
             meshRenderer.enabled = false;
-        }
         // If the focused object changed this frame,
         // start detecting fresh gestures again.
         if (FocusedObject != oldFocusObject)
         {
-            oldFocusObject.BroadcastMessage("OnSelect");
+            if (oldFocusObject != null)
+                oldFocusObject.BroadcastMessage("OnSelect");
+            if (FocusedObject != null)
+                FocusedObject.BroadcastMessage("OnSelect");
             recognizer.CancelGestures();
             recognizer.StartCapturingGestures();
         }
+
+
+        //System.Collections.Generic.List<RaycastResult> hitGuiInfo = new System.Collections.Generic.List<RaycastResult>();
+        //PointerEventData pointer = new PointerEventData(EventSystem.current);
+        //EventSystem.current.RaycastAll(pointer, hitGuiInfo);
+        //// GraphicRaycaster gr = 
+        //t = true;
+        //meshRenderer.enabled = true;
+
+        //if (hitGuiInfo.Count > 0)
+        //{
+        //    foreach (var go in hitGuiInfo)
+        //    {
+        //        Debug.Log(go.gameObject.name, go.gameObject);
+        //    }
+        //}
+
+        //    else
+        // If the raycast did not hit a hologram, hide the cursor mesh.
     }
 }

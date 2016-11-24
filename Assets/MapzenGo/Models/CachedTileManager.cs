@@ -17,6 +17,11 @@ namespace MapzenGo.Models
             base.Start();
         }
 
+        public void ClearCache()
+        {
+            if (Directory.Exists(CacheFolderPath)) Directory.Delete(CacheFolderPath, true);
+        }
+
         protected override void LoadTile(Vector2d tileTms, Tile tile)
         {
             var tilePath = Path.Combine(CacheFolderPath, _mapzenLayers.Replace(',', '_') + "_" + tileTms.x + "_" + tileTms.y) + ".json";

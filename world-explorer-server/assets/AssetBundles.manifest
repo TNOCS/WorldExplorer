@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 119883947
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: buildings/eindhoven
+      Dependencies: {}

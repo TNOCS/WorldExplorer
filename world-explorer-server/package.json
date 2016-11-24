@@ -1,0 +1,41 @@
+{
+  "name": "world-explorer-server",
+  "version": "0.0.1",
+  "description": "Tile server proxy for WorldExplorer serving Mapzen vector tiles.",
+  "main": "dist/server.js",
+  "scripts": {
+    "postinstall": "typings i && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TNOCS/WorldExplorerServer.git"
+  },
+  "keywords": [
+    "tile",
+    "server",
+    "mapzen",
+    "proxy",
+    "worldexplorer",
+    "hololens"
+  ],
+  "author": "Erik Vullings <erik.vullings@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TNOCS/WorldExplorerServer/issues"
+  },
+  "homepage": "https://github.com/TNOCS/WorldExplorerServer#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "method-override": "^2.3.6",
+    "mkdirp": "^0.5.1",
+    "request": "^2.79.0",
+    "serve-static": "^1.11.1"
+  },
+  "devDependencies": {
+    "typescript": "^2.0.3",
+    "typings": "^1.4.0"
+  }
+}

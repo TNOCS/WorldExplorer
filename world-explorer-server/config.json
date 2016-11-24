@@ -1,0 +1,6 @@
+{
+  "port": 10733,
+  "port_note": "This port address is the only one that can be used in Unity with a local asset service (i.e. Unity does not support a URL with port for asset bundles).",
+  "cache": "cache",
+  "url": "http://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.json?api_key=vector-tiles-dB21RAF"
+}

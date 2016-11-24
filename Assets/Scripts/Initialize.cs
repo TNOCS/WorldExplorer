@@ -1,5 +1,12 @@
 ﻿using UnityEngine;
 using Assets.Scripts;
+using MapzenGo.Models;
+#if (NETFX_CORE)
+using System;
+using System.Text;
+using Assets.MapzenGo.Models.Enums;
+using Assets.Scripts.Utils;
+#endif
 
 public class Initialize : MonoBehaviour
 {
@@ -182,7 +189,6 @@ public class Initialize : MonoBehaviour
             //// subscribe to the topic "/home/temperature" with QoS 2 
             client.Subscribe(new string[] { "view" }, new byte[] { uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
         }
-
     }
 
     protected void SetView(string msg)
@@ -197,7 +203,7 @@ public class Initialize : MonoBehaviour
             appState.TileManager.Latitude = iv.Lat;
             appState.TileManager.Longitude = iv.Lon;
             appState.TileManager.Zoom = iv.Zoom;
-            appState.TileManager.Start();
+            appState.ResetMap();
         }
     }
 #endif
@@ -205,6 +211,16 @@ public class Initialize : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if (Input.GetKeyDown(KeyCode.LeftArrow)) appState.Center = new Vector3(-1, 0, 0);
+        //if (Input.GetKeyDown(KeyCode.RightArrow)) appState.Center = new Vector3(1, 0, 0);
+        //if (Input.GetKeyDown(KeyCode.DownArrow)) appState.Center = new Vector3(0, 0, -1);
+        //if (Input.GetKeyDown(KeyCode.UpArrow)) appState.Center = new Vector3(0, 0, 1);
+        //if (Input.GetKeyDown(KeyCode.I)) appState.Center = new Vector3(0, 1, 0);
+        //if (Input.GetKeyDown(KeyCode.O)) appState.Center = new Vector3(0, -1, 0);
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            appState.ClearCache();
+        }
         for (var i = 0; i < Mathf.Min(8, appState.Config.Views.Count); i++)
         {
             if (!Input.GetKeyDown(string.Format("{0}", i + 1))) continue;

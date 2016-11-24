@@ -69,6 +69,18 @@
   ],
   "Views": [
     {
+      "Name": "Station",
+      "Lat": 51.44228,
+      "Lon": 5.48004,
+      "Zoom": 17,
+      "TileSize": 100,
+      "Range": 2,
+      "Scale": 1,
+      "Mapzen": [ "buildings", "water", "roads", "pois", "assets" ],
+      "Layers": [],
+      "TileLayers": [ "TopoLayer" ]
+    },
+    {
       "Name": "School",
       "Lat": 51.480699,
       "Lon": 5.450737,
@@ -82,13 +94,13 @@
     },
     {
       "Name": "City center",
-      "Lat": 51.439232,
+      "Lat": 51.438232,
       "Lon": 5.478346,
       "Zoom": 17,
       "TileSize": 100,
       "Range": 2,
       "Scale": 1,
-      "Mapzen": [ "buildings", "water", "roads", "pois" ],
+      "Mapzen": [ "buildings", "water", "roads", "pois", "assets" ],
       "Layers": [],
       "TileLayers": [ "TopoLayer" ]
     },
@@ -168,7 +180,7 @@
   "TileServer": "",
   "MqttServer": "cool3.sensorlab.tno.nl",
   "MqttPort": "8026",
-  "InitialView": "School",
+  "InitialView": "City center",
   "Table": {
     "TableSize": 1.5,
     "TableHeight": 1.5

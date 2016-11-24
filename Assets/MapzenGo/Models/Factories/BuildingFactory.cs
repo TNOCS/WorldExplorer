@@ -111,7 +111,7 @@ namespace MapzenGo.Models.Factories
                 var kind = geo["properties"].HasField("landuse_kind")
                 ? geo["properties"]["landuse_kind"].str.ConvertToBuildingType()
                 : BuildingType.Unknown;
-
+                // Debug.Log(kind);
                 var typeSettings = FactorySettings.GetSettingsFor<BuildingSettings>(kind);
 
                 //if we dont have a setting defined for that, it'Ll be merged to "unknown" 

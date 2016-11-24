@@ -9,12 +9,11 @@ namespace MapzenGo.Models
 {
     public class DynamicTileManager : TileManager
     {
+        private static readonly AppState appState = AppState.Instance;
         //[SerializeField] private Rect _centerCollider;
         [SerializeField] private int _removeAfter;
         [SerializeField]
         private bool _keepCentralized = false;
-
-       
 
         public override void Start()
         {
@@ -27,18 +26,17 @@ namespace MapzenGo.Models
 
         public override void Update()
         {
-            base.Update();
+            //base.Update();
             UpdateTiles();
         }
 
         private void UpdateTiles()
         {
-            AppState appState = AppState.Instance;
             if (appState.Center.x != 0 || appState.Center.y != 0 || appState.Center.z != 0) 
             {
                 //player movement in TMS tiles: Note the minus in front of the y.
-                var tileDif = new Vector2(appState.Center.x, -appState.Center.y);
-                Zoom += (int) appState.Center.z;
+                var tileDif = new Vector2(appState.Center.x, -appState.Center.z);
+                Zoom += (int) appState.Center.y;
                 //Debug.Log(tileDif);
                 //move locals
                 Centralize(tileDif);

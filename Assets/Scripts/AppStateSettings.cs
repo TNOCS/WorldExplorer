@@ -1,13 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using MapzenGo.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Classes;
-using Assets.Scripts.Utils;
 using MapzenGo.Models.Plugins;
 using UniRx;
-using System;
-using Assets.MapzenGo.Models.Enums;
 
 namespace Assets.Scripts
 {
@@ -16,7 +14,6 @@ namespace Assets.Scripts
         public const string ShowLayerSpeech = "Show ";
         public const string HideLayerSpeech = "Show ";
         public const string ToggleSpeech = "Toggle ";
-
 
         public GameObject World;
         public GameObject Terrain;
@@ -32,7 +29,7 @@ namespace Assets.Scripts
         } // guarantee this will be always a singleton only - can't use the constructor!
 
         public Vector3 Center { get; set; }
-        public CachedTileManager TileManager { get; set; }
+        public TileManager TileManager { get; set; }
 
         public AppConfig Config { get; set; }
         public ViewState State { get; set; }
@@ -43,6 +40,7 @@ namespace Assets.Scripts
         public void Init()
         {
             Speech = new SpeechManager();
+            MapzenTags.ForEach(k => Speech.AddKeyword(ToggleSpeech + k, () => ToggleMapzen(k)));
         }
 
         private void ToggleMapzen(string tag)
@@ -112,36 +110,46 @@ namespace Assets.Scripts
             InitMap();
         }
 
+        public void ClearCache()
+        {
+            var tm = TileManager as CachedTileManager;
+            if (tm != null)
+            {
+                tm.ClearCache();
+                ResetMap();
+            }
+        }
+
         public void InitMap()
         {
             var iv = Config.InitalView;
-
-            //Enum.GetNames(typeof(PoiType)).ToList().ForEach(pt =>
-            //{
-            //    if (!MapzenTags.Contains(pt)) MapzenTags.Add(pt);
-            //});
 
             var i = iv.Range;
             if (i > mapScales.Length) i = mapScales.Length;
             var mapScale = mapScales[i - 1];
             Map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
-            MapzenTags.ForEach(k => Speech.AddKeyword(ToggleSpeech + k, () => ToggleMapzen(k)));
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);
 
             // init map
+#if DEBUG
+            var tm = World.AddComponent<TileManager>(); 
+            tm._mapzenUrl = "http://localhost:10733/{0}/{1}/{2}/{3}.{4}";
+#else
             var tm = World.AddComponent<CachedTileManager>();
+            tm._key = "vector-tiles-dB21RAF";
+            Speech.AddKeyword("Clear cache", () => { tm.ClearCache(); });
+#endif
             tm.Latitude = iv.Lat;
             tm.Longitude = iv.Lon;
             tm.Range = iv.Range;
             tm.Zoom = iv.Zoom;
             tm.TileSize = iv.TileSize;
-            tm._key = "vector-tiles-dB21RAF";
 
             TileManager = tm;
 
-            #region UI
+#region UI
 
             var ui = new GameObject("UI"); // Placeholder (root element in UI tree)
             ui.transform.SetParent(World.transform, false);
@@ -153,11 +161,11 @@ namespace Assets.Scripts
             AddRectTransformToGameObject(poi);
             poi.transform.SetParent(ui.transform, false);
 
-            #endregion
+#endregion
 
-            #region FACTORIES
+#region FACTORIES
 
-            #region defaultfactories
+#region defaultfactories
             var factories = new GameObject("Factories");
             factories.transform.SetParent(World.transform, false);
 
@@ -206,6 +214,16 @@ namespace Assets.Scripts
                 var poisFactory = pois.AddComponent<PoiFactory>();
             }
 
+            if (iv.Mapzen.Contains("assets")) // assets
+            {
+                var models = new GameObject("ModelFactory");
+                models.transform.SetParent(factories.transform, false);
+                var modelFactory = models.AddComponent<ModelFactory>();
+                //modelFactory.scale = Table.transform.localScale.x;
+                modelFactory.scale = 2;
+                modelFactory.BundleURL = "http://localhost/buildings/eindhoven";
+            }
+
             #endregion
 
             if (iv.Layers.Any())
@@ -225,9 +243,9 @@ namespace Assets.Scripts
                 });
             }
 
-            #endregion
+#endregion
 
-            #region TILE PLUGINS
+#region TILE PLUGINS
 
             var tilePlugins = new GameObject("TilePlugins");
             tilePlugins.transform.SetParent(World.transform, false);
@@ -267,7 +285,7 @@ namespace Assets.Scripts
                 });
             }
 
-            #endregion
+#endregion
             //tileLayer.transform.SetParent(tilePlugins.transform, false);
             //var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
             //tileLayerPlugin.tileLayers = Config.Layers;

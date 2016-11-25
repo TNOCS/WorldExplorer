@@ -148,6 +148,7 @@ namespace Assets.Scripts
             var tm = World.AddComponent<CachedTileManager>();
             tm._key = "vector-tiles-dB21RAF";
             Speech.AddKeyword("Clear cache", () => { tm.ClearCache(); });
+            tm._mapzenUrl = "http://134.221.20.226:3999/{0}/{1}/{2}/{3}.{4}";
 #endif
             tm.Latitude = iv.Lat;
             tm.Longitude = iv.Lon;
@@ -231,7 +232,7 @@ namespace Assets.Scripts
                 var modelFactory = models.AddComponent<ModelFactory>();
                 modelFactory.scale = Table.transform.localScale.x;
                 //modelFactory.scale = 2;
-                modelFactory.BundleURL = "http://localhost:10733/buildings/eindhoven";
+                modelFactory.BundleURL = "http://134.221.20.226:3999/assets/buildings/eindhoven";
                 modelFactory.version = 5;
             }
 

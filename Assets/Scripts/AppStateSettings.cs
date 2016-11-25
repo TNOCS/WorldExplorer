@@ -233,7 +233,7 @@ namespace Assets.Scripts
                 modelFactory.scale = Table.transform.localScale.x;
                 //modelFactory.scale = 2;
                 modelFactory.BundleURL = "http://134.221.20.226:3999/assets/buildings/eindhoven";
-                modelFactory.version = 5;
+                modelFactory.version = 6;
             }
 
             #endregion

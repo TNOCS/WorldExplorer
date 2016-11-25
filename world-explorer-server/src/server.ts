@@ -18,7 +18,7 @@ const app = express();
 app.use(cors());
 app.use(express.static(path.join(process.cwd(), 'public')));
 
-let tileServer = new TileServer(config.url, config.cache);
+let tileServer = new TileServer(config.port, config.url, config.cache);
 
 app.get('/:layers/:z/:x/:y.json', (req, res) => {
   let tile = <ITile> {

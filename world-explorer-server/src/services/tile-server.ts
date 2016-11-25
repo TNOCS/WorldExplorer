@@ -39,11 +39,11 @@ export class TileServer implements ITileService {
    * 
    * @memberOf TileServer
    */
-  constructor(private url: string, private path: string) {
+  constructor(port: number, private url: string, private path: string) {
     this.useInternet = !url;
     if (!fs.existsSync(path)) { fs.mkdirSync(path); }
     if (!assets.hasOwnProperty('features') || assets.features.length === 0) { return; }
-    this.assetService = new AssetTileService('assets', assets);
+    this.assetService = new AssetTileService(port, 'assets', assets);
   }
 
   public getTile(tile: ITile, cb: (error: Error, collection: { [key: string]: FeatureCollection }) => void) {

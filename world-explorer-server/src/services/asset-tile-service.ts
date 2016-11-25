@@ -12,7 +12,7 @@ export class AssetTileService {
   private isActive = false;
   private tiles: { [zoom: number]: { [key: string]: FeatureCollection } } = {};
 
-  constructor(private name: string, private geojson?: FeatureCollection) {
+  constructor(private port: number, private name: string, private geojson?: FeatureCollection) {
     if (!geojson || !geojson.hasOwnProperty('features') || geojson.features.length === 0) { return; }
     this.setAssetBundleUrl();
     // Create tiles for the most popular zoom levels
@@ -57,7 +57,7 @@ export class AssetTileService {
    * @memberOf AssetTileService
    */
   private setAssetBundleUrl() {
-    let ipAddress = 'http://' + ip.address();
+    let ipAddress = `http://${ip.address()}:${this.port}`;
     this.geojson.features.forEach(f => {
       if (!f.hasOwnProperty('properties')
         || !f.properties.hasOwnProperty('assetbundle')

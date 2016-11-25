@@ -16,7 +16,7 @@ config.cache = path.resolve(config.cache ? config.cache : 'cache');
 const app = express();
 
 app.use(cors());
-app.use(express.static(path.join(process.cwd(), 'assets')));
+app.use(express.static(path.join(process.cwd(), 'public/assets')));
 
 let tileServer = new TileServer(config.url, config.cache);
 

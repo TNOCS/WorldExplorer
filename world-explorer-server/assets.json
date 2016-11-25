@@ -12,7 +12,7 @@
         "name": "ADO Den Haag",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -26,7 +26,7 @@
         "name": "Kurhaus",
         "min_zoom": 16,
         "id": 58578286,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -40,7 +40,7 @@
         "name": "Circustheater",
         "min_zoom": 16,
         "id": 58578266,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -54,7 +54,7 @@
         "name": "Binnenhof",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -68,7 +68,7 @@
         "name": "Ridderzaal",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -82,7 +82,7 @@
         "name": "Noordeinde",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -96,7 +96,7 @@
         "name": "Hoftoren",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -110,7 +110,7 @@
         "name": "Den Haag HS",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -124,7 +124,7 @@
         "name": "Mauritshuis",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -138,7 +138,7 @@
         "name": "Mesdag",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -152,7 +152,7 @@
         "name": "Vredespaleis",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -166,7 +166,7 @@
         "name": "Strijkijzer",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -180,7 +180,7 @@
         "name": "Ministerie van Binnenlandse Zaken",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -194,7 +194,7 @@
         "name": "Ministeries",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }, {
       "geometry": {
@@ -208,7 +208,7 @@
         "name": "Pier van Scheveningen",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/denhaag"
+        "assetbundle": "buildings/assets/denhaag"
       }
     }
     
@@ -225,7 +225,7 @@
         "name": "Flight forum",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/eindhoven"
+        "assetbundle": "buildings/assets/eindhoven"
       }
     }, {
       "geometry": {
@@ -239,7 +239,7 @@
         "name": "Auditorium",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/eindhoven"
+        "assetbundle": "buildings/assets/eindhoven"
       }
     }, {
       "geometry": {
@@ -253,7 +253,7 @@
         "name": "Evoluon",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/eindhoven"
+        "assetbundle": "buildings/assets/eindhoven"
       }
     }, {
       "geometry": {
@@ -267,7 +267,7 @@
         "name": "Van Abbe Museum",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/eindhoven"
+        "assetbundle": "buildings/assets/eindhoven"
       }
     }, {
       "geometry": {
@@ -281,7 +281,7 @@
         "name": "Witte dame",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/eindhoven"
+        "assetbundle": "buildings/assets/eindhoven"
       }
     }, {
       "geometry": {
@@ -291,7 +291,7 @@
       "type": "Feature",
       "properties": {
         "asset": "anton philips",
-        "assetassetbundle": "buildings/eindhoven",
+        "assetassetbundle": "buildings/assets/eindhoven",
         "remove_from": "pois",
         "name": "Anton Philips",
         "min_zoom": 17,
@@ -309,7 +309,7 @@
         "name": "Catharina kerk",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/eindhoven"
+        "assetbundle": "buildings/assets/eindhoven"
       }
     }, {
       "geometry": {
@@ -323,7 +323,7 @@
         "name": "Catharina kerk",
         "min_zoom": 16,
         "id": 271573902,
-        "assetbundle": "buildings/eindhoven"
+        "assetbundle": "buildings/assets/eindhoven"
       }
     }, {
       "geometry": {
@@ -337,7 +337,7 @@
         "name": "Stadhuis",
         "min_zoom": 16,
         "id": 271573917,
-        "assetbundle": "buildings/eindhoven"
+        "assetbundle": "buildings/assets/eindhoven"
       }
     }, {
       "geometry": {
@@ -351,7 +351,7 @@
         "name": "Station Eindhoven",
         "min_zoom": 16,
         "id": 271557484,
-        "assetbundle": "buildings/eindhoven"
+        "assetbundle": "buildings/assets/eindhoven"
       }
     }
   ]

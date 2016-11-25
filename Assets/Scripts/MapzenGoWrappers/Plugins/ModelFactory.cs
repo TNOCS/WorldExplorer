@@ -13,6 +13,11 @@ using System;
 public class ModelFactory : Factory
 {
     public string BundleURL;
+    /// <summary>
+    /// Specify the version number so you will download a new version.
+    /// See http://answers.unity3d.com/questions/157563/how-do-you-set-an-assetbundles-version-number.html
+    /// </summary>
+    public int version = 1;
     public override string XmlTag { get { return "assets"; } }
     public float scale = 1F;
 
@@ -35,7 +40,7 @@ public class ModelFactory : Factory
         }
     }
 
-    System.Collections.IEnumerator DownloadAndCache(Tile tile, JSONObject geo, string assetName, int version = 0)
+    System.Collections.IEnumerator DownloadAndCache(Tile tile, JSONObject geo, string assetName)
     {
         // Wait for the Caching system to be ready
         while (!Caching.ready)
@@ -72,7 +77,15 @@ public class ModelFactory : Factory
         yield return null;
     }
 
-    private IEnumerator LoadAsset(Tile tile, JSONObject geo, string assetName, int version = 0)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tile"></param>
+    /// <param name="geo"></param>
+    /// <param name="assetName"></param>
+    /// <param name="version">Increment the version number so you will really download a new version</param>
+    /// <returns></returns>
+    private IEnumerator LoadAsset(Tile tile, JSONObject geo, string assetName, int version = 1)
     {
         var bundleURL = geo["properties"].HasField("assetbundle") ? geo["properties"]["assetbundle"].str : BundleURL;
         var bundle = AssetBundleManager.getAssetBundle(bundleURL, version);

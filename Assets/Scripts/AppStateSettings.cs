@@ -229,9 +229,10 @@ namespace Assets.Scripts
                 var models = new GameObject("ModelFactory");
                 models.transform.SetParent(factories.transform, false);
                 var modelFactory = models.AddComponent<ModelFactory>();
-                //modelFactory.scale = Table.transform.localScale.x;
-                modelFactory.scale = 2;
-                modelFactory.BundleURL = "http://localhost/buildings/eindhoven";
+                modelFactory.scale = Table.transform.localScale.x;
+                //modelFactory.scale = 2;
+                modelFactory.BundleURL = "http://localhost:10733/buildings/eindhoven";
+                modelFactory.version = 4;
             }
 
             #endregion

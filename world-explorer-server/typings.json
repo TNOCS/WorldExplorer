@@ -4,6 +4,7 @@
     "express-serve-static-core": "registry:dt/express-serve-static-core#4.0.0+20161008174359",
     "form-data": "registry:dt/form-data#0.0.0+20160724024111",
     "geojson": "registry:dt/geojson#0.0.0+20160619034323",
+    "ip": "registry:dt/ip#0.0.0+20160929195624",
     "method-override": "registry:dt/method-override#0.0.0+20160925094606",
     "node": "registry:dt/node#6.0.0+20161008175459",
     "request": "registry:dt/request#0.0.0+20161116202412"

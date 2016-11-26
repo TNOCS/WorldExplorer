@@ -48,14 +48,14 @@ namespace Assets.Scripts
         private void ToggleMapzen(string tag)
         {
 
-            if (Config == null || Config.InitalView == null) return;
-            if (Config.InitalView.Mapzen.Contains(tag))
+            if (Config == null || Config.ActiveView == null) return;
+            if (Config.ActiveView.Mapzen.Contains(tag))
             {
-                Config.InitalView.Mapzen.Remove(tag);
+                Config.ActiveView.Mapzen.Remove(tag);
             }
             else
             {
-                Config.InitalView.Mapzen.Add(tag);
+                Config.ActiveView.Mapzen.Add(tag);
             }
             ResetMap();
         }
@@ -93,7 +93,7 @@ namespace Assets.Scripts
 
         public void AddTerrain()
         {
-            var iv = Config.InitalView;
+            var iv = Config.ActiveView;
             var t = Config.Table;
 
             #region create map & terrain
@@ -129,7 +129,7 @@ namespace Assets.Scripts
 
         public void InitMap()
         {
-            var iv = Config.InitalView;
+            var iv = Config.ActiveView;
 
             var i = iv.Range;
             if (i > mapScales.Length) i = mapScales.Length;
@@ -248,7 +248,6 @@ namespace Assets.Scripts
                 var l = Config.Layers.FirstOrDefault(k => k.Title == layer && k.Type == "geojson");
                 if (l != null)
                 {
-                    
                     InitGeojsonLayer(l);
                 }
             });
@@ -346,7 +345,7 @@ namespace Assets.Scripts
         public void AddGeojsonLayer(Layer l)
         {
             if (l._active) return;
-            var iv = Config.InitalView;
+            var av = Config.ActiveView;
             ObservableWWW.GetWWW(l.Url).Subscribe(
                 success =>
                 {
@@ -359,12 +358,12 @@ namespace Assets.Scripts
                     var symbolFactory = layerObject.AddComponent<SymbolFactory>();
                     //symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
                     symbolFactory.geojson = "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"type\": \"Feature\",       \"properties\": {          \"IconUrl\": \"http://134.221.20.241:3000/images/pomp.png\",  				\"stats\":[{ 				\"name\":\"ammo\", 				\"type\":\"bar\", 				\"value\":\"10\", 				\"maxValue\":\"100\" 				},{ 				\"name\":\"ammo\", 				\"type\":\"bar\", 				\"value\":\"10\", 				\"maxValue\":\"100\" 				},{ 				\"name\":\"ammo\", 				\"type\":\"bar\", 				\"value\":\"10\", 				\"maxValue\":\"100\" 				},{ 				\"name\":\"ammo\", 				\"type\":\"bar\", 				\"value\":\"10\", 				\"maxValue\":\"100\" 				},{ 				\"name\":\"ammo\", 				\"type\":\"bar\", 				\"value\":\"10\", 				\"maxValue\":\"100\" 				}], 				\"Lan\":\"5.0466084480285645\",         \"Lon\":\"52.45997114230474\" 			}, 		 	       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.0466084480285645,           52.45997114230474         ]       }     },     {       \"type\": \"Feature\",       \"properties\": {\"IconUrl\": \"http://134.221.20.241:3000/images/ambulanceposten.png\"},       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.048539638519287,           52.45887287117959         ]       }     },     {       \"type\": \"Feature\",       \"properties\": {\"IconUrl\": \"http://134.221.20.241:3000/images/politie.png\"},       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.046522617340088,           52.45781379807768         ]       }     },     {       \"type\": \"Feature\",       \"properties\": {\"IconUrl\": \"http://134.221.20.241:3000/images/politie.png\"},       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.0501275062561035,           52.461265498103494         ]       }     }   ] }";// success.text;  
-                    symbolFactory.zoom = iv.Zoom;
-                    symbolFactory.Latitude = iv.Lat;
-                    symbolFactory.Longitude = iv.Lon;
-                    symbolFactory.TileSize = iv.TileSize;
+                    symbolFactory.zoom = av.Zoom;
+                    symbolFactory.Latitude = av.Lat;
+                    symbolFactory.Longitude = av.Lon;
+                    symbolFactory.TileSize = av.TileSize;
                     symbolFactory.Layer = l;
-                    symbolFactory.Range = iv.Range;
+                    symbolFactory.Range = av.Range;
                     symbolFactory.InitLayer();
                 },
                 error =>

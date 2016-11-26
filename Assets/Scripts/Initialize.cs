@@ -149,7 +149,7 @@ public class Initialize : MonoBehaviour
         {
             appState.Speech.Keywords.Add("Switch to " + v.Name, () =>
             {
-                appState.Config.InitalView = v;
+                appState.Config.ActiveView = v;
                 appState.ResetMap();
             });
         });
@@ -224,7 +224,7 @@ public class Initialize : MonoBehaviour
         for (var i = 0; i < Mathf.Min(8, appState.Config.Views.Count); i++)
         {
             if (!Input.GetKeyDown(string.Format("{0}", i + 1))) continue;
-            appState.Config.InitalView = appState.Config.Views[i];
+            appState.Config.ActiveView = appState.Config.Views[i];
             appState.ResetMap();
             return;
         }

@@ -69,6 +69,30 @@
   ],
   "Views": [
     {
+      "Name": "Kurhaus",
+      "Lat": 52.111077,
+      "Lon": 4.285591,
+      "Zoom": 17,
+      "TileSize": 100,
+      "Range": 2,
+      "Scale": 1,
+      "Mapzen": [ "buildings", "water", "roads", "pois", "assets" ],
+      "Layers": [],
+      "TileLayers": [ "TopoLayer" ]
+    },
+    {
+      "Name": "Station",
+      "Lat": 51.44228,
+      "Lon": 5.48004,
+      "Zoom": 17,
+      "TileSize": 100,
+      "Range": 2,
+      "Scale": 1,
+      "Mapzen": [ "buildings", "water", "roads", "pois", "assets" ],
+      "Layers": [],
+      "TileLayers": [ "TopoLayer" ]
+    },
+    {
       "Name": "School",
       "Lat": 51.480699,
       "Lon": 5.450737,
@@ -82,13 +106,13 @@
     },
     {
       "Name": "City center",
-      "Lat": 51.439232,
+      "Lat": 51.438232,
       "Lon": 5.478346,
       "Zoom": 17,
       "TileSize": 100,
       "Range": 2,
       "Scale": 1,
-      "Mapzen": [ "buildings", "water", "roads", "pois" ],
+      "Mapzen": [ "buildings", "water", "roads", "pois", "assets" ],
       "Layers": [],
       "TileLayers": [ "TopoLayer" ]
     },
@@ -143,7 +167,7 @@
     {
       "Name": "Detail",
       "Lat": 52.4587,
-      "Lon":5.0431,
+      "Lon": 5.0431,
       "Zoom": 17,
       "TileSize": 100,
       "Range": 2,
@@ -168,7 +192,7 @@
   "TileServer": "",
   "MqttServer": "cool3.sensorlab.tno.nl",
   "MqttPort": "8026",
-  "InitialView": "Detail",
+  "InitialView": "Kurhaus",
   "Table": {
     "TableSize": 1.5,
     "TableHeight": 1.5

@@ -1,0 +1,42 @@
+ManifestFileVersion: 0
+CRC: 2782793160
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 1d8faa8b81a2a1e4deff13d2580d2a27
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: d4e22bca998c188582dba61b6c905222
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/van abbe museum.skp
+- Assets/auditorium.skp
+- Assets/schouwburg.skp
+- Assets/effenaar.skp
+- Assets/catharina kerk.skp
+- Assets/philips stadion.skp
+- Assets/stadhuis.skp
+- Assets/flight forum.skp
+- Assets/anton philips.skp
+- Assets/witte dame.skp
+- Assets/station eindhoven.skp
+- Assets/pathe.skp
+- Assets/evoluon.skp
+Dependencies: []

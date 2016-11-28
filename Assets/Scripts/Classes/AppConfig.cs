@@ -40,7 +40,7 @@ namespace Assets.Scripts.Classes
             }
 
             // InitalView = new ViewState();
-            InitalView = Views.FirstOrDefault(v => v.Name == json.GetString("InitialView"));
+            ActiveView = Views.FirstOrDefault(v => v.Name == json.GetString("InitialView"));
             Table = new Table();
             Table.FromJson(json["Table"]);
 
@@ -52,6 +52,6 @@ namespace Assets.Scripts.Classes
         public string MqttPort { get; set; }
         public List<ViewState> Views { get; set; }
         public Table Table { get; set; }
-        public ViewState InitalView { get; set; }
+        public ViewState ActiveView { get; set; }
     }
 }

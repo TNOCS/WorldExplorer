@@ -1,15 +1,15 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!29 &1
-SceneSettings:
+OcclusionCullingSettings:
   m_ObjectHideFlags: 0
-  m_PVSData: 
-  m_PVSObjectsArray: []
-  m_PVSPortalsArray: []
+  serializedVersion: 2
   m_OcclusionBakeSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
+  m_SceneGUID: 00000000000000000000000000000000
+  m_OcclusionCullingData: {fileID: 0}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44692558, g: 0.49678743, b: 0.57508624, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -79,26 +79,176 @@ NavMeshSettings:
   m_ObjectHideFlags: 0
   m_BuildSettings:
     serializedVersion: 2
+    agentTypeID: 0
     agentRadius: 0.5
     agentHeight: 2
     agentSlope: 45
     agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
-    accuratePlacement: 0
     minRegionArea: 2
-    cellSize: 0.16666667
     manualCellSize: 0
+    cellSize: 0.16666667
+    accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &607155679
+--- !u!1 &828219662
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 607155681}
-  - 108: {fileID: 607155680}
+  - component: {fileID: 828219667}
+  - component: {fileID: 828219666}
+  - component: {fileID: 828219665}
+  - component: {fileID: 828219664}
+  - component: {fileID: 828219663}
+  - component: {fileID: 828219668}
+  - component: {fileID: 828219669}
+  m_Layer: 0
+  m_Name: Main Camera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!81 &828219663
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 828219662}
+  m_Enabled: 1
+--- !u!124 &828219664
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 828219662}
+  m_Enabled: 1
+--- !u!92 &828219665
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 828219662}
+  m_Enabled: 1
+--- !u!20 &828219666
+Camera:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 828219662}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: -1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+  m_StereoMirrorMode: 0
+--- !u!4 &828219667
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 828219662}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &828219668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 828219662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db9e75eca6c2283419dbff40b68ffbc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  json: "{\r\n\"type\": \"FeatureCollection\",\r\n\"features\": [{\r\n    \"geometry\":
+    {\r\n    \"type\": \"Point\",\r\n    \"coordinates\": [5.070362091064453, 53.295336751980656]\r\n},
+    \ \"type\": \"Feature\",\r\n    \"properties\": {\r\n        \"kind\": \"forest\",\r\n
+    \       \"area\": 35879,\r\n        \"source\": \"openstreetmap.org\",\r\n        \"min_zoom\":
+    14,\r\n        \"tier\": 2,\r\n        \"id\": 119757239, \t\t\r\n        \"symbol\":
+    \"liaise.png\"\r\n    }\r\n}, {\r\n    \"geometry\": {\r\n        \"type\": \"Point\",\r\n
+    \       \"coordinates\": [5.072250366210937, 53.29523415150025]\r\n    },\r\n
+    \   \"type\": \"Feature\",\r\n    \"properties\": {\r\n        \"kind\": \"forest\",\r\n
+    \       \"area\": 1651,\r\n        \"source\": \"openstreetmap.org\",\r\n        \"min_zoom\":
+    14,\r\n        \"tier\": 2,\r\n        \"id\": 119757777, \t\t\r\n        \"symbol\":
+    \"counterattack_fire.png\"\r\n    }\r\n}, {\r\n    \"geometry\": {\r\n        \"type\":
+    \"Point\",\r\n        \"coordinates\": [5.066671371459961, 53.29469549493482]\r\n
+    \   }, \"type\": \"Feature\",\r\n        \"properties\": {\r\n            \"marker-color\":
+    \"#7e7e7e\",\r\n            \"marker-size\": \"medium\",\r\n            \"marker-symbol\":
+    \"circle-stroked\",\r\n            \"kind\": \"app-622\",\r\n            \"area\":
+    18729,\r\n            \"source\": \"openstreetmap.org\",\r\n            \"min_zoom\":
+    14,\r\n            \"tier\": 2,\r\n            \"id\": 119758146,\r\n            \"symbol\":
+    \"warrant_served.png\"\r\n    }\r\n}, {\r\n    \"geometry\": {\r\n        \"type\":
+    \"Point\",\r\n        \"coordinates\": [5.068731307983398, 53.29497764922103]\r\n
+    \   }, \"type\": \"Feature\",\r\n        \"properties\": {\r\n            \"kind\":
+    \"bus_stop\",\r\n            \"name\": \"Eureka\",\r\n            \"source\":
+    \"openstreetmap.org\",\r\n            \"min_zoom\": 17,\r\n            \"operator\":
+    \"TCR\",\r\n            \"id\": 2833355779, \t\t\r\n            \"symbol\": \"activity.png\"\r\n
+    \   }\r\n}]}"
+--- !u!114 &828219669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 828219662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 120ba207cff42584584563bcf18c124f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ExtraMouseSensitivityScale: 3
+  DefaultMouseSensitivity: 0.1
+  MouseLookButton: 4
+  IsControllerLookInverted: 1
+  CurrentControlMode: 0
+  FastControlKey: 305
+  ControlSlowSpeed: 0.1
+  ControlFastSpeed: 1
+  MoveHorizontal: Horizontal
+  MoveVertical: Vertical
+  MouseX: Mouse X
+  MouseY: Mouse Y
+  LookHorizontal: LookHorizontal
+  LookVertical: LookVertical
+--- !u!1 &1476632035
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1476632037}
+  - component: {fileID: 1476632036}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -106,12 +256,12 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!108 &607155680
+--- !u!108 &1476632036
 Light:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 607155679}
+  m_GameObject: {fileID: 1476632035}
   m_Enabled: 1
   serializedVersion: 7
   m_Type: 1
@@ -140,129 +290,16 @@ Light:
   m_BounceIntensity: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!4 &607155681
+--- !u!4 &1476632037
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 607155679}
+  m_GameObject: {fileID: 1476632035}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
---- !u!1001 &1176396634
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 402774, guid: b84b73491ac53a34095000876132a211, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 402774, guid: b84b73491ac53a34095000876132a211, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 402774, guid: b84b73491ac53a34095000876132a211, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 402774, guid: b84b73491ac53a34095000876132a211, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 402774, guid: b84b73491ac53a34095000876132a211, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 402774, guid: b84b73491ac53a34095000876132a211, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 402774, guid: b84b73491ac53a34095000876132a211, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 402774, guid: b84b73491ac53a34095000876132a211, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2035550, guid: b84b73491ac53a34095000876132a211, type: 2}
-      propertyPath: near clip plane
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2035550, guid: b84b73491ac53a34095000876132a211, type: 2}
-      propertyPath: far clip plane
-      value: 100
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: b84b73491ac53a34095000876132a211, type: 2}
-  m_IsPrefabParent: 0
---- !u!1 &1176396635 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 190680, guid: b84b73491ac53a34095000876132a211, type: 2}
-  m_PrefabInternal: {fileID: 1176396634}
---- !u!114 &1176396636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1176396635}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 120ba207cff42584584563bcf18c124f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ExtraMouseSensitivityScale: 3
-  DefaultMouseSensitivity: 0.1
-  MouseLookButton: 4
-  IsControllerLookInverted: 1
-  CurrentControlMode: 0
-  FastControlKey: 305
-  ControlSlowSpeed: 0.1
-  ControlFastSpeed: 1
-  MoveHorizontal: Horizontal
-  MoveVertical: Vertical
-  MouseX: Mouse X
-  MouseY: Mouse Y
-  LookHorizontal: LookHorizontal
-  LookVertical: LookVertical
---- !u!114 &1176396637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1176396635}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db9e75eca6c2283419dbff40b68ffbc7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  json: "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\":
-    {         \"type\": \"Point\",         \"coordinates\": [           5.070362091064453,
-    \          53.295336751980656         ]       },       \"type\": \"Feature\",
-    \      \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,
-    \        \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\":
-    2,         \"id\": 119757239, \t\t \"symbol\": \"liaise.png\"       }     },     {
-    \      \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [
-    \          5.072250366210937,           53.29523415150025         ]       },       \"type\":
-    \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\":
-    1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\":
-    2,         \"id\": 119757777, \t\t \"symbol\": \"counterattack_fire.png\"       }
-    \    },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\":
-    [           5.066671371459961,           53.29469549493482         ]       },
-    \      \"type\": \"Feature\",       \"properties\": {         \"marker-color\":
-    \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",
-    \        \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",
-    \        \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\":
-    \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\":
-    \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103
-    \        ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\":
-    \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",
-    \        \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779,
-    \t\t \"symbol\": \"activity.png\"       }     }   ] }"
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}

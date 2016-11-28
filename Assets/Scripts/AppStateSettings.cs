@@ -1,26 +1,21 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using MapzenGo.Models.Settings;
 using MapzenGo.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Classes;
-using Assets.Scripts.Utils;
 using MapzenGo.Models.Plugins;
 using UniRx;
-using System;
-using Assets.MapzenGo.Models.Enums;
 
 namespace Assets.Scripts
 {
-
     public class AppState : Singleton<AppState>
     {
-
         public const string ShowLayerSpeech = "Show ";
         public const string HideLayerSpeech = "Show ";
         public const string ToggleSpeech = "Toggle ";
-
 
         public GameObject World;
         public GameObject Terrain;
@@ -31,13 +26,12 @@ namespace Assets.Scripts
 
         public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
 
-
         protected AppState()
         {
         } // guarantee this will be always a singleton only - can't use the constructor!
 
         public Vector3 Center { get; set; }
-        public CachedTileManager TileManager { get; set; }
+        public TileManager TileManager { get; set; }
 
         public AppConfig Config { get; set; }
         public ViewState State { get; set; }
@@ -48,20 +42,20 @@ namespace Assets.Scripts
         public void Init()
         {
             Speech = new SpeechManager();
-
+            MapzenTags.ForEach(k => Speech.AddKeyword(ToggleSpeech + k, () => ToggleMapzen(k)));
         }
 
         private void ToggleMapzen(string tag)
         {
 
-            if (Config == null || Config.InitalView == null) return;
-            if (Config.InitalView.Mapzen.Contains(tag))
+            if (Config == null || Config.ActiveView == null) return;
+            if (Config.ActiveView.Mapzen.Contains(tag))
             {
-                Config.InitalView.Mapzen.Remove(tag);
+                Config.ActiveView.Mapzen.Remove(tag);
             }
             else
             {
-                Config.InitalView.Mapzen.Add(tag);
+                Config.ActiveView.Mapzen.Add(tag);
             }
             ResetMap();
         }
@@ -99,7 +93,7 @@ namespace Assets.Scripts
 
         public void AddTerrain()
         {
-            var iv = Config.InitalView;
+            var iv = Config.ActiveView;
             var t = Config.Table;
 
             #region create map & terrain
@@ -123,37 +117,48 @@ namespace Assets.Scripts
             InitMap();
         }
 
+        public void ClearCache()
+        {
+            var tm = TileManager as CachedTileManager;
+            if (tm != null)
+            {
+                tm.ClearCache();
+                ResetMap();
+            }
+        }
+
         public void InitMap()
         {
-            var iv = Config.InitalView;
-
-            //Enum.GetNames(typeof(PoiType)).ToList().ForEach(pt =>
-            //{
-            //    if (!MapzenTags.Contains(pt)) MapzenTags.Add(pt);
-            //});
+            var iv = Config.ActiveView;
 
             var i = iv.Range;
             if (i > mapScales.Length) i = mapScales.Length;
             var mapScale = mapScales[i - 1];
             Map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
-            MapzenTags.ForEach(k => Speech.AddKeyword(ToggleSpeech + k, () => ToggleMapzen(k)));
 
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);
 
             // init map
+#if DEBUG
+            var tm = World.AddComponent<TileManager>(); 
+            tm._mapzenUrl = "http://localhost:10733/{0}/{1}/{2}/{3}.{4}";
+#else
             var tm = World.AddComponent<CachedTileManager>();
+            tm._key = "vector-tiles-dB21RAF";
+            Speech.AddKeyword("Clear cache", () => { tm.ClearCache(); });
+            tm._mapzenUrl = "http://134.221.20.226:3999/{0}/{1}/{2}/{3}.{4}";
+#endif
             tm.Latitude = iv.Lat;
             tm.Longitude = iv.Lon;
             tm.Range = iv.Range;
             tm.Zoom = iv.Zoom;
             tm.TileSize = iv.TileSize;
-            tm._key = "vector-tiles-dB21RAF";
 
             TileManager = tm;
 
-            #region UI
+#region UI
 
             var ui = new GameObject("UI"); // Placeholder (root element in UI tree)
             ui.transform.SetParent(World.transform, false);
@@ -165,11 +170,11 @@ namespace Assets.Scripts
             AddRectTransformToGameObject(poi);
             poi.transform.SetParent(ui.transform, false);
 
-            #endregion
+#endregion
 
-            #region FACTORIES
+#region FACTORIES
 
-            #region defaultfactories
+#region defaultfactories
             var factories = new GameObject("Factories");
             factories.transform.SetParent(World.transform, false);
 
@@ -220,6 +225,17 @@ namespace Assets.Scripts
                 pois.transform.SetParent(factories.transform, false);
                 var poisFactory = pois.AddComponent<PoiFactory>();
             }
+            if (iv.Mapzen.Contains("assets")) // assets
+            {
+                var models = new GameObject("ModelFactory");
+                models.transform.SetParent(factories.transform, false);
+                var modelFactory = models.AddComponent<ModelFactory>();
+                modelFactory.scale = Table.transform.localScale.x;
+                //modelFactory.scale = 2;
+                modelFactory.BundleURL = "http://134.221.20.226:3999/assets/buildings/eindhoven";
+                modelFactory.version = 6;
+            }
+
             #endregion
 
 
@@ -232,15 +248,14 @@ namespace Assets.Scripts
                 var l = Config.Layers.FirstOrDefault(k => k.Title == layer && k.Type == "geojson");
                 if (l != null)
                 {
-                    
                     InitGeojsonLayer(l);
                 }
             });
 
            
-            #endregion
+#endregion
 
-            #region TILE PLUGINS
+#region TILE PLUGINS
 
             var tilePlugins = new GameObject("TilePlugins");
             tilePlugins.transform.SetParent(World.transform, false);
@@ -269,7 +284,7 @@ namespace Assets.Scripts
                 });
             }
 
-            #endregion
+#endregion
 
         }
    
@@ -330,7 +345,7 @@ namespace Assets.Scripts
         public void AddGeojsonLayer(Layer l)
         {
             if (l._active) return;
-            var iv = Config.InitalView;
+            var av = Config.ActiveView;
             ObservableWWW.GetWWW(l.Url).Subscribe(
                 success =>
                 {
@@ -343,12 +358,12 @@ namespace Assets.Scripts
                     var symbolFactory = layerObject.AddComponent<SymbolFactory>();
                     //symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
                     symbolFactory.geojson = "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"type\": \"Feature\",       \"properties\": {          \"IconUrl\": \"http://134.221.20.241:3000/images/pomp.png\",  				\"stats\":[{ 				\"name\":\"ammo\", 				\"type\":\"bar\", 				\"value\":\"10\", 				\"maxValue\":\"100\" 				},{ 				\"name\":\"ammo\", 				\"type\":\"bar\", 				\"value\":\"10\", 				\"maxValue\":\"100\" 				},{ 				\"name\":\"ammo\", 				\"type\":\"bar\", 				\"value\":\"10\", 				\"maxValue\":\"100\" 				},{ 				\"name\":\"ammo\", 				\"type\":\"bar\", 				\"value\":\"10\", 				\"maxValue\":\"100\" 				},{ 				\"name\":\"ammo\", 				\"type\":\"bar\", 				\"value\":\"10\", 				\"maxValue\":\"100\" 				}], 				\"Lan\":\"5.0466084480285645\",         \"Lon\":\"52.45997114230474\" 			}, 		 	       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.0466084480285645,           52.45997114230474         ]       }     },     {       \"type\": \"Feature\",       \"properties\": {\"IconUrl\": \"http://134.221.20.241:3000/images/ambulanceposten.png\"},       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.048539638519287,           52.45887287117959         ]       }     },     {       \"type\": \"Feature\",       \"properties\": {\"IconUrl\": \"http://134.221.20.241:3000/images/politie.png\"},       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.046522617340088,           52.45781379807768         ]       }     },     {       \"type\": \"Feature\",       \"properties\": {\"IconUrl\": \"http://134.221.20.241:3000/images/politie.png\"},       \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [           5.0501275062561035,           52.461265498103494         ]       }     }   ] }";// success.text;  
-                    symbolFactory.zoom = iv.Zoom;
-                    symbolFactory.Latitude = iv.Lat;
-                    symbolFactory.Longitude = iv.Lon;
-                    symbolFactory.TileSize = iv.TileSize;
+                    symbolFactory.zoom = av.Zoom;
+                    symbolFactory.Latitude = av.Lat;
+                    symbolFactory.Longitude = av.Lon;
+                    symbolFactory.TileSize = av.TileSize;
                     symbolFactory.Layer = l;
-                    symbolFactory.Range = iv.Range;
+                    symbolFactory.Range = av.Range;
                     symbolFactory.InitLayer();
                 },
                 error =>
@@ -375,8 +390,6 @@ namespace Assets.Scripts
             Destroy(Holder);
         }
 
-
-
         protected void AddRectTransformToGameObject(GameObject go)
         {
             var rt = go.AddComponent<RectTransform>();
@@ -385,14 +398,5 @@ namespace Assets.Scripts
             rt.anchorMin = new Vector2(0, 0);
             rt.anchorMax = new Vector2(1, 1);
         }
-
-
     }
-
-
-
-
-
-
-
 }

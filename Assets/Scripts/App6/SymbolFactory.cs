@@ -1,19 +1,9 @@
 ﻿using UnityEngine;
-
 using System.Collections;
-
 using System.Collections.Generic;
-
-using System.Linq;
-
 using System;
-
-using UnityEngine.Windows.Speech;
 using Assets.Scripts.App6;
 using MapzenGo.Helpers;
-using MapzenGo.Models;
-using Assets.Scripts.MapzenGoWrappers;
-using MapzenGo.Helpers.VectorD;
 using UnityEngine.UI;
 using Assets.Scripts.Utils;
 using Assets.Scripts.Classes;
@@ -21,14 +11,7 @@ using System.Text.RegularExpressions;
 
 public class SymbolFactory : MonoBehaviour
 {
-
-
-
-
-
-
     [System.Serializable]
-
     public class Geometry
     {
         public string type { get; set; }
@@ -36,14 +19,9 @@ public class SymbolFactory : MonoBehaviour
         public List<Vector3> vectors { get; set; }
     }
 
-
-
     [System.Serializable]
-
     public class Feature
-
     {
-
         public string type { get; set; }
         public string id { get; set; }
         public Dictionary<string, object> properties { get; set; }
@@ -54,21 +32,15 @@ public class SymbolFactory : MonoBehaviour
         public JSONObject cor { get; set; }
     }
 
-
-
     public class GeoJson
-
     {
-
         public string type { get; set; }
 
         public List<Feature> features { get; set; }
 
         public Vector3 center { get; set; }
-
-
-
     }
+
     /// <summary>
     /// JSON imput string from service
     /// </summary>
@@ -99,25 +71,26 @@ public class SymbolFactory : MonoBehaviour
     protected Vector2d CenterTms; //tms tile coordinate
     protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
     private Vector3 center;
-    private System.Threading.Timer refreshTimer;
+    //private System.Threading.Timer refreshTimer;
     protected List<GameObject> SymbolGuis;
+    protected List<Vector2d> SymbolTiles;
+
     void Awake()
     {
         _symbolInfo = Resources.Load("_symbolInfo") as GameObject;
         _bar = Resources.Load("_bar") as GameObject;
     }
-    protected List<Vector2d> SymbolTiles;
+
     private void Start()
     {
         SymbolGuis = new List<GameObject>();
-       
     }
+
     /// <summary>
     /// Build the symbol layer
     /// </summary>
     public void InitLayer()
     {
-
         AddLayer();
         //if (Layer.Refresh > 0)
         //{
@@ -130,24 +103,18 @@ public class SymbolFactory : MonoBehaviour
         //    }, null, interval, interval);
 
         //}
-
     }
 
     private void RemoveLayer()
     {
-
     }
-
 
     private void AddLayer()
     {
-
         string encodedString = geojson;
-
         var geoJson = loadGeoJson(encodedString);
 
         // create tag
-
         //SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
         //SerializedProperty tagsProp = tagManager.FindProperty("tags");
         //SerializedProperty layersProp = tagManager.FindProperty("layers");
@@ -167,8 +134,6 @@ public class SymbolFactory : MonoBehaviour
         //    n.stringValue = s;
         //}
 
-
-
         SymbolTiles = new List<Vector2d>();
         // setText(geoJson.features.Count + " features");
         var v2 = GM.LatLonToMeters(Latitude, Longitude);
@@ -184,13 +149,10 @@ public class SymbolFactory : MonoBehaviour
         var rect = GM.TileBounds(CenterTms, zoom);
         transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
         center = rect.Center.ToVector3();
-
     }
-
 
     private void CreateSymbolTiles(Vector2d CenterTms, Vector2d CenterInMercator)
     {
-
         if (geoJson.features != null)
         {
             for (int i = -Range; i <= Range; i++)
@@ -212,7 +174,6 @@ public class SymbolFactory : MonoBehaviour
                 StartCoroutine(createSymbols(c));
             }
         }
-
     }
 
     /// <summary>
@@ -231,7 +192,6 @@ public class SymbolFactory : MonoBehaviour
         else
             web = baseUrl + f.properties["symbol"].ToString().Replace(@"""", "");
 
-
         WWW www = new WWW(web);
         yield return www;
 
@@ -240,7 +200,6 @@ public class SymbolFactory : MonoBehaviour
         {
             if (_symbolInfo)
             {
-
                 var id = f.id;
                 if (string.IsNullOrEmpty(id)) id = Guid.NewGuid().ToString();
                 string symbolname = "symbol-" + id;
@@ -278,16 +237,13 @@ public class SymbolFactory : MonoBehaviour
                 symbol.transform.localScale = new Vector3(Layer.Scale, Layer.Scale);
                 symbol.transform.localPosition = new Vector3(0, 60f, 0);
 
-
                 GameObject instance = Instantiate(Resources.Load("cone", typeof(GameObject)), target.transform) as GameObject;
                 instance.name = "cone";                instance.transform.localPosition = new Vector3(10f, 10f, 10f);
                 instance.transform.localScale = new Vector3(30f, 30f, 30f);
                 //instance.transform.localRotation = new Quaternion(0f, 0f, 180f,0f);
 
-
                 if (f.Stats != null)
                 {
-
                     var info = (GameObject)Instantiate(_symbolInfo);
                     SymbolGuis.Add(info);
                     var canvas = info.GetComponent<Canvas>();
@@ -297,9 +253,7 @@ public class SymbolFactory : MonoBehaviour
                     canvas.transform.localPosition = new Vector3(0, 180, 0);
                     int count = 0;
                     for (int i = 0; i < f.Stats.Count; i++)
-
                     {
-
                         switch (f.Stats[i]["type"].ToString().Replace(@"""", ""))
                         {
                             default:
@@ -315,7 +269,6 @@ public class SymbolFactory : MonoBehaviour
                                 ICO.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
                                 count++;
                                 break;
-
                         }
                     }
                     canvas.transform.localPosition = new Vector3(canvas.transform.localPosition.x, canvas.transform.localPosition.y + (count - 1) * 36.66f, canvas.transform.localPosition.z);
@@ -324,6 +277,7 @@ public class SymbolFactory : MonoBehaviour
             }
         }
     }
+
     private string GetIconUrl(Feature c)
     {
         string web = Layer.IconUrl; // "http://134.221.20.241:3000/images/pomp.png"; // baseUrl + c.properties["symbol"].ToString().Replace(@"""", "");
@@ -353,12 +307,8 @@ public class SymbolFactory : MonoBehaviour
 
         if (coords == null) return result;
 
-
-
         var lat = float.Parse(coords.list[1].ToString());
-
         var lon = float.Parse(coords.list[0].ToString());
-
         var mp = GM.LatLonToMeters(new Vector2d(lat, lon));
 
         mp = GM.MetersToTile(mp, zoom);
@@ -371,14 +321,11 @@ public class SymbolFactory : MonoBehaviour
     /// <param name="text"></param>
     /// <returns></returns>
     private GeoJson loadGeoJson(string text)
-
     {
-
         JSONObject geojson = new JSONObject(text);
         geoJson.features = new List<Feature>();
         var features = geojson["features"];
         for (var fid = 0; fid < features.Count; fid++)
-
         {
             JSONObject feature = features[fid];
             var f = new Feature();
@@ -388,13 +335,10 @@ public class SymbolFactory : MonoBehaviour
             f.geometry.coordinates = feature["geometry"]["coordinates"];
 
             switch (f.geometry.type)
-
             {
-
                 case "MultiPolygon":
                     // f.geometry.vectors = parsePolygon(f.geometry.coordinates.list[0]);
                     break;
-
                 case "Polygon":
                     // f.geometry.vectors = parsePolygon(f.geometry.coordinates);
                     break;
@@ -402,19 +346,14 @@ public class SymbolFactory : MonoBehaviour
                     f.tilePoint = parseTile(f.geometry.coordinates);
                     f.cor = f.geometry.coordinates;
                     break;
-
             }
 
             f.properties = new Dictionary<string, object>();
 
-
             if (feature["properties"].keys != null)
             {
-
                 foreach (var s in feature["properties"].keys)
-
                 {
-
                     f.properties[s] = feature["properties"][s];
                     if (s == "stats")
                     {
@@ -429,15 +368,11 @@ public class SymbolFactory : MonoBehaviour
                             }
                             f.Stats.Add(statDic);
                         }
-
-
                     }
                 }
             }
 
-
             geoJson.features.Add(f);
-
         }
         if (geoJson.features[0].geometry.vectors != null)
             geoJson.center = geoJson.features[0].geometry.vectors[0];
@@ -445,11 +380,7 @@ public class SymbolFactory : MonoBehaviour
             geoJson.center = new Vector3((float)geoJson.features[0].tilePoint.x, 0, (float)geoJson.features[0].tilePoint.y);
 
         return geoJson;
-
     }
-
-
-
 
     void Update()
     {
@@ -457,7 +388,5 @@ public class SymbolFactory : MonoBehaviour
         {
             c.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward, Camera.main.transform.up);
         }
-
     }
-
 }

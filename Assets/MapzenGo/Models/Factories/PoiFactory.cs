@@ -3,8 +3,6 @@ using System.Linq;
 using MapzenGo.Helpers;
 using MapzenGo.Models.Settings;
 using UnityEngine;
-using UnityEngine.UI;
-using System;
 using Assets.Scripts.MapzenGoWrappers;
 
 namespace MapzenGo.Models.Factories
@@ -35,28 +33,13 @@ namespace MapzenGo.Models.Factories
             { 
                 foreach (var entity in featureList.Where(x => Query(x)).SelectMany(geo => Create(tile, geo)))
                 {
-                    if (entity != null)
-                    {
-                        entity.transform.SetParent(_container.transform, true);
-                        entity.transform.localScale = new Vector3(100, 100, 0);
-                        // scale from the poi
-                        //  entity.transform.localScale = Vector3.one * 3 / tile.transform.lossyScale.x;
-                    }
+                    //if (entity != null)
+                    //{
+                    //    entity.transform.SetParent(_container.transform, true);
+                    //    entity.transform.localScale = new Vector3(100, 100, 0);
+                    //}
                 }
             }
-            //else
-            //{
-
-            //    if (temp != "{\"type\":\"FeatureCollection\",\"features\":[]}")
-            //    {
-            //        if (featureList != null)
-            //        {
-            //            var list = featureList;
-            //            string kind = list[0]["properties"]["kind"].ToString();
-            //            Debug.Log("Error poi kind not found! Add it to the source Kind:" + kind);
-            //        }
-            //    }
-            //}
         }
 
         protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
@@ -83,7 +66,7 @@ namespace MapzenGo.Models.Factories
             var c = geo["geometry"]["coordinates"];
             var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
             var localMercPos = dotMerc - tile.Rect.Center;
-            go.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y, 30F);
+            go.transform.position = new Vector3((float)localMercPos.x, 30F, (float)localMercPos.y);
             var target = new GameObject("poiTarget");
             var targetScript = target.AddComponent<targetForPoi>();
             target.transform.position = localMercPos.ToVector3();

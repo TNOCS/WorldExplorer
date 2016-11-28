@@ -1,0 +1,18 @@
+{
+  "globalDependencies": {
+    "express": "registry:dt/express#4.0.0+20160708185218",
+    "express-serve-static-core": "registry:dt/express-serve-static-core#4.0.0+20161008174359",
+    "form-data": "registry:dt/form-data#0.0.0+20160724024111",
+    "geojson": "registry:dt/geojson#0.0.0+20160619034323",
+    "ip": "registry:dt/ip#0.0.0+20160929195624",
+    "method-override": "registry:dt/method-override#0.0.0+20160925094606",
+    "node": "registry:dt/node#6.0.0+20161008175459",
+    "request": "registry:dt/request#0.0.0+20161116202412"
+  },
+  "dependencies": {
+    "body-parser": "registry:npm/body-parser#1.15.2+20160815132839",
+    "cors": "registry:npm/cors#2.7.0+20160902012746",
+    "mkdirp": "registry:npm/mkdirp#0.5.0+20160723033700",
+    "serve-static": "registry:npm/serve-static#1.11.1+20161113104247"
+  }
+}

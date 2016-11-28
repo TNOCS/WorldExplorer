@@ -1,0 +1,46 @@
+ManifestFileVersion: 0
+CRC: 2934807866
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 07d2a7d365b4be05704c48da71be65a7
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: d4e22bca998c188582dba61b6c905222
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/bijenkorf.skp
+- Assets/pier.skp
+- Assets/peace.skp
+- Assets/ministerie_bz.skp
+- Assets/binnenhof.skp
+- Assets/wijnhavenkwartier.skp
+- Assets/ridderzaal.skp
+- Assets/mauritshuis.skp
+- Assets/hs.skp
+- Assets/mesdag.skp
+- Assets/noordeinde.skp
+- Assets/hoftoren.skp
+- Assets/kurhaus.skp
+- Assets/circustheater.skp
+- Assets/strijkijzer.skp
+- Assets/ado.skp
+- Assets/castalia.skp
+Dependencies: []

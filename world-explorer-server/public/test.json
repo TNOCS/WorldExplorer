@@ -1,1 +1,68 @@
-{   "type": "FeatureCollection",   "features": [     {       "type": "Feature",       "properties": {          "IconUrl": "http://134.221.20.241:3000/images/pomp.png",  				"stats":[{ 				"name":"ammo", 				"type":"bar", 				"value":"10", 				"maxValue":"100" 				},{ 				"name":"ammo", 				"type":"bar", 				"value":"10", 				"maxValue":"100" 				},{ 				"name":"ammo", 				"type":"bar", 				"value":"10", 				"maxValue":"100" 				},{ 				"name":"ammo", 				"type":"bar", 				"value":"10", 				"maxValue":"100" 				},{ 				"name":"ammo", 				"type":"bar", 				"value":"10", 				"maxValue":"100" 				}], 				"Lan":"5.0466084480285645",         "Lon":"52.45997114230474" 			}, 		 	       "geometry": {         "type": "Point",         "coordinates": [           5.0466084480285645,           52.45997114230474         ]       }     },     {       "type": "Feature",       "properties": {"IconUrl": "http://134.221.20.241:3000/images/ambulanceposten.png"},       "geometry": {         "type": "Point",         "coordinates": [           5.048539638519287,           52.45887287117959         ]       }     },     {       "type": "Feature",       "properties": {"IconUrl": "http://134.221.20.241:3000/images/politie.png"},       "geometry": {         "type": "Point",         "coordinates": [           5.046522617340088,           52.45781379807768         ]       }     },     {       "type": "Feature",       "properties": {"IconUrl": "http://134.221.20.241:3000/images/politie.png"},       "geometry": {         "type": "Point",         "coordinates": [           5.0501275062561035,           52.461265498103494         ]       }     }   ] }
+{
+  "type": "FeatureCollection",
+  "features": [{
+    "type": "Feature",
+    "properties": {
+      "IconUrl": "http://134.221.20.241:3000/images/pomp.png",
+      "stats": [{
+        "name": "ammo",
+        "type": "bar",
+        "value": "10",
+        "maxValue": "100"
+      }, {
+        "name": "ammo",
+        "type": "bar",
+        "value": "10",
+        "maxValue": "100"
+      }, {
+        "name": "ammo",
+        "type": "bar",
+        "value": "10",
+        "maxValue": "100"
+      }, {
+        "name": "ammo",
+        "type": "bar",
+        "value": "10",
+        "maxValue": "100"
+      }, {
+        "name": "ammo",
+        "type": "bar",
+        "value": "10",
+        "maxValue": "100"
+      }],
+      "Lan": "5.0466084480285645",
+      "Lon": "52.45997114230474"
+    },
+    "geometry": {
+      "type": "Point",
+      "coordinates": [5.0466084480285645, 52.45997114230474]
+    }
+  }, {
+    "type": "Feature",
+    "properties": {
+      "IconUrl": "http://134.221.20.241:3000/images/ambulanceposten.png"
+    },
+    "geometry": {
+      "type": "Point",
+      "coordinates": [5.048539638519287, 52.45887287117959]
+    }
+  }, {
+    "type": "Feature",
+    "properties": {
+      "IconUrl": "http://134.221.20.241:3000/images/politie.png"
+    },
+    "geometry": {
+      "type": "Point",
+      "coordinates": [5.046522617340088, 52.45781379807768]
+    }
+  }, {
+    "type": "Feature",
+    "properties": {
+      "IconUrl": "http://134.221.20.241:3000/images/politie.png"
+    },
+    "geometry": {
+      "type": "Point",
+      "coordinates": [5.0501275062561035, 52.461265498103494]
+    }
+  }]
+}

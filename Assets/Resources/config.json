@@ -85,9 +85,9 @@
       "Lon": 4.285591,
       "Zoom": 17,
       "TileSize": 100,
-      "Range": 2,
+      "Range": 3,
       "Scale": 1,
-      "Mapzen": [ "buildings", "water", "roads", "pois", "assets" ],
+      "Mapzen": [ "buildings", "pois", "assets" ],
       "Layers": [],
       "TileLayers": [ "TopoLayer" ]
     },

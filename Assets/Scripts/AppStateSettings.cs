@@ -157,7 +157,6 @@ namespace Assets.Scripts
             tm.TileSize = iv.TileSize;
 
             TileManager = tm;
-
 #region UI
 
             var ui = new GameObject("UI"); // Placeholder (root element in UI tree)

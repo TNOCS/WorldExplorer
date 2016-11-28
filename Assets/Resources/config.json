@@ -29,8 +29,19 @@
       "Group": "baselayer"
     },
     {
+      "Title": "Symboltest",
+      "Url": "http://localhost:10733/test.json",
+      "IconUrl":  "http://localhost:10733/test.json",
+      "VoiceCommand": "symbol",
+      "UseTransparency": true,
+      "Height": 1.1,
+      "Scale": 60,
+      "Type": "geojson",
+      "Enabled": true
+    },
+	{
       "Title": "Police",
-      "Url": "http://134.221.20.241:3000/api/layers/politie.actual",
+	  "Url": "http://134.221.20.241:3000/api/layers/politie.actual",
       "IconUrl": "http://134.221.20.241:3000/images/politie.png",
       "VoiceCommand": "police",
       "UseTransparency": true,
@@ -170,10 +181,10 @@
       "Lon": 5.0431,
       "Zoom": 17,
       "TileSize": 100,
-      "Range": 2,
+      "Range": 4,
       "Scale": 1,
       "Mapzen": [ "buildings", "water", "roads", "landuse", "water", "pois" ],
-      "Layers": [ "Police" ],
+      "Layers": [ "Symboltest" ],
       "TileLayers": [ "TopoLayer" ]
     },
     {
@@ -192,7 +203,7 @@
   "TileServer": "",
   "MqttServer": "cool3.sensorlab.tno.nl",
   "MqttPort": "8026",
-  "InitialView": "Kurhaus",
+  "InitialView": "Detail",
   "Table": {
     "TableSize": 1.5,
     "TableHeight": 1.5

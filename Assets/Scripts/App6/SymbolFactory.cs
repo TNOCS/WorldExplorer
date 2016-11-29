@@ -196,6 +196,7 @@ public class SymbolFactory : MonoBehaviour
         yield return www;
 
         // Check if the point is  in the displayed tile area if so continue
+        // range en lat long via appstate
         if (SymbolTiles.Contains(f.tilePoint))
         {
             if (_symbolInfo)
@@ -336,12 +337,7 @@ public class SymbolFactory : MonoBehaviour
 
             switch (f.geometry.type)
             {
-                case "MultiPolygon":
-                    // f.geometry.vectors = parsePolygon(f.geometry.coordinates.list[0]);
-                    break;
-                case "Polygon":
-                    // f.geometry.vectors = parsePolygon(f.geometry.coordinates);
-                    break;
+                
                 case "Point":
                     f.tilePoint = parseTile(f.geometry.coordinates);
                     f.cor = f.geometry.coordinates;

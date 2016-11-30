@@ -66,13 +66,13 @@ public class NetworkOutMessage : global::System.IDisposable {
     SharingClientPINVOKE.NetworkOutMessage_Write__SWIG_6(swigCPtr, XString.getCPtr(value));
   }
 
-  public unsafe void WriteArray(byte[] data, uint length) {
-    fixed ( byte* swig_ptrTo_data = data ) {
-    {
-      SharingClientPINVOKE.NetworkOutMessage_WriteArray(swigCPtr, (global::System.IntPtr)swig_ptrTo_data, length);
-    }
-    }
-  }
+  //public unsafe void WriteArray(byte[] data, uint length) {
+  //  fixed ( byte* swig_ptrTo_data = data ) {
+  //  {
+  //    SharingClientPINVOKE.NetworkOutMessage_WriteArray(swigCPtr, (global::System.IntPtr)swig_ptrTo_data, length);
+  //  }
+  //  }
+  //}
 
   public virtual void Reset() {
     SharingClientPINVOKE.NetworkOutMessage_Reset(swigCPtr);

@@ -44,7 +44,7 @@ namespace HoloToolkit.Unity
         }
        
 
-        private void LateUpdate()
+        protected virtual void LateUpdate()
         {
             // Enable/Disable the cursor based whether gaze hit a hologram
             if (CursorOnHolograms != null)
@@ -54,7 +54,7 @@ namespace HoloToolkit.Unity
             if (CursorOffHolograms != null)
             {
                 //  CursorOffHolograms.SetActive(!GazeManager.Instance.Hit);
-                CursorOffHolograms.SetActive(true);
+                CursorOffHolograms.SetActive(!GazeManager.Instance.Hit);
             }
 
             // Place the cursor at the calculated position.

@@ -40,7 +40,7 @@ namespace HoloToolkit.Unity
         /// <summary>
         /// Keeps the object facing the camera.
         /// </summary>
-        private void Update()
+       protected  virtual void Update()
         {
             // Get a Vector that points from the Camera to the target.
             Vector3 forward;

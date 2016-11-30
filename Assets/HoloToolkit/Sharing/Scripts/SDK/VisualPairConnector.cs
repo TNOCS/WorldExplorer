@@ -43,14 +43,14 @@ public class VisualPairConnector : PairMaker {
     return ret; 
   }
 
-  public unsafe bool ProcessImage(byte[] image, int width, int height, int bytesPerPixel) {
-    fixed ( byte* swig_ptrTo_image = image ) {
-    {
-      bool ret = SharingClientPINVOKE.VisualPairConnector_ProcessImage(swigCPtr, (global::System.IntPtr)swig_ptrTo_image, width, height, bytesPerPixel);
-      return ret;
-    }
-    }
-  }
+  //public unsafe bool ProcessImage(byte[] image, int width, int height, int bytesPerPixel) {
+  //  fixed ( byte* swig_ptrTo_image = image ) {
+  //  {
+  //    bool ret = SharingClientPINVOKE.VisualPairConnector_ProcessImage(swigCPtr, (global::System.IntPtr)swig_ptrTo_image, width, height, bytesPerPixel);
+  //    return ret;
+  //  }
+  //  }
+  //}
 
   public virtual bool IsProcessingImage() {
     bool ret = SharingClientPINVOKE.VisualPairConnector_IsProcessingImage(swigCPtr);

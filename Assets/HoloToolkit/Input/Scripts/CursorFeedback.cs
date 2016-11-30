@@ -64,8 +64,11 @@ namespace HoloToolkit.Unity
             {
                 return;
             }
+            handDetectedGameObject.transform.position = GazeManager.Instance.Position + GazeManager.Instance.Normal * 0.01f;
 
-            handDetectedGameObject.SetActive(HandsManager.Instance.HandDetected);
+            // Orient the cursor to match the surface being gazed at.
+            //  handDetectedGameObject.transform.up = GazeManager.Instance.Normal;
+            handDetectedGameObject.SetActive(Assets.Scripts.Utils.HandsManager.Instance.HandDetected);
         }
     }
 }

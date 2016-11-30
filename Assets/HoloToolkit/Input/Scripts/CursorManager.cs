@@ -42,6 +42,7 @@ namespace HoloToolkit.Unity
                 enabled = false;
             }
         }
+       
 
         private void LateUpdate()
         {
@@ -52,7 +53,8 @@ namespace HoloToolkit.Unity
             }
             if (CursorOffHolograms != null)
             {
-                CursorOffHolograms.SetActive(!GazeManager.Instance.Hit);
+                //  CursorOffHolograms.SetActive(!GazeManager.Instance.Hit);
+                CursorOffHolograms.SetActive(true);
             }
 
             // Place the cursor at the calculated position.

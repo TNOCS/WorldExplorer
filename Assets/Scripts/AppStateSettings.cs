@@ -139,7 +139,9 @@ namespace Assets.Scripts
 
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);
-
+            var gazeManager = World.AddComponent<HoloToolkit.Unity.GazeManager>();
+            gazeManager.MaxGazeDistance = 3f;
+         
             // init map
 #if DEBUG
             var tm = World.AddComponent<TileManager>(); 

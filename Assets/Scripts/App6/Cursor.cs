@@ -1,9 +1,10 @@
-﻿using System;
+﻿using HoloToolkit.Unity;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.VR.WSA.Input;
 
-public class Cursor : MonoBehaviour
+public class Cursor : HoloToolkit.Unity.CursorManager
 {
     private MeshRenderer meshRenderer;
 
@@ -17,10 +18,6 @@ public class Cursor : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        // Grab the mesh renderer that's on the same object as this script.
-        meshRenderer = this.gameObject.GetComponentInChildren<MeshRenderer>();
-        ;
-
         // Set up a GestureRecognizer to detect Select gestures.
         recognizer = new GestureRecognizer();
         recognizer.TappedEvent += (source, tapCount, ray) =>
@@ -38,73 +35,46 @@ public class Cursor : MonoBehaviour
     {
 
     }
-    public void setPosition(GameObject pos)
-    {
-        this.transform.position = pos.transform.position;
-        // Rotate the cursor to hug the surface of the hologram.
-        this.transform.rotation =
-            Quaternion.FromToRotation(pos.transform.position, Camera.main.transform.forward);
 
-        meshRenderer.enabled = t;
-    }
     // Update is called once per frame
     void Update()
     {
         // Do a raycast into the world based on the user's
         // head position and orientation.
-        var headPosition = Camera.main.transform.position;
-        var gazeDirection = Camera.main.transform.forward;
+ 
         GameObject oldFocusObject = FocusedObject;
-        RaycastHit hitInfo;
-        if (Physics.Raycast(headPosition, gazeDirection, out hitInfo))
+        GameObject hitInfo = GazeManager.Instance.HitInfo.transform.gameObject;
+        if (hitInfo.tag == "symbol")
         {
-            // If the raycast hit a hologram...
 
-            // Display the cursor mesh.
-            meshRenderer.enabled = true;
-            // Move the cursor to the point where the raycast hit.
-            this.transform.position = hitInfo.point;
-            // Rotate the cursor to hug the surface of the hologram.
-            this.transform.rotation =
-                Quaternion.FromToRotation(Vector3.up, hitInfo.normal);
-
-
-
-
-            if (hitInfo.transform.gameObject.tag == "symbol")
-            {
-
-                if (prevTarget == null)
-                    hitInfo.transform.gameObject.GetComponent<SymbolTargetHandler>().Show();
-                else
-                    if (prevTarget != hitInfo.transform.gameObject)
-                {
-                    prevTarget.GetComponent<SymbolTargetHandler>().Hide();
-                    hitInfo.transform.gameObject.GetComponent<SymbolTargetHandler>().Show();
-                }
-                prevTarget = hitInfo.transform.gameObject;
-                if (Input.GetMouseButtonDown(0))
-                {
-                    if (oldFocusObject != hitInfo.transform.gameObject)
-                        FocusedObject = hitInfo.transform.gameObject;
-                    else
-                        FocusedObject = null;
-
-                }
-            }
+            if (prevTarget == null)
+                hitInfo.transform.gameObject.GetComponent<SymbolTargetHandler>().Show();
             else
+                if (prevTarget != hitInfo.transform.gameObject)
             {
-                if (prevTarget != null)
-                {
-                    prevTarget.GetComponent<SymbolTargetHandler>().Hide();
-                    prevTarget = null;
-                }
+                prevTarget.GetComponent<SymbolTargetHandler>().Hide();
+                hitInfo.transform.gameObject.GetComponent<SymbolTargetHandler>().Show();
             }
+            prevTarget = hitInfo.transform.gameObject;
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (oldFocusObject != hitInfo.transform.gameObject)
+                    FocusedObject = hitInfo.transform.gameObject;
+                else
+                    FocusedObject = null;
 
-
+            }
         }
         else
-            meshRenderer.enabled = false;
+        {
+            if (prevTarget != null)
+            {
+                prevTarget.GetComponent<SymbolTargetHandler>().Hide();
+                prevTarget = null;
+            }
+        }
+
+
         // If the focused object changed this frame,
         // start detecting fresh gestures again.
         if (FocusedObject != oldFocusObject)
@@ -116,24 +86,6 @@ public class Cursor : MonoBehaviour
             recognizer.CancelGestures();
             recognizer.StartCapturingGestures();
         }
-
-
-        //System.Collections.Generic.List<RaycastResult> hitGuiInfo = new System.Collections.Generic.List<RaycastResult>();
-        //PointerEventData pointer = new PointerEventData(EventSystem.current);
-        //EventSystem.current.RaycastAll(pointer, hitGuiInfo);
-        //// GraphicRaycaster gr = 
-        //t = true;
-        //meshRenderer.enabled = true;
-
-        //if (hitGuiInfo.Count > 0)
-        //{
-        //    foreach (var go in hitGuiInfo)
-        //    {
-        //        Debug.Log(go.gameObject.name, go.gameObject);
-        //    }
-        //}
-
-        //    else
-        // If the raycast did not hit a hologram, hide the cursor mesh.
+     
     }
 }

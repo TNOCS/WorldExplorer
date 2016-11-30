@@ -567,29 +567,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db9e75eca6c2283419dbff40b68ffbc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  json: "{   \"type\": \"FeatureCollection\",   \"features\": [     {       \"geometry\":
-    {         \"type\": \"Point\",         \"coordinates\": [           5.070362091064453,
-    \          53.295336751980656         ]       },       \"type\": \"Feature\",
-    \      \"properties\": {         \"kind\": \"forest\",         \"area\": 35879,
-    \        \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\":
-    2,         \"id\": 119757239, \t\t \"symbol\": \"liaise.png\"       }     },     {
-    \      \"geometry\": {         \"type\": \"Point\",         \"coordinates\": [
-    \          5.072250366210937,           53.29523415150025         ]       },       \"type\":
-    \"Feature\",       \"properties\": {         \"kind\": \"forest\",         \"area\":
-    1651,         \"source\": \"openstreetmap.org\",         \"min_zoom\": 14,         \"tier\":
-    2,         \"id\": 119757777, \t\t \"symbol\": \"counterattack_fire.png\"       }
-    \    },     {       \"geometry\": {         \"type\": \"Point\",         \"coordinates\":
-    [           5.066671371459961,           53.29469549493482         ]       },
-    \      \"type\": \"Feature\",       \"properties\": {         \"marker-color\":
-    \"#7e7e7e\",         \"marker-size\": \"medium\",         \"marker-symbol\": \"circle-stroked\",
-    \        \"kind\": \"app-622\",         \"area\": 18729,         \"source\": \"openstreetmap.org\",
-    \        \"min_zoom\": 14,         \"tier\": 2,         \"id\": 119758146,         \"symbol\":
-    \"warrant_served.png\"       }     },     {       \"geometry\": {         \"type\":
-    \"Point\",         \"coordinates\": [           5.068731307983398,           53.29497764922103
-    \        ]       },       \"type\": \"Feature\",       \"properties\": {         \"kind\":
-    \"bus_stop\",         \"name\": \"Eureka\",         \"source\": \"openstreetmap.org\",
-    \        \"min_zoom\": 17,         \"operator\": \"TCR\",         \"id\": 2833355779,
-    \t\t \"symbol\": \"activity.png\"       }     }   ] }"
 --- !u!114 &1176396638
 MonoBehaviour:
   m_ObjectHideFlags: 0

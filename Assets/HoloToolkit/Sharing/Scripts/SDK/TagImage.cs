@@ -48,13 +48,13 @@ public class TagImage : global::System.IDisposable {
     return ret;
   }
 
-  public unsafe void CopyImageData(byte[] data, int bufferSize, int bytesPerPixel) {
-    fixed ( byte* swig_ptrTo_data = data ) {
-    {
-      SharingClientPINVOKE.TagImage_CopyImageData(swigCPtr, (global::System.IntPtr)swig_ptrTo_data, bufferSize, bytesPerPixel);
-    }
-    }
-  }
+  //public unsafe void CopyImageData(byte[] data, int bufferSize, int bytesPerPixel) {
+  //  fixed ( byte* swig_ptrTo_data = data ) {
+  //  {
+  //    SharingClientPINVOKE.TagImage_CopyImageData(swigCPtr, (global::System.IntPtr)swig_ptrTo_data, bufferSize, bytesPerPixel);
+  //  }
+  //  }
+  //}
 
 }
 

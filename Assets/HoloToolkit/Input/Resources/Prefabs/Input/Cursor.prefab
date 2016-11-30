@@ -37,6 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000013535415816}
   - component: {fileID: 114954683771999132}
+  - component: {fileID: 114359578103472168}
   m_Layer: 2
   m_Name: Cursor
   m_TagString: Untagged
@@ -74,6 +75,22 @@ GameObject:
   - component: {fileID: 114000011545086728}
   m_Layer: 2
   m_Name: Point light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1366184494267798
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4372801865896974}
+  - component: {fileID: 114342688549344796}
+  m_Layer: 2
+  m_Name: CursorBillboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -131,8 +148,22 @@ Transform:
   m_Children:
   - {fileID: 4000011283192616}
   - {fileID: 4000013144497514}
+  - {fileID: 4372801865896974}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4372801865896974
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1366184494267798}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4000013535415816}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23000011471158336
 MeshRenderer:
@@ -260,6 +291,31 @@ MonoBehaviour:
   UploadingColor: {r: 0.19746451, g: 0.10845588, b: 0.86764705, a: 1}
   DownloadingColor: {r: 0, g: 1, b: 0.13103461, a: 1}
   FailureColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &114342688549344796
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1366184494267798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac231985ef92a2f42b0f0ac4797e1077, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PivotAxis: 0
+--- !u!114 &114359578103472168
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012943254746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51ed223ff06645143a29ed4849a50a24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HandDetectedAsset: {fileID: 173238, guid: 63b112b193820c9458f19fe4f0cc625a, type: 2}
+  FeedbackParent: {fileID: 1366184494267798}
 --- !u!114 &114954683771999132
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -42,14 +42,14 @@ public class ImageTagManager : global::System.IDisposable {
     SharingClientPINVOKE.ImageTagManager_Update(swigCPtr);
   }
 
-  public unsafe bool FindTags(byte[] data, int pixelWidth, int pixelHeight, int bytesPerPixel, ImageTagLocationListener locationCallback) {
-    fixed ( byte* swig_ptrTo_data = data ) {
-    {
-      bool ret = SharingClientPINVOKE.ImageTagManager_FindTags(swigCPtr, (global::System.IntPtr)swig_ptrTo_data, pixelWidth, pixelHeight, bytesPerPixel, ImageTagLocationListener.getCPtr(locationCallback));
-      return ret;
-    }
-    }
-  }
+  //public unsafe bool FindTags(byte[] data, int pixelWidth, int pixelHeight, int bytesPerPixel, ImageTagLocationListener locationCallback) {
+  //  fixed ( byte* swig_ptrTo_data = data ) {
+  //  {
+  //    bool ret = SharingClientPINVOKE.ImageTagManager_FindTags(swigCPtr, (global::System.IntPtr)swig_ptrTo_data, pixelWidth, pixelHeight, bytesPerPixel, ImageTagLocationListener.getCPtr(locationCallback));
+  //    return ret;
+  //  }
+  //  }
+  //}
 
   public virtual TagImage CreateTagImage(int tagId) {
     global::System.IntPtr cPtr = SharingClientPINVOKE.ImageTagManager_CreateTagImage(swigCPtr, tagId);

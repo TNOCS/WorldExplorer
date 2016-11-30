@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using Assets.Scripts;
 using MapzenGo.Models;
+using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Text;
+using HoloToolkit.Unity;
 #if (NETFX_CORE)
 using System;
 using System.Text;
@@ -15,25 +19,58 @@ public class Initialize : MonoBehaviour
     // Use this for initialization
     private GameObject _cursorFab;
     private GameObject cursor;
+    private GameObject HoloManagers;
     private AppState appState;
-
-    void includeAnchorMovingScript()
-    {
-
-
-       
-
-        cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
-        cursor.name = "Cursor";
- 
-    }
-
+    private GameObject Hud;
+    private Dictionary<string, string> audioCommands;
+    private Font font;
+    private AudioClip fingerPressedSound;
     void Awake()
     {
         var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
         _cursorFab = Resources.Load("Prefabs\\Input\\Cursor") as GameObject;
         appState = AppState.Instance;
         appState.LoadConfig();
+        Hud = GameObject.Find("HUDCanvas");
+        audioCommands = new Dictionary<string, string>();
+        font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        fingerPressedSound = (AudioClip)Resources.Load("FingerPressed");
+    }
+
+    void InitHud()
+    {
+        HoloManagers = new GameObject("HoloManagers");
+        var Handsmanager = HoloManagers.AddComponent<Assets.Scripts.Utils.HandsManager>();
+        Handsmanager.FingerPressedSound = fingerPressedSound;
+        
+        GameObject textO = new GameObject("Commands-Help");
+        textO.transform.SetParent(Hud.transform);
+        Text info = textO.AddComponent<Text>();
+
+
+        RectTransform rt = textO.GetComponent(typeof(RectTransform)) as RectTransform;
+       
+        rt.anchorMin = new Vector2(1, 1);
+        rt.anchorMax = new Vector2(1, 1);
+        rt.pivot = new Vector2(1f, 1f);
+        rt.position = new Vector2(0, 0);
+        rt.anchoredPosition = new Vector2(0, 0);
+
+        info.font = font;
+        info.resizeTextForBestFit = true;
+        info.verticalOverflow = VerticalWrapMode.Truncate;
+
+        StringBuilder s = new StringBuilder();
+        s.AppendLine("Commands:");
+        int h = 1;
+        foreach (var item in audioCommands)
+        {
+            s.AppendLine(item.Key + ": " + item.Value);
+            h++;
+        }
+        rt.sizeDelta = new Vector2(350, (h + 1) * 25);
+        info.text = s.ToString();
+
     }
 
     void Start()
@@ -42,26 +79,40 @@ public class Initialize : MonoBehaviour
         appState.Speech = new Assets.Scripts.SpeechManager();
 
         appState.AddTerrain();
-        InitViews();
         InitSpeech();
-
+        InitViews();
+        InitHud();
 
 #if (NETFX_CORE)
-        InitMqtt();
+     //   InitMqtt();
 #endif
-        includeAnchorMovingScript();
+        cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
+        cursor.name = "Cursor";
 
         appState.Speech.Init();
     }
 
     void InitSpeech()
     {
+        audioCommands.Add("Hide Commands", " Hides the voice commands");
+        appState.Speech.Keywords.Add("Hide Commands", () =>
+        {
+            Hud.SetActive(false);
+            // appState.TileManager.UpdateTiles();
+        });
+        audioCommands.Add("Show Commands", " Displays the voice commands");
+        appState.Speech.Keywords.Add("Show Commands", () =>
+        {
+            Hud.SetActive(true);
+            // appState.TileManager.UpdateTiles();
+        });
+        audioCommands.Add("Zoom Out", " Zoom out");
         appState.Speech.Keywords.Add("Zoom out", () =>
         {
             appState.Center = new Vector3(appState.Center.x, appState.Center.y, appState.Center.z + 1);
             // appState.TileManager.UpdateTiles();
         });
-
+        audioCommands.Add("Center table", " Places the table at your current position");
         appState.Speech.Keywords.Add("Center Table", () =>
         {
             appState.Table.transform.position = new Vector3(gameObject.transform.position.x, 0.7f, gameObject.transform.position.z);
@@ -71,9 +122,11 @@ public class Initialize : MonoBehaviour
 
     void InitViews()
     {
-       
+
         appState.Config.Views.ForEach(v =>
         {
+            audioCommands.Add("Switch to " + v.Name, " displays the view");
+
             appState.Speech.Keywords.Add("Switch to " + v.Name, () =>
             {
                 appState.Config.ActiveView = v;
@@ -121,7 +174,7 @@ public class Initialize : MonoBehaviour
     protected void SetView(string msg)
     {
         var view = new JSONObject(msg);
-        var iv = appState.Config.InitalView;
+        var iv = appState.Config.ActiveView;
         iv.Lat = view.GetFloat("Lat");
         iv.Lon = view.GetFloat("Lon");
         iv.Zoom = view.GetInt("Zoom");

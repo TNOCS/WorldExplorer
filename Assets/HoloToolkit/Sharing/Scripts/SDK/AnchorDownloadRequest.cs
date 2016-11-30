@@ -55,14 +55,14 @@ public class AnchorDownloadRequest : global::System.IDisposable {
     return ret;
   }
 
-  public unsafe bool GetData(byte[] data, int dataSize) {
-    fixed ( byte* swig_ptrTo_data = data ) {
-    {
-      bool ret = SharingClientPINVOKE.AnchorDownloadRequest_GetData(swigCPtr, (global::System.IntPtr)swig_ptrTo_data, dataSize);
-      return ret;
-    }
-    }
-  }
+  //public unsafe bool GetData(byte[] data, int dataSize) {
+  //  fixed ( byte* swig_ptrTo_data = data ) {
+  //  {
+  //    bool ret = SharingClientPINVOKE.AnchorDownloadRequest_GetData(swigCPtr, (global::System.IntPtr)swig_ptrTo_data, dataSize);
+  //    return ret;
+  //  }
+  //  }
+  //}
 
 }
 

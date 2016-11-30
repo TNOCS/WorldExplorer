@@ -84,14 +84,14 @@ public class RoomManager : global::System.IDisposable {
     return ret;
   }
 
-  public unsafe bool UploadAnchor(Room room, XString anchorName, byte[] data, int dataSize) {
-    fixed ( byte* swig_ptrTo_data = data ) {
-    {
-      bool ret = SharingClientPINVOKE.RoomManager_UploadAnchor(swigCPtr, Room.getCPtr(room), XString.getCPtr(anchorName), (global::System.IntPtr)swig_ptrTo_data, dataSize);
-      return ret;
-    }
-    }
-  }
+  //public unsafe bool UploadAnchor(Room room, XString anchorName, byte[] data, int dataSize) {
+  //  fixed ( byte* swig_ptrTo_data = data ) {
+  //  {
+  //    bool ret = SharingClientPINVOKE.RoomManager_UploadAnchor(swigCPtr, Room.getCPtr(room), XString.getCPtr(anchorName), (global::System.IntPtr)swig_ptrTo_data, dataSize);
+  //    return ret;
+  //  }
+  //  }
+  //}
 
 }
 

@@ -187,7 +187,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
             Debug.Log(datasize + " bytes ");
             rawAnchorData = new byte[datasize];
 
-            request.GetData(rawAnchorData, datasize);
+          //  request.GetData(rawAnchorData, datasize);
             currentState = ImportExportState.DataReady;
         }
         else
@@ -514,11 +514,11 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
         if (status == SerializationCompletionReason.Succeeded && exportingAnchorBytes.Count > minTrustworthySerializedAnchorDataSize)
         {
             Debug.Log("Uploading anchor: " + exportingAnchorName);
-            roomManager.UploadAnchor(
-                currentRoom,
-                new XString(exportingAnchorName),
-                exportingAnchorBytes.ToArray(),
-                exportingAnchorBytes.Count);
+            //roomManager.UploadAnchor(
+            //    currentRoom,
+            //    new XString(exportingAnchorName),
+            //    exportingAnchorBytes.ToArray(),
+            //    exportingAnchorBytes.Count);
         }
         else
         {

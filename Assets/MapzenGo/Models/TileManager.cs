@@ -129,11 +129,14 @@ namespace MapzenGo.Models
         protected virtual void LoadTile(Vector2d tileTms, Tile tile)
         {
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
-            Debug.Log(url);
+            // Debug.Log(url);
             ObservableWWW.Get(url)
                 .Subscribe(
                     text => { ConstructTile(text, tile); }, //success
-                    exp => Debug.Log("Error fetching -> " + url)); //failure
+                    exp => {
+                        Debug.Log("Error fetching -> " + url);
+                        Debug.LogError(exp.Message);
+                    }); //failure
         }
 
         protected void ConstructTile(string text, Tile tile)

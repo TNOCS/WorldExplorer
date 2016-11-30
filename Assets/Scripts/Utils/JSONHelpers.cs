@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Assets.Scripts.Utils
+﻿namespace Assets.Scripts.Utils
 {
-
     public static class JsonHelpers
     {
         public static double GetDouble(this JSONObject json, string key, double defaultValue = 0)

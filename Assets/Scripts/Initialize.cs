@@ -5,9 +5,8 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Text;
 using HoloToolkit.Unity;
-#if (NETFX_CORE)
 using System;
-using System.Text;
+#if (NETFX_CORE)
 using Assets.MapzenGo.Models.Enums;
 using Assets.Scripts.Utils;
 #endif
@@ -82,10 +81,8 @@ public class Initialize : MonoBehaviour
         InitSpeech();
         InitViews();
         InitHud();
+        InitMqtt();
 
-#if (NETFX_CORE)
-     //   InitMqtt();
-#endif
         cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
         cursor.name = "Cursor";
 
@@ -135,15 +132,20 @@ public class Initialize : MonoBehaviour
         });
     }
 
-#if (NETFX_CORE)
+//#if (NETFX_CORE)
     protected void InitMqtt()
     {
+#if (NETFX_CORE)
         var client = new uPLibrary.Networking.M2Mqtt.MqttClient(appState.Config.MqttServer, int.Parse(appState.Config.MqttPort), false);
+#else
+        var client = new uPLibrary.Networking.M2Mqtt.MqttClient(appState.Config.MqttServer, int.Parse(appState.Config.MqttPort));
+#endif
         try
         {
-            client.Connect("holoclient");
+            Debug.Log("Connecting to MQTT");
+            client.Connect(Guid.NewGuid().ToString());
         }
-        catch (Exception e)
+        catch
         {
             Debug.LogError("Error connecting to mqtt");
         }
@@ -175,9 +177,9 @@ public class Initialize : MonoBehaviour
     {
         var view = new JSONObject(msg);
         var iv = appState.Config.ActiveView;
-        iv.Lat = view.GetFloat("Lat");
-        iv.Lon = view.GetFloat("Lon");
-        iv.Zoom = view.GetInt("Zoom");
+        iv.Lat = GetFloat(view, "Lat");
+        iv.Lon = GetFloat(view, "Lon");
+        iv.Zoom = GetInt(view, "Zoom");
         if (appState.TileManager)
         {
             appState.TileManager.Latitude = iv.Lat;
@@ -186,7 +188,19 @@ public class Initialize : MonoBehaviour
             appState.ResetMap();
         }
     }
-#endif
+    //#endif
+
+    private static int GetInt(JSONObject json, string key, int defaultValue = 0)
+    {
+        if (json && json.HasField(key) && json[key].IsNumber) return (int)json[key].n;
+        return defaultValue;
+    }
+
+    private static float GetFloat(JSONObject json, string key, float defaultValue = 0f)
+    {
+        if (json && json.HasField(key) && json[key].IsNumber) return (float)json[key].n;
+        return defaultValue;
+    }
 
     // Update is called once per frame
     void Update()

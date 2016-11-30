@@ -62,8 +62,6 @@ namespace Assets.Scripts
 
         public void LoadConfig()
         {
-
-
             var targetFile = Resources.Load<TextAsset>("config");
             var test = new JSONObject(targetFile.text);
 
@@ -145,7 +143,7 @@ namespace Assets.Scripts
             // init map
 #if DEBUG
             var tm = World.AddComponent<TileManager>(); 
-            tm._mapzenUrl = "http://localhost:10733/{0}/{1}/{2}/{3}.{4}";
+            tm._mapzenUrl = "http://169.254.80.80:10733/{0}/{1}/{2}/{3}.{4}";
 #else
             var tm = World.AddComponent<CachedTileManager>();
             tm._key = "vector-tiles-dB21RAF";
@@ -379,16 +377,16 @@ namespace Assets.Scripts
             //Holder.transform.DetachChildren();
             Destroy(Holder);
             return;
-            while (Holder.transform.childCount > 0)
-            {
-                var childs = Holder.transform.transform.childCount;
-                for (var i = 0; i <= childs - 1; i++)
-                {
-                    var go = Holder.transform.transform.GetChild(i).gameObject;
-                    DoDeleteAll(go);
-                }
-            }
-            Destroy(Holder);
+            //while (Holder.transform.childCount > 0)
+            //{
+            //    var childs = Holder.transform.transform.childCount;
+            //    for (var i = 0; i <= childs - 1; i++)
+            //    {
+            //        var go = Holder.transform.transform.GetChild(i).gameObject;
+            //        DoDeleteAll(go);
+            //    }
+            //}
+            //Destroy(Holder);
         }
 
         protected void AddRectTransformToGameObject(GameObject go)

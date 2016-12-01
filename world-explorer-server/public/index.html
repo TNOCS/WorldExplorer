@@ -28,7 +28,7 @@
   </style>
   <div id="map" />
   <script>
-        var client;
+        var client, map;
 
         function getParameterByName(name, url) {
           // http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
@@ -52,14 +52,21 @@
             })
 
             client.on("message", function(topic, payload) {
-                console.log(payload.toString());
+              var subtopic = topic.substr(sessionName.length + 1);
+              var msg = payload.toString();
+              console.log(subtopic + ': ' + msg);
+              switch (subtopic) {
+                case 'view':
+                  var view = JSON.parse(msg);
+                  map.setView(L.latLng(view.lat, view.lon), view.zoom);
+                  break;
+              }
             });
         }
 
-        function changeViewToCenterMap(map) {
+        function changeViewToCenterMap(map, sessionName) {
           var center = map.getCenter();
           var zoom = map.getZoom();
-          //var bounds = map.getBounds();
           var view = {
               lat: center.lat,
               lon: center.lng,
@@ -72,35 +79,25 @@
         }
 
         function setupMap(sessionName) {
-            var map = L.map('map').fitWorld();
+            map = L.map('map').fitWorld();
             L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 maxZoom: 18
             }).addTo(map);
             map.setView(new L.LatLng(52.0862573323384, 5.949096679687501), 8);
-            // map.on('moveend', function(e) {
-            //     var center = map.getCenter();
-            //     var zoom = map.getZoom();
-            //     var bounds = map.getBounds();
-            //     var view = {
-            //         lat: center.lat,
-            //         lon: center.lng,
-            //         zoom: zoom
-            //     };
-            //     if (client) {
-            //         client.publish(sessionName + '/view', JSON.stringify(view));
-            //     }
-            //     console.log(view);
-            // });
 
-            L.easyButton('fa-globe fa-2x', function(btn, map){
-              changeViewToCenterMap(map);
+            L.easyButton('fa-globe fa-2x', function(btn, m){
+              changeViewToCenterMap(m, sessionName);
             }).addTo(map);
         }
 
-        var sessionName = getParameterByName('session') || 'one';
-        setupMqtt(sessionName);
-        setupMap(sessionName);
+        function init() {
+          var sessionName = getParameterByName('session') || 'one'; // by default, join the first session.
+          setupMqtt(sessionName);
+          setupMap(sessionName);
+        }
+
+        init();
     </script>
 </body>
 

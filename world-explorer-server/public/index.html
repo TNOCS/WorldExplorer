@@ -1,38 +1,54 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="css/leaflet.css" />
-    <script src="js/leaflet.js"></script>
-    <script src="js/mqtt.js"></script>
-    <script src="js/jquery.min.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="css/leaflet.css" />
+  <link rel="stylesheet" href="css/font-awesome.min.css" />
+  <link rel="stylesheet" href="css/easy-button.css" />
+  <script src="js/leaflet.js"></script>
+  <script src="js/easy-button.js"></script>
+  <script src="js/mqtt.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 </head>
 
 <body>
-    <style>
-        body {
-            padding: 0;
-            margin: 0;
-        }
-        
-        html,
-        body,
-        #map {
-            height: 100vh;
-            width: 100vw;
-        }
-    </style>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    
+    html,
+    body,
+    #map {
+      height: 100vh;
+      width: 100vw;
+    }
 
-    <div id="map" />
-    <script>
+  </style>
+  <div id="map" />
+  <script>
         var client;
 
-        function setupMqtt() {
+        function getParameterByName(name, url) {
+          // http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+          if (!url) {
+            url = window.location.href;
+          }
+          name = name.replace(/[\[\]]/g, "\\$&");
+          var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+              results = regex.exec(url);
+          if (!results) return null;
+          if (!results[2]) return '';
+          return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        function setupMqtt(sessionName) {
             client = mqtt.connect("ws://cool3.sensorlab.tno.nl:8028");
             client.on('connect', function() {
                 console.log("connected");
-                client.subscribe('view')
-                client.publish('one/presence', 'Hello mqtt')
+                client.subscribe(sessionName + '/view')
+                client.publish(sessionName + '/presence', 'Hello mqtt')
             })
 
             client.on("message", function(topic, payload) {
@@ -40,32 +56,51 @@
             });
         }
 
-        function setupMap() {
+        function changeViewToCenterMap(map) {
+          var center = map.getCenter();
+          var zoom = map.getZoom();
+          //var bounds = map.getBounds();
+          var view = {
+              lat: center.lat,
+              lon: center.lng,
+              zoom: zoom
+          };
+          if (client) {
+              client.publish(sessionName + '/view', JSON.stringify(view));
+          }
+          console.log(view);
+        }
+
+        function setupMap(sessionName) {
             var map = L.map('map').fitWorld();
             L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 maxZoom: 18
             }).addTo(map);
-            map.setView(new L.LatLng(51.3, 0.7), 9);
-            map.on('moveend', function(e) {
-                var center = map.getCenter();
-                var zoom = map.getZoom();
-                var bounds = map.getBounds();
-                var view = {
-                    Lat: center.lat,
-                    Lon: center.lng,
-                    Zoom: zoom
-                };
-                if (client) {
-                    client.publish('view', JSON.stringify(view));
-                }
-                console.log(view);
-            });
+            map.setView(new L.LatLng(52.0862573323384, 5.949096679687501), 8);
+            // map.on('moveend', function(e) {
+            //     var center = map.getCenter();
+            //     var zoom = map.getZoom();
+            //     var bounds = map.getBounds();
+            //     var view = {
+            //         lat: center.lat,
+            //         lon: center.lng,
+            //         zoom: zoom
+            //     };
+            //     if (client) {
+            //         client.publish(sessionName + '/view', JSON.stringify(view));
+            //     }
+            //     console.log(view);
+            // });
 
+            L.easyButton('fa-globe fa-2x', function(btn, map){
+              changeViewToCenterMap(map);
+            }).addTo(map);
         }
 
-        setupMap();
-        setupMqtt();
+        var sessionName = getParameterByName('session') || 'one';
+        setupMqtt(sessionName);
+        setupMap(sessionName);
     </script>
 </body>
 

@@ -3,6 +3,9 @@ A Hololens application, based on [MapzenGo](https://github.com/brnkhy/MapzenGo),
 
 ![Example](http://i.imgur.com/MEwIH56.png)
 
+# Lessons Learned
+Also see the [Lessons Learned](https://github.com/TNOCS/WorldExplorer/wiki/Lessons-Learned) section in the Wiki, which contains some tips to develop Hololens applications for Unity.
+
 # Build instructions
 
 First, make sure that you can run the local tile server. See the build instructions in the `world-explorer-server` folder.

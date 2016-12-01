@@ -91,6 +91,12 @@ public class SymbolFactory : MonoBehaviour
     /// </summary>
     public void InitLayer()
     {
+        if (string.IsNullOrEmpty(baseUrl))
+        {
+            var uri = new Uri(Layer.Url);
+            baseUrl = uri.IsDefaultPort ? string.Format("{0}/", uri.Host) : string.Format("{0}:{1}/", uri.Host, uri.Port);
+        }
+
         AddLayer();
         //if (Layer.Refresh > 0)
         //{
@@ -185,17 +191,24 @@ public class SymbolFactory : MonoBehaviour
     IEnumerator createSymbols(Feature f)
     {
         string web;
-        if (!f.properties.ContainsKey("symbol"))
+        if (f.properties.ContainsKey("iconUrl"))
+        {
+            web = baseUrl + f.properties["iconUrl"].ToString().Replace(@"""", "");
+        }
+        else if (!string.IsNullOrEmpty(Layer.IconUrl))
         {
             web = GetIconUrl(f);
         }
         else
-            web = baseUrl + f.properties["symbol"].ToString().Replace(@"""", "");
+        {
+            web = "";
+        }
 
+        if (string.IsNullOrEmpty(web)) yield break;
         WWW www = new WWW(web);
         yield return www;
 
-        // Check if the point is  in the displayed tile area if so continue
+        // Check if the point is in the displayed tile area if so continue
         // range en lat long via appstate
         if (SymbolTiles.Contains(f.tilePoint))
         {
@@ -239,13 +252,14 @@ public class SymbolFactory : MonoBehaviour
                 symbol.transform.localPosition = new Vector3(0, 60f, 0);
 
                 GameObject instance = Instantiate(Resources.Load("cone", typeof(GameObject)), target.transform) as GameObject;
-                instance.name = "cone";                instance.transform.localPosition = new Vector3(10f, 10f, 10f);
+                instance.name = "cone";
+                instance.transform.localPosition = new Vector3(10f, 10f, 10f);
                 instance.transform.localScale = new Vector3(30f, 30f, 30f);
                 //instance.transform.localRotation = new Quaternion(0f, 0f, 180f,0f);
 
                 if (f.Stats != null)
                 {
-                    var info = (GameObject)Instantiate(_symbolInfo);
+                    var info = Instantiate(_symbolInfo);
                     SymbolGuis.Add(info);
                     var canvas = info.GetComponent<Canvas>();
                     canvas.worldCamera = Camera.main;
@@ -260,8 +274,8 @@ public class SymbolFactory : MonoBehaviour
                             default:
                                 break;
                             case "bar":
-                                var bar = (GameObject)Instantiate(_bar);
-                                bar.transform.parent = info.transform;
+                                var bar = Instantiate(_bar);
+                                bar.transform.SetParent(info.transform, false);
                                 bar.transform.localScale = new Vector3(100, 100);
                                 var BarFill = bar.transform.FindChild("Bar-Background").FindChild("Bar-Fill").gameObject.GetComponentInChildren<Image>().fillAmount = (float.Parse(f.Stats[i]["value"].ToString().Replace(@"""", "")) / float.Parse(f.Stats[i]["maxValue"].ToString().Replace(@"""", "")));//calculate fill stat value
 

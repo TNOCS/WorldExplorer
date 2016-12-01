@@ -81,7 +81,7 @@ artifacts/
 *_p.c
 *_i.h
 *.ilk
-# *.meta
+*.bak.meta
 *.obj
 *.pch
 *.pdb

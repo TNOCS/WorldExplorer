@@ -183,7 +183,7 @@
       "TileSize": 100,
       "Range": 4,
       "Scale": 1,
-      "Mapzen": [ "buildings", "water", "roads", "landuse", "water", "pois" ],
+      "Mapzen": [ "buildings", "water", "landuse", "water", "pois", "assets" ],
       "Layers": [ "Symboltest" ],
       "TileLayers": [ "TopoLayer" ]
     },

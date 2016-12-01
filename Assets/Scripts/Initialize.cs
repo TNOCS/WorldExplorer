@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Assets.Scripts;
+using Assets.Scripts.Plugins;
 using MapzenGo.Models;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -13,8 +14,6 @@ using Assets.Scripts.Utils;
 
 public class Initialize : MonoBehaviour
 {
-
-
     // Use this for initialization
     private GameObject _cursorFab;
     private GameObject cursor;
@@ -24,6 +23,8 @@ public class Initialize : MonoBehaviour
     private Dictionary<string, string> audioCommands;
     private Font font;
     private AudioClip fingerPressedSound;
+    private SessionManager sessionMgr;
+
     void Awake()
     {
         var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
@@ -69,11 +70,11 @@ public class Initialize : MonoBehaviour
         }
         rt.sizeDelta = new Vector2(350, (h + 1) * 25);
         info.text = s.ToString();
-
     }
 
     void Start()
     {
+        Debug.Log("Initializing...");
         appState.Camera = gameObject;
         appState.Speech = new Assets.Scripts.SpeechManager();
 
@@ -81,7 +82,9 @@ public class Initialize : MonoBehaviour
         InitSpeech();
         InitViews();
         InitHud();
-        InitMqtt();
+        sessionMgr = SessionManager.Instance;
+        sessionMgr.Init();
+        //InitMqtt();
 
         cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
         cursor.name = "Cursor";
@@ -130,76 +133,6 @@ public class Initialize : MonoBehaviour
                 appState.ResetMap();
             });
         });
-    }
-
-//#if (NETFX_CORE)
-    protected void InitMqtt()
-    {
-#if (NETFX_CORE)
-        var client = new uPLibrary.Networking.M2Mqtt.MqttClient(appState.Config.MqttServer, int.Parse(appState.Config.MqttPort), false);
-#else
-        var client = new uPLibrary.Networking.M2Mqtt.MqttClient(appState.Config.MqttServer, int.Parse(appState.Config.MqttPort));
-#endif
-        try
-        {
-            Debug.Log("Connecting to MQTT");
-            client.Connect(Guid.NewGuid().ToString());
-        }
-        catch
-        {
-            Debug.LogError("Error connecting to mqtt");
-        }
-        if (client.IsConnected)
-        {
-            // register to message received 
-            client.MqttMsgPublishReceived += (sender, e) =>
-            {                
-                UnityMainThreadDispatcher.Instance().Enqueue(() =>
-                {
-                    var msg = Encoding.UTF8.GetString(e.Message);
-                    switch (e.Topic)
-                    {
-                        case "view":
-                            SetView(msg);
-                            break;
-                    }
-                    GameObject _3dText = GameObject.Find("tbTemp");
-                    _3dText.GetComponent<TextMesh>().text = msg;
-                });
-            };
-
-            //// subscribe to the topic "/home/temperature" with QoS 2 
-            client.Subscribe(new string[] { "view" }, new byte[] { uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-        }
-    }
-
-    protected void SetView(string msg)
-    {
-        var view = new JSONObject(msg);
-        var iv = appState.Config.ActiveView;
-        iv.Lat = GetFloat(view, "Lat");
-        iv.Lon = GetFloat(view, "Lon");
-        iv.Zoom = GetInt(view, "Zoom");
-        if (appState.TileManager)
-        {
-            appState.TileManager.Latitude = iv.Lat;
-            appState.TileManager.Longitude = iv.Lon;
-            appState.TileManager.Zoom = iv.Zoom;
-            appState.ResetMap();
-        }
-    }
-    //#endif
-
-    private static int GetInt(JSONObject json, string key, int defaultValue = 0)
-    {
-        if (json && json.HasField(key) && json[key].IsNumber) return (int)json[key].n;
-        return defaultValue;
-    }
-
-    private static float GetFloat(JSONObject json, string key, float defaultValue = 0f)
-    {
-        if (json && json.HasField(key) && json[key].IsNumber) return (float)json[key].n;
-        return defaultValue;
     }
 
     // Update is called once per frame

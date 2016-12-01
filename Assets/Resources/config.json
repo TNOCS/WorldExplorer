@@ -204,6 +204,7 @@
   "MqttServer": "cool3.sensorlab.tno.nl",
   "MqttPort": "8026",
   "InitialView": "Detail",
+  "SessionName": "one",
   "Table": {
     "TableSize": 1.5,
     "TableHeight": 1.5

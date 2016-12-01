@@ -24,6 +24,7 @@ public class Initialize : MonoBehaviour
     private Dictionary<string, string> audioCommands;
     private Font font;
     private AudioClip fingerPressedSound;
+    private Sprite background;
     void Awake()
     {
         var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
@@ -41,24 +42,39 @@ public class Initialize : MonoBehaviour
         HoloManagers = new GameObject("HoloManagers");
         var Handsmanager = HoloManagers.AddComponent<Assets.Scripts.Utils.HandsManager>();
         Handsmanager.FingerPressedSound = fingerPressedSound;
+        GameObject paneltext = new GameObject("textpanel");
+        paneltext.transform.position = new Vector3(0, 1, 0);
         
+        paneltext.transform.SetParent(Hud.transform, false);
+        paneltext.transform.localPosition = new Vector3(0, 0, 0);
+        var panelimage = paneltext.AddComponent<Image>();
+        RectTransform panelimagert = paneltext.GetComponent(typeof(RectTransform)) as RectTransform;
+        panelimage.sprite = new Sprite();
+
         GameObject textO = new GameObject("Commands-Help");
-        textO.transform.SetParent(Hud.transform);
+        textO.transform.position = new Vector3(0, 1, 0);
+       
+        textO.transform.SetParent(paneltext.transform,false);
+      
+
+
+
+
         Text info = textO.AddComponent<Text>();
 
 
         RectTransform rt = textO.GetComponent(typeof(RectTransform)) as RectTransform;
-       
+
         rt.anchorMin = new Vector2(1, 1);
         rt.anchorMax = new Vector2(1, 1);
         rt.pivot = new Vector2(1f, 1f);
         rt.position = new Vector2(0, 0);
         rt.anchoredPosition = new Vector2(0, 0);
-
+        rt.position= new Vector3(0, 0, 0);
         info.font = font;
         info.resizeTextForBestFit = true;
         info.verticalOverflow = VerticalWrapMode.Truncate;
-
+       
         StringBuilder s = new StringBuilder();
         s.AppendLine("Commands:");
         int h = 1;
@@ -68,6 +84,9 @@ public class Initialize : MonoBehaviour
             h++;
         }
         rt.sizeDelta = new Vector2(350, (h + 1) * 25);
+        panelimagert.sizeDelta = rt.sizeDelta;
+        textO.transform.position = new Vector3(0, 0, 0);
+        textO.transform.localPosition = new Vector3(0, 0, 0);
         info.text = s.ToString();
 
     }
@@ -132,7 +151,7 @@ public class Initialize : MonoBehaviour
         });
     }
 
-//#if (NETFX_CORE)
+    //#if (NETFX_CORE)
     protected void InitMqtt()
     {
 #if (NETFX_CORE)
@@ -153,7 +172,7 @@ public class Initialize : MonoBehaviour
         {
             // register to message received 
             client.MqttMsgPublishReceived += (sender, e) =>
-            {                
+            {
                 UnityMainThreadDispatcher.Instance().Enqueue(() =>
                 {
                     var msg = Encoding.UTF8.GetString(e.Message);

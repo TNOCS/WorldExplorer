@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
 using Assets.Scripts;
 using Assets.Scripts.Plugins;
-using MapzenGo.Models;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Text;
-using HoloToolkit.Unity;
-using System;
 #if (NETFX_CORE)
 using Assets.MapzenGo.Models.Enums;
 using Assets.Scripts.Utils;
@@ -14,6 +11,8 @@ using Assets.Scripts.Utils;
 
 public class Initialize : MonoBehaviour
 {
+    public const string SwitchToSpeech = "Switch to ";
+
     // Use this for initialization
     private GameObject _cursorFab;
     private GameObject cursor;
@@ -27,7 +26,9 @@ public class Initialize : MonoBehaviour
 
     void Awake()
     {
-        var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
+        Debug.Log("Waking up...");
+        // We need this so the MQTT thread can receive messages
+        gameObject.AddComponent<UnityMainThreadDispatcher>();
         _cursorFab = Resources.Load("Prefabs\\Input\\Cursor") as GameObject;
         appState = AppState.Instance;
         appState.LoadConfig();
@@ -46,7 +47,6 @@ public class Initialize : MonoBehaviour
         GameObject textO = new GameObject("Commands-Help");
         textO.transform.SetParent(Hud.transform);
         Text info = textO.AddComponent<Text>();
-
 
         RectTransform rt = textO.GetComponent(typeof(RectTransform)) as RectTransform;
        
@@ -70,13 +70,14 @@ public class Initialize : MonoBehaviour
         }
         rt.sizeDelta = new Vector2(350, (h + 1) * 25);
         info.text = s.ToString();
+        Hud.SetActive(false);
     }
 
     void Start()
     {
         Debug.Log("Initializing...");
         appState.Camera = gameObject;
-        appState.Speech = new Assets.Scripts.SpeechManager();
+        //appState.Speech = SpeechManager.Instance;
 
         appState.AddTerrain();
         InitSpeech();
@@ -84,7 +85,6 @@ public class Initialize : MonoBehaviour
         InitHud();
         sessionMgr = SessionManager.Instance;
         sessionMgr.Init();
-        //InitMqtt();
 
         cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
         cursor.name = "Cursor";
@@ -94,6 +94,9 @@ public class Initialize : MonoBehaviour
 
     void InitSpeech()
     {
+
+
+
         audioCommands.Add("Hide Commands", " Hides the voice commands");
         appState.Speech.Keywords.Add("Hide Commands", () =>
         {
@@ -104,12 +107,6 @@ public class Initialize : MonoBehaviour
         appState.Speech.Keywords.Add("Show Commands", () =>
         {
             Hud.SetActive(true);
-            // appState.TileManager.UpdateTiles();
-        });
-        audioCommands.Add("Zoom Out", " Zoom out");
-        appState.Speech.Keywords.Add("Zoom out", () =>
-        {
-            appState.Center = new Vector3(appState.Center.x, appState.Center.y, appState.Center.z + 1);
             // appState.TileManager.UpdateTiles();
         });
         audioCommands.Add("Center table", " Places the table at your current position");
@@ -125,12 +122,14 @@ public class Initialize : MonoBehaviour
 
         appState.Config.Views.ForEach(v =>
         {
-            audioCommands.Add("Switch to " + v.Name, " displays the view");
+            var cmd = SwitchToSpeech + v.Name;
+            audioCommands.Add(cmd, " displays the view");
 
-            appState.Speech.Keywords.Add("Switch to " + v.Name, () =>
+            appState.Speech.Keywords.Add(cmd + v.Name, () =>
             {
-                appState.Config.ActiveView = v;
+                appState.Config.ActiveView = v.Clone();
                 appState.ResetMap();
+                sessionMgr.UpdateView(appState.Config.ActiveView);
             });
         });
     }
@@ -151,7 +150,7 @@ public class Initialize : MonoBehaviour
         for (var i = 0; i < Mathf.Min(8, appState.Config.Views.Count); i++)
         {
             if (!Input.GetKeyDown(string.Format("{0}", i + 1))) continue;
-            appState.Config.ActiveView = appState.Config.Views[i];
+            appState.Config.ActiveView = appState.Config.Views[i].Clone();
             appState.ResetMap();
             return;
         }

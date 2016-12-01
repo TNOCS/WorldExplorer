@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Text;
 using uPLibrary.Networking.M2Mqtt;
 using System.Collections.Generic;
+using Assets.Scripts.Classes;
 
 namespace Assets.Scripts.Plugins
 {
@@ -19,6 +20,7 @@ namespace Assets.Scripts.Plugins
         AppState appState = AppState.Instance;
         MqttClient client;
         string topic;
+        string sessionName;
 
         protected SessionManager()
         {
@@ -36,6 +38,7 @@ namespace Assets.Scripts.Plugins
         public void JoinSession(string name)
         {
             if (!client.IsConnected || string.IsNullOrEmpty(name)) return;
+            sessionName = name;
             if (!string.IsNullOrEmpty(topic)) client.Unsubscribe(new[] { topic });
             topic = (name + "/#").ToLower();
             Debug.Log("Client is joining session " + topic);
@@ -87,17 +90,32 @@ namespace Assets.Scripts.Plugins
 
         protected void SetView(string msg)
         {
+            var av = appState.Config.ActiveView;
             var view = new JSONObject(msg);
-            var iv = appState.Config.ActiveView;
-            iv.Lat = view.GetFloat("lat");
-            iv.Lon = view.GetFloat("lon");
-            iv.Zoom = view.GetInt("zoom");
+            var lat = view.GetFloat("lat");
+            var lon = view.GetFloat("lon");
+            var zoom = view.GetInt("zoom");
+            var range = view.GetInt("range", av.Range);
+            if (av.Equal(lat, lon, zoom, range)) return;
+            av.SetView(lat, lon, zoom, range);
             if (!appState.TileManager) return;
-            appState.TileManager.Latitude = iv.Lat;
-            appState.TileManager.Longitude = iv.Lon;
-            appState.TileManager.Zoom = iv.Zoom;
-            appState.ResetMap();
+            appState.ResetMap(av);
         }
 
+        public void UpdateView(ViewState view)
+        {
+            SendJsonMessage("view", string.Format("{ lat: {0}, lon: {1}, zoom: {2}, range: {3} }", view.Lat, view.Lon, view.Zoom, view.Range));
+        }
+
+        /// <summary>
+        /// Send a JSON message as UTF8 bytes to a subtopic.
+        /// </summary>
+        /// <param name="subtopic"></param>
+        /// <param name="json"></param>
+        public void SendJsonMessage(string subtopic, string json)
+        {
+            Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));   
+            client.Publish(string.Format("{0}/{1}", sessionName, subtopic), Encoding.UTF8.GetBytes(json));
+        }
     }
 }

@@ -1,9 +1,4 @@
-﻿using Assets.Scripts.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes
@@ -21,17 +16,17 @@ namespace Assets.Scripts.Classes
 
         public void FromJson(JSONObject json)
         {
-            Title = json.GetString("Title");
-            Url = json.GetString("Url");
-            Type = json.GetString("Type");
-            Enabled = json.GetBoolean("Enabled");
-            VoiceCommand = json.GetString("VoiceCommand");
-            UseTransparency = json.GetBoolean("UseTransparency");
-            Height = json.GetFloat("Height");
-            Group = json.GetString("Group");
-            IconUrl = json.GetString("IconUrl");
-            Scale = json.GetInt("Scale", 30);
-            if (json.HasField("Refresh")) Refresh = json.GetInt("Refresh");
+            Title = json.GetString("title");
+            Url = json.GetString("url");
+            Type = json.GetString("type");
+            Enabled = json.GetBoolean("enabled");
+            VoiceCommand = json.GetString("voiceCommand");
+            UseTransparency = json.GetBoolean("useTransparency");
+            Height = json.GetFloat("height");
+            Group = json.GetString("group");
+            IconUrl = json.GetString("iconUrl");
+            Scale = json.GetInt("scale", 30);
+            if (json.HasField("refresh")) Refresh = json.GetInt("refresh");
         }
 
         public bool _active { get; set; }

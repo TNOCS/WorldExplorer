@@ -35,9 +35,13 @@ namespace Assets.Scripts
 
         public List<string> MapzenTags = new List<string>(new string[] { "buildings", "water", "roads", "pois", "landuse" });
 
+        public void Awake()
+        {
+            Speech = SpeechManager.Instance;
+        }
+
         public void Init()
         {
-            Speech = new SpeechManager();
             MapzenTags.ForEach(k => Speech.AddKeyword(ToggleSpeech + k, () => ToggleMapzen(k)));
         }
 
@@ -65,8 +69,16 @@ namespace Assets.Scripts
             Config.FromJson(test);
         }
 
-        public void ResetMap()
+        public void ResetMap(ViewState view = null)
         {
+            if (view != null)
+            {
+                TileManager.Latitude = view.Lat;
+                TileManager.Longitude = view.Lon;
+                TileManager.Zoom = view.Zoom;
+                TileManager.Range = view.Range;
+            }
+
             Config.Layers.ForEach(l =>
             {
                 DestroyGeojsonLayer(l);
@@ -95,12 +107,11 @@ namespace Assets.Scripts
             Terrain = new GameObject("terrain");
             Terrain.transform.position = new Vector3(0f, 0f, 0f);
 
-
             Table = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            Table.name = "Table";
             Table.transform.position = new Vector3(0f, 0.7f, 0f);
             Table.transform.localScale = new Vector3(t.TableSize, t.TableHeight, t.TableSize);
             Table.transform.SetParent(Terrain.transform, false);
-
 
 
             Map = new GameObject("Map");
@@ -129,7 +140,6 @@ namespace Assets.Scripts
             if (i > mapScales.Length) i = mapScales.Length;
             var mapScale = mapScales[i - 1];
             Map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
-
 
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);
@@ -180,14 +190,12 @@ namespace Assets.Scripts
                 var buildingFactory = buildings.AddComponent<BuildingFactory>();
             }
 
-
             //var flatBuildings = new GameObject("FlatBuildingFactory");
             //flatBuildings.transform.SetParent(factories.transform, false);
             //var flatBuildingFactory = flatBuildings.AddComponent<FlatBuildingFactory>();
 
             if (iv.Mapzen.Contains("roads"))
             {
-
                 var roads = new GameObject("RoadFactory");
                 roads.transform.SetParent(factories.transform, false);
                 var roadFactory = roads.AddComponent<RoadFactory>();
@@ -199,9 +207,12 @@ namespace Assets.Scripts
                 water.transform.SetParent(factories.transform, false);
                 var waterFactory = water.AddComponent<WaterFactory>();
             }
-            //var boundary = new GameObject("BoundaryFactory");
-            //boundary.transform.SetParent(factories.transform, false);
-            //var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
+            if (iv.Mapzen.Contains("boundaries"))
+            {
+                var boundary = new GameObject("BoundaryFactory");
+                boundary.transform.SetParent(factories.transform, false);
+                var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
+            }
 
             if (iv.Mapzen.Contains("landuse"))
             {
@@ -223,19 +234,18 @@ namespace Assets.Scripts
                 pois.transform.SetParent(factories.transform, false);
                 var poisFactory = pois.AddComponent<PoiFactory>();
             }
+
             if (iv.Mapzen.Contains("assets")) // assets
             {
                 var models = new GameObject("ModelFactory");
                 models.transform.SetParent(factories.transform, false);
                 var modelFactory = models.AddComponent<ModelFactory>();
                 modelFactory.scale = Table.transform.localScale.x;
-                //modelFactory.scale = 2;
                 modelFactory.BundleURL = "http://134.221.20.226:3999/assets/buildings/eindhoven";
                 modelFactory.version = 6;
             }
 
             #endregion
-
 
             Layers = new GameObject("Layers");
             Layers.transform.SetParent(Table.transform);
@@ -249,8 +259,6 @@ namespace Assets.Scripts
                     InitGeojsonLayer(l);
                 }
             });
-
-           
 #endregion
 
 #region TILE PLUGINS
@@ -271,7 +279,6 @@ namespace Assets.Scripts
             foreach (var tl in Config.Layers.Where(k => { return k.Type.ToLower() == "tilelayer"; }))
             {
                 Speech.AddKeyword(ShowLayerSpeech + tl.VoiceCommand, () => {
-
                     if (tl.Group != null)
                     {
                         var ll = Config.Layers.Where(k => k.Type.ToLower() == "tilelayer" && k.Group == tl.Group).Select(k => k.Title);
@@ -354,7 +361,6 @@ namespace Assets.Scripts
                     l._active = true;
 
                     var symbolFactory = layerObject.AddComponent<SymbolFactory>();
-                    //symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
                     symbolFactory.geojson = success.text;
                     symbolFactory.zoom = av.Zoom;
                     symbolFactory.Latitude = av.Lat;

@@ -1,28 +1,19 @@
-﻿using Assets.Scripts.Utils;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Assets.Scripts.Classes
 {
     public class AppConfig
     {
-
-        public AppConfig()
-        {
-            //this.Layers = new List<Layer>();
-        }
-
         public void FromJson(JSONObject json)
         {
-            TileServer = json.GetString("TileServer");
-            MqttServer = json.GetString("MqttServer");
-            MqttPort = json.GetString("MqttPort");
-            SessionName = json.GetString("SessionName");
+            TileServer = json.GetString("tileServer");
+            MqttServer = json.GetString("mqttServer");
+            MqttPort = json.GetString("mqttPort");
+            SessionName = json.GetString("sessionName");
 
             Layers = new List<Layer>();
-            var ll = json["Layers"];
+            var ll = json["layers"];
             for (var l = 0; l < ll.Count; l++)
             {
                 var layer = new Layer();
@@ -31,7 +22,7 @@ namespace Assets.Scripts.Classes
             }
 
             Views = new List<ViewState>();
-            var vs = json["Views"];
+            var vs = json["views"];
             for (var l = 0; l < vs.Count; l++)
             {
                 var view = new ViewState();
@@ -40,10 +31,9 @@ namespace Assets.Scripts.Classes
             }
 
            //InitalView = new ViewState();
-            ActiveView = Views.FirstOrDefault(v => v.Name == json.GetString("InitialView"));
+            ActiveView = Views.FirstOrDefault(v => v.Name == json.GetString("initialView"));
             Table = new Table();
-            Table.FromJson(json["Table"]);
-
+            Table.FromJson(json["table"]);
         }
 
         public List<Layer> Layers { get; set; }

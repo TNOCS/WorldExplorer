@@ -10,8 +10,8 @@ namespace Assets.Scripts.Classes
     {
         public void FromJson(JSONObject json)
         {
-            TableSize = json.GetFloat("TableSize");
-            TableHeight = json.GetFloat("TableHeight");
+            TableSize = json.GetFloat("size");
+            TableHeight = json.GetFloat("height");
         }
 
         public float TableSize { get; set; }

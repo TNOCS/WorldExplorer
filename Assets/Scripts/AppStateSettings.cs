@@ -1,7 +1,4 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
-using MapzenGo.Models.Settings;
+﻿using UnityEngine;
 using MapzenGo.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -213,9 +210,12 @@ namespace Assets.Scripts
                 var landuseFactory = landuse.AddComponent<LanduseFactory>();
             }
 
-            var places = new GameObject("PlacesFactory");
-            places.transform.SetParent(factories.transform, false);
-            var placesFactory = places.AddComponent<PlacesFactory>();
+            if (iv.Mapzen.Contains("places"))
+            {
+                var places = new GameObject("PlacesFactory");
+                places.transform.SetParent(factories.transform, false);
+                var placesFactory = places.AddComponent<PlacesFactory>();
+            }
 
             if (iv.Mapzen.Contains("pois"))
             {

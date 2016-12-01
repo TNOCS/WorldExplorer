@@ -68,8 +68,9 @@ namespace Assets.Scripts.Plugins
                 UnityMainThreadDispatcher.Instance().Enqueue(() =>
                 {
                     var msg = Encoding.UTF8.GetString(e.Message);
-                    Debug.Log("Received message: " + msg);
-                    switch (e.Topic)
+                    var title = e.Topic.Substring(topic.Length-1);
+                    Debug.Log(string.Format("Received message on topic {0}: {1}", title, msg));
+                    switch (title)
                     {
                         case "view":
                             SetView(msg);
@@ -88,9 +89,9 @@ namespace Assets.Scripts.Plugins
         {
             var view = new JSONObject(msg);
             var iv = appState.Config.ActiveView;
-            iv.Lat = view.GetFloat("Lat");
-            iv.Lon = view.GetFloat("Lon");
-            iv.Zoom = view.GetInt("Zoom");
+            iv.Lat = view.GetFloat("lat");
+            iv.Lon = view.GetFloat("lon");
+            iv.Zoom = view.GetInt("zoom");
             if (!appState.TileManager) return;
             appState.TileManager.Latitude = iv.Lat;
             appState.TileManager.Longitude = iv.Lon;

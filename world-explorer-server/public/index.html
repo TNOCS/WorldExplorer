@@ -1,0 +1,72 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <script src="js/leaflet.js"></script>
+    <script src="js/mqtt.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+</head>
+
+<body>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        
+        html,
+        body,
+        #map {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+
+    <div id="map" />
+    <script>
+        var client;
+
+        function setupMqtt() {
+            client = mqtt.connect("ws://cool3.sensorlab.tno.nl:8028");
+            client.on('connect', function() {
+                console.log("connected");
+                client.subscribe('view')
+                client.publish('one/presence', 'Hello mqtt')
+            })
+
+            client.on("message", function(topic, payload) {
+                console.log(payload.toString());
+            });
+        }
+
+        function setupMap() {
+            var map = L.map('map').fitWorld();
+            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                maxZoom: 18
+            }).addTo(map);
+            map.setView(new L.LatLng(51.3, 0.7), 9);
+            map.on('moveend', function(e) {
+                var center = map.getCenter();
+                var zoom = map.getZoom();
+                var bounds = map.getBounds();
+                var view = {
+                    Lat: center.lat,
+                    Lon: center.lng,
+                    Zoom: zoom
+                };
+                if (client) {
+                    client.publish('view', JSON.stringify(view));
+                }
+                console.log(view);
+            });
+
+        }
+
+        setupMap();
+        setupMqtt();
+    </script>
+</body>
+
+</html>

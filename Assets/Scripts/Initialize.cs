@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Assets.Scripts;
+using Assets.Scripts.Plugins;
 using MapzenGo.Models;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -13,8 +14,6 @@ using Assets.Scripts.Utils;
 
 public class Initialize : MonoBehaviour
 {
-
-
     // Use this for initialization
     private GameObject _cursorFab;
     private GameObject cursor;
@@ -24,7 +23,8 @@ public class Initialize : MonoBehaviour
     private Dictionary<string, string> audioCommands;
     private Font font;
     private AudioClip fingerPressedSound;
-    private Sprite background;
+    private SessionManager sessionMgr;
+
     void Awake()
     {
         var threadDispatcher = gameObject.AddComponent<UnityMainThreadDispatcher>();
@@ -42,39 +42,24 @@ public class Initialize : MonoBehaviour
         HoloManagers = new GameObject("HoloManagers");
         var Handsmanager = HoloManagers.AddComponent<Assets.Scripts.Utils.HandsManager>();
         Handsmanager.FingerPressedSound = fingerPressedSound;
-        GameObject paneltext = new GameObject("textpanel");
-        paneltext.transform.position = new Vector3(0, 1, 0);
         
-        paneltext.transform.SetParent(Hud.transform, false);
-        paneltext.transform.localPosition = new Vector3(0, 0, 0);
-        var panelimage = paneltext.AddComponent<Image>();
-        RectTransform panelimagert = paneltext.GetComponent(typeof(RectTransform)) as RectTransform;
-        panelimage.sprite = new Sprite();
-
         GameObject textO = new GameObject("Commands-Help");
-        textO.transform.position = new Vector3(0, 1, 0);
-       
-        textO.transform.SetParent(paneltext.transform,false);
-      
-
-
-
-
+        textO.transform.SetParent(Hud.transform);
         Text info = textO.AddComponent<Text>();
 
 
         RectTransform rt = textO.GetComponent(typeof(RectTransform)) as RectTransform;
-
+       
         rt.anchorMin = new Vector2(1, 1);
         rt.anchorMax = new Vector2(1, 1);
         rt.pivot = new Vector2(1f, 1f);
         rt.position = new Vector2(0, 0);
         rt.anchoredPosition = new Vector2(0, 0);
-        rt.position= new Vector3(0, 0, 0);
+
         info.font = font;
         info.resizeTextForBestFit = true;
         info.verticalOverflow = VerticalWrapMode.Truncate;
-       
+
         StringBuilder s = new StringBuilder();
         s.AppendLine("Commands:");
         int h = 1;
@@ -84,15 +69,12 @@ public class Initialize : MonoBehaviour
             h++;
         }
         rt.sizeDelta = new Vector2(350, (h + 1) * 25);
-        panelimagert.sizeDelta = rt.sizeDelta;
-        textO.transform.position = new Vector3(0, 0, 0);
-        textO.transform.localPosition = new Vector3(0, 0, 0);
         info.text = s.ToString();
-
     }
 
     void Start()
     {
+        Debug.Log("Initializing...");
         appState.Camera = gameObject;
         appState.Speech = new Assets.Scripts.SpeechManager();
 
@@ -100,7 +82,9 @@ public class Initialize : MonoBehaviour
         InitSpeech();
         InitViews();
         InitHud();
-        InitMqtt();
+        sessionMgr = SessionManager.Instance;
+        sessionMgr.Init();
+        //InitMqtt();
 
         cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
         cursor.name = "Cursor";
@@ -149,76 +133,6 @@ public class Initialize : MonoBehaviour
                 appState.ResetMap();
             });
         });
-    }
-
-    //#if (NETFX_CORE)
-    protected void InitMqtt()
-    {
-#if (NETFX_CORE)
-        var client = new uPLibrary.Networking.M2Mqtt.MqttClient(appState.Config.MqttServer, int.Parse(appState.Config.MqttPort), false);
-#else
-        var client = new uPLibrary.Networking.M2Mqtt.MqttClient(appState.Config.MqttServer, int.Parse(appState.Config.MqttPort));
-#endif
-        try
-        {
-            Debug.Log("Connecting to MQTT");
-            client.Connect(Guid.NewGuid().ToString());
-        }
-        catch
-        {
-            Debug.LogError("Error connecting to mqtt");
-        }
-        if (client.IsConnected)
-        {
-            // register to message received 
-            client.MqttMsgPublishReceived += (sender, e) =>
-            {
-                UnityMainThreadDispatcher.Instance().Enqueue(() =>
-                {
-                    var msg = Encoding.UTF8.GetString(e.Message);
-                    switch (e.Topic)
-                    {
-                        case "view":
-                            SetView(msg);
-                            break;
-                    }
-                    GameObject _3dText = GameObject.Find("tbTemp");
-                    _3dText.GetComponent<TextMesh>().text = msg;
-                });
-            };
-
-            //// subscribe to the topic "/home/temperature" with QoS 2 
-            client.Subscribe(new string[] { "view" }, new byte[] { uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-        }
-    }
-
-    protected void SetView(string msg)
-    {
-        var view = new JSONObject(msg);
-        var iv = appState.Config.ActiveView;
-        iv.Lat = GetFloat(view, "Lat");
-        iv.Lon = GetFloat(view, "Lon");
-        iv.Zoom = GetInt(view, "Zoom");
-        if (appState.TileManager)
-        {
-            appState.TileManager.Latitude = iv.Lat;
-            appState.TileManager.Longitude = iv.Lon;
-            appState.TileManager.Zoom = iv.Zoom;
-            appState.ResetMap();
-        }
-    }
-    //#endif
-
-    private static int GetInt(JSONObject json, string key, int defaultValue = 0)
-    {
-        if (json && json.HasField(key) && json[key].IsNumber) return (int)json[key].n;
-        return defaultValue;
-    }
-
-    private static float GetFloat(JSONObject json, string key, float defaultValue = 0f)
-    {
-        if (json && json.HasField(key) && json[key].IsNumber) return (float)json[key].n;
-        return defaultValue;
     }
 
     // Update is called once per frame

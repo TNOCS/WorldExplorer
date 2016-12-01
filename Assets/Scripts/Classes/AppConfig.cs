@@ -19,7 +19,7 @@ namespace Assets.Scripts.Classes
             TileServer = json.GetString("TileServer");
             MqttServer = json.GetString("MqttServer");
             MqttPort = json.GetString("MqttPort");
-
+            SessionName = json.GetString("SessionName");
 
             Layers = new List<Layer>();
             var ll = json["Layers"];
@@ -53,5 +53,6 @@ namespace Assets.Scripts.Classes
         public List<ViewState> Views { get; set; }
         public Table Table { get; set; }
         public ViewState ActiveView { get; set; }
+        public string SessionName { get; set; }
     }
 }

@@ -32,7 +32,6 @@ namespace Assets.Scripts
 
         public Vector3 Center { get; set; }
         public TileManager TileManager { get; set; }
-
         public AppConfig Config { get; set; }
         public ViewState State { get; set; }
         public SpeechManager Speech { get; set; }

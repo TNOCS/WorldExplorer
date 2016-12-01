@@ -800,4 +800,35 @@ public class JSONObject
     {
         return (object)o != null;
     }
+
+    public double GetDouble(string key, double defaultValue = 0)
+    {
+        if (HasField(key) && this[key].IsNumber) return this[key].n;
+        return defaultValue;
+    }
+
+    public int GetInt(string key, int defaultValue = 0)
+    {
+        if (HasField(key) && this[key].IsNumber) return (int)this[key].n;
+        return defaultValue;
+    }
+
+    public float GetFloat(string key, float defaultValue = 0f)
+    {
+        if (HasField(key) && this[key].IsNumber) return (float)this[key].n;
+        return defaultValue;
+    }
+
+    public string GetString(string key, string defaultValue = "")
+    {
+        if (HasField(key) && this[key].IsString) return this[key].str;
+        return defaultValue;
+    }
+
+    public bool GetBoolean(string key, bool defaultValue = false)
+    {
+        if (HasField(key) && this[key].IsBool) return this[key].b;
+        return defaultValue;
+    }
+
 }

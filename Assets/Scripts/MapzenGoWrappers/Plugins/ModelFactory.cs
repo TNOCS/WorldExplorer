@@ -32,7 +32,7 @@ public class ModelFactory : Factory
         if (!(tile.Data.HasField(XmlTag) && tile.Data[XmlTag].HasField("features")))
             return;
 
-        string temp = tile.Data[XmlTag].ToString();
+        // string temp = tile.Data[XmlTag].ToString();
         var featureList = tile.Data[XmlTag]["features"].list;
         if (featureList != null && featureList.Count > 0)
         {

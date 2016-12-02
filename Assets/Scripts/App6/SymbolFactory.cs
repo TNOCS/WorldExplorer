@@ -70,7 +70,7 @@ public class SymbolFactory : MonoBehaviour
 
     protected Vector2d CenterTms; //tms tile coordinate
     protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
-    private Vector3 center;
+    //private Vector3 center;
     //private System.Threading.Timer refreshTimer;
     protected List<GameObject> SymbolGuis;
     protected List<Vector2d> SymbolTiles;
@@ -154,7 +154,7 @@ public class SymbolFactory : MonoBehaviour
         // set symbol holder scale
         var rect = GM.TileBounds(CenterTms, zoom);
         transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
-        center = rect.Center.ToVector3();
+        //center = rect.Center.ToVector3();
     }
 
     private void CreateSymbolTiles(Vector2d CenterTms, Vector2d CenterInMercator)

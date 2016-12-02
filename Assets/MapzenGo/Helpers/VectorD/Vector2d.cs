@@ -200,7 +200,7 @@ namespace UnityEngine
 
         public override string ToString()
         {
-            return this.x + " - " + this.y;
+            return x + " - " + y;
             //string fmt = "({0:D1}, {1:D1})";
             //object[] objArray = new object[2];
             //int index1 = 0;
@@ -212,7 +212,7 @@ namespace UnityEngine
             //__Boxed<double> local2 = (ValueType)this.y;
             //objArray[index2] = (object)local2;
 
-            return "not implemented";
+            //return "not implemented";
         }
 
         public string ToString(string format)

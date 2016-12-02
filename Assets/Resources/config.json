@@ -30,8 +30,8 @@
     },
     {
       "title": "Symboltest",
-      "url": "http://134.221.20.240:10733/test.json",
-      "IconUrl": "http://134.221.20.240:10733/test.json",
+      "url": "http://134.221.20.226:3999/test.json",
+      "IconUrl": "http://134.221.20.226:3999/test.json",
       "voiceCommand": "symbol",
       "useTransparency": true,
       "height": 1.1,

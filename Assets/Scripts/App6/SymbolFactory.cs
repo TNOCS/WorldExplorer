@@ -94,7 +94,7 @@ public class SymbolFactory : MonoBehaviour
         if (string.IsNullOrEmpty(baseUrl))
         {
             var uri = new Uri(Layer.Url);
-            baseUrl = uri.IsDefaultPort ? string.Format("{0}/", uri.Host) : string.Format("{0}:{1}/", uri.Host, uri.Port);
+            baseUrl = uri.IsDefaultPort ? string.Format("http://{0}/", uri.Host) : string.Format("http://{0}:{1}/", uri.Host, uri.Port);
         }
 
         AddLayer();

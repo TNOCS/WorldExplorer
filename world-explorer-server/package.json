@@ -30,6 +30,8 @@
   "homepage": "https://github.com/TNOCS/WorldExplorerServer#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "command-line-args": "^3.0.3",
+    "command-line-usage": "^3.0.7",
     "cors": "^2.8.1",
     "express": "^4.14.0",
     "ip": "^1.1.4",

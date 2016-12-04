@@ -17,10 +17,12 @@ namespace Assets.Scripts.Plugins
     public class SessionManager : Singleton<SessionManager>
     {
         const string NewSessionKeyword = "Join session ";
+        readonly string id = Guid.NewGuid().ToString();
         AppState appState = AppState.Instance;
         MqttClient client;
         string topic;
         string sessionName;
+        List<User> users = new List<User>();
 
         protected SessionManager()
         {
@@ -29,6 +31,7 @@ namespace Assets.Scripts.Plugins
         public void Init()
         {
             Debug.Log("Initializing SessionManager");
+            var mtd = gameObject.AddComponent<UnityMainThreadDispatcher>();
             InitMqtt();
             var sessions = new List<string> { "one", "two", "three" };
             sessions.ForEach(session => appState.Speech.AddKeyword(NewSessionKeyword + session, () => JoinSession(session)));
@@ -56,7 +59,7 @@ namespace Assets.Scripts.Plugins
             try
             {
                 Debug.Log("Connecting to MQTT");
-                client.Connect(Guid.NewGuid().ToString());
+                client.Connect(id);
             }
             catch
             {
@@ -108,14 +111,24 @@ namespace Assets.Scripts.Plugins
         }
 
         /// <summary>
+        /// Update the presence status.
+        /// </summary>
+        /// <param name="join">When true, join the session, otherwise, leave.</param>
+        public void UpdatePresence(bool join)
+        {
+
+        }
+
+        /// <summary>
         /// Send a JSON message as UTF8 bytes to a subtopic.
         /// </summary>
         /// <param name="subtopic"></param>
         /// <param name="json"></param>
-        public void SendJsonMessage(string subtopic, string json)
+        /// <param name="retain">Retain the message</param>
+        protected void SendJsonMessage(string subtopic, string json, bool retain = true)
         {
             Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));   
-            client.Publish(string.Format("{0}/{1}", sessionName, subtopic), Encoding.UTF8.GetBytes(json));
+            client.Publish(string.Format("{0}/{1}", sessionName, subtopic), Encoding.UTF8.GetBytes(json), uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, retain);
         }
     }
 }

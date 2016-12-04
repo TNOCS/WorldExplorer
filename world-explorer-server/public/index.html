@@ -44,7 +44,7 @@
         }
 
         function setupMqtt(sessionName) {
-            client = mqtt.connect("ws://cool3.sensorlab.tno.nl:8028");
+            client = mqtt.connect("ws://localhost:8028");
             client.on('connect', function() {
                 console.log("connected");
                 client.subscribe(sessionName + '/view')
@@ -73,7 +73,7 @@
               zoom: zoom
           };
           if (client) {
-              client.publish(sessionName + '/view', JSON.stringify(view));
+              client.publish(sessionName + '/view', JSON.stringify(view), { qos: 2, retain: true });
           }
           console.log(view);
         }

@@ -5,6 +5,7 @@ using System.Linq;
 using Assets.Scripts.Classes;
 using MapzenGo.Models.Plugins;
 using UniRx;
+using System.Collections;
 
 namespace Assets.Scripts
 {
@@ -60,13 +61,24 @@ namespace Assets.Scripts
             ResetMap();
         }
 
-        public void LoadConfig()
+        public void LoadConfig(string url)
         {
-            var targetFile = Resources.Load<TextAsset>("config");
-            var test = new JSONObject(targetFile.text);
+            string json;
+
+            WWW www = new WWW(url);
+
+            while (!www.isDone) Thread.Sleep(50);
+
+            if (!string.IsNullOrEmpty(www.error)) {
+                var targetFile = Resources.Load<TextAsset>("config");
+                json = targetFile.text;
+            } else
+            {
+                json = www.text;
+            }
 
             Config = new AppConfig();
-            Config.FromJson(test);
+            Config.FromJson(new JSONObject(json));
         }
 
         public void ResetMap(ViewState view = null)
@@ -148,14 +160,14 @@ namespace Assets.Scripts
          
             // init map
 #if DEBUG
-            var tm = World.AddComponent<TileManager>(); 
-            tm._mapzenUrl = "http://169.254.80.80:10733/{0}/{1}/{2}/{3}.{4}";
+            var tm = World.AddComponent<TileManager>();
 #else
             var tm = World.AddComponent<CachedTileManager>();
-            tm._key = "vector-tiles-dB21RAF";
             Speech.AddKeyword("Clear cache", () => { tm.ClearCache(); });
-            tm._mapzenUrl = "http://134.221.20.226:3999/{0}/{1}/{2}/{3}.{4}";
+            //tm._key = "vector-tiles-dB21RAF";
+            //tm._mapzenUrl = "http://134.221.20.226:3999/{0}/{1}/{2}/{3}.{4}";
 #endif
+            tm._mapzenUrl = "http://" + Config.TileServer + "/{0}/{1}/{2}/{3}.{4}"; // "http://169.254.80.80:10733/{0}/{1}/{2}/{3}.{4}";
             tm.Latitude = iv.Lat;
             tm.Longitude = iv.Lon;
             tm.Range = iv.Range;

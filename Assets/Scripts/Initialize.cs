@@ -11,6 +11,8 @@ using Assets.Scripts.Utils;
 
 public class Initialize : MonoBehaviour
 {
+    [SerializeField]
+    private string configUrl = "https://dl.dropboxusercontent.com/s/efkzvthcoz307vh/config_erik.json?dl=0";
     public const string SwitchToSpeech = "Switch to ";
 
     // Use this for initialization
@@ -28,10 +30,10 @@ public class Initialize : MonoBehaviour
     {
         Debug.Log("Waking up...");
         // We need this so the MQTT thread can receive messages
-        gameObject.AddComponent<UnityMainThreadDispatcher>();
+        // var mtd = gameObject.AddComponent<UnityMainThreadDispatcher>();
         _cursorFab = Resources.Load("Prefabs\\Input\\Cursor") as GameObject;
         appState = AppState.Instance;
-        appState.LoadConfig();
+        appState.LoadConfig(configUrl);
         Hud = GameObject.Find("HUDCanvas");
         audioCommands = new Dictionary<string, string>();
         font = Resources.GetBuiltinResource<Font>("Arial.ttf");

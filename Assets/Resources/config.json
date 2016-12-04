@@ -39,9 +39,9 @@
       "type": "geojson",
       "Enabled": true
     },
-	{
+    {
       "title": "Police",
-	    "url": "http://134.221.20.240:3000/api/layers/politie.actual",
+      "url": "http://134.221.20.240:3000/api/layers/politie.actual",
       "IconUrl": "http://134.221.20.240:3000/images/politie.png",
       "voiceCommand": "police",
       "useTransparency": true,
@@ -201,6 +201,7 @@
     }
   ],
   "tileServer": "",
+  "mqttServer": "localhost",
   "mqttServer": "cool3.sensorlab.tno.nl",
   "mqttPort": "8026",
   "initialView": "Detail",

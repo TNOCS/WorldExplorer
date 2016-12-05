@@ -60,7 +60,7 @@ public class GestureManager : Singleton<GestureManager>
         ResetGestureRecognizers();
     }
 
-    void OnDestroy()
+    new void OnDestroy()
     {
         // 2.b: Unregister the Tapped and Navigation events on the NavigationRecognizer.
         NavigationRecognizer.TappedEvent -= NavigationRecognizer_TappedEvent;

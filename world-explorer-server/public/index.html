@@ -47,8 +47,9 @@
             client = mqtt.connect("ws://localhost:8028");
             client.on('connect', function() {
                 console.log("connected");
-                client.subscribe(sessionName + '/view')
-                client.publish(sessionName + '/presence', 'Hello mqtt')
+                client.subscribe(sessionName + '/view');
+                client.subscribe(sessionName + '/presence/#');
+                client.publish(sessionName + '/presence', 'Hello mqtt');
             })
 
             client.on("message", function(topic, payload) {

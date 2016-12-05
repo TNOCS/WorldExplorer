@@ -105,9 +105,7 @@ public class SymbolFactory : MonoBehaviour
         //    {
         //        RemoveLayer();
         //        AddLayer();
-
         //    }, null, interval, interval);
-
         //}
     }
 

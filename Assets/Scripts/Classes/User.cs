@@ -8,21 +8,24 @@ namespace Assets.Scripts.Classes
 
     public class User
     {
-        private Guid id;
+        private string id;
         private Color selectionColor;
         private string selectedFeatureId;
+        private DateTime lastUpdateReceived;
 
-        public User(Guid id)
+        public User()
+        {
+            id = Guid.NewGuid().ToString();
+            LastUpdateReceived = DateTime.UtcNow;
+        }
+
+        public User(string id)
         {
             this.id = id;
+            LastUpdateReceived = DateTime.UtcNow;
         }
 
-        public User(Guid id, Color selectionColor) : this(id)
-        {
-            this.selectionColor = selectionColor;
-        }
-
-        public Guid Id { get { return id; } }
+        public string Id { get { return id; } }
 
         public Color SelectionColor
         {
@@ -34,6 +37,56 @@ namespace Assets.Scripts.Classes
         {
             get { return selectedFeatureId; }
             set { selectedFeatureId = value; }
+        }
+
+        /// <summary>
+        /// Last update in UTC time
+        /// </summary>
+        public DateTime LastUpdateReceived
+        {
+            get { return lastUpdateReceived; }
+            set { lastUpdateReceived = value; }
+        }
+
+        public string Name { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format(@"id: {0}, name: {6}, selectedFeatureId: {1}, selectionColor: r: {2}, g: {3}, b: {4}, a: {5}",
+                    id, selectedFeatureId, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name);
+        }
+
+        public string ToJSON()
+        {
+            if (string.IsNullOrEmpty(selectedFeatureId))
+            {
+                // Only send the ID
+                return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"" }}", id, Name);
+            }
+            else
+            {
+                return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{6}"" }}, ""selectedFeatureId"": ""{1}"", ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }} }}",
+                    id, selectedFeatureId, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name);
+            }
+        }
+
+        public static User FromJSON(string json)
+        {
+            var jsonObj = new JSONObject(json);
+            var user = new User(jsonObj.GetString("id"));
+            if (jsonObj.HasField("selectedFeatureId"))
+            {
+                user.selectedFeatureId = jsonObj.GetString("selectedFeatureId");
+                if (jsonObj.HasField("selectionColor"))
+                {
+                    var a = jsonObj["selectionColor"].GetFloat("a", 1);
+                    var r = jsonObj["selectionColor"].GetFloat("r", 1);
+                    var g = jsonObj["selectionColor"].GetFloat("g", 1);
+                    var b = jsonObj["selectionColor"].GetFloat("b", 1);
+                    user.selectionColor = new Color(r, g, b, a);
+                }
+            }
+            return user;
         }
     }
 }

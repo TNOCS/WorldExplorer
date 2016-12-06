@@ -180,7 +180,7 @@ namespace Assets.Scripts.Plugins
         {
             var now = DateTime.UtcNow;
             if (users.Count == 0) return;
-            for (var i = users.Count - 1; i >= 0; i++)
+            for (var i = users.Count - 1; i >= 0; i--)
             {
                 var user = users[i];
                 if (now - user.LastUpdateReceived > TimeSpan.FromSeconds(25))

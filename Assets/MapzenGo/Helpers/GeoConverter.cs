@@ -34,21 +34,6 @@ namespace MapzenGo.Helpers
         }
 
         /// <summary>
-        /// Converts pixel coordinates in given zoom level of pyramid to EPSG:900913
-        /// </summary>
-        /// <param name="p"></param>
-        /// <param name="zoom"></param>
-        /// <returns></returns>
-        public static Vector2d PixelsToMeters(Vector2d p, int zoom)
-        {
-            var res = Resolution(zoom);
-            var met = new Vector2d();
-            met.x = (p.x * res - OriginShift);
-            met.y = -(p.y * res - OriginShift);
-            return met;
-        }
-
-        /// <summary>
         /// Converts EPSG:900913 to pyramid pixel coordinates in given zoom level
         /// </summary>
         /// <param name="m"></param>
@@ -61,6 +46,21 @@ namespace MapzenGo.Helpers
             pix.x = ((m.x + OriginShift) / res);
             pix.y = ((-m.y + OriginShift) / res);
             return pix;
+        }
+
+        /// <summary>
+        /// Converts pixel coordinates in given zoom level of pyramid to EPSG:900913
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="zoom"></param>
+        /// <returns></returns>
+        public static Vector2d PixelsToMeters(Vector2d p, int zoom)
+        {
+            var res = Resolution(zoom);
+            var met = new Vector2d();
+            met.x = (p.x * res - OriginShift);
+            met.y = -(p.y * res - OriginShift);
+            return met;
         }
 
         /// <summary>

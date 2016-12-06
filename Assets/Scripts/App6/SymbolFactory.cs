@@ -28,8 +28,11 @@ namespace Symbols
         public List<Dictionary<string, object>> Stats { get; set; }
         public Geometry geometry { get; set; }
         public Vector2d tilePoint { get; set; }
-        // lat lon
-        public Vector2d lngLat { get; set; }
+        public Vector2d lngLat { get; protected set; }
+
+        public void SetLatLon(Vector2d lngLat) {
+            this.lngLat = lngLat;
+        }
 
         /// <summary>
         /// Only get the id and latitude/longitude as JSON: Optionally, specify the image URL too (icon).
@@ -188,9 +191,9 @@ namespace Symbols
             }
 
             // Fill newly created tiles with symbols if present
-            foreach (Feature c in geoJson.features)
+            foreach (Feature f in geoJson.features)
             {
-                StartCoroutine(createSymbols(c));
+                StartCoroutine(createSymbols(f));
             }
         }
 
@@ -244,9 +247,11 @@ namespace Symbols
             symbol.name = symbolname;
             var dotMerc = GM.LatLonToMeters(f.lngLat.y, f.lngLat.x);
             var localMercPos = (dotMerc - CenterInMercator);
-            symbol.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
+            //Debug.Log(string.Format("Local merc pos x: {0}, y: {1}", localMercPos.x, localMercPos.y));
+
+            // symbol.transform.position = new Vector3((float)localMercPos.x, (float)localMercPos.y);
             // var target = new GameObject("symbol-Target");
-            target.transform.position = localMercPos.ToVector3();
+            target.transform.position = symbol.transform.position = localMercPos.ToVector3();
             target.transform.SetParent(transform, false);
             var sprite = symbol.AddComponent<SpriteRenderer>();
             var w = www.texture.width;
@@ -360,7 +365,7 @@ namespace Symbols
                 {
                     case "Point":
                         f.tilePoint = parseTile(f.geometry.coordinates);
-                        f.lngLat = new Vector2d(f.geometry.coordinates.list[0].f, f.geometry.coordinates.list[1].f);
+                        f.SetLatLon(new Vector2d(f.geometry.coordinates.list[0].f, f.geometry.coordinates.list[1].f));
                         break;
                 }
 

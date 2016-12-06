@@ -82,12 +82,12 @@ namespace Assets.Scripts.Plugins
                 {
                     var msg = Encoding.UTF8.GetString(e.Message);
                     var subtopic = e.Topic.Substring(topic.Length-1);
-                    Debug.Log(string.Format("Received message on topic {0}: {1}", subtopic, msg));
                     if (subtopic.StartsWith("presence/"))
                     {
                         UpdateUsersPresence(msg);
                         return;
                     }
+                    Debug.Log(string.Format("Received message on topic {0}: {1}", subtopic, msg));
                     switch (subtopic)
                     {
                         case "view":
@@ -126,7 +126,7 @@ namespace Assets.Scripts.Plugins
 
         protected void Heartbeat()
         {
-            InvokeRepeating("UpdatePresence", 5, 2);
+            InvokeRepeating("UpdatePresence", 5, 4);
         }
 
         /// <summary>

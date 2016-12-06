@@ -7,6 +7,9 @@
     "postinstall": "typings i && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "tile_server": "./bin/run.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TNOCS/WorldExplorerServer.git"
@@ -27,6 +30,8 @@
   "homepage": "https://github.com/TNOCS/WorldExplorerServer#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "command-line-args": "^3.0.3",
+    "command-line-usage": "^3.0.7",
     "cors": "^2.8.1",
     "express": "^4.14.0",
     "ip": "^1.1.4",

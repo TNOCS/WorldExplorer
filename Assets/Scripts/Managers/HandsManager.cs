@@ -108,7 +108,7 @@ namespace Assets.Scripts.Utils
             GestureManager.Instance.ResetGestureRecognizers();
         }
 
-        void OnDestroy()
+        new void OnDestroy()
         {
             InteractionManager.SourceDetected -= InteractionManager_SourceDetected;
             InteractionManager.SourceLost -= InteractionManager_SourceLost;

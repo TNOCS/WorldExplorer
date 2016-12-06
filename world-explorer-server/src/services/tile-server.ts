@@ -40,6 +40,7 @@ export class TileServer implements ITileService {
    * @memberOf TileServer
    */
   constructor(port: number, private url: string, private path: string) {
+    if (!url) { console.error('URL is not defined!'); }
     this.useInternet = !url;
     if (!fs.existsSync(path)) { fs.mkdirSync(path); }
     if (!assets.hasOwnProperty('features') || assets.features.length === 0) { return; }

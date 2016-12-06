@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using MapzenGo.Helpers.VectorD;
 using UnityEngine;
 
@@ -21,7 +18,12 @@ namespace MapzenGo.Helpers
             return LatLonToMeters(v.x, v.y);
         }
 
-        //Converts given lat/lon in WGS84 Datum to XY in Spherical Mercator EPSG:900913
+        /// <summary>
+        /// Converts given lat/lon in WGS84 Datum to XY in Spherical Mercator EPSG:900913
+        /// </summary>
+        /// <param name="lat"></param>
+        /// <param name="lon"></param>
+        /// <returns></returns>
         public static Vector2d LatLonToMeters(double lat, double lon)
         {
             var p = new Vector2d();
@@ -31,17 +33,12 @@ namespace MapzenGo.Helpers
             return new Vector2d(p.x, p.y);
         }
 
-        //Converts pixel coordinates in given zoom level of pyramid to EPSG:900913
-        public static Vector2d PixelsToMeters(Vector2d p, int zoom)
-        {
-            var res = Resolution(zoom);
-            var met = new Vector2d();
-            met.x = (p.x * res - OriginShift);
-            met.y = -(p.y * res - OriginShift);
-            return met;
-        }
-
-        //Converts EPSG:900913 to pyramid pixel coordinates in given zoom level
+        /// <summary>
+        /// Converts EPSG:900913 to pyramid pixel coordinates in given zoom level
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="zoom"></param>
+        /// <returns></returns>
         public static Vector2d MetersToPixels(Vector2d m, int zoom)
         {
             var res = Resolution(zoom);
@@ -51,7 +48,26 @@ namespace MapzenGo.Helpers
             return pix;
         }
 
-        //Returns a TMS (NOT Google!) tile covering region in given pixel coordinates
+        /// <summary>
+        /// Converts pixel coordinates in given zoom level of pyramid to EPSG:900913
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="zoom"></param>
+        /// <returns></returns>
+        public static Vector2d PixelsToMeters(Vector2d p, int zoom)
+        {
+            var res = Resolution(zoom);
+            var met = new Vector2d();
+            met.x = (p.x * res - OriginShift);
+            met.y = -(p.y * res - OriginShift);
+            return met;
+        }
+
+        /// <summary>
+        /// Returns a TMS (NOT Google!) tile covering region in given pixel coordinates
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
         public static Vector2d PixelsToTile(Vector2d p)
         {
             var t = new Vector2d();
@@ -66,21 +82,35 @@ namespace MapzenGo.Helpers
             return new Vector2d(p.x, mapSize - p.y);
         }
 
-        //Returns tile for given mercator coordinates
+        /// <summary>
+        /// Returns tile for given mercator coordinates
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="zoom"></param>
+        /// <returns></returns>
         public static Vector2d MetersToTile(Vector2d m, int zoom)
         {
             var p = MetersToPixels(m, zoom);
             return PixelsToTile(p);
         }
 
-        //Returns bounds of the given tile in EPSG:900913 coordinates
+        /// <summary>
+        /// Returns bounds of the given tile in EPSG:900913 coordinates
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="zoom"></param>
+        /// <returns></returns>
         public static RectD TileBounds(Vector2d t, int zoom)
         {
             var min = PixelsToMeters(new Vector2d(t.x * TileSize, t.y * TileSize), zoom);
             var max = PixelsToMeters(new Vector2d((t.x + 1) * TileSize, (t.y + 1) * TileSize), zoom);
             return new RectD(min, max - min);
         }
-
+        /// <summary>
+        /// Converts meters to a Latitude (y) and Longitude (x).
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
         public static Vector2d MetersToLatLon(Vector2d m)
         {
             var ll = new Vector2d();
@@ -99,7 +129,11 @@ namespace MapzenGo.Helpers
         //    return new RectD(min.x, min.y, Math.Abs(max.x - min.x), Math.Abs(max.y - min.y));
         //}
 
-        //Resolution (meters/pixel) for given zoom level (measured at Equator)
+        /// <summary>
+        /// Resolution (meters/pixel) for given zoom level (measured at Equator) 
+        /// </summary>
+        /// <param name="zoom"></param>
+        /// <returns></returns>
         public static double Resolution(int zoom)
         {
             return InitialResolution / (Math.Pow(2, zoom));

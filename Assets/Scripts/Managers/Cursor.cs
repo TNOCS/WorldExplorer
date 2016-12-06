@@ -1,15 +1,10 @@
 ﻿using HoloToolkit.Unity;
-using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.VR.WSA.Input;
 
 public class Cursor : HoloToolkit.Unity.CursorManager
 {
-    private MeshRenderer meshRenderer;
-
-    private bool t = false;
-
+    // private MeshRenderer meshRenderer;
 
     // Represents the hologram that is currently being gazed at.
     public GameObject FocusedObject { get; private set; }

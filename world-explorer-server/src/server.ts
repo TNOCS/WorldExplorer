@@ -4,40 +4,42 @@ import * as cors from 'cors';
 import * as ip from 'ip';
 import { ITile } from './models/tile-service';
 import { TileServer } from './services/tile-server';
-import { IServerConfig } from './models/config';
+import { ICommandLineOptions } from './cli';
 
-console.log(__dirname);
-console.log(__filename);
-console.log(process.cwd());
+const log = console.log;
 
-const config: IServerConfig = require(process.cwd() + '/config.json');
-config.cache = path.resolve(config.cache ? config.cache : 'cache');
+// console.log(__dirname);
+// console.log(__filename);
+// console.log(process.cwd());
+export class Server {
+  constructor(options: ICommandLineOptions) {
+    const app = express();
 
-const app = express();
+    app.use(cors());
+    app.use(express.static(path.join(process.cwd(), 'public')));
 
-app.use(cors());
-app.use(express.static(path.join(process.cwd(), 'public')));
+    let tileServer = new TileServer(options.port, options.url, options.cache);
 
-let tileServer = new TileServer(config.port, config.url, config.cache);
+    app.get('/:layers/:z/:x/:y.json', (req, res) => {
+      let tile = <ITile> {
+        layers: (<string> req.params.layers).split(','),
+        x: req.params.x,
+        y: req.params.y,
+        zoom: req.params.z
+      };
+      tileServer.getTile(tile, (err, collection) => {
+        if (err) {
+          console.error('Error getting tile: ' + JSON.stringify(tile, null, 2));
+          console.error(err);
+          return;
+        }
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(collection));
+      });
+    });
 
-app.get('/:layers/:z/:x/:y.json', (req, res) => {
-  let tile = <ITile> {
-    layers: (<string> req.params.layers).split(','),
-    x: req.params.x,
-    y: req.params.y,
-    zoom: req.params.z
-  };
-  tileServer.getTile(tile, (err, collection) => {
-    if (err) {
-      console.error('Error getting tile: ' + JSON.stringify(tile, null, 2));
-      console.error(err);
-      return;
-    }
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(collection));
-  });
-});
-
-app.listen(config.port, () => {
-  console.log(`Listening on http://${ip.address()}:${config.port}...`);
-});
+    app.listen(options.port, () => {
+      log(`Listening on http://${ip.address()}:${options.port}...`);
+    });
+  }
+}

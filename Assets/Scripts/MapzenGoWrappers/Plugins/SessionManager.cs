@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Text;
 using uPLibrary.Networking.M2Mqtt;
 using System.Collections.Generic;
+using Assets.Scripts.Classes;
+using Symbols;
 
 namespace Assets.Scripts.Plugins
 {
@@ -16,9 +18,15 @@ namespace Assets.Scripts.Plugins
     public class SessionManager : Singleton<SessionManager>
     {
         const string NewSessionKeyword = "Join session ";
-        AppState appState = AppState.Instance;
-        MqttClient client;
-        string topic;
+        protected readonly AppState appState = AppState.Instance;
+        protected readonly User me = new User();
+        protected MqttClient client;
+        protected string topic;
+        protected string sessionName;
+        /// <summary>
+        /// Other users in the session
+        /// </summary>
+        protected List<User> users = new List<User>();
 
         protected SessionManager()
         {
@@ -27,6 +35,9 @@ namespace Assets.Scripts.Plugins
         public void Init()
         {
             Debug.Log("Initializing SessionManager");
+            me.Name = appState.Config.UserName;
+            me.SelectionColor = appState.Config.SelectionColor;
+            var mtd = gameObject.AddComponent<UnityMainThreadDispatcher>();
             InitMqtt();
             var sessions = new List<string> { "one", "two", "three" };
             sessions.ForEach(session => appState.Speech.AddKeyword(NewSessionKeyword + session, () => JoinSession(session)));
@@ -36,10 +47,12 @@ namespace Assets.Scripts.Plugins
         public void JoinSession(string name)
         {
             if (!client.IsConnected || string.IsNullOrEmpty(name)) return;
+            sessionName = name;
             if (!string.IsNullOrEmpty(topic)) client.Unsubscribe(new[] { topic });
             topic = (name + "/#").ToLower();
             Debug.Log("Client is joining session " + topic);
             client.Subscribe(new string[] { topic }, new byte[] { uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+            Heartbeat();
         }
 
         protected void InitMqtt()
@@ -53,7 +66,7 @@ namespace Assets.Scripts.Plugins
             try
             {
                 Debug.Log("Connecting to MQTT");
-                client.Connect(Guid.NewGuid().ToString());
+                client.Connect(me.Id);
             }
             catch
             {
@@ -68,8 +81,14 @@ namespace Assets.Scripts.Plugins
                 UnityMainThreadDispatcher.Instance().Enqueue(() =>
                 {
                     var msg = Encoding.UTF8.GetString(e.Message);
-                    Debug.Log("Received message: " + msg);
-                    switch (e.Topic)
+                    var subtopic = e.Topic.Substring(topic.Length-1);
+                    if (subtopic.StartsWith("presence/"))
+                    {
+                        UpdateUsersPresence(msg);
+                        return;
+                    }
+                    Debug.Log(string.Format("Received message on topic {0}: {1}", subtopic, msg));
+                    switch (subtopic)
                     {
                         case "view":
                             SetView(msg);
@@ -86,17 +105,122 @@ namespace Assets.Scripts.Plugins
 
         protected void SetView(string msg)
         {
+            var av = appState.Config.ActiveView;
             var view = new JSONObject(msg);
-            var iv = appState.Config.ActiveView;
-            iv.Lat = view.GetFloat("Lat");
-            iv.Lon = view.GetFloat("Lon");
-            iv.Zoom = view.GetInt("Zoom");
+            var lat = view.GetFloat("lat");
+            var lon = view.GetFloat("lon");
+            var zoom = view.GetInt("zoom");
+            var range = view.GetInt("range", av.Range);
+            if (av.Equal(lat, lon, zoom, range)) return;
+            av.SetView(lat, lon, zoom, range);
             if (!appState.TileManager) return;
-            appState.TileManager.Latitude = iv.Lat;
-            appState.TileManager.Longitude = iv.Lon;
-            appState.TileManager.Zoom = iv.Zoom;
-            appState.ResetMap();
+            appState.ResetMap(av);
         }
 
+        public void UpdateView(ViewState view)
+        {
+            SendJsonMessage("view", string.Format("{ lat: {0}, lon: {1}, zoom: {2}, range: {3} }", view.Lat, view.Lon, view.Zoom, view.Range));
+        }
+
+        #region Room management
+
+        protected void Heartbeat()
+        {
+            InvokeRepeating("UpdatePresence", 5, 4);
+        }
+
+        /// <summary>
+        /// Update users in the session.
+        /// </summary>
+        /// <param name="json"></param>
+        protected void UpdateUsersPresence(string json)
+        {
+            var user = User.FromJSON(json);
+            if (user.Id == me.Id) return; // Do not update yourself
+
+            var found = false;
+            for (var i = 0; i < users.Count; i++)
+            {
+                var existingUser = users[i];
+                if (user.Id != existingUser.Id) continue;
+                found = true;
+                if (user.SelectedFeature.id != existingUser.SelectedFeature.id)
+                {
+                    UpdateUserSelection(existingUser.SelectedFeature, user);
+                }
+                users[i] = user;
+            }
+            if (!found) users.Add(user);
+        }
+
+        /// <summary>
+        /// A user in the session has changed its selection. Make it visible.
+        /// </summary>
+        /// <param name="selectedFeature"></param>
+        /// <param name="user">If user does not exist, remove the current selection.</param>
+        protected void UpdateUserSelection(Feature selectedFeature, User user = null)
+        {
+
+        }
+
+        /// <summary>
+        /// Update the presence status.
+        /// </summary>
+        protected void UpdatePresence()
+        {
+            var subtopic = string.Format("presence/{0}", me.Id);
+            SendJsonMessage(subtopic, me.ToJSON(), false);
+            RemoveOldUsersFromSession();
+        }
+
+        /// <summary>
+        /// Remove stale users from the session
+        /// </summary>
+        protected void RemoveOldUsersFromSession()
+        {
+            var now = DateTime.UtcNow;
+            for (var i = users.Count - 1; i >= 0; i++)
+            {
+                var user = users[i];
+                if (now - user.LastUpdateReceived > TimeSpan.FromSeconds(25))
+                {
+                    if (!string.IsNullOrEmpty(user.SelectedFeature.id)) UpdateUserSelection(user.SelectedFeature);
+                    users.RemoveAt(i);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set or unset the selected feature.
+        /// </summary>
+        /// <param name="feature"></param>
+        /// <param name="isSelected"></param>
+        public void UpdateSelectedFeature(Feature feature, bool isSelected)
+        {
+            if (isSelected)
+            {
+                me.SelectedFeature = feature;
+                UpdatePresence();
+            }
+            else
+            {
+                UpdatePresence();
+                me.SelectedFeature = null;
+            }
+        }
+
+        #endregion Room management
+
+        /// <summary>
+        /// Send a JSON message as UTF8 bytes to a subtopic.
+        /// </summary>
+        /// <param name="subtopic"></param>
+        /// <param name="json"></param>
+        /// <param name="retain">Retain the message</param>
+        protected void SendJsonMessage(string subtopic, string json, bool retain = true)
+        {
+            Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));   
+            client.Publish(string.Format("{0}/{1}", sessionName, subtopic), Encoding.UTF8.GetBytes(json), uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, retain);
+        }
     }
 }

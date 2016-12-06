@@ -1,13 +1,12 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
-using MapzenGo.Models.Settings;
+﻿using UnityEngine;
 using MapzenGo.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Classes;
 using MapzenGo.Models.Plugins;
 using UniRx;
+using System.Collections;
+using Symbols;
 
 namespace Assets.Scripts
 {
@@ -16,37 +15,34 @@ namespace Assets.Scripts
         public const string ShowLayerSpeech = "Show ";
         public const string HideLayerSpeech = "Show ";
         public const string ToggleSpeech = "Toggle ";
-
         public GameObject World;
         public GameObject Terrain;
         public GameObject Table;
         public GameObject Camera;
         public GameObject Map;
         public GameObject Layers;
-
         public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
-
-        protected AppState()
-        {
-        } // guarantee this will be always a singleton only - can't use the constructor!
-
         public Vector3 Center { get; set; }
         public TileManager TileManager { get; set; }
         public AppConfig Config { get; set; }
         public ViewState State { get; set; }
         public SpeechManager Speech { get; set; }
-
         public List<string> MapzenTags = new List<string>(new string[] { "buildings", "water", "roads", "pois", "landuse" });
+
+        protected AppState() {} // guarantee this will be always a singleton only - can't use the constructor!
+
+        public void Awake()
+        {
+            Speech = SpeechManager.Instance;
+        }
 
         public void Init()
         {
-            Speech = new SpeechManager();
             MapzenTags.ForEach(k => Speech.AddKeyword(ToggleSpeech + k, () => ToggleMapzen(k)));
         }
 
         private void ToggleMapzen(string tag)
         {
-
             if (Config == null || Config.ActiveView == null) return;
             if (Config.ActiveView.Mapzen.Contains(tag))
             {
@@ -59,17 +55,36 @@ namespace Assets.Scripts
             ResetMap();
         }
 
-        public void LoadConfig()
+        public void LoadConfig(string url)
         {
-            var targetFile = Resources.Load<TextAsset>("config");
-            var test = new JSONObject(targetFile.text);
+            string json;
+
+            WWW www = new WWW(url);
+
+            while (!www.isDone) Thread.Sleep(50);
+
+            if (!string.IsNullOrEmpty(www.error)) {
+                var targetFile = Resources.Load<TextAsset>("config");
+                json = targetFile.text;
+            } else
+            {
+                json = www.text;
+            }
 
             Config = new AppConfig();
-            Config.FromJson(test);
+            Config.FromJson(new JSONObject(json));
         }
 
-        public void ResetMap()
+        public void ResetMap(ViewState view = null)
         {
+            if (view != null)
+            {
+                TileManager.Latitude = view.Lat;
+                TileManager.Longitude = view.Lon;
+                TileManager.Zoom = view.Zoom;
+                TileManager.Range = view.Range;
+            }
+
             Config.Layers.ForEach(l =>
             {
                 DestroyGeojsonLayer(l);
@@ -98,12 +113,11 @@ namespace Assets.Scripts
             Terrain = new GameObject("terrain");
             Terrain.transform.position = new Vector3(0f, 0f, 0f);
 
-
             Table = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            Table.name = "Table";
             Table.transform.position = new Vector3(0f, 0.7f, 0f);
             Table.transform.localScale = new Vector3(t.TableSize, t.TableHeight, t.TableSize);
             Table.transform.SetParent(Terrain.transform, false);
-
 
 
             Map = new GameObject("Map");
@@ -133,7 +147,6 @@ namespace Assets.Scripts
             var mapScale = mapScales[i - 1];
             Map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
-
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);
             var gazeManager = World.AddComponent<HoloToolkit.Unity.GazeManager>();
@@ -141,14 +154,14 @@ namespace Assets.Scripts
          
             // init map
 #if DEBUG
-            var tm = World.AddComponent<TileManager>(); 
-            tm._mapzenUrl = "http://169.254.80.80:10733/{0}/{1}/{2}/{3}.{4}";
+            var tm = World.AddComponent<TileManager>();
 #else
             var tm = World.AddComponent<CachedTileManager>();
-            tm._key = "vector-tiles-dB21RAF";
             Speech.AddKeyword("Clear cache", () => { tm.ClearCache(); });
-            tm._mapzenUrl = "http://134.221.20.226:3999/{0}/{1}/{2}/{3}.{4}";
+            //tm._key = "vector-tiles-dB21RAF";
+            //tm._mapzenUrl = "http://134.221.20.226:3999/{0}/{1}/{2}/{3}.{4}";
 #endif
+            tm._mapzenUrl = "http://" + Config.TileServer + "/{0}/{1}/{2}/{3}.{4}"; // "http://169.254.80.80:10733/{0}/{1}/{2}/{3}.{4}";
             tm.Latitude = iv.Lat;
             tm.Longitude = iv.Lon;
             tm.Range = iv.Range;
@@ -183,14 +196,12 @@ namespace Assets.Scripts
                 var buildingFactory = buildings.AddComponent<BuildingFactory>();
             }
 
-
             //var flatBuildings = new GameObject("FlatBuildingFactory");
             //flatBuildings.transform.SetParent(factories.transform, false);
             //var flatBuildingFactory = flatBuildings.AddComponent<FlatBuildingFactory>();
 
             if (iv.Mapzen.Contains("roads"))
             {
-
                 var roads = new GameObject("RoadFactory");
                 roads.transform.SetParent(factories.transform, false);
                 var roadFactory = roads.AddComponent<RoadFactory>();
@@ -202,9 +213,12 @@ namespace Assets.Scripts
                 water.transform.SetParent(factories.transform, false);
                 var waterFactory = water.AddComponent<WaterFactory>();
             }
-            //var boundary = new GameObject("BoundaryFactory");
-            //boundary.transform.SetParent(factories.transform, false);
-            //var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
+            if (iv.Mapzen.Contains("boundaries"))
+            {
+                var boundary = new GameObject("BoundaryFactory");
+                boundary.transform.SetParent(factories.transform, false);
+                var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
+            }
 
             if (iv.Mapzen.Contains("landuse"))
             {
@@ -213,9 +227,12 @@ namespace Assets.Scripts
                 var landuseFactory = landuse.AddComponent<LanduseFactory>();
             }
 
-            var places = new GameObject("PlacesFactory");
-            places.transform.SetParent(factories.transform, false);
-            var placesFactory = places.AddComponent<PlacesFactory>();
+            if (iv.Mapzen.Contains("places"))
+            {
+                var places = new GameObject("PlacesFactory");
+                places.transform.SetParent(factories.transform, false);
+                var placesFactory = places.AddComponent<PlacesFactory>();
+            }
 
             if (iv.Mapzen.Contains("pois"))
             {
@@ -223,19 +240,18 @@ namespace Assets.Scripts
                 pois.transform.SetParent(factories.transform, false);
                 var poisFactory = pois.AddComponent<PoiFactory>();
             }
+
             if (iv.Mapzen.Contains("assets")) // assets
             {
                 var models = new GameObject("ModelFactory");
                 models.transform.SetParent(factories.transform, false);
                 var modelFactory = models.AddComponent<ModelFactory>();
                 modelFactory.scale = Table.transform.localScale.x;
-                //modelFactory.scale = 2;
                 modelFactory.BundleURL = "http://134.221.20.226:3999/assets/buildings/eindhoven";
                 modelFactory.version = 6;
             }
 
             #endregion
-
 
             Layers = new GameObject("Layers");
             Layers.transform.SetParent(Table.transform);
@@ -249,8 +265,6 @@ namespace Assets.Scripts
                     InitGeojsonLayer(l);
                 }
             });
-
-           
 #endregion
 
 #region TILE PLUGINS
@@ -271,7 +285,6 @@ namespace Assets.Scripts
             foreach (var tl in Config.Layers.Where(k => { return k.Type.ToLower() == "tilelayer"; }))
             {
                 Speech.AddKeyword(ShowLayerSpeech + tl.VoiceCommand, () => {
-
                     if (tl.Group != null)
                     {
                         var ll = Config.Layers.Where(k => k.Type.ToLower() == "tilelayer" && k.Group == tl.Group).Select(k => k.Title);
@@ -354,7 +367,6 @@ namespace Assets.Scripts
                     l._active = true;
 
                     var symbolFactory = layerObject.AddComponent<SymbolFactory>();
-                    //symbolFactory.baseUrl = "http://gamelab.tno.nl/Missieprep/";
                     symbolFactory.geojson = success.text;
                     symbolFactory.zoom = av.Zoom;
                     symbolFactory.Latitude = av.Lat;

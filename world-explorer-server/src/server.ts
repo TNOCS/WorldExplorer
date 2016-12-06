@@ -18,7 +18,7 @@ export class Server {
     app.use(cors());
     app.use(express.static(path.join(process.cwd(), 'public')));
 
-    let tileServer = new TileServer(options.port, options.url, options.cache);
+    let tileServer = new TileServer(options.port, options.url, options.cache, options.server);
 
     app.get('/:layers/:z/:x/:y.json', (req, res) => {
       let tile = <ITile> {
@@ -39,7 +39,7 @@ export class Server {
     });
 
     app.listen(options.port, () => {
-      log(`Listening on http://${ip.address()}:${options.port}...`);
+      log(`Listening on ${options.server || 'http://' + ip.address()}:${options.port}...`);
     });
   }
 }

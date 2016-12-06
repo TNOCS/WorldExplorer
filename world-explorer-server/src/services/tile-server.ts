@@ -34,17 +34,19 @@ export class TileServer implements ITileService {
   /**
    * Creates an instance of TileServer.
    * 
-   * @param {string} url: URL for requesting more data
-   * @param {string} path: absolute base path to the cached data 
+   * @param {number} port
+   * @param {string} url
+   * @param {string} path: absolute base path to the cached data
+   * @param {string} [server] IP address, e.g. http://...
    * 
    * @memberOf TileServer
    */
-  constructor(port: number, private url: string, private path: string) {
+  constructor(port: number, private url: string, private path: string, private server?: string) {
     if (!url) { console.error('URL is not defined!'); }
     this.useInternet = !url;
     if (!fs.existsSync(path)) { fs.mkdirSync(path); }
     if (!assets.hasOwnProperty('features') || assets.features.length === 0) { return; }
-    this.assetService = new AssetTileService(port, 'assets', assets);
+    this.assetService = new AssetTileService(port, 'assets', server, assets);
   }
 
   public getTile(tile: ITile, cb: (error: Error, collection: { [key: string]: FeatureCollection }) => void) {

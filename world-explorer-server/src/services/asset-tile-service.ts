@@ -1,6 +1,5 @@
 import * as ip from 'ip';
 import { GeoConverter } from '../utils/geo-converter';
-import { GeoJSONUtils } from '../utils/geojson-utils';
 import { ITile, FeatureCollection } from '../models/tile-service';
 
 const urljoin = require('url-join');
@@ -12,9 +11,9 @@ export class AssetTileService {
   private isActive = false;
   private tiles: { [zoom: number]: { [key: string]: FeatureCollection } } = {};
 
-  constructor(private port: number, private name: string, private geojson?: FeatureCollection) {
+  constructor(private port: number, private name: string, private server?: string, private geojson?: FeatureCollection) {
     if (!geojson || !geojson.hasOwnProperty('features') || geojson.features.length === 0) { return; }
-    this.setAssetBundleUrl();
+    this.setAssetBundleUrl(server);
     // Create tiles for the most popular zoom levels
     [15, 16, 17, 18].forEach(zoom => this.createTiles(zoom));
     this.isActive = true;
@@ -56,8 +55,13 @@ export class AssetTileService {
    * 
    * @memberOf AssetTileService
    */
-  private setAssetBundleUrl() {
-    let ipAddress = `http://${ip.address()}:${this.port}`;
+  private setAssetBundleUrl(server?: string) {
+    let ipAddress: string;
+    if (server) {
+      ipAddress = `${server}:${this.port}`;
+    } else {
+      ipAddress = `http://${ip.address()}:${this.port}`;
+    }
     this.geojson.features.forEach(f => {
       if (!f.hasOwnProperty('properties')
         || !f.properties.hasOwnProperty('assetbundle')

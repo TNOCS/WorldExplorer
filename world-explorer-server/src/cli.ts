@@ -22,6 +22,13 @@ export interface ICommandLineOptions {
    */
   url: string;
   /**
+   * Host server address
+   * 
+   * @type {string}
+   * @memberOf ICommandLineOptions
+   */
+  server: string;
+  /**
    * Server port
    * 
    * @type {number}
@@ -46,8 +53,9 @@ export interface ICommandLineOptions {
 
 export class CommandLineInterface {
   public static optionDefinitions = [
-    { name: 'help', alias: '?', type: Boolean, multiple: false, typeLabel: '[underline]{Help}', description: 'Display help information.' },
+    { name: 'help', alias: 'h', type: Boolean, multiple: false, typeLabel: '[underline]{Help}', description: 'Display help information.' },
     { name: 'cache', alias: 'c', defaultValue: config.cache || 'cache', type: String, multiple: false, typeLabel: '[underline]{Cache folder}', description: 'Folder for caching the tiles (default ./cache).' },
+    { name: 'server', alias: 's', defaultValue: config.server, type: String, multiple: false, typeLabel: '[underline]{Server address}', description: 'Server address.' },
     { name: 'port', alias: 'p', defaultValue: config.port || 10733, type: Number, multiple: false, typeLabel: '[underline]{Server port}', description: 'Port for the server to use (default 10733).' }
   ];
 

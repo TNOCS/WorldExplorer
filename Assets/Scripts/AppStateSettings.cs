@@ -360,7 +360,7 @@ namespace Assets.Scripts
             ObservableWWW.GetWWW(l.Url).Subscribe(
                 success =>
                 {
-                    var layerObject = new GameObject("Layer-" + l.Title);
+                    var layerObject = new GameObject(l.Title);
 
                     layerObject.transform.SetParent(Layers.transform, false);
                     l._object = layerObject;

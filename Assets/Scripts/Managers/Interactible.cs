@@ -75,5 +75,6 @@ public class Interactible : MonoBehaviour
         }
 
         this.SendMessage("PerformTagAlong");
+        //SessionManager.Instance.SendMessage("Cone selected", SessionManager.topics.selection);
     }
 }

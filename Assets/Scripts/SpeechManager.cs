@@ -19,6 +19,7 @@ namespace Assets.Scripts
 
         public void Init()
         {
+            Debug.Log("Initializing speech manager");
             // Tell the KeywordRecognizer about our keywords.
             keywordRecognizer = new KeywordRecognizer(Keywords.Keys.ToArray());
 
@@ -40,11 +41,12 @@ namespace Assets.Scripts
             AddKeyword("Decrease range", () => SetZoomAndRange(0, -1));
             var directions = new List<string> { "north", "south", "east", "west", "north east", "north west", "south east", "south west" };
             directions.ForEach(dir => AddKeyword("Go " + dir, () => Go(dir)));
-            directions.ForEach(dir => AddKeyword("Go go " + dir, () => Go(dir, 2)));
+            //directions.ForEach(dir => AddKeyword("Go go " + dir, () => Go(dir, 2)));
         }
 
         private void SetZoomAndRange(int deltaZoom, int deltaRange)
         {
+            Debug.Log("Setting new view");
             var view = appState.Config.ActiveView;
             view.Zoom += deltaZoom;
             view.Range += deltaRange;
@@ -54,6 +56,7 @@ namespace Assets.Scripts
 
         private void Go(string direction, int stepSize = 1)
         {
+            Debug.Log(string.Format("Go {0}...", direction));
             var view = appState.Config.ActiveView;
             var metersPerTile = view.Resolution * stepSize;
             var merc = GM.LatLonToMeters(new Vector2d(view.Lon, view.Lat));

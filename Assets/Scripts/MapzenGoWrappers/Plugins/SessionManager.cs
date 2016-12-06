@@ -26,7 +26,7 @@ namespace Assets.Scripts.Plugins
         /// <summary>
         /// Other users in the session
         /// </summary>
-        protected List<User> users = new List<User>();
+        protected readonly List<User> users = new List<User>();
 
         protected SessionManager()
         {
@@ -144,7 +144,7 @@ namespace Assets.Scripts.Plugins
                 var existingUser = users[i];
                 if (user.Id != existingUser.Id) continue;
                 found = true;
-                if (user.SelectedFeature.id != existingUser.SelectedFeature.id)
+                if (user.SelectedFeature != null && existingUser.SelectedFeature != null && user.SelectedFeature.id != existingUser.SelectedFeature.id)
                 {
                     UpdateUserSelection(existingUser.SelectedFeature, user);
                 }
@@ -179,12 +179,13 @@ namespace Assets.Scripts.Plugins
         protected void RemoveOldUsersFromSession()
         {
             var now = DateTime.UtcNow;
+            if (users.Count == 0) return;
             for (var i = users.Count - 1; i >= 0; i++)
             {
                 var user = users[i];
                 if (now - user.LastUpdateReceived > TimeSpan.FromSeconds(25))
                 {
-                    if (!string.IsNullOrEmpty(user.SelectedFeature.id)) UpdateUserSelection(user.SelectedFeature);
+                    if (user.SelectedFeature != null && !string.IsNullOrEmpty(user.SelectedFeature.id)) UpdateUserSelection(user.SelectedFeature);
                     users.RemoveAt(i);
                 }
             }

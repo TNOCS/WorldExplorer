@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Plugins;
+using UnityEngine;
 
 /// <summary>
 /// The Interactible class flags a Game Object as being "Interactible".
@@ -74,5 +75,6 @@ public class Interactible : MonoBehaviour
         }
 
         this.SendMessage("PerformTagAlong");
+        SessionManager.Instance.SendMessage("Cone selected", SessionManager.topics.selection);
     }
 }

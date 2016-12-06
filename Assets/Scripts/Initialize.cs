@@ -36,25 +36,24 @@ public class Initialize : MonoBehaviour
         font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         fingerPressedSound = (AudioClip)Resources.Load("FingerPressed");
     }
-
     void InitHud()
     {
         HoloManagers = new GameObject("HoloManagers");
         var Handsmanager = HoloManagers.AddComponent<Assets.Scripts.Utils.HandsManager>();
         Handsmanager.FingerPressedSound = fingerPressedSound;
-        
+        GameObject paneltext = new GameObject("textpanel");
+        paneltext.transform.position = new Vector3(0, 1, 0);
+
+        paneltext.transform.SetParent(Hud.transform, false);
+        paneltext.transform.localPosition = new Vector3(0, 0, 0);
+        var panelimage = paneltext.AddComponent<Image>();
+        RectTransform panelimagert = paneltext.GetComponent(typeof(RectTransform)) as RectTransform;
+        panelimage.sprite = new Sprite();
+
         GameObject textO = new GameObject("Commands-Help");
-        textO.transform.SetParent(Hud.transform);
+        textO.transform.SetParent(paneltext.transform, false);
         Text info = textO.AddComponent<Text>();
-
-
         RectTransform rt = textO.GetComponent(typeof(RectTransform)) as RectTransform;
-       
-        rt.anchorMin = new Vector2(1, 1);
-        rt.anchorMax = new Vector2(1, 1);
-        rt.pivot = new Vector2(1f, 1f);
-        rt.position = new Vector2(0, 0);
-        rt.anchoredPosition = new Vector2(0, 0);
 
         info.font = font;
         info.resizeTextForBestFit = true;
@@ -69,8 +68,11 @@ public class Initialize : MonoBehaviour
             h++;
         }
         rt.sizeDelta = new Vector2(350, (h + 1) * 25);
+        panelimagert.sizeDelta = rt.sizeDelta;
+
         info.text = s.ToString();
     }
+
 
     void Start()
     {

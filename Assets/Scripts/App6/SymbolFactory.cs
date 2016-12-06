@@ -232,6 +232,7 @@ public class SymbolFactory : MonoBehaviour
                 var h = www.texture.height;
                 sprite.sprite = Sprite.Create(www.texture, new Rect(0, 0, w, h), new Vector2(0, 0));
                 var symbolCom = symbol.AddComponent<Symbol>();
+                target.AddComponent<Interactible>();
                 symbolCom.Stick(target.transform);
 
                 symbol.transform.SetParent(target.transform, true);

@@ -102,7 +102,6 @@ GameObject:
   - component: {fileID: 515131035}
   - component: {fileID: 515131034}
   - component: {fileID: 515131033}
-  - component: {fileID: 515131037}
   m_Layer: 5
   m_Name: HUDCanvas
   m_TagString: Untagged
@@ -184,17 +183,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 2}
   m_SizeDelta: {x: 973, y: 484}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &515131037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 515131032}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d64fe964307468049b66393e9e2de054, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &828219662
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Symbols;
+using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes
@@ -10,7 +11,6 @@ namespace Assets.Scripts.Classes
     {
         private string id;
         private Color selectionColor;
-        private string selectedFeatureId;
         private DateTime lastUpdateReceived;
 
         public User()
@@ -33,11 +33,7 @@ namespace Assets.Scripts.Classes
             set { selectionColor = value; }
         }
 
-        public string SelectedFeatureId
-        {
-            get { return selectedFeatureId; }
-            set { selectedFeatureId = value; }
-        }
+        public Feature SelectedFeature { get; set; }
 
         /// <summary>
         /// Last update in UTC time
@@ -53,20 +49,20 @@ namespace Assets.Scripts.Classes
         public override string ToString()
         {
             return string.Format(@"id: {0}, name: {6}, selectedFeatureId: {1}, selectionColor: r: {2}, g: {3}, b: {4}, a: {5}",
-                    id, selectedFeatureId, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name);
+                    id, SelectedFeature.id, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name);
         }
 
         public string ToJSON()
         {
-            if (string.IsNullOrEmpty(selectedFeatureId))
+            if (SelectedFeature == null)
             {
                 // Only send the ID
                 return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"" }}", id, Name);
             }
             else
             {
-                return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{6}"" }}, ""selectedFeatureId"": ""{1}"", ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }} }}",
-                    id, selectedFeatureId, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name);
+                return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{6}"", ""selectedFeature"": {1}, ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }} }}",
+                    id, SelectedFeature.ToLimitedJSON(), selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name);
             }
         }
 
@@ -76,7 +72,7 @@ namespace Assets.Scripts.Classes
             var user = new User(jsonObj.GetString("id"));
             if (jsonObj.HasField("selectedFeatureId"))
             {
-                user.selectedFeatureId = jsonObj.GetString("selectedFeatureId");
+                user.SelectedFeature.id = jsonObj.GetString("selectedFeatureId");
                 if (jsonObj.HasField("selectionColor"))
                 {
                     var a = jsonObj["selectionColor"].GetFloat("a", 1);

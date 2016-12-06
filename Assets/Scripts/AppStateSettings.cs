@@ -6,6 +6,7 @@ using Assets.Scripts.Classes;
 using MapzenGo.Models.Plugins;
 using UniRx;
 using System.Collections;
+using Symbols;
 
 namespace Assets.Scripts
 {
@@ -14,27 +15,21 @@ namespace Assets.Scripts
         public const string ShowLayerSpeech = "Show ";
         public const string HideLayerSpeech = "Show ";
         public const string ToggleSpeech = "Toggle ";
-
         public GameObject World;
         public GameObject Terrain;
         public GameObject Table;
         public GameObject Camera;
         public GameObject Map;
         public GameObject Layers;
-
         public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
-
-        protected AppState()
-        {
-        } // guarantee this will be always a singleton only - can't use the constructor!
-
         public Vector3 Center { get; set; }
         public TileManager TileManager { get; set; }
         public AppConfig Config { get; set; }
         public ViewState State { get; set; }
         public SpeechManager Speech { get; set; }
-
         public List<string> MapzenTags = new List<string>(new string[] { "buildings", "water", "roads", "pois", "landuse" });
+
+        protected AppState() {} // guarantee this will be always a singleton only - can't use the constructor!
 
         public void Awake()
         {
@@ -48,7 +43,6 @@ namespace Assets.Scripts
 
         private void ToggleMapzen(string tag)
         {
-
             if (Config == null || Config.ActiveView == null) return;
             if (Config.ActiveView.Mapzen.Contains(tag))
             {

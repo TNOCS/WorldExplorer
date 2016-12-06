@@ -4,6 +4,7 @@ using System.Text;
 using uPLibrary.Networking.M2Mqtt;
 using System.Collections.Generic;
 using Assets.Scripts.Classes;
+using Symbols;
 
 namespace Assets.Scripts.Plugins
 {
@@ -135,15 +136,17 @@ namespace Assets.Scripts.Plugins
         protected void UpdateUsersPresence(string json)
         {
             var user = User.FromJSON(json);
+            if (user.Id == me.Id) return; // Do not update yourself
+
             var found = false;
             for (var i = 0; i < users.Count; i++)
             {
                 var existingUser = users[i];
                 if (user.Id != existingUser.Id) continue;
                 found = true;
-                if (user.SelectedFeatureId != existingUser.SelectedFeatureId)
+                if (user.SelectedFeature.id != existingUser.SelectedFeature.id)
                 {
-                    UpdateUserSelection(existingUser.SelectedFeatureId, user);
+                    UpdateUserSelection(existingUser.SelectedFeature, user);
                 }
                 users[i] = user;
             }
@@ -153,9 +156,9 @@ namespace Assets.Scripts.Plugins
         /// <summary>
         /// A user in the session has changed its selection. Make it visible.
         /// </summary>
-        /// <param name="selectedFeatureId"></param>
+        /// <param name="selectedFeature"></param>
         /// <param name="user">If user does not exist, remove the current selection.</param>
-        protected void UpdateUserSelection(string selectedFeatureId, User user = null)
+        protected void UpdateUserSelection(Feature selectedFeature, User user = null)
         {
 
         }
@@ -181,7 +184,7 @@ namespace Assets.Scripts.Plugins
                 var user = users[i];
                 if (now - user.LastUpdateReceived > TimeSpan.FromSeconds(25))
                 {
-                    if (!string.IsNullOrEmpty(user.SelectedFeatureId)) UpdateUserSelection(user.SelectedFeatureId);
+                    if (!string.IsNullOrEmpty(user.SelectedFeature.id)) UpdateUserSelection(user.SelectedFeature);
                     users.RemoveAt(i);
                 }
             }
@@ -190,11 +193,20 @@ namespace Assets.Scripts.Plugins
         /// <summary>
         /// Set or unset the selected feature.
         /// </summary>
-        /// <param name="featureId"></param>
-        public void UpdateSelectedFeature(string featureId = "")
+        /// <param name="feature"></param>
+        /// <param name="isSelected"></param>
+        public void UpdateSelectedFeature(Feature feature, bool isSelected)
         {
-            me.SelectedFeatureId = featureId;
-            UpdatePresence();
+            if (isSelected)
+            {
+                me.SelectedFeature = feature;
+                UpdatePresence();
+            }
+            else
+            {
+                UpdatePresence();
+                me.SelectedFeature = null;
+            }
         }
 
         #endregion Room management

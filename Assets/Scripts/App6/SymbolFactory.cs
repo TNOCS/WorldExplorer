@@ -47,7 +47,7 @@ namespace Symbols
             var lat = lngLat.y;
             var icon = string.Empty;
             if (properties.ContainsKey("iconUrl")) icon = string.Format("{0}{1}", baseUrl, ((JSONObject)properties["iconUrl"]).str);
-            return string.Format(@"{{ ""id"": {0}, ""lat"": {1}, ""lon"": {2}, ""icon"": ""{3}"" }}", id, lat, lon, icon);
+            return string.Format(@"{{ ""id"": ""{0}"", ""lat"": {1}, ""lon"": {2}, ""icon"": ""{3}"" }}", id, lat, lon, icon);
         }
     }
 

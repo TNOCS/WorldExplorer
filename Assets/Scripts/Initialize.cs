@@ -149,7 +149,8 @@ public class Initialize : MonoBehaviour
         {
             appState.ClearCache();
         }
-        for (var i = 0; i < Mathf.Min(8, appState.Config.Views.Count); i++)
+        if (appState.Config == null) return;
+        for (var i = 0; i < Mathf.Min(9, appState.Config.Views.Count); i++)
         {
             if (!Input.GetKeyDown(string.Format("{0}", i + 1))) continue;
             appState.Config.ActiveView = appState.Config.Views[i].Clone();

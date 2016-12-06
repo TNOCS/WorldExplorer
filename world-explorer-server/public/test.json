@@ -3,7 +3,7 @@
   "features": [{
     "type": "Feature",
     "properties": {
-	"id":"1",
+      "id": "1",
       "iconUrl": "images/pomp.png",
       "stats": [{
         "name": "ammo",
@@ -40,19 +40,18 @@
     }
   }, {
     "type": "Feature",
-	"id":"2",
     "properties": {
+      "id": "2",
       "iconUrl": "images/ambulanceposten.png"
     },
     "geometry": {
-	"id":"3",
       "type": "Point",
       "coordinates": [5.048539638519287, 52.45887287117959]
     }
   }, {
     "type": "Feature",
-	"id":"4",
     "properties": {
+      "id": "3",
       "iconUrl": "images/politie.png"
     },
     "geometry": {
@@ -62,7 +61,7 @@
   }, {
     "type": "Feature",
     "properties": {
-	"id":"5",
+      "id": "4",
       "iconUrl": "images/politie.png"
     },
     "geometry": {

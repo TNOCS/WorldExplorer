@@ -30,7 +30,8 @@ namespace Symbols
         public Vector2d tilePoint { get; set; }
         public Vector2d lngLat { get; protected set; }
 
-        public void SetLatLon(Vector2d lngLat) {
+        public void SetLatLon(Vector2d lngLat)
+        {
             this.lngLat = lngLat;
         }
 
@@ -88,8 +89,8 @@ namespace Symbols
 
         protected Vector2d CenterTms; //tms tile coordinate
         public Vector2d CenterInMercator; //this is like distance (meters) in mercator 
-                                             //private Vector3 center;
-                                             //private System.Threading.Timer refreshTimer;
+                                          //private Vector3 center;
+                                          //private System.Threading.Timer refreshTimer;
         protected List<GameObject> SymbolGuis;
         protected List<Vector2d> SymbolTiles;
 
@@ -227,7 +228,7 @@ namespace Symbols
             // range en lat long via appstate
             if (!(SymbolTiles.Contains(f.tilePoint) && _symbolInfo)) yield return null;
             var id = f.id;
-            string symbolname = "symbol-" + id;
+            string symbolname = id;
             var target = new GameObject("Symbol-target-" + f.tilePoint.ToString());
             var target_collider = target.AddComponent<BoxCollider>();
             target_collider.size = new Vector3(Layer.Scale, Layer.Scale * 1.25F, Layer.Scale);
@@ -355,7 +356,7 @@ namespace Symbols
             {
                 JSONObject feature = features[fid];
                 var f = new Feature();
-                f.id = feature.GetString("id", Guid.NewGuid().ToString());
+                f.id = transform.gameObject.name + (feature.HasField("properties") ? feature["properties"].GetString("id", Guid.NewGuid().ToString()) : Guid.NewGuid().ToString());
                 f.baseUrl = baseUrl;
                 f.geometry = new Geometry();
                 f.geometry.type = feature["geometry"]["type"].ToString().Replace("\"", "");

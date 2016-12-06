@@ -12,7 +12,7 @@ namespace Assets.Scripts.Classes
         private string id;
         private Color selectionColor;
         private DateTime lastUpdateReceived;
-
+        public Material UserMaterial { get;private set; }
         public User()
         {
             id = Guid.NewGuid().ToString();
@@ -30,7 +30,12 @@ namespace Assets.Scripts.Classes
         public Color SelectionColor
         {
             get { return selectionColor; }
-            set { selectionColor = value; }
+            set { 
+                if (selectionColor == value) return;
+                selectionColor = value;
+                UserMaterial = new Material(Shader.Find(" Diffuse"));
+                UserMaterial.color = value;
+            }
         }
 
         public Feature SelectedFeature { get; set; }
@@ -70,9 +75,15 @@ namespace Assets.Scripts.Classes
         {
             var jsonObj = new JSONObject(json);
             var user = new User(jsonObj.GetString("id"));
-            if (jsonObj.HasField("selectedFeatureId"))
+            if (jsonObj.HasField("selectedFeature"))
             {
-                user.SelectedFeature.id = jsonObj.GetString("selectedFeatureId");
+
+                user.SelectedFeature = new Feature();
+                var sf = jsonObj["selectedFeature"];
+                user.SelectedFeature.id = sf.GetString("id");
+
+                user.SelectedFeature.SetLatLon(new Vector2d(sf.GetFloat("lon"),sf.GetFloat("lat")));
+
                 if (jsonObj.HasField("selectionColor"))
                 {
                     var a = jsonObj["selectionColor"].GetFloat("a", 1);

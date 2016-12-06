@@ -160,7 +160,8 @@ namespace Assets.Scripts.Plugins
         /// <param name="user">If user does not exist, remove the current selection.</param>
         protected void UpdateUserSelection(Feature selectedFeature, User user = null)
         {
-
+            GameObject selectedObject = GameObject.Find(selectedFeature.id);
+           
         }
 
         /// <summary>

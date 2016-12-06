@@ -81,7 +81,7 @@ namespace Assets.Scripts.Plugins
                 UnityMainThreadDispatcher.Instance().Enqueue(() =>
                 {
                     var msg = Encoding.UTF8.GetString(e.Message);
-                    var subtopic = e.Topic.Substring(topic.Length-1);
+                    var subtopic = e.Topic.Substring(topic.Length - 1);
                     if (subtopic.StartsWith("presence/"))
                     {
                         UpdateUsersPresence(msg);
@@ -139,12 +139,12 @@ namespace Assets.Scripts.Plugins
             if (user.Id == me.Id) return; // Do not update yourself
 
             var found = false;
-            for (var i = 0; i < users.Count; i++)
+            for (var i = 0; i < users.Count&&!found; i++)
             {
                 var existingUser = users[i];
                 if (user.Id != existingUser.Id) continue;
                 found = true;
-                if (user.SelectedFeature != null && existingUser.SelectedFeature != null && user.SelectedFeature.id != existingUser.SelectedFeature.id)
+                if (user.SelectedFeature != null && existingUser.SelectedFeature != null)// && user.SelectedFeature.id != existingUser.SelectedFeature.id)
                 {
                     UpdateUserSelection(existingUser.SelectedFeature, user);
                 }
@@ -160,8 +160,9 @@ namespace Assets.Scripts.Plugins
         /// <param name="user">If user does not exist, remove the current selection.</param>
         protected void UpdateUserSelection(Feature selectedFeature, User user = null)
         {
-            GameObject selectedObject = GameObject.Find(selectedFeature.id);
-           
+            GameObject selectedObject = GameObject.Find(selectedFeature.id).transform.parent.gameObject;
+            Renderer coneRender = selectedObject.transform.FindChild("cone/Cone with Right Triangle/Component").gameObject.GetComponent<Renderer>();
+            coneRender.material = user.UserMaterial;
         }
 
         /// <summary>
@@ -221,7 +222,7 @@ namespace Assets.Scripts.Plugins
         /// <param name="retain">Retain the message</param>
         protected void SendJsonMessage(string subtopic, string json, bool retain = true)
         {
-            Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));   
+            Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));
             client.Publish(string.Format("{0}/{1}", sessionName, subtopic), Encoding.UTF8.GetBytes(json), uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, retain);
         }
     }

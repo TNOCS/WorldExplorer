@@ -815,7 +815,7 @@ public class JSONObject
 
     public float GetFloat(string key, float defaultValue = 0f)
     {
-        if (HasField(key) && this[key].IsNumber) return (float)this[key].n;
+        if (HasField(key) && this[key].IsNumber) return (float)this[key].f;
         return defaultValue;
     }
 

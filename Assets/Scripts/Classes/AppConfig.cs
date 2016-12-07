@@ -59,5 +59,6 @@ namespace Assets.Scripts.Classes
         public string SessionName { get; set; }
         public string UserName { get; set; }
         public Color SelectionColor { get; set; }
+
     }
 }

@@ -27,7 +27,8 @@ namespace Assets.Scripts.Plugins
         /// Other users in the session
         /// </summary>
         protected readonly List<User> users = new List<User>();
-
+        internal   GameObject cursorPrefab;
+       
         protected SessionManager()
         {
         } // guarantee this will be always a singleton only - can't use the constructor!
@@ -37,6 +38,7 @@ namespace Assets.Scripts.Plugins
             Debug.Log("Initializing SessionManager");
             me.Name = appState.Config.UserName;
             me.SelectionColor = appState.Config.SelectionColor;
+            
             var mtd = gameObject.AddComponent<UnityMainThreadDispatcher>();
             InitMqtt();
             var sessions = new List<string> { "one", "two", "three" };
@@ -81,7 +83,7 @@ namespace Assets.Scripts.Plugins
                 UnityMainThreadDispatcher.Instance().Enqueue(() =>
                 {
                     var msg = Encoding.UTF8.GetString(e.Message);
-                    var subtopic = e.Topic.Substring(topic.Length-1);
+                    var subtopic = e.Topic.Substring(topic.Length - 1);
                     if (subtopic.StartsWith("presence/"))
                     {
                         UpdateUsersPresence(msg);
@@ -101,7 +103,7 @@ namespace Assets.Scripts.Plugins
                     //_3dText.GetComponent<TextMesh>().text = msg;
                 });
             };
-        }
+        }  
 
         protected void SetView(string msg)
         {
@@ -139,18 +141,25 @@ namespace Assets.Scripts.Plugins
             if (user.Id == me.Id) return; // Do not update yourself
 
             var found = false;
-            for (var i = 0; i < users.Count; i++)
+            for (var i = 0; i < users.Count&&!found; i++)
             {
                 var existingUser = users[i];
                 if (user.Id != existingUser.Id) continue;
                 found = true;
-                if (user.SelectedFeature != null && existingUser.SelectedFeature != null && user.SelectedFeature.id != existingUser.SelectedFeature.id)
+                if (user.SelectedFeature != null && existingUser.SelectedFeature != null)// && user.SelectedFeature.id != existingUser.SelectedFeature.id)
                 {
                     UpdateUserSelection(existingUser.SelectedFeature, user);
                 }
                 users[i] = user;
             }
-            if (!found) users.Add(user);
+            if (!found)
+            {
+                user.Cursor = Instantiate(cursorPrefab, new Vector3(0, 1, 0), transform.rotation);
+             //   user.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material=user.UserMaterial;   
+                users.Add(user);
+
+
+            }
         }
 
         /// <summary>
@@ -160,8 +169,9 @@ namespace Assets.Scripts.Plugins
         /// <param name="user">If user does not exist, remove the current selection.</param>
         protected void UpdateUserSelection(Feature selectedFeature, User user = null)
         {
-            GameObject selectedObject = GameObject.Find(selectedFeature.id);
-           
+            GameObject selectedObject = GameObject.Find(selectedFeature.id).transform.parent.gameObject;
+            SymbolTargetHandler handler = selectedObject.GetComponent<SymbolTargetHandler>();
+            handler.OnSelect(user.UserMaterial);
         }
 
         /// <summary>
@@ -221,7 +231,7 @@ namespace Assets.Scripts.Plugins
         /// <param name="retain">Retain the message</param>
         protected void SendJsonMessage(string subtopic, string json, bool retain = true)
         {
-            Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));   
+            Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));
             client.Publish(string.Format("{0}/{1}", sessionName, subtopic), Encoding.UTF8.GetBytes(json), uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, retain);
         }
     }

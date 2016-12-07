@@ -60,7 +60,7 @@ namespace Assets.Scripts
 
             WWW www = new WWW(url);
 
-            while (!www.isDone) System.Threading.Thread.Sleep(50);
+            while (!www.isDone) { UniRx.Thread.Sleep(50); }
 
             if (!string.IsNullOrEmpty(www.error)) {
                 var targetFile = Resources.Load<TextAsset>("config");

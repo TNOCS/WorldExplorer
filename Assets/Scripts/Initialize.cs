@@ -86,6 +86,7 @@ public class Initialize : MonoBehaviour
         //appState.Speech = SpeechManager.Instance;
         cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
         cursor.name = "Cursor";
+        cursor.GetComponent<Cursor>().enabled = true;
         appState.AddTerrain();
         InitSpeech();
         InitViews();

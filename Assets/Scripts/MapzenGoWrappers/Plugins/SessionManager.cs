@@ -87,10 +87,10 @@ namespace Assets.Scripts.Plugins
                 {
                     var msg = Encoding.UTF8.GetString(e.Message);
                     var subtopic = e.Topic.Substring(topic.Length - 1);
-                    string command = (subtopic.Split('/').Length==3) ? subtopic.Split('/')[2] : null;
+
                     if (subtopic.StartsWith("presence/"))
                     {
-                        UpdateUsersPresence(msg, command);
+                        UpdateUsersPresence(msg);
                         return;
                     }
                     Debug.Log(string.Format("Received message on topic {0}: {1}", subtopic, msg));
@@ -139,7 +139,7 @@ namespace Assets.Scripts.Plugins
         /// Update users in the session.
         /// </summary>
         /// <param name="json"></param>
-        protected void UpdateUsersPresence(string json, string command)
+        protected void UpdateUsersPresence(string json)
         {
             var user = User.FromJSON(json, cursors);
             if (user.Id == me.Id) return; // Do not update yourself
@@ -175,12 +175,8 @@ namespace Assets.Scripts.Plugins
                 if (user.Cursor == null)
                     user.Cursor = users[i].Cursor;
             }
-            if (command != null && user.SelectedFeature != null && existingUser.SelectedFeature != null && user.SelectedFeature.id != existingUser.SelectedFeature.id && (!prevCommand.ContainsKey(user) || (prevCommand[user] != command)))
+            if ( user.SelectedFeature != null && existingUser.SelectedFeature != null && user.SelectedFeature.id != existingUser.SelectedFeature.id )
             {
-                if (prevCommand.ContainsKey(user))
-                    prevCommand[user] = command;
-                else
-                    prevCommand.Add(user, command);
                 UpdateUserSelection(existingUser.SelectedFeature, user);
             }
 
@@ -202,15 +198,6 @@ namespace Assets.Scripts.Plugins
             handler.OnSelect(user.UserMaterial, user.Cursor);
         }
 
-        /// <summary>
-        /// Update the presence status.
-        /// </summary>
-        protected void UpdatePresence(string command)
-        {
-            var subtopic = string.Format("presence/{0}/{1}", me.Id, command);
-            SendJsonMessage(subtopic, me.ToJSON(), false);
-            RemoveOldUsersFromSession();
-        }
         /// <summary>
         /// Update the presence status.
         /// </summary>
@@ -249,11 +236,11 @@ namespace Assets.Scripts.Plugins
             if (isSelected)
             {
                 me.SelectedFeature = feature;
-                UpdatePresence("select");
+                UpdatePresence();
             }
             else
             {
-                UpdatePresence("deselect");
+                UpdatePresence();
                 me.SelectedFeature = null;
             }
         }

@@ -5,9 +5,7 @@ using System.Linq;
 using Assets.Scripts.Classes;
 using MapzenGo.Models.Plugins;
 using UniRx;
-using System.Collections;
 using Symbols;
-using System.Threading;
 
 namespace Assets.Scripts
 {
@@ -62,7 +60,7 @@ namespace Assets.Scripts
 
             WWW www = new WWW(url);
 
-            while (!www.isDone) Thread.Sleep(50);
+            while (!www.isDone) System.Threading.Thread.Sleep(50);
 
             if (!string.IsNullOrEmpty(www.error)) {
                 var targetFile = Resources.Load<TextAsset>("config");

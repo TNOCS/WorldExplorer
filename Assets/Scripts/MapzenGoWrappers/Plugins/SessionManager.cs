@@ -158,6 +158,7 @@ namespace Assets.Scripts.Plugins
             }
             if (!found)
             {
+
                 var cursor = cursors.Find(u => u.name == user.Id + "-Cursor");
                 if (cursor == null)
                 {
@@ -169,19 +170,19 @@ namespace Assets.Scripts.Plugins
                 else
                     user.Cursor = cursor;
                 users.Add(user);
+                if (user.SelectedFeature != null)
+                    UpdateUserSelection(existingUser.SelectedFeature, user);
+
             }
             else
             {
                 if (user.Cursor == null)
                     user.Cursor = users[i].Cursor;
-            }
-            if ( user.SelectedFeature != null && existingUser.SelectedFeature != null && user.SelectedFeature.id != existingUser.SelectedFeature.id )
-            {
-                UpdateUserSelection(existingUser.SelectedFeature, user);
-            }
+                if (user.SelectedFeature != null && existingUser.SelectedFeature != null)// && user.SelectedFeature.id != existingUser.SelectedFeature.id)
+                    UpdateUserSelection(existingUser.SelectedFeature, user);
+                users[i] = user;
 
-            users[i] = user;
-
+            }
         }
 
         /// <summary>
@@ -247,7 +248,8 @@ namespace Assets.Scripts.Plugins
 
         #endregion Room management
 
-        public void UpdateLayer(Layer layer) {
+        public void UpdateLayer(Layer layer)
+        {
             var subtopic = string.Format("layers/{0}", layer.Title);
             SendJsonMessage(subtopic, layer.ToJSON());
         }
@@ -261,7 +263,7 @@ namespace Assets.Scripts.Plugins
         protected void SendJsonMessage(string subtopic, string json, bool retain = true)
         {
             Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));
-            client.Publish(string.Format("{0}/{1}", sessionName, subtopic), Encoding.UTF8.GetBytes(json), uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, retain);
+            client.Publish(string.Format("{0}/{1}", sessionName, subtopic), Encoding.UTF8.GetBytes(json), uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, retain);
         }
     }
 }

@@ -34,26 +34,22 @@ public class Cursor : HoloToolkit.Unity.CursorManager
                         FocusedObject = hitInfo.transform.gameObject;
                     else
                         FocusedObject = null;
-
-
                 }
             }
             if (FocusedObject != oldFocusObject)
             {
                 if (oldFocusObject != null)
-                    oldFocusObject.BroadcastMessage("OnSelect");
+                    oldFocusObject.BroadcastMessage("OnSelect", SendMessageOptions.RequireReceiver);
                 if (FocusedObject != null)
-                    FocusedObject.BroadcastMessage("OnSelect");
+                    FocusedObject.BroadcastMessage("OnSelect", SendMessageOptions.RequireReceiver);
             }
         };
         recognizer.StartCapturingGestures();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-
-    }
-
+    // private void OnTriggerEnter(Collider other)
+    // {
+    // }
 
     private float nextActionTime = 1.0f;
     // in seconds
@@ -63,14 +59,11 @@ public class Cursor : HoloToolkit.Unity.CursorManager
     {
         // Do a raycast into the world based on the user's
         // head position and orientation.
-
-
         if (GazeManager.Instance.HitInfo.transform != null)
         {
             GameObject hitInfo = GazeManager.Instance.HitInfo.transform.gameObject;
             if (hitInfo.tag == "symbol")
             {
-
                 if (prevTarget == null)
                     hitInfo.transform.gameObject.GetComponent<SymbolTargetHandler>().Show();
                 else
@@ -80,7 +73,7 @@ public class Cursor : HoloToolkit.Unity.CursorManager
                     hitInfo.transform.gameObject.GetComponent<SymbolTargetHandler>().Show();
                 }
                 prevTarget = hitInfo.transform.gameObject;
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0)) 
                 {
                     mouse = true;
                     oldFocusObject = FocusedObject;
@@ -88,7 +81,6 @@ public class Cursor : HoloToolkit.Unity.CursorManager
                         FocusedObject = hitInfo.transform.gameObject;
                     else
                         FocusedObject = null;
-
                 }
             }
             else
@@ -99,7 +91,6 @@ public class Cursor : HoloToolkit.Unity.CursorManager
                     prevTarget = null;
                 }
             }
-
         }
 
         // If the focused object changed this frame,
@@ -117,12 +108,9 @@ public class Cursor : HoloToolkit.Unity.CursorManager
             }
             mouse=false;
         }
-
     }
     protected override void LateUpdate()
     {
         base.LateUpdate();
-
-
     }
 }

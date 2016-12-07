@@ -30,7 +30,7 @@ namespace Symbols
             oldMat = coneRender.material;
             cursor = GameObject.Find(sessionManager.me.Id + "-Cursor");
         }
-        void OnSelect()
+        public void OnSelect()
         {
             selected = !selected;
 

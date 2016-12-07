@@ -19,7 +19,8 @@ namespace Symbols
         private Material oldMat;
         private Renderer coneRender;
         public Feature Feature { get; set; }
-
+        private bool OtherUserSelected = false;
+        
         // Use this for initialization
         void Start()
         {
@@ -49,12 +50,12 @@ namespace Symbols
             }
         }
 
-        public void OnSelect(Material selectedMat)
+        public void OnSelect(Material selectedMat,Vector3 pos)
         {
-            selected = !selected;
+            OtherUserSelected = !OtherUserSelected;
 
             // If the user is in placing mode, display the spatial mapping mesh.
-            if (selected)
+            if (OtherUserSelected)
             {
                 gui.SetActive(true);
                 
@@ -66,6 +67,14 @@ namespace Symbols
                 coneRender.material = oldMat;
                 gui.SetActive(false);
             }
+            transform.position = new Vector3(pos.x, pos.y, pos.z);
+
+            // Now, update the lat/lon of the feature
+            var sf = transform.parent.GetComponent<SymbolFactory>();
+            var v0 = new Vector2d(transform.localPosition.x, transform.localPosition.z) + sf.CenterInMercator;
+            // Debug.Log(string.Format("Meters x: {0}, y: {1}", v0.x, v0.y));
+            var v3 = GM.MetersToLatLon(v0);
+            Feature.SetLatLon(v3);
         }
 
         public void Show()

@@ -33,12 +33,12 @@ namespace Assets.Scripts.Plugins
         {
         } // guarantee this will be always a singleton only - can't use the constructor!
 
-        public void Init()
+        public void Init(GameObject cursor)
         {
             Debug.Log("Initializing SessionManager");
             me.Name = appState.Config.UserName;
             me.SelectionColor = appState.Config.SelectionColor;
-            
+            me.Cursor = cursor;
             var mtd = gameObject.AddComponent<UnityMainThreadDispatcher>();
             InitMqtt();
             var sessions = new List<string> { "one", "two", "three" };
@@ -141,24 +141,31 @@ namespace Assets.Scripts.Plugins
             if (user.Id == me.Id) return; // Do not update yourself
 
             var found = false;
-            for (var i = 0; i < users.Count&&!found; i++)
+            User existingUser = null;
+            int i = -1;
+            while( i < users.Count-1&&!found)
             {
-                var existingUser = users[i];
+                i++;
+                existingUser = users[i];
                 if (user.Id != existingUser.Id) continue;
                 found = true;
-                if (user.SelectedFeature != null && existingUser.SelectedFeature != null)// && user.SelectedFeature.id != existingUser.SelectedFeature.id)
-                {
-                    UpdateUserSelection(existingUser.SelectedFeature, user);
-                }
-                users[i] = user;
+
+                
             }
             if (!found)
             {
                 user.Cursor = Instantiate(cursorPrefab, new Vector3(0, 1, 0), transform.rotation);
-             //   user.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material=user.UserMaterial;   
+                user.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material=user.UserMaterial;   
                 users.Add(user);
-
-
+            }
+            else
+            {
+                if (user.SelectedFeature != null && existingUser.SelectedFeature != null)// && user.SelectedFeature.id != existingUser.SelectedFeature.id)
+                {
+                    UpdateUserSelection(existingUser.SelectedFeature, user);
+                }
+                user.Cursor = users[i].Cursor;
+                users[i] = user;
             }
         }
 
@@ -171,7 +178,7 @@ namespace Assets.Scripts.Plugins
         {
             GameObject selectedObject = GameObject.Find(selectedFeature.id).transform.parent.gameObject;
             SymbolTargetHandler handler = selectedObject.GetComponent<SymbolTargetHandler>();
-            handler.OnSelect(user.UserMaterial);
+            handler.OnSelect(user.UserMaterial,user.Cursor.transform.position);
         }
 
         /// <summary>

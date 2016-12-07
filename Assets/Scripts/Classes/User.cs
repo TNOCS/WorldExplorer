@@ -14,6 +14,7 @@ namespace Assets.Scripts.Classes
         private DateTime lastUpdateReceived;
         public GameObject Cursor { get; set; }
         public Material UserMaterial { get; private set; }
+
         public User()
         {
             id = Guid.NewGuid().ToString();
@@ -64,10 +65,10 @@ namespace Assets.Scripts.Classes
             if (SelectedFeature == null)
             {
                 // Only send the ID
-                if(Cursor==null)
-               return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"", ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, }}", id, Name, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a);
+                if (Cursor == null)
+                    return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"", ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, }}", id, Name, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a);
                 else
-                   return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"", ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, ""cursor"":{{""xpos"":{7},""ypos"":{8},""zpos"":{9},""xrot"":{10},""yrot"":{11},""zrot"":{12} }}}}", id, Name, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Cursor.transform.position.x, Cursor.transform.position.y, Cursor.transform.position.z, Cursor.transform.rotation.x, Cursor.transform.rotation.y, Cursor.transform.rotation.z);
+                    return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"", ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, ""cursor"":{{""xpos"":{7},""ypos"":{8},""zpos"":{9},""xrot"":{10},""yrot"":{11},""zrot"":{12} }}}}", id, Name, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Cursor.transform.position.x, Cursor.transform.position.y, Cursor.transform.position.z, Cursor.transform.rotation.x, Cursor.transform.rotation.y, Cursor.transform.rotation.z);
             }
             else
             {
@@ -75,7 +76,7 @@ namespace Assets.Scripts.Classes
                     return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{6}"", ""selectedFeature"": {1}, ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }} }}", id, SelectedFeature.ToLimitedJSON(), selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name);
                 else
                     return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{6}"", ""selectedFeature"": {1}, ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, ""cursor"":{{""xpos"":{7},""ypos"":{8},""zpos"":{9},""xrot"":{10},""yrot"":{11},""zrot"":{12} }} }}",
-                id, SelectedFeature.ToLimitedJSON(), selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name, Cursor.transform.position.x, Cursor.transform.position.y,Cursor.transform.position.z, Cursor.transform.rotation.x, Cursor.transform.rotation.y, Cursor.transform.rotation.z);
+                id, SelectedFeature.ToLimitedJSON(), selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name, Cursor.transform.position.x, Cursor.transform.position.y, Cursor.transform.position.z, Cursor.transform.rotation.x, Cursor.transform.rotation.y, Cursor.transform.rotation.z);
             }
         }
 
@@ -99,6 +100,21 @@ namespace Assets.Scripts.Classes
                     var g = jsonObj["selectionColor"].GetFloat("g", 1);
                     var b = jsonObj["selectionColor"].GetFloat("b", 1);
                     user.SelectionColor = new Color(r, g, b, a);
+                }
+                if (jsonObj.HasField("cursor"))
+                {
+                    var posx = jsonObj["cursor"].GetFloat("posx", 1);
+                    var posy = jsonObj["cursor"].GetFloat("posy", 1);
+                    var posz = jsonObj["cursor"].GetFloat("posz", 1);
+                    var rotx = jsonObj["cursor"].GetFloat("rotx", 1);
+                    var roty = jsonObj["cursor"].GetFloat("roty", 1);
+                    var rotz = jsonObj["cursor"].GetFloat("rotz", 1);
+                    if (user.Cursor != null)
+                    {
+                        user.Cursor.transform.position = new Vector3(posx, posy, posz);
+                        user.Cursor.transform.rotation =Quaternion.Euler(rotx, roty, rotz);
+                    }
+
                 }
             }
             return user;

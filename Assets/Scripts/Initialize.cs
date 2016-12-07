@@ -13,7 +13,7 @@ public class Initialize : MonoBehaviour
 {
     [SerializeField]
 
-    private string configUrl = "https://dl.dropboxusercontent.com/s/co6kjmkgls2ptnq/config_ronaldb.json?dl=0";
+    private string configUrl = "https://dl.dropboxusercontent.com/s/wv89vyug74u4gy5/config_ronald.json?dl=0";
     public const string SwitchToSpeech = "Switch to ";
 
     // Use this for initialization
@@ -93,8 +93,9 @@ public class Initialize : MonoBehaviour
         InitViews();
         InitHud();
         sessionMgr = SessionManager.Instance;
+
         sessionMgr.cursorPrefab = _cursorFabOther;
-        sessionMgr.Init();
+        sessionMgr.Init(cursor);
 
         appState.Speech.Init();
     }

@@ -162,12 +162,11 @@ namespace Assets.Scripts.Plugins
                 {
                     user.Cursor = Instantiate(cursorPrefab, new Vector3(0, 1, 0), transform.rotation);
                     user.Cursor.name = user.Id + "-Cursor";
-
+                    user.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = user.UserMaterial;
                     cursors.Add(user.Cursor);
                 }
                 else
                     user.Cursor = cursor;
-                user.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = user.UserMaterial;
                 users.Add(user);
             }
             else

@@ -260,6 +260,11 @@ namespace Assets.Scripts.Plugins
 
         #endregion Room management
 
+        public void UpdateLayer(Layer layer) {
+            var subtopic = string.Format("layers/{0}", layer.Title);
+            SendJsonMessage(subtopic, layer.ToJSON());
+        }
+
         /// <summary>
         /// Send a JSON message as UTF8 bytes to a subtopic.
         /// </summary>

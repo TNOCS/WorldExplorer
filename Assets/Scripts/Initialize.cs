@@ -12,7 +12,7 @@ using Assets.Scripts.Utils;
 public class Initialize : MonoBehaviour
 {
     [SerializeField]
-    private string configUrl = "https://dl.dropboxusercontent.com/s/efkzvthcoz307vh/config_erik.json?dl=0";
+    private string configUrl = "https://dl.dropboxusercontent.com/s/co6kjmkgls2ptnq/config_ronaldb.json?dl=0";
     public const string SwitchToSpeech = "Switch to ";
 
     // Use this for initialization

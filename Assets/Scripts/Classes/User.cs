@@ -37,7 +37,7 @@ namespace Assets.Scripts.Classes
             {
                 if (selectionColor == value) return;
                 selectionColor = value;
-                UserMaterial = new Material(Shader.Find("Diffuse"));
+                UserMaterial = new Material(Shader.Find("HoloToolkit/Cursor"));
                 UserMaterial.color = value;
             }
         }

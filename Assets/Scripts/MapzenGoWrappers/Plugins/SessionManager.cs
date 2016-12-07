@@ -19,7 +19,7 @@ namespace Assets.Scripts.Plugins
     {
         const string NewSessionKeyword = "Join session ";
         protected readonly AppState appState = AppState.Instance;
-        protected readonly User me = new User();
+        public readonly User me = new User();
         protected MqttClient client;
         protected string topic;
         protected string sessionName;

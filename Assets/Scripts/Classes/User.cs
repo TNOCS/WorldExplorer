@@ -111,10 +111,12 @@ namespace Assets.Scripts.Classes
                     var rotx = cur.GetFloat("xrot", 1);
                     var roty = cur.GetFloat("yrot", 1);
                     var rotz = cur.GetFloat("zrot", 1);
-                    if (user.Cursor == null || cursors.Count == 0) return user;
-                    user.Cursor = cursors.Find(i => i.name == user.id + "-Cursor");
-                    user.Cursor.transform.position = new Vector3(posx, posy, posz);
-                    user.Cursor.transform.rotation = Quaternion.Euler(rotx, roty, rotz);
+                    if (user.Cursor != null && cursors.Count != 0)
+                    {
+                        user.Cursor = cursors.Find(i => i.name == user.id + "-Cursor");
+                        user.Cursor.transform.position = new Vector3(posx, posy, posz);
+                        user.Cursor.transform.rotation = Quaternion.Euler(rotx, roty, rotz);
+                    }
 
 
                 }

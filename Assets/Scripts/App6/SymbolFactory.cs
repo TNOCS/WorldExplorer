@@ -362,7 +362,7 @@ namespace Symbols
             {
                 JSONObject feature = features[fid];
                 var f = new Feature();
-                f.id = transform.gameObject.name + (feature.HasField("properties") ? feature["properties"].GetString("id", Guid.NewGuid().ToString()) : Guid.NewGuid().ToString());
+                f.id = transform.gameObject.name + "/" + (feature.HasField("properties") ? feature["properties"].GetString("id", Guid.NewGuid().ToString()) : Guid.NewGuid().ToString());
                 f.baseUrl = baseUrl;
                 f.geometry = new Geometry();
                 f.geometry.type = feature["geometry"]["type"].ToString().Replace("\"", "");

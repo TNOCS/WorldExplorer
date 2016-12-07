@@ -29,7 +29,7 @@ namespace Assets.Scripts.Plugins
         protected readonly List<User> users = new List<User>();
         protected readonly List<GameObject> cursors = new List<GameObject>();
         internal GameObject cursorPrefab;
-
+        private Dictionary<User, string> prevCommand;
         protected SessionManager()
         {
         } // guarantee this will be always a singleton only - can't use the constructor!
@@ -87,9 +87,10 @@ namespace Assets.Scripts.Plugins
                 {
                     var msg = Encoding.UTF8.GetString(e.Message);
                     var subtopic = e.Topic.Substring(topic.Length - 1);
+                    string command = (subtopic.Contains("/")) ? subtopic.Split('/')[1] : null;
                     if (subtopic.StartsWith("presence/"))
                     {
-                        UpdateUsersPresence(msg);
+                        UpdateUsersPresence(msg, command);
                         return;
                     }
                     Debug.Log(string.Format("Received message on topic {0}: {1}", subtopic, msg));
@@ -138,7 +139,7 @@ namespace Assets.Scripts.Plugins
         /// Update users in the session.
         /// </summary>
         /// <param name="json"></param>
-        protected void UpdateUsersPresence(string json)
+        protected void UpdateUsersPresence(string json, string command)
         {
             var user = User.FromJSON(json, cursors);
             if (user.Id == me.Id) return; // Do not update yourself
@@ -173,13 +174,18 @@ namespace Assets.Scripts.Plugins
             {
                 if (user.Cursor == null)
                     user.Cursor = users[i].Cursor;
-
-                if (user.SelectedFeature != null && existingUser.SelectedFeature != null)// && user.SelectedFeature.id != existingUser.SelectedFeature.id)
-                {
-                    UpdateUserSelection(existingUser.SelectedFeature, user);
-                }
-                users[i] = user;
             }
+            if (command != null && user.SelectedFeature != null && existingUser.SelectedFeature != null && user.SelectedFeature.id != existingUser.SelectedFeature.id && (!prevCommand.ContainsKey(user) || (prevCommand[user] != command)))
+            {
+                if (prevCommand.ContainsKey(user))
+                    prevCommand[user] = command;
+                else
+                    prevCommand.Add(user, command);
+                UpdateUserSelection(existingUser.SelectedFeature, user);
+            }
+
+            users[i] = user;
+
         }
 
         /// <summary>
@@ -193,9 +199,18 @@ namespace Assets.Scripts.Plugins
             if (gameobj == null) return;
             GameObject selectedObject = gameobj.transform.parent.gameObject;
             SymbolTargetHandler handler = selectedObject.GetComponent<SymbolTargetHandler>();
-            handler.OnSelect(user.UserMaterial, user.Cursor.transform.position);
+            handler.OnSelect(user.UserMaterial, user.Cursor);
         }
 
+        /// <summary>
+        /// Update the presence status.
+        /// </summary>
+        protected void UpdatePresence(string command)
+        {
+            var subtopic = string.Format("presence/{0}/{1}", me.Id, command);
+            SendJsonMessage(subtopic, me.ToJSON(), false);
+            RemoveOldUsersFromSession();
+        }
         /// <summary>
         /// Update the presence status.
         /// </summary>
@@ -234,11 +249,11 @@ namespace Assets.Scripts.Plugins
             if (isSelected)
             {
                 me.SelectedFeature = feature;
-                UpdatePresence();
+                UpdatePresence("select");
             }
             else
             {
-                UpdatePresence();
+                UpdatePresence("deselect");
                 me.SelectedFeature = null;
             }
         }

@@ -16,6 +16,7 @@ namespace Assets.Scripts.Classes
         public GameObject Cursor { get; set; }
         public Material UserMaterial { get; private set; }
 
+
         public User()
         {
             id = Guid.NewGuid().ToString();

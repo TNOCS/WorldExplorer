@@ -214,15 +214,18 @@ namespace Assets.Scripts.Plugins
         /// </summary>
         protected void RemoveOldUsersFromSession()
         {
-            var now = DateTime.UtcNow;
             if (users.Count == 0) return;
+            var now = DateTime.UtcNow;
             for (var i = users.Count - 1; i >= 0; i--)
             {
                 var user = users[i];
                 if (now - user.LastUpdateReceived > TimeSpan.FromSeconds(25))
                 {
                     if (user.SelectedFeature != null && !string.IsNullOrEmpty(user.SelectedFeature.id)) UpdateUserSelection(user.SelectedFeature);
-                    users.RemoveAt(i);
+                    {
+                     //todo remove cursor object and clean the list
+                        users.RemoveAt(i);
+                    }
                 }
             }
         }

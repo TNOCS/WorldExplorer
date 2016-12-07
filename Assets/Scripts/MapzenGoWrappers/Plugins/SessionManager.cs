@@ -19,7 +19,7 @@ namespace Assets.Scripts.Plugins
     {
         const string NewSessionKeyword = "Join session ";
         protected readonly AppState appState = AppState.Instance;
-        protected readonly User me = new User();
+        public readonly User me = new User();
         protected MqttClient client;
         protected string topic;
         protected string sessionName;
@@ -40,7 +40,7 @@ namespace Assets.Scripts.Plugins
             me.Name = appState.Config.UserName;
             me.SelectionColor = appState.Config.SelectionColor;
             me.Cursor = cursor;
-            me.Cursor.name = me.Id+"-Cursor";
+            me.Cursor.name = me.Id + "-Cursor";
             me.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = me.UserMaterial;
             var mtd = gameObject.AddComponent<UnityMainThreadDispatcher>();
             InitMqtt();
@@ -157,10 +157,16 @@ namespace Assets.Scripts.Plugins
             }
             if (!found)
             {
-                user.Cursor = Instantiate(cursorPrefab, new Vector3(0, 1, 0), transform.rotation);
-                user.Cursor.name = user.Id + "-Cursor";
-                cursors.Add(user.Cursor);
-                user.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = user.UserMaterial;
+                var cursor = cursors.Find(u => u.name == user.Id + "-Cursor");
+                if (cursor == null)
+                {
+                    user.Cursor = Instantiate(cursorPrefab, new Vector3(0, 1, 0), transform.rotation);
+                    user.Cursor.name = user.Id + "-Cursor";
+                    user.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = user.UserMaterial;
+                    cursors.Add(user.Cursor);
+                }
+                else
+                    user.Cursor = cursor;
                 users.Add(user);
             }
             else
@@ -185,7 +191,7 @@ namespace Assets.Scripts.Plugins
         {
             var gameobj = GameObject.Find(selectedFeature.id);
             if (gameobj == null) return;
-            GameObject selectedObject =gameobj.transform.parent.gameObject;
+            GameObject selectedObject = gameobj.transform.parent.gameObject;
             SymbolTargetHandler handler = selectedObject.GetComponent<SymbolTargetHandler>();
             handler.OnSelect(user.UserMaterial, user.Cursor.transform.position);
         }

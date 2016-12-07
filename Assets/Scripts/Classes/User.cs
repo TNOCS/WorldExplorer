@@ -37,7 +37,7 @@ namespace Assets.Scripts.Classes
             {
                 if (selectionColor == value) return;
                 selectionColor = value;
-                UserMaterial = new Material(Shader.Find("Diffuse"));
+                UserMaterial = new Material(Shader.Find("HoloToolkit/Cursor"));
                 UserMaterial.color = value;
             }
         }
@@ -93,34 +93,39 @@ namespace Assets.Scripts.Classes
                 user.SelectedFeature.id = sf.GetString("id");
 
                 user.SelectedFeature.SetLatLon(new Vector2d(sf.GetFloat("lon"), sf.GetFloat("lat")));
-
-                if (jsonObj.HasField("selectionColor"))
-                {
-                    var a = jsonObj["selectionColor"].GetFloat("a", 1);
-                    var r = jsonObj["selectionColor"].GetFloat("r", 1);
-                    var g = jsonObj["selectionColor"].GetFloat("g", 1);
-                    var b = jsonObj["selectionColor"].GetFloat("b", 1);
-                    user.SelectionColor = new Color(r, g, b, a);
-                }
-                if (jsonObj.HasField("cursor"))
-                {
-                    var cur = jsonObj["cursor"];
-                    var posx = cur.GetFloat("xpos", 1);
-                    var posy = cur.GetFloat("ypos", 1);
-                    var posz = cur.GetFloat("zpos", 1);
-                    var rotx = cur.GetFloat("xrot", 1);
-                    var roty = cur.GetFloat("yrot", 1);
-                    var rotz = cur.GetFloat("zrot", 1);
-                    if (user.Cursor != null && cursors.Count != 0)
-                    {
-                        user.Cursor = cursors.Find(i => i.name == user.id + "-Cursor");
-                        user.Cursor.transform.position = new Vector3(posx, posy, posz);
-                        user.Cursor.transform.rotation = Quaternion.Euler(rotx, roty, rotz);
-                    }
-
-
-                }
             }
+            if (jsonObj.HasField("selectionColor"))
+            {
+                var a = jsonObj["selectionColor"].GetFloat("a", 1);
+                var r = jsonObj["selectionColor"].GetFloat("r", 1);
+                var g = jsonObj["selectionColor"].GetFloat("g", 1);
+                var b = jsonObj["selectionColor"].GetFloat("b", 1);
+                user.SelectionColor = new Color(r, g, b, a);
+            }
+            if (jsonObj.HasField("cursor"))
+            {
+                var cur = jsonObj["cursor"];
+                var posx = cur.GetFloat("xpos", 1);
+                var posy = cur.GetFloat("ypos", 1);
+                var posz = cur.GetFloat("zpos", 1);
+                var rotx = cur.GetFloat("xrot", 1);
+                var roty = cur.GetFloat("yrot", 1);
+                var rotz = cur.GetFloat("zrot", 1);
+                if (user.Cursor == null && cursors != null && cursors.Count != 0)
+                {
+                    user.Cursor = cursors.Find(i => i.name == user.id + "-Cursor");
+                }
+                if (user.Cursor != null)
+                {
+                    user.Cursor.transform.position = new Vector3(posx, posy, posz);
+                    user.Cursor.transform.rotation = Quaternion.Euler(rotx, roty, rotz);
+
+                }
+
+
+
+            }
+
             return user;
         }
     }

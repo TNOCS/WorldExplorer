@@ -28,7 +28,7 @@ namespace Symbols
            selectedMat.color = AppState.Instance.Config.SelectionColor;
             coneRender = transform.FindChild("cone/Cone with Right Triangle/Component").gameObject.GetComponent<Renderer>();
             oldMat = coneRender.material;
-            cursor = GameObject.Find("Cursor");
+            cursor = GameObject.Find(sessionManager.me.Id+"-Cursor");
         }
         void OnSelect()
         {

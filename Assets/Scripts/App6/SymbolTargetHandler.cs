@@ -37,6 +37,12 @@ namespace Symbols
             // If the user is in placing mode, display the spatial mapping mesh.
             if (selected)
             {
+                SpeechManager.Instance.AddKeyword("Place", () =>
+                {
+                    coneRender.material = oldMat;
+                    sessionManager.UpdateSelectedFeature(Feature, false);
+                    gui.SetActive(false);
+                });
                 gui.SetActive(true);
                 sessionManager.UpdateSelectedFeature(Feature, true);
                 coneRender.material = selectedMat;
@@ -44,6 +50,7 @@ namespace Symbols
             // If the user is not in placing mode, hide the spatial mapping mesh.
             else
             {
+                SpeechManager.Instance.RemoveKeyword("Place");
                 coneRender.material = oldMat;
                 sessionManager.UpdateSelectedFeature(Feature, false);
                 gui.SetActive(false);

@@ -1,10 +1,11 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using Symbols;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes
 {
-
-
     public class Layer
     {
         public Layer()
@@ -72,6 +73,17 @@ namespace Assets.Scripts.Classes
         /// Interval in seconds to refresh layer
         /// </summary>
         public int Refresh { get; set; }
+
+        public GeoJson GeoJSON { get; set; }
+
+        public string ToJSON() {
+            var features = new StringBuilder();
+            GeoJSON.features.ForEach(f => {
+                features.Append(f.ToJSON());
+                features.Append(",");
+            });
+            return string.Format(@"{{ ""type"": ""FeatureCollection"", ""features"": [{0}] }}", features.ToString().TrimEnd(new[] {','}));
+        }
     }
 
 }

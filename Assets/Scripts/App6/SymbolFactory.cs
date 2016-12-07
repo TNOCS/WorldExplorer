@@ -7,6 +7,8 @@ using MapzenGo.Helpers;
 using UnityEngine.UI;
 using Assets.Scripts.Classes;
 using System.Text.RegularExpressions;
+using System.Text;
+using System.Globalization;
 
 namespace Symbols
 {
@@ -24,7 +26,7 @@ namespace Symbols
         public string type { get; set; }
         public string id { get; set; }
         public string baseUrl { get; set; }
-        public Dictionary<string, object> properties { get; set; }
+        public Dictionary<string, JSONObject> properties { get; set; }
         public List<Dictionary<string, object>> Stats { get; set; }
         public Geometry geometry { get; set; }
         public Vector2d tilePoint { get; set; }
@@ -48,6 +50,23 @@ namespace Symbols
             var icon = string.Empty;
             if (properties.ContainsKey("iconUrl")) icon = string.Format("{0}{1}", baseUrl, ((JSONObject)properties["iconUrl"]).str);
             return string.Format(@"{{ ""id"": ""{0}"", ""lat"": {1}, ""lon"": {2}, ""icon"": ""{3}"" }}", id, lat, lon, icon);
+        }
+
+        /// <summary>
+        /// Convert the Feature to JSON.
+        /// NOTE: This only creates point features
+        /// </summary>
+        public string ToJSON()
+        {
+            var props = new StringBuilder();
+            foreach (var kvp in properties) {
+                var s = kvp.Value.ToString();
+                props.AppendFormat(@"""{0}"": {1},", kvp.Key, s);
+            }
+            var geometry = string.Format(@"{{ ""type"": ""Point"", ""coordinates"": [{0},{1}] }}", lngLat.x, lngLat.y);
+            var json = string.Format(@"{{ ""type"": ""Feature"", ""geometry"": {0}, ""properties"": {{{1}}} }}", 
+                geometry, props.ToString().TrimEnd(new[] {','}));
+            return json;
         }
     }
 
@@ -117,7 +136,7 @@ namespace Symbols
             this.Longitude = lon;
             this.TileSize = tileSize;
             this.Range = range;
-            
+
             if (string.IsNullOrEmpty(baseUrl))
             {
                 var uri = new Uri(Layer.Url);
@@ -142,29 +161,7 @@ namespace Symbols
 
         private void AddLayer()
         {
-            string encodedString = geojson;
-            var geoJson = loadGeoJson(encodedString);
-
-            // create tag
-            //SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
-            //SerializedProperty tagsProp = tagManager.FindProperty("tags");
-            //SerializedProperty layersProp = tagManager.FindProperty("layers");
-            //string s = "layer-" + Layer.Title;
-
-            //bool found = false;
-            //for (int i = 0; i < tagsProp.arraySize; i++)
-            //{
-            //    SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
-            //    if (t.stringValue.Equals(s)) { found = true; break; }
-            //}
-
-            //if (!found)
-            //{
-            //    tagsProp.InsertArrayElementAtIndex(0);
-            //    SerializedProperty n = tagsProp.GetArrayElementAtIndex(0);
-            //    n.stringValue = s;
-            //}
-
+            Layer.GeoJSON = LoadGeoJson(geojson);            
             SymbolTiles = new List<Vector2d>();
             // setText(geoJson.features.Count + " features");
             var v2 = GM.LatLonToMeters(Latitude, Longitude);
@@ -355,11 +352,12 @@ namespace Symbols
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        private GeoJson loadGeoJson(string text)
+        private GeoJson LoadGeoJson(string text)
         {
-            JSONObject geojson = new JSONObject(text);
+            JSONObject go = new JSONObject(text);
             geoJson.features = new List<Feature>();
-            var features = geojson["features"];
+            if (!go.HasField("features")) return null;
+            var features = go["features"];
             for (var fid = 0; fid < features.Count; fid++)
             {
                 JSONObject feature = features[fid];
@@ -369,7 +367,6 @@ namespace Symbols
                 f.geometry = new Geometry();
                 f.geometry.type = feature["geometry"]["type"].ToString().Replace("\"", "");
                 f.geometry.coordinates = feature["geometry"]["coordinates"];
-
                 switch (f.geometry.type)
                 {
                     case "Point":
@@ -377,27 +374,25 @@ namespace Symbols
                         f.SetLatLon(new Vector2d(f.geometry.coordinates.list[0].f, f.geometry.coordinates.list[1].f));
                         break;
                 }
-
-                f.properties = new Dictionary<string, object>();
+                f.properties = new Dictionary<string, JSONObject>();
 
                 if (feature["properties"].keys != null)
                 {
-                    foreach (var s in feature["properties"].keys)
+                    foreach (var key in feature["properties"].keys)
                     {
-                        f.properties[s] = feature["properties"][s];
-                        if (s == "stats")
+                        f.properties[key] = feature["properties"][key];
+                        if (key != "stats") continue;
+
+                        var x = new JSONObject(feature["properties"][key].ToString());
+                        f.Stats = new List<Dictionary<string, object>>();
+                        for (int i = 0; i < x.Count; i++)
                         {
-                            var x = new JSONObject(feature["properties"][s].ToString());
-                            f.Stats = new List<Dictionary<string, object>>();
-                            for (int i = 0; i < x.Count; i++)
+                            var statDic = new Dictionary<string, object>();
+                            foreach (var item in x[i].keys)
                             {
-                                var statDic = new Dictionary<string, object>();
-                                foreach (var item in x[i].keys)
-                                {
-                                    statDic.Add(item, x[i][item]);
-                                }
-                                f.Stats.Add(statDic);
+                                statDic.Add(item, x[i][item]);
                             }
+                            f.Stats.Add(statDic);
                         }
                     }
                 }

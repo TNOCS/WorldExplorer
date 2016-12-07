@@ -12,6 +12,8 @@ public class Cursor : HoloToolkit.Unity.CursorManager
     public GameObject FocusedObject { get; private set; }
     private GameObject prevTarget;
     GestureRecognizer recognizer;
+    private GameObject oldFocusObject;
+    private bool mouse = false;
     // Use this for initialization
     void Start()
     {
@@ -20,19 +22,28 @@ public class Cursor : HoloToolkit.Unity.CursorManager
         recognizer.TappedEvent += (source, tapCount, ray) =>
         {
             // Send an OnSelect message to the focused object and its ancestors.
-            GameObject oldFocusObject = FocusedObject;
+            oldFocusObject = FocusedObject;
             if (GazeManager.Instance.HitInfo.transform != null)
             {
                 GameObject hitInfo = GazeManager.Instance.HitInfo.transform.gameObject;
-                // Send an OnSelect message to the focused object and its ancestors.
-                if (oldFocusObject != hitInfo.transform.gameObject)
-                    FocusedObject = hitInfo.transform.gameObject;
-                else
-                    FocusedObject = null;
-                if (FocusedObject != null)
+                if (hitInfo.tag == "symbol")
                 {
-                    FocusedObject.BroadcastMessage("OnSelect");
+
+                    // Send an OnSelect message to the focused object and its ancestors.
+                    if (oldFocusObject != hitInfo.transform.gameObject)
+                        FocusedObject = hitInfo.transform.gameObject;
+                    else
+                        FocusedObject = null;
+
+
                 }
+            }
+            if (FocusedObject != oldFocusObject)
+            {
+                if (oldFocusObject != null)
+                    oldFocusObject.BroadcastMessage("OnSelect");
+                if (FocusedObject != null)
+                    FocusedObject.BroadcastMessage("OnSelect");
             }
         };
         recognizer.StartCapturingGestures();
@@ -53,7 +64,7 @@ public class Cursor : HoloToolkit.Unity.CursorManager
         // Do a raycast into the world based on the user's
         // head position and orientation.
 
-        GameObject oldFocusObject = FocusedObject;
+
         if (GazeManager.Instance.HitInfo.transform != null)
         {
             GameObject hitInfo = GazeManager.Instance.HitInfo.transform.gameObject;
@@ -71,6 +82,8 @@ public class Cursor : HoloToolkit.Unity.CursorManager
                 prevTarget = hitInfo.transform.gameObject;
                 if (Input.GetMouseButtonDown(0))
                 {
+                    mouse = true;
+                    oldFocusObject = FocusedObject;
                     if (oldFocusObject != hitInfo.transform.gameObject)
                         FocusedObject = hitInfo.transform.gameObject;
                     else
@@ -91,14 +104,18 @@ public class Cursor : HoloToolkit.Unity.CursorManager
 
         // If the focused object changed this frame,
         // start detecting fresh gestures again.
-        if (FocusedObject != oldFocusObject)
+        if (mouse)
         {
-            if (oldFocusObject != null)
-                oldFocusObject.BroadcastMessage("OnSelect");
-            if (FocusedObject != null)
-                FocusedObject.BroadcastMessage("OnSelect");
-            recognizer.CancelGestures();
-            recognizer.StartCapturingGestures();
+            if (FocusedObject != oldFocusObject)
+            {
+                if (oldFocusObject != null)
+                    oldFocusObject.BroadcastMessage("OnSelect");
+                if (FocusedObject != null)
+                    FocusedObject.BroadcastMessage("OnSelect");
+                recognizer.CancelGestures();
+                recognizer.StartCapturingGestures();
+            }
+            mouse=false;
         }
 
     }

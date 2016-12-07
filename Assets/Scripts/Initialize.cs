@@ -17,6 +17,7 @@ public class Initialize : MonoBehaviour
 
     // Use this for initialization
     private GameObject _cursorFab;
+    private GameObject _cursorFabOther;
     private GameObject cursor;
     private GameObject HoloManagers;
     private AppState appState;
@@ -32,7 +33,9 @@ public class Initialize : MonoBehaviour
         // We need this so the MQTT thread can receive messages
         // var mtd = gameObject.AddComponent<UnityMainThreadDispatcher>();
         _cursorFab = Resources.Load("Prefabs\\Input\\Cursor") as GameObject;
-        appState = AppState.Instance;
+        _cursorFabOther  = Resources.Load("Prefabs\\Input\\CursorOther") as GameObject;
+        
+         appState = AppState.Instance;
         appState.LoadConfig(configUrl);
         Hud = GameObject.Find("HUDCanvas");
         audioCommands = new Dictionary<string, string>();
@@ -79,17 +82,17 @@ public class Initialize : MonoBehaviour
     {
         Debug.Log("Initializing...");
         appState.Camera = gameObject;
-        //appState.Speech = SpeechManager.Instance;
 
+        //appState.Speech = SpeechManager.Instance;
+        cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
+        cursor.name = "Cursor";
         appState.AddTerrain();
         InitSpeech();
         InitViews();
         InitHud();
         sessionMgr = SessionManager.Instance;
+        sessionMgr.cursorPrefab = _cursorFabOther;
         sessionMgr.Init();
-
-        cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
-        cursor.name = "Cursor";
 
         appState.Speech.Init();
     }

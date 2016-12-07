@@ -361,21 +361,14 @@ namespace Assets.Scripts
             ObservableWWW.GetWWW(l.Url).Subscribe(
                 success =>
                 {
-                    var layerObject = new GameObject("Layer-" + l.Title);
+                    var layerObject = new GameObject(l.Title);
 
                     layerObject.transform.SetParent(Layers.transform, false);
                     l._object = layerObject;
                     l._active = true;
 
                     var symbolFactory = layerObject.AddComponent<SymbolFactory>();
-                    symbolFactory.geojson = success.text;
-                    symbolFactory.zoom = av.Zoom;
-                    symbolFactory.Latitude = av.Lat;
-                    symbolFactory.Longitude = av.Lon;
-                    symbolFactory.TileSize = av.TileSize;
-                    symbolFactory.Layer = l;
-                    symbolFactory.Range = av.Range;
-                    symbolFactory.InitLayer();
+                    symbolFactory.InitLayer(l, success.text, av.Zoom, av.Lat, av.Lon, av.TileSize, av.Range);
                 },
                 error =>
                 {

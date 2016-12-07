@@ -24,12 +24,11 @@ namespace Symbols
         void Start()
         {
             selectedMat = (Material)Resources.Load("Materials/cone-Color-J04", typeof(Material));
-            selectedMat.color = AppState.Instance.Config.SelectionColor;
+           selectedMat.color = AppState.Instance.Config.SelectionColor;
             coneRender = transform.FindChild("cone/Cone with Right Triangle/Component").gameObject.GetComponent<Renderer>();
             oldMat = coneRender.material;
             cursor = GameObject.Find("Cursor");
         }
-
         void OnSelect()
         {
             selected = !selected;
@@ -46,6 +45,25 @@ namespace Symbols
             {
                 coneRender.material = oldMat;
                 sessionManager.UpdateSelectedFeature(Feature, false);
+                gui.SetActive(false);
+            }
+        }
+
+        public void OnSelect(Material selectedMat)
+        {
+            selected = !selected;
+
+            // If the user is in placing mode, display the spatial mapping mesh.
+            if (selected)
+            {
+                gui.SetActive(true);
+                
+                coneRender.material = selectedMat;
+            }
+            // If the user is not in placing mode, hide the spatial mapping mesh.
+            else
+            {
+                coneRender.material = oldMat;
                 gui.SetActive(false);
             }
         }

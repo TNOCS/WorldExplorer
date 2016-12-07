@@ -108,8 +108,16 @@ namespace Symbols
         /// <summary>
         /// Build the symbol layer
         /// </summary>
-        public void InitLayer()
+        public void InitLayer(Layer layer, string geojson, int zoom, float lat, float lon, int tileSize, int range)
         {
+            this.Layer = layer;
+            this.geojson = geojson;
+            this.zoom = zoom;
+            this.Latitude = lat;
+            this.Longitude = lon;
+            this.TileSize = tileSize;
+            this.Range = range;
+            
             if (string.IsNullOrEmpty(baseUrl))
             {
                 var uri = new Uri(Layer.Url);

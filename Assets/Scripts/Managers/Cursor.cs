@@ -1,4 +1,6 @@
-﻿using HoloToolkit.Unity;
+﻿
+using Assets.Scripts.Plugins;
+using HoloToolkit.Unity;
 using Symbols;
 using UnityEngine;
 using UnityEngine.VR.WSA.Input;
@@ -6,7 +8,6 @@ using UnityEngine.VR.WSA.Input;
 public class Cursor : HoloToolkit.Unity.CursorManager
 {
     // private MeshRenderer meshRenderer;
-
     // Represents the hologram that is currently being gazed at.
     public GameObject FocusedObject { get; private set; }
     private GameObject prevTarget;
@@ -32,12 +33,16 @@ public class Cursor : HoloToolkit.Unity.CursorManager
 
     }
 
+
+    private float nextActionTime = 1.0f;
+    // in seconds
+    private float period = 1.0f;
     // Update is called once per frame
     void Update()
     {
         // Do a raycast into the world based on the user's
         // head position and orientation.
- 
+
         GameObject oldFocusObject = FocusedObject;
         if (GazeManager.Instance.HitInfo.transform != null)
         {
@@ -71,6 +76,7 @@ public class Cursor : HoloToolkit.Unity.CursorManager
                     prevTarget = null;
                 }
             }
+
         }
 
         // If the focused object changed this frame,
@@ -84,11 +90,12 @@ public class Cursor : HoloToolkit.Unity.CursorManager
             recognizer.CancelGestures();
             recognizer.StartCapturingGestures();
         }
-     
+
     }
     protected override void LateUpdate()
     {
         base.LateUpdate();
+
 
     }
 }

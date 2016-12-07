@@ -8,7 +8,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: Default
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _EMISSION _LIGHTMAPPING_REALTIME
+  m_ShaderKeywords: _EMISSION _LIGHTMAPPING_REALTIME _USEMAINTEX_ON
   m_LightmapFlags: 1
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -46,6 +46,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
+        name: _EmissionTex
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _MainTex
       second:
         m_Texture: {fileID: 0}
@@ -73,6 +79,15 @@ Material:
     - first:
         name: _BumpScale
       second: 1
+    - first:
+        name: _ColorMask
+      second: 15
+    - first:
+        name: _ColorWriteMask
+      second: 15
+    - first:
+        name: _Cull
+      second: 2
     - first:
         name: _Cutoff
       second: 0.5
@@ -119,15 +134,45 @@ Material:
         name: _SrcBlend
       second: 1
     - first:
+        name: _Stencil
+      second: 0
+    - first:
+        name: _StencilComp
+      second: 8
+    - first:
+        name: _StencilOp
+      second: 0
+    - first:
+        name: _StencilReadMask
+      second: 255
+    - first:
+        name: _StencilWriteMask
+      second: 255
+    - first:
         name: _UVSec
       second: 0
+    - first:
+        name: _UseBumpMap
+      second: 0
+    - first:
+        name: _UseColor
+      second: 0
+    - first:
+        name: _UseEmissionTex
+      second: 0
+    - first:
+        name: _UseMainTex
+      second: 1
+    - first:
+        name: _ZTest
+      second: 4
     - first:
         name: _ZWrite
       second: 1
     m_Colors:
     - first:
         name: _Color
-      second: {r: 0.6, g: 0.12352943, b: 0.12352943, a: 1}
+      second: {r: 0.32673022, g: 0.24264708, b: 0.6, a: 1}
     - first:
         name: _EmissionColor
       second: {r: 0, g: 0, b: 0, a: 1}

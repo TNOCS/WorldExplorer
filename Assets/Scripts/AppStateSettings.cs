@@ -7,6 +7,7 @@ using MapzenGo.Models.Plugins;
 using UniRx;
 using System.Collections;
 using Symbols;
+using System.Threading;
 
 namespace Assets.Scripts
 {

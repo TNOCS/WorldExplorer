@@ -12,11 +12,13 @@ using Assets.Scripts.Utils;
 public class Initialize : MonoBehaviour
 {
     [SerializeField]
-    private string configUrl = "https://dl.dropboxusercontent.com/s/efkzvthcoz307vh/config_erik.json?dl=0";
+
+    private string configUrl = "https://dl.dropboxusercontent.com/s/wv89vyug74u4gy5/config_ronald.json?dl=0";
     public const string SwitchToSpeech = "Switch to ";
 
     // Use this for initialization
     private GameObject _cursorFab;
+    private GameObject _cursorFabOther;
     private GameObject cursor;
     private GameObject HoloManagers;
     private AppState appState;
@@ -32,6 +34,8 @@ public class Initialize : MonoBehaviour
         // We need this so the MQTT thread can receive messages
         // var mtd = gameObject.AddComponent<UnityMainThreadDispatcher>();
         _cursorFab = Resources.Load("Prefabs\\Input\\Cursor") as GameObject;
+        _cursorFabOther = Resources.Load("Prefabs\\Input\\CursorOther") as GameObject;
+
         appState = AppState.Instance;
         appState.LoadConfig(configUrl);
         Hud = GameObject.Find("HUDCanvas");
@@ -45,18 +49,18 @@ public class Initialize : MonoBehaviour
         HoloManagers = new GameObject("HoloManagers");
         var Handsmanager = HoloManagers.AddComponent<Assets.Scripts.Utils.HandsManager>();
         Handsmanager.FingerPressedSound = fingerPressedSound;
-        
-        GameObject textO = new GameObject("Commands-Help");
-        textO.transform.SetParent(Hud.transform);
-        Text info = textO.AddComponent<Text>();
 
+        GameObject paneltext = new GameObject("textpanel");
+        paneltext.transform.position = new Vector3(0, 1, 0);
+        paneltext.transform.SetParent(Hud.transform, false);
+        paneltext.transform.localPosition = new Vector3(0, 0, 0);
+        var panelimage = paneltext.AddComponent<Image>();
+        RectTransform panelimagert = paneltext.GetComponent(typeof(RectTransform)) as RectTransform;
+        panelimage.sprite = new Sprite();
+        GameObject textO = new GameObject("Commands-Help");
+        textO.transform.SetParent(paneltext.transform, false);
+        Text info = textO.AddComponent<Text>();
         RectTransform rt = textO.GetComponent(typeof(RectTransform)) as RectTransform;
-       
-        rt.anchorMin = new Vector2(1, 1);
-        rt.anchorMax = new Vector2(1, 1);
-        rt.pivot = new Vector2(1f, 1f);
-        rt.position = new Vector2(0, 0);
-        rt.anchoredPosition = new Vector2(0, 0);
 
         info.font = font;
         info.resizeTextForBestFit = true;
@@ -71,25 +75,27 @@ public class Initialize : MonoBehaviour
             h++;
         }
         rt.sizeDelta = new Vector2(350, (h + 1) * 25);
+        panelimagert.sizeDelta = rt.sizeDelta;
         info.text = s.ToString();
-        Hud.SetActive(false);
     }
 
     void Start()
     {
         Debug.Log("Initializing...");
         appState.Camera = gameObject;
-        //appState.Speech = SpeechManager.Instance;
 
+        //appState.Speech = SpeechManager.Instance;
+        cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
+        cursor.name = "Cursor";
+        cursor.GetComponent<Cursor>().enabled = true;
         appState.AddTerrain();
         InitSpeech();
         InitViews();
         InitHud();
         sessionMgr = SessionManager.Instance;
-        sessionMgr.Init();
 
-        cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
-        cursor.name = "Cursor";
+        sessionMgr.cursorPrefab = _cursorFabOther;
+        sessionMgr.Init(cursor);
 
         appState.Speech.Init();
     }

@@ -132,7 +132,7 @@ namespace Assets.Scripts.Plugins
 
         protected void Heartbeat()
         {
-            InvokeRepeating("UpdatePresence", 5, 4);
+            InvokeRepeating("UpdatePresence", 5, 1);
         }
 
         /// <summary>

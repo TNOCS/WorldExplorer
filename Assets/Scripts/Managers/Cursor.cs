@@ -20,9 +20,19 @@ public class Cursor : HoloToolkit.Unity.CursorManager
         recognizer.TappedEvent += (source, tapCount, ray) =>
         {
             // Send an OnSelect message to the focused object and its ancestors.
-            if (FocusedObject != null)
+            GameObject oldFocusObject = FocusedObject;
+            if (GazeManager.Instance.HitInfo.transform != null)
             {
-                FocusedObject.BroadcastMessage("OnSelect");
+                GameObject hitInfo = GazeManager.Instance.HitInfo.transform.gameObject;
+                // Send an OnSelect message to the focused object and its ancestors.
+                if (oldFocusObject != hitInfo.transform.gameObject)
+                    FocusedObject = hitInfo.transform.gameObject;
+                else
+                    FocusedObject = null;
+                if (FocusedObject != null)
+                {
+                    FocusedObject.BroadcastMessage("OnSelect");
+                }
             }
         };
         recognizer.StartCapturingGestures();

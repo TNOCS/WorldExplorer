@@ -114,9 +114,10 @@ namespace Assets.Scripts.Classes
                     if (user.Cursor != null && cursors.Count != 0)
                     {
                         user.Cursor = cursors.Find(i => i.name == user.id + "-Cursor");
+                    }
                         user.Cursor.transform.position = new Vector3(posx, posy, posz);
                         user.Cursor.transform.rotation = Quaternion.Euler(rotx, roty, rotz);
-                    }
+                    
 
 
                 }

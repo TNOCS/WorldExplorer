@@ -171,7 +171,7 @@ namespace Assets.Scripts.Plugins
                     user.Cursor = cursor;
                 users.Add(user);
                 if (user.SelectedFeature != null)
-                    UpdateUserSelection(existingUser.SelectedFeature, user);
+                    UpdateUserSelection(user.SelectedFeature, user);
 
             }
             else

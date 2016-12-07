@@ -98,7 +98,7 @@ namespace Assets.Scripts.Classes
                     var r = jsonObj["selectionColor"].GetFloat("r", 1);
                     var g = jsonObj["selectionColor"].GetFloat("g", 1);
                     var b = jsonObj["selectionColor"].GetFloat("b", 1);
-                    user.selectionColor = new Color(r, g, b, a);
+                    user.SelectionColor = new Color(r, g, b, a);
                 }
             }
             return user;

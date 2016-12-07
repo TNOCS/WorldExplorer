@@ -87,7 +87,7 @@ namespace Assets.Scripts.Plugins
                 {
                     var msg = Encoding.UTF8.GetString(e.Message);
                     var subtopic = e.Topic.Substring(topic.Length - 1);
-                    string command = (subtopic.Contains("/")) ? subtopic.Split('/')[1] : null;
+                    string command = (subtopic.Split('/').Length==3) ? subtopic.Split('/')[2] : null;
                     if (subtopic.StartsWith("presence/"))
                     {
                         UpdateUsersPresence(msg, command);

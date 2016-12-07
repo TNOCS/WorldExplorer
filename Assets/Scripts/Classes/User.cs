@@ -1,5 +1,6 @@
 ﻿using Symbols;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes
@@ -80,7 +81,7 @@ namespace Assets.Scripts.Classes
             }
         }
 
-        public static User FromJSON(string json)
+        public static User FromJSON(string json, List<GameObject> cursors)
         {
             var jsonObj = new JSONObject(json);
             var user = new User(jsonObj.GetString("id"));
@@ -103,17 +104,18 @@ namespace Assets.Scripts.Classes
                 }
                 if (jsonObj.HasField("cursor"))
                 {
-                    var posx = jsonObj["cursor"].GetFloat("posx", 1);
-                    var posy = jsonObj["cursor"].GetFloat("posy", 1);
-                    var posz = jsonObj["cursor"].GetFloat("posz", 1);
-                    var rotx = jsonObj["cursor"].GetFloat("rotx", 1);
-                    var roty = jsonObj["cursor"].GetFloat("roty", 1);
-                    var rotz = jsonObj["cursor"].GetFloat("rotz", 1);
-                    if (user.Cursor != null)
-                    {
-                        user.Cursor.transform.position = new Vector3(posx, posy, posz);
-                        user.Cursor.transform.rotation =Quaternion.Euler(rotx, roty, rotz);
-                    }
+                    var cur = jsonObj["cursor"];
+                    var posx = cur.GetFloat("xpos", 1);
+                    var posy = cur.GetFloat("ypos", 1);
+                    var posz = cur.GetFloat("zpos", 1);
+                    var rotx = cur.GetFloat("xrot", 1);
+                    var roty = cur.GetFloat("yrot", 1);
+                    var rotz = cur.GetFloat("zrot", 1);
+                    if (user.Cursor == null || cursors.Count == 0) return user;
+                    user.Cursor = cursors.Find(i => i.name == user.id + "-Cursor");
+                    user.Cursor.transform.position = new Vector3(posx, posy, posz);
+                    user.Cursor.transform.rotation = Quaternion.Euler(rotx, roty, rotz);
+
 
                 }
             }

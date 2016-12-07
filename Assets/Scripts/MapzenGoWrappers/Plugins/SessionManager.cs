@@ -27,8 +27,9 @@ namespace Assets.Scripts.Plugins
         /// Other users in the session
         /// </summary>
         protected readonly List<User> users = new List<User>();
-        internal   GameObject cursorPrefab;
-       
+        protected readonly List<GameObject> cursors = new List<GameObject>();
+        internal GameObject cursorPrefab;
+
         protected SessionManager()
         {
         } // guarantee this will be always a singleton only - can't use the constructor!
@@ -39,6 +40,8 @@ namespace Assets.Scripts.Plugins
             me.Name = appState.Config.UserName;
             me.SelectionColor = appState.Config.SelectionColor;
             me.Cursor = cursor;
+            me.Cursor.name = me.Id+"-Cursor";
+            me.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = me.UserMaterial;
             var mtd = gameObject.AddComponent<UnityMainThreadDispatcher>();
             InitMqtt();
             var sessions = new List<string> { "one", "two", "three" };
@@ -103,7 +106,7 @@ namespace Assets.Scripts.Plugins
                     //_3dText.GetComponent<TextMesh>().text = msg;
                 });
             };
-        }  
+        }
 
         protected void SetView(string msg)
         {
@@ -137,34 +140,38 @@ namespace Assets.Scripts.Plugins
         /// <param name="json"></param>
         protected void UpdateUsersPresence(string json)
         {
-            var user = User.FromJSON(json);
+            var user = User.FromJSON(json, cursors);
             if (user.Id == me.Id) return; // Do not update yourself
 
             var found = false;
             User existingUser = null;
             int i = -1;
-            while( i < users.Count-1&&!found)
+            while (i < users.Count - 1 && !found)
             {
                 i++;
                 existingUser = users[i];
                 if (user.Id != existingUser.Id) continue;
                 found = true;
 
-                
+
             }
             if (!found)
             {
                 user.Cursor = Instantiate(cursorPrefab, new Vector3(0, 1, 0), transform.rotation);
-                user.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material=user.UserMaterial;   
+                user.Cursor.name = user.Id + "-Cursor";
+                cursors.Add(user.Cursor);
+                user.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = user.UserMaterial;
                 users.Add(user);
             }
             else
             {
+                if (user.Cursor == null)
+                    user.Cursor = users[i].Cursor;
+
                 if (user.SelectedFeature != null && existingUser.SelectedFeature != null)// && user.SelectedFeature.id != existingUser.SelectedFeature.id)
                 {
                     UpdateUserSelection(existingUser.SelectedFeature, user);
                 }
-                user.Cursor = users[i].Cursor;
                 users[i] = user;
             }
         }
@@ -176,9 +183,11 @@ namespace Assets.Scripts.Plugins
         /// <param name="user">If user does not exist, remove the current selection.</param>
         protected void UpdateUserSelection(Feature selectedFeature, User user = null)
         {
-            GameObject selectedObject = GameObject.Find(selectedFeature.id).transform.parent.gameObject;
+            var gameobj = GameObject.Find(selectedFeature.id);
+            if (gameobj == null) return;
+            GameObject selectedObject =gameobj.transform.parent.gameObject;
             SymbolTargetHandler handler = selectedObject.GetComponent<SymbolTargetHandler>();
-            handler.OnSelect(user.UserMaterial,user.Cursor.transform.position);
+            handler.OnSelect(user.UserMaterial, user.Cursor.transform.position);
         }
 
         /// <summary>

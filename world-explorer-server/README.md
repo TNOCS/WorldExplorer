@@ -1,6 +1,13 @@
 # WorldExplorerServer
 Tile server proxy for WorldExplorer, serving cached Mapzen vector tiles, or your own GeoJSON tiles. 
-In addition, when running on port 10733 (requirement of Unity), it can serve as an assetbundle server too.
+In addition, when running on port 10733 (requirement of Unity), it can serve as an assetbundle server too (serving assets from the `public/assets` folder). Furthermore, it runs a small map application, with which you can specify the location on the map too look at in the Hololens.
+
+In case you wish to have a collaborative session, please install an MQTT server too. For example, you can use:
+```console
+npm i -g mosca
+mosca -p 8026 --http-port 8028
+```
+Which starts an MQTT server on port 8026, and a WebSockets client on port 8028.
 
 Features:
 - Serve GeoJSON as tiles from the cache folder (folder can be configured in `config.json`). For example, when requesting [http://localhost:10733/buildings,roads,landuse,places,pois/17/67530/43625.json](http://localhost:10733/buildings,roads,landuse,places,pois/17/67530/43625.json), a JSON object is returned containing the keys `buildings`, `roads` etc. whose value is a GeoJSON feature collection.

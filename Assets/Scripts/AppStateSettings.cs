@@ -28,7 +28,7 @@ namespace Assets.Scripts
         public SpeechManager Speech { get; set; }
         public List<string> MapzenTags = new List<string>(new string[] { "buildings", "water", "roads", "pois", "landuse" });
 
-        protected AppState() {} // guarantee this will be always a singleton only - can't use the constructor!
+        protected AppState() { } // guarantee this will be always a singleton only - can't use the constructor!
 
         public void Awake()
         {
@@ -62,10 +62,12 @@ namespace Assets.Scripts
 
             while (!www.isDone) { UniRx.Thread.Sleep(50); }
 
-            if (!string.IsNullOrEmpty(www.error)) {
+            if (!string.IsNullOrEmpty(www.error))
+            {
                 var targetFile = Resources.Load<TextAsset>("config");
                 json = targetFile.text;
-            } else
+            }
+            else
             {
                 json = www.text;
             }
@@ -150,7 +152,7 @@ namespace Assets.Scripts
             World.transform.SetParent(Map.transform, false);
             var gazeManager = World.AddComponent<HoloToolkit.Unity.GazeManager>();
             gazeManager.MaxGazeDistance = 3f;
-         
+
             // init map
 #if DEBUG
             var tm = World.AddComponent<TileManager>();
@@ -168,7 +170,7 @@ namespace Assets.Scripts
             tm.TileSize = iv.TileSize;
 
             TileManager = tm;
-#region UI
+            #region UI
 
             var ui = new GameObject("UI"); // Placeholder (root element in UI tree)
             ui.transform.SetParent(World.transform, false);
@@ -180,11 +182,11 @@ namespace Assets.Scripts
             AddRectTransformToGameObject(poi);
             poi.transform.SetParent(ui.transform, false);
 
-#endregion
+            #endregion
 
-#region FACTORIES
+            #region FACTORIES
 
-#region defaultfactories
+            #region defaultfactories
             var factories = new GameObject("Factories");
             factories.transform.SetParent(World.transform, false);
 
@@ -264,9 +266,9 @@ namespace Assets.Scripts
                     InitGeojsonLayer(l);
                 }
             });
-#endregion
+            #endregion
 
-#region TILE PLUGINS
+            #region TILE PLUGINS
 
             var tilePlugins = new GameObject("TilePlugins");
             tilePlugins.transform.SetParent(World.transform, false);
@@ -283,7 +285,8 @@ namespace Assets.Scripts
 
             foreach (var tl in Config.Layers.Where(k => { return k.Type.ToLower() == "tilelayer"; }))
             {
-                Speech.AddKeyword(ShowLayerSpeech + tl.VoiceCommand, () => {
+                Speech.AddKeyword(ShowLayerSpeech + tl.VoiceCommand, () =>
+                {
                     if (tl.Group != null)
                     {
                         var ll = Config.Layers.Where(k => k.Type.ToLower() == "tilelayer" && k.Group == tl.Group).Select(k => k.Title);
@@ -294,10 +297,10 @@ namespace Assets.Scripts
                 });
             }
 
-#endregion
+            #endregion
 
         }
-   
+
         public void DestroyGeojsonLayer(Layer l)
         {
             Speech.RemoveKeyword(ShowLayerSpeech + l.VoiceCommand);

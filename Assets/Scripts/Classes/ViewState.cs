@@ -84,7 +84,7 @@ namespace Assets.Scripts.Classes
         {
             get
             {
-                return TileSize * 156543.03 * Math.Cos(Lat) / (2 ^ Zoom);
+                return TileSize * 156543.03 * Math.Cos(Lat * Math.PI/180) / (Math.Pow(2, Zoom));
             }
         }
 

@@ -30,6 +30,10 @@ namespace Symbols
             oldMat = coneRender.material;
             cursor = GameObject.Find(sessionManager.me.Id + "-Cursor");
         }
+
+        /// <summary>
+        /// OnSelect is called whenever a cone is selected or deselected.
+        /// </summary>
         public void OnSelect()
         {
             selected = !selected;
@@ -39,6 +43,7 @@ namespace Symbols
             {
                 SpeechManager.Instance.AddKeyword("Place", () =>
                 {
+                    selected = false;
                     coneRender.material = oldMat;
                     sessionManager.UpdateSelectedFeature(Feature, false);
                     gui.SetActive(false);
@@ -57,6 +62,11 @@ namespace Symbols
             }
         }
 
+        /// <summary>
+        /// OnSelect is called whenever another cursor selects an item.
+        /// </summary>
+        /// <param name="selectedMat"></param>
+        /// <param name="otherCursor"></param>
         public void OnSelect(Material selectedMat, GameObject otherCursor)
         {
             OtherUserSelected = !OtherUserSelected;
@@ -76,63 +86,53 @@ namespace Symbols
                 gui.SetActive(false);
                 transform.position = new Vector3(otherCursor.transform.position.x, otherCursor.transform.position.y, otherCursor.transform.position.z);
 
-                // Now, update the lat/lon of the feature
-                var sf = transform.parent.GetComponent<SymbolFactory>();
-                var v0 = new Vector2d(transform.localPosition.x, transform.localPosition.z) + sf.CenterInMercator;
-                // Debug.Log(string.Format("Meters x: {0}, y: {1}", v0.x, v0.y));
-                var v3 = GM.MetersToLatLon(v0);
-                Feature.SetLatLon(v3);
+                //// Now, update the lat/lon of the feature
+                //var sf = transform.parent.GetComponent<SymbolFactory>();
+                //var v0 = new Vector2d(transform.localPosition.x, transform.localPosition.z) + sf.CenterInMercator;
+                //// Debug.Log(string.Format("Meters x: {0}, y: {1}", v0.x, v0.y));
+                //var v3 = GM.MetersToLatLon(v0);
+                //Feature.SetLatLon(v3);
                 otherCursor = null;
-
             }
-
         }
 
         public void Show()
         {
-            if (!selected)
-                gui.SetActive(true);
+            if (selected) return;
+            gui.SetActive(true);
         }
 
         public void Hide()
         {
-            if (!selected)
-                gui.SetActive(false);
+            if (selected) return;
+            gui.SetActive(false);
         }
 
         // Update is called once per frame
         void Update()
         {
+            Vector3 pos;
             if (OtherUserSelected)
             {
-                var pos = otherCursor.transform.position;
-                transform.position = new Vector3(pos.x, pos.y, pos.z);
-
-                // Now, update the lat/lon of the feature
-                var sf = transform.parent.GetComponent<SymbolFactory>();
-                var v0 = new Vector2d(transform.localPosition.x, transform.localPosition.z) + sf.CenterInMercator;
-                var v3 = GM.MetersToLatLon(v0);
-                Feature.SetLatLon(v3); transform.position = new Vector3(pos.x, pos.y, pos.z);
-
+                pos = otherCursor.transform.position;
             }
-
-
-            if (selected)
+            else if (selected)
             {
-                // Do a raycast into the world that will only hit the Spatial Mapping mesh.
-
-                // Move this object's parent object to
-                // where the raycast hit the Spatial Mapping mesh.
-                transform.position = new Vector3(cursor.transform.position.x, this.transform.position.y, cursor.transform.position.z);
-
-                // Now, update the lat/lon of the feature
-                var sf = transform.parent.GetComponent<SymbolFactory>();
-                var v0 = new Vector2d(transform.localPosition.x, transform.localPosition.z) + sf.CenterInMercator;
-                // Debug.Log(string.Format("Meters x: {0}, y: {1}", v0.x, v0.y));
-                var v3 = GM.MetersToLatLon(v0);
-                Feature.SetLatLon(v3);
-                // Debug.Log(string.Format("Latlng: {0}, {1}", v3.y, v3.x));
+                // Move this object's parent object to where the raycast hit the Spatial Mapping mesh.
+                pos = cursor.transform.position;
+            } else
+            {
+                return;
             }
+
+            transform.position = new Vector3(pos.x, pos.y, pos.z);
+            // Now, update the lat/lon of the feature
+            var sf = transform.parent.GetComponent<SymbolFactory>();
+            var v0 = new Vector2d(transform.localPosition.x, transform.localPosition.z) + sf.CenterInMercator;
+            // Debug.Log(string.Format("Meters x: {0}, y: {1}", v0.x, v0.y));
+            var v3 = GM.MetersToLatLon(v0);
+            Feature.SetLatLon(v3);
+            // Debug.Log(string.Format("Latlng: {0}, {1}", v3.y, v3.x));
         }
     }
 }

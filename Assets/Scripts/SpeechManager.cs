@@ -32,8 +32,11 @@ namespace Assets.Scripts
             sessionManager = SessionManager.Instance;
         }
 
+        private void doNothing() { }
+
         private void AddDefaultKeywords()
         {
+            AddKeyword("Place", () => doNothing() );
             AddKeyword("Zoom in", () => SetZoomAndRange(1,0));
             AddKeyword("Zoom out", () => SetZoomAndRange(-1, 0));
             AddKeyword("Increase range", () => SetZoomAndRange(0, 1));
@@ -110,13 +113,14 @@ namespace Assets.Scripts
 
         public void AddKeyword(string speech, Action action)
         {
-            if (Keywords.ContainsKey(speech)) return;
-            Keywords.Add(speech, action);
+            Keywords[speech] = action;
+            //if (Keywords.ContainsKey(speech)) return;
+            //Keywords.Add(speech, action);
         }
 
         public void RemoveKeyword(string speech)
         {
-            if (Keywords.ContainsKey(speech)) Keywords.Remove(speech);
+            if (Keywords.ContainsKey(speech)) Keywords[speech] = () => { return; };
         }
 
     }

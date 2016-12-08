@@ -153,12 +153,9 @@ namespace Assets.Scripts.Plugins
                 existingUser = users[i];
                 if (user.Id != existingUser.Id) continue;
                 found = true;
-
-
             }
             if (!found)
             {
-
                 var cursor = cursors.Find(u => u.name == user.Id + "-Cursor");
                 if (cursor == null)
                 {
@@ -172,16 +169,14 @@ namespace Assets.Scripts.Plugins
                 users.Add(user);
                 if (user.SelectedFeature != null)
                     UpdateUserSelection(user.SelectedFeature, user);
-
             }
             else
             {
                 if (user.Cursor == null)
                     user.Cursor = users[i].Cursor;
-                if (user.SelectedFeature != null && existingUser.SelectedFeature != null)// && user.SelectedFeature.id != existingUser.SelectedFeature.id)
+                if (user.SelectedFeature != null && existingUser.SelectedFeature != null)
                     UpdateUserSelection(existingUser.SelectedFeature, user);
                 users[i] = user;
-
             }
         }
 

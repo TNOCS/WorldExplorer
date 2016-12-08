@@ -4,10 +4,6 @@ using Assets.Scripts.Plugins;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Text;
-#if (NETFX_CORE)
-using Assets.MapzenGo.Models.Enums;
-using Assets.Scripts.Utils;
-#endif
 
 public class Initialize : MonoBehaviour
 {
@@ -102,9 +98,6 @@ public class Initialize : MonoBehaviour
 
     void InitSpeech()
     {
-
-
-
         audioCommands.Add("Hide Commands", " Hides the voice commands");
         appState.Speech.Keywords.Add("Hide Commands", () =>
         {
@@ -127,7 +120,6 @@ public class Initialize : MonoBehaviour
 
     void InitViews()
     {
-
         appState.Config.Views.ForEach(v =>
         {
             var cmd = SwitchToSpeech + v.Name;
@@ -145,12 +137,6 @@ public class Initialize : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.LeftArrow)) appState.Center = new Vector3(-1, 0, 0);
-        //if (Input.GetKeyDown(KeyCode.RightArrow)) appState.Center = new Vector3(1, 0, 0);
-        //if (Input.GetKeyDown(KeyCode.DownArrow)) appState.Center = new Vector3(0, 0, -1);
-        //if (Input.GetKeyDown(KeyCode.UpArrow)) appState.Center = new Vector3(0, 0, 1);
-        //if (Input.GetKeyDown(KeyCode.I)) appState.Center = new Vector3(0, 1, 0);
-        //if (Input.GetKeyDown(KeyCode.O)) appState.Center = new Vector3(0, -1, 0);
         if (Input.GetKeyDown(KeyCode.C))
         {
             appState.ClearCache();

@@ -157,8 +157,8 @@ namespace Assets.Scripts
 #if DEBUG
             var tm = World.AddComponent<TileManager>();
 #else
-            var tm = World.AddComponent<CachedTileManager>();
-            Speech.AddKeyword("Clear cache", () => { tm.ClearCache(); });
+            var tm = World.AddComponent<TileManager>();
+            //Speech.AddKeyword("Clear tiles", () => { tm.ClearCache(); });
             //tm._key = "vector-tiles-dB21RAF";
             //tm._mapzenUrl = "http://134.221.20.226:3999/{0}/{1}/{2}/{3}.{4}";
 #endif

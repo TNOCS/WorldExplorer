@@ -147,6 +147,7 @@ public class Initialize : MonoBehaviour
             if (!Input.GetKeyDown(string.Format("{0}", i + 1))) continue;
             appState.Config.ActiveView = appState.Config.Views[i].Clone();
             appState.ResetMap();
+            sessionMgr.UpdateView(appState.Config.ActiveView);
             return;
         }
     }

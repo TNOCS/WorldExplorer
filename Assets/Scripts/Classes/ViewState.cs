@@ -88,6 +88,11 @@ namespace Assets.Scripts.Classes
             }
         }
 
+        public string ToJSON()
+        {
+            return string.Format(@"{{ ""lat"": {0}, ""lon"": {1}, ""zoom"": {2}, ""range"": {3} }}", Lat, Lon, Zoom, Range);
+        }
+
         public string Name { get; set; }
         public float Lat { get; set; }
         public float Lon { get; set; }

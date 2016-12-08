@@ -125,7 +125,7 @@ namespace Assets.Scripts.Plugins
 
         public void UpdateView(ViewState view)
         {
-            SendJsonMessage("view", view.ToJSON());
+            SendJsonMessage("view", view.ToLimitedJSON());
         }
 
         #region Room management

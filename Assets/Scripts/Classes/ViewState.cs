@@ -84,13 +84,24 @@ namespace Assets.Scripts.Classes
         {
             get
             {
-                return TileSize * 156543.03 * Math.Cos(Lat * Math.PI/180) / (Math.Pow(2, Zoom));
+                // 256 is the TileSize in GM
+                return 256 * 156543.03 * Math.Cos(Lat * Math.PI/180) / (Math.Pow(2, Zoom));
             }
         }
 
-        public string ToJSON()
+        /// <summary>
+        /// This is a simplified representation of the view state, ignoring things like layers, name etc.
+        /// It is intended for synchronization of view state between different session users.
+        /// </summary>
+        /// <returns></returns>
+        public string ToLimitedJSON()
         {
             return string.Format(@"{{ ""lat"": {0}, ""lon"": {1}, ""zoom"": {2}, ""range"": {3} }}", Lat, Lon, Zoom, Range);
+        }
+
+        public override string ToString()
+        {
+            return string.Format(@"Name: {0}, lat: {1}, lon: {2}, zoom: {3}, range: {4}", Name, Lat, Lon, Zoom, Range);
         }
 
         public string Name { get; set; }

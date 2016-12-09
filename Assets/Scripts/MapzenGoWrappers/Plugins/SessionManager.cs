@@ -133,7 +133,7 @@ namespace Assets.Scripts.Plugins
 
         public void UpdateView(ViewState view)
         {
-            SendJsonMessage("view", view.ToLimitedJSON());
+            SendJsonMessage("view", view.ToLimitedJSON(),false);
         }
 
         #region Room management
@@ -223,9 +223,9 @@ namespace Assets.Scripts.Plugins
             for (var i = users.Count - 1; i >= 0; i--)
             {
                 var user = users[i];
-                if (now - user.LastUpdateReceived > TimeSpan.FromSeconds(25))
+                if (now - user.LastUpdateReceived > TimeSpan.FromSeconds(50))
                 {
-                    if (user.SelectedFeature != null && !string.IsNullOrEmpty(user.SelectedFeature.id)) UpdateUserSelection(user.SelectedFeature);
+                    if (user.SelectedFeature != null && !string.IsNullOrEmpty(user.SelectedFeature.id)) UpdateUserSelection(user.SelectedFeature,user);
                     {
                      //todo remove cursor object and clean the list
                         users.RemoveAt(i);
@@ -258,7 +258,7 @@ namespace Assets.Scripts.Plugins
         public void UpdateLayer(Layer layer)
         {
             var subtopic = string.Format("layers/{0}", layer.Title);
-            SendJsonMessage(subtopic, layer.ToJSON());
+            SendJsonMessage(subtopic, layer.ToJSON(),false);
         }
 
         /// <summary>

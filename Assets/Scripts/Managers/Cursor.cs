@@ -11,6 +11,7 @@ public class Cursor : HoloToolkit.Unity.CursorManager
     public GameObject FocusedObject { get; private set; }
     private GameObject prevTarget;
     GestureRecognizer recognizer;
+  //  protected readonly SelectionHandler selectionHandler = SelectionHandler.Instance;
     private GameObject oldFocusObject;
     private bool mouse = false;
     // Use this for initialization
@@ -28,11 +29,13 @@ public class Cursor : HoloToolkit.Unity.CursorManager
                 if (hitInfo.tag == "symbol")
                 {
                     // Send an OnSelect message to the focused object and its ancestors.
-                    if (oldFocusObject != hitInfo.transform.gameObject)
-                        FocusedObject = hitInfo.transform.gameObject;
-                    else
-                        FocusedObject = null;
-                }
+                 //   if (oldFocusObject != hitInfo.transform.gameObject && selectionHandler.GameObjectIsSelected(hitInfo.transform.gameObject))
+                   // { FocusedObject = hitInfo.transform.gameObject;
+
+                  //  }
+                 // /  else
+                 //       FocusedObject = null;
+                }//
             }
             if (FocusedObject != oldFocusObject)
             {

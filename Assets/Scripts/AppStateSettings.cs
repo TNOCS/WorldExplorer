@@ -27,12 +27,13 @@ namespace Assets.Scripts
         public ViewState State { get; set; }
         public SpeechManager Speech { get; set; }
         public List<string> MapzenTags = new List<string>(new string[] { "buildings", "water", "roads", "pois", "landuse" });
-
+        public SelectionHandler selectionHandler;
         protected AppState() { } // guarantee this will be always a singleton only - can't use the constructor!
 
         public void Awake()
         {
             Speech = SpeechManager.Instance;
+            selectionHandler = SelectionHandler.Instance;
         }
 
         public void Init()

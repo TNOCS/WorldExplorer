@@ -1,72 +1,191 @@
 {
   "type": "FeatureCollection",
-  "features": [{
-    "type": "Feature",
-    "properties": {
-      "id": "1",
-      "iconUrl": "images/pomp.png",
-      "stats": [{
-        "name": "ammo",
-        "type": "bar",
-        "value": "10",
-        "maxValue": "100"
-      }, {
-        "name": "ammo",
-        "type": "bar",
-        "value": "10",
-        "maxValue": "100"
-      }, {
-        "name": "ammo",
-        "type": "bar",
-        "value": "10",
-        "maxValue": "100"
-      }, {
-        "name": "ammo",
-        "type": "bar",
-        "value": "10",
-        "maxValue": "100"
-      }, {
-        "name": "ammo",
-        "type": "bar",
-        "value": "10",
-        "maxValue": "100"
-      }],
-      "Lan": "5.0466084480285645",
-      "Lon": "52.45997114230474"
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "1",
+        "iconUrl": "images/neutralize.png",
+        "stats": [
+          {
+            "name": "health",
+            "type": "bar",
+            "value": "100",
+            "maxValue": "100"
+          },
+          {
+            "name": "ammo",
+            "type": "bar",
+            "value": "90",
+            "maxValue": "100"
+          },
+          {
+            "name": "ammo",
+            "type": "bar",
+            "value": "75",
+            "maxValue": "100"
+          },
+          {
+            "name": "ammo",
+            "type": "bar",
+            "value": "50",
+            "maxValue": "100"
+          },
+          {
+            "name": "ammo",
+            "type": "bar",
+            "value": "20",
+            "maxValue": "100"
+          }
+        ],
+        "Lan": "5.0466084480285645",
+        "Lon": "52.45997114230474"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.046093463897705,
+          52.45902976873187
+        ]
+      }
     },
-    "geometry": {
-      "type": "Point",
-      "coordinates": [5.0466084480285645, 52.45997114230474]
-    }
-  }, {
-    "type": "Feature",
-    "properties": {
-      "id": "2",
-      "iconUrl": "images/ambulanceposten.png"
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "1",
+        "iconUrl": "images/inform.png",
+        "stats": [
+          {
+            "name": "health",
+            "type": "bar",
+            "value": "100",
+            "maxValue": "100"
+          },
+          {
+            "name": "ammo",
+            "type": "bar",
+            "value": "90",
+            "maxValue": "100"
+          },
+          {
+            "name": "ammo",
+            "type": "bar",
+            "value": "75",
+            "maxValue": "100"
+          },
+          {
+            "name": "ammo",
+            "type": "bar",
+            "value": "50",
+            "maxValue": "100"
+          },
+          {
+            "name": "ammo",
+            "type": "bar",
+            "value": "20",
+            "maxValue": "100"
+          }
+        ],
+        "Lan": "5.0466084480285645",
+        "Lon": "52.45997114230474"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.047370195388794,
+          52.45868328589126
+        ]
+      }
     },
-    "geometry": {
-      "type": "Point",
-      "coordinates": [5.048539638519287, 52.45887287117959]
-    }
-  }, {
-    "type": "Feature",
-    "properties": {
-      "id": "3",
-      "iconUrl": "images/politie.png"
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "1",
+        "iconUrl": "images/provide_infrastructure.png",
+        "stats": [
+          {
+            "name": "health",
+            "type": "bar",
+            "value": "100",
+            "maxValue": "100"
+          },
+          {
+            "name": "ammo",
+            "type": "bar",
+            "value": "90",
+            "maxValue": "100"
+          },
+          {
+            "name": "ammo",
+            "type": "bar",
+            "value": "75",
+            "maxValue": "100"
+          },
+          {
+            "name": "ammo",
+            "type": "bar",
+            "value": "50",
+            "maxValue": "100"
+          },
+          {
+            "name": "ammo",
+            "type": "bar",
+            "value": "20",
+            "maxValue": "100"
+          }
+        ],
+        "Lan": "5.0466084480285645",
+        "Lon": "52.45997114230474"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.0477135181427,
+          52.45980117356528
+        ]
+      }
     },
-    "geometry": {
-      "type": "Point",
-      "coordinates": [5.046522617340088, 52.45781379807768]
-    }
-  }, {
-    "type": "Feature",
-    "properties": {
-      "id": "4",
-      "iconUrl": "images/politie.png"
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "2",
+        "iconUrl": "images/bypass.png"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.04970908164978,
+          52.459010156568425
+        ]
+      }
     },
-    "geometry": {
-      "type": "Point",
-      "coordinates": [5.0501275062561035, 52.461265498103494]
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "3",
+        "iconUrl": "images/breach.png"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.046522617340088,
+          52.45781379807768
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "4",
+        "iconUrl": "images/politie.png"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.0501275062561035,
+          52.461265498103494
+        ]
+      }
     }
-  }]
+  ]
 }

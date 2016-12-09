@@ -11,7 +11,7 @@ namespace Assets.Scripts.Plugins
     /// <summary>
     /// The SessionManager is responsible for setting up a connection with the MQTT server, and managing view updates, room management, etc.
     /// It uses multiple topics in the Mqtt client, where each topic contains one object type (as JSON):
-    /// [TOPIC_NAME]/room: Room class: Describes the room members, and for each member, their selection, selection color etc.
+    /// [TOPIC_NAME]/presence/[ID]: Describes the session users, and for each User, their selection, selection color, cursor position etc.
     /// [TOPIC_NAME]/view: View class: Describes the active center location, and zoom level
     /// [TOPIC_NAME]/layers/[LAYER_NAME]: Each layer contains a dynamic (i.e. editable) GeoJSON layer. Note that we download the initial layer via the WWWclient, but updates (edits) are published here.
     /// </summary>
@@ -133,7 +133,7 @@ namespace Assets.Scripts.Plugins
 
         public void UpdateView(ViewState view)
         {
-            SendJsonMessage("view", string.Format("{ lat: {0}, lon: {1}, zoom: {2}, range: {3} }", view.Lat, view.Lon, view.Zoom, view.Range));
+            SendJsonMessage("view", view.ToLimitedJSON());
         }
 
         #region Room management
@@ -161,12 +161,9 @@ namespace Assets.Scripts.Plugins
                 existingUser = users[i];
                 if (user.Id != existingUser.Id) continue;
                 found = true;
-
-
             }
             if (!found)
             {
-
                 var cursor = cursors.Find(u => u.name == user.Id + "-Cursor");
                 if (cursor == null)
                 {
@@ -181,16 +178,14 @@ namespace Assets.Scripts.Plugins
                 selectionHandler.addUser( user);
                 if (user.SelectedFeature != null)
                     UpdateUserSelection(user.SelectedFeature, user);
-
             }
             else
             {
                 if (user.Cursor == null)
                     user.Cursor = users[i].Cursor;
-                if (user.SelectedFeature != null && existingUser.SelectedFeature != null)// && user.SelectedFeature.id != existingUser.SelectedFeature.id)
+                if (user.SelectedFeature != null && existingUser.SelectedFeature != null)
                     UpdateUserSelection(existingUser.SelectedFeature, user);
                 users[i] = user;
-
             }
         }
 

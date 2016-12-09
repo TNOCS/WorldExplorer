@@ -36,11 +36,11 @@ namespace Assets.Scripts
         /// </summary>
         public void StartListining()
         {   // Tell the KeywordRecognizer about our keywords.
+
             keywordRecognizer = new KeywordRecognizer(Keywords.Keys.ToArray());
             // Register a callback for the KeywordRecognizer and start recognizing!
             keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
             keywordRecognizer.Start();
-
         }
 
         private void InitSessions()
@@ -49,8 +49,11 @@ namespace Assets.Scripts
             sessionManager = SessionManager.Instance;
         }
 
+        private void doNothing() { }
+
         private void AddDefaultKeywords()
         {
+
 
             audioCommands.Add("Hide Commands", " Hides the voice commands");
             appState.Speech.Keywords.Add("Hide Commands", () =>
@@ -72,6 +75,8 @@ namespace Assets.Scripts
             });
             AddKeyword("Place", () => selectionHadnler.releaseObj());//doNothing());
             AddKeyword("Zoom in", () => SetZoomAndRange(1, 0));
+            AddKeyword("Place", () => doNothing() );
+            AddKeyword("Zoom in", () => SetZoomAndRange(1,0));
             AddKeyword("Zoom out", () => SetZoomAndRange(-1, 0));
             AddKeyword("Increase range", () => SetZoomAndRange(0, 1));
             AddKeyword("Decrease range", () => SetZoomAndRange(0, -1));
@@ -96,9 +101,10 @@ namespace Assets.Scripts
             Debug.Log(string.Format("Go {0}...", direction));
             var view = appState.Config.ActiveView;
             var metersPerTile = view.Resolution * stepSize;
+            Debug.Log(string.Format("Moving {0} meters {1}...", metersPerTile, direction));
             var merc = GM.LatLonToMeters(new Vector2d(view.Lon, view.Lat));
             Vector2d delta;
-            switch (direction)
+            switch (direction.ToLowerInvariant())
             {
                 case "north":
                     delta = new Vector2d(0, metersPerTile);
@@ -130,14 +136,15 @@ namespace Assets.Scripts
             }
             merc += delta;
             var ll = GM.MetersToLatLon(merc);
-            view.Lat = (float)ll.y;
-            view.Lon = (float)ll.x;
+            view.Lat = (float)ll.x;
+            view.Lon = (float)ll.y;
             appState.ResetMap(view);
             sessionManager.UpdateView(view);
         }
 
         private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
         {
+            Debug.Log("Keyword recognized: " + args.text);
             Action keywordAction;
             if (Keywords.TryGetValue(args.text, out keywordAction))
             {
@@ -147,12 +154,14 @@ namespace Assets.Scripts
 
         public void AddKeyword(string speech, Action action)
         {
-            if (!Keywords.ContainsKey(speech)) Keywords.Add(speech, action);
+            Keywords[speech] = action;
+            //if (Keywords.ContainsKey(speech)) return;
+            //Keywords.Add(speech, action);
         }
 
         public void RemoveKeyword(string speech)
         {
-            if (Keywords.ContainsKey(speech)) Keywords.Remove(speech);
+            if (Keywords.ContainsKey(speech)) Keywords[speech] = () => { return; };
         }
 
     }

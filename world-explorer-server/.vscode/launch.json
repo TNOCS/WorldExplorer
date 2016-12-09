@@ -5,7 +5,7 @@
       "name": "Launch",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceRoot}/src/server.ts",
+      "program": "${workspaceRoot}/src/cli.ts",
       "stopOnEntry": false,
       "args": [],
       "cwd": "${workspaceRoot}",

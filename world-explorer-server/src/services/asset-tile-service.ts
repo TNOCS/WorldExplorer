@@ -58,7 +58,7 @@ export class AssetTileService {
   private setAssetBundleUrl(server?: string) {
     let ipAddress: string;
     if (server) {
-      ipAddress = `${server}:${this.port}`;
+      ipAddress = `http://${server}:${this.port}`;
     } else {
       ipAddress = `http://${ip.address()}:${this.port}`;
     }

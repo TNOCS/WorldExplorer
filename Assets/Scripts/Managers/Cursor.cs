@@ -1,5 +1,4 @@
 ﻿
-using Assets.Scripts.Plugins;
 using HoloToolkit.Unity;
 using Symbols;
 using UnityEngine;
@@ -29,7 +28,6 @@ public class Cursor : HoloToolkit.Unity.CursorManager
                 GameObject hitInfo = GazeManager.Instance.HitInfo.transform.gameObject;
                 if (hitInfo.tag == "symbol")
                 {
-
                     // Send an OnSelect message to the focused object and its ancestors.
                  //   if (oldFocusObject != hitInfo.transform.gameObject && selectionHandler.GameObjectIsSelected(hitInfo.transform.gameObject))
                    // { FocusedObject = hitInfo.transform.gameObject;

@@ -9,8 +9,8 @@ public class Initialize : MonoBehaviour
 {
     private const string SwitchToSpeech = "Switch to ";
     // private string configUrl = "https://dl.dropboxusercontent.com/s/efkzvthcoz307vh/config_erik.json?dl=0";
-
-    private string configUrl = "https://dl.dropboxusercontent.com/s/wv89vyug74u4gy5/config_ronald.json?dl=0";
+    private string configUrl = https://www.dropbox.com/s/z2ttlfxbupodrkb/config_ronaldc.json?dl=0
+   // private string configUrl = "https://dl.dropboxusercontent.com/s/wv89vyug74u4gy5/config_ronald.json?dl=0";
     private SpeechManager speech;
     // Use this for initialization
     private GameObject _cursorFab;

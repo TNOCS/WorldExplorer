@@ -19,6 +19,7 @@ namespace Assets.Scripts.Plugins
     {
         const string NewSessionKeyword = "Join session ";
         protected readonly AppState appState = AppState.Instance;
+        protected  SelectionHandler selectionHandler;
         public readonly User me = new User();
         protected MqttClient client;
         protected string topic;
@@ -30,13 +31,20 @@ namespace Assets.Scripts.Plugins
         protected readonly List<GameObject> cursors = new List<GameObject>();
         internal GameObject cursorPrefab;
         private Dictionary<User, string> prevCommand;
+        private void Awake()
+        {
+            selectionHandler = appState.selectionHandler;
+        }
         protected SessionManager()
         {
         } // guarantee this will be always a singleton only - can't use the constructor!
 
         public void Init(GameObject cursor)
         {
+          
             Debug.Log("Initializing SessionManager");
+            if(selectionHandler==null)selectionHandler= SelectionHandler.Instance;
+            selectionHandler.addUser(me);
             me.Name = appState.Config.UserName;
             me.SelectionColor = appState.Config.SelectionColor;
             me.Cursor = cursor;
@@ -170,6 +178,7 @@ namespace Assets.Scripts.Plugins
                 else
                     user.Cursor = cursor;
                 users.Add(user);
+                selectionHandler.addUser( user);
                 if (user.SelectedFeature != null)
                     UpdateUserSelection(user.SelectedFeature, user);
 
@@ -196,7 +205,7 @@ namespace Assets.Scripts.Plugins
             if (gameobj == null) return;
             GameObject selectedObject = gameobj.transform.parent.gameObject;
             SymbolTargetHandler handler = selectedObject.GetComponent<SymbolTargetHandler>();
-            handler.OnSelect(user.UserMaterial, user.Cursor);
+            handler.OnSelect(user);
         }
 
         /// <summary>

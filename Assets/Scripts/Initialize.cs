@@ -12,10 +12,10 @@ using Assets.Scripts.Utils;
 public class Initialize : MonoBehaviour
 {
     private const string SwitchToSpeech = "Switch to ";
-    private string configUrl = "https://dl.dropboxusercontent.com/s/efkzvthcoz307vh/config_erik.json?dl=0";
+    // private string configUrl = "https://dl.dropboxusercontent.com/s/efkzvthcoz307vh/config_erik.json?dl=0";
 
-    // private string configUrl = "https://dl.dropboxusercontent.com/s/wv89vyug74u4gy5/config_ronald.json?dl=0";
-
+    private string configUrl = "https://dl.dropboxusercontent.com/s/wv89vyug74u4gy5/config_ronald.json?dl=0";
+    private SpeechManager speech;
     // Use this for initialization
     private GameObject _cursorFab;
     private GameObject _cursorFabOther;
@@ -23,11 +23,11 @@ public class Initialize : MonoBehaviour
     private GameObject HoloManagers;
     private AppState appState;
     private GameObject Hud;
-    private Dictionary<string, string> audioCommands;
+
     private Font font;
     private AudioClip fingerPressedSound;
     private SessionManager sessionMgr;
-
+    private SelectionHandler selectionHandler;
     void Awake()
     {
         Debug.Log("Waking up...");
@@ -39,7 +39,8 @@ public class Initialize : MonoBehaviour
         appState = AppState.Instance;
         appState.LoadConfig(configUrl);
         Hud = GameObject.Find("HUDCanvas");
-        audioCommands = new Dictionary<string, string>();
+        appState.Speech.Hud = Hud;
+
         font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         fingerPressedSound = (AudioClip)Resources.Load("FingerPressed");
     }
@@ -69,7 +70,7 @@ public class Initialize : MonoBehaviour
         StringBuilder s = new StringBuilder();
         s.AppendLine("Commands:");
         int h = 1;
-        foreach (var item in audioCommands)
+        foreach (var item in speech.audioCommands)
         {
             s.AppendLine(item.Key + ": " + item.Value);
             h++;
@@ -81,48 +82,29 @@ public class Initialize : MonoBehaviour
 
     void Start()
     {
+
         Debug.Log("Initializing...");
         appState.Camera = gameObject;
-
-        //appState.Speech = SpeechManager.Instance;
+        //init cursor next for sessionmanager
         cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
         cursor.name = "Cursor";
         cursor.GetComponent<Cursor>().enabled = true;
-        appState.AddTerrain();
-        InitSpeech();
-        InitViews();
-        InitHud();
+        // session manager is nesscary for speech so init that next
         sessionMgr = SessionManager.Instance;
-
         sessionMgr.cursorPrefab = _cursorFabOther;
         sessionMgr.Init(cursor);
-
+        // then add the terraion this will build the symboltargethandler which needs the sessionmanagr
+        appState.AddTerrain();
+        // init the speech dictionarys but do not start listiningen to the commands yet
         appState.Speech.Init();
-    }
-
-    void InitSpeech()
-    {
-
-
-
-        audioCommands.Add("Hide Commands", " Hides the voice commands");
-        appState.Speech.Keywords.Add("Hide Commands", () =>
-        {
-            Hud.SetActive(false);
-            // appState.TileManager.UpdateTiles();
-        });
-        audioCommands.Add("Show Commands", " Displays the voice commands");
-        appState.Speech.Keywords.Add("Show Commands", () =>
-        {
-            Hud.SetActive(true);
-            // appState.TileManager.UpdateTiles();
-        });
-        audioCommands.Add("Center table", " Places the table at your current position");
-        appState.Speech.Keywords.Add("Center Table", () =>
-        {
-            appState.Table.transform.position = new Vector3(gameObject.transform.position.x, 0.7f, gameObject.transform.position.z);
-            //Center = new Vector3(Center.x, Center.y, Center.z + 1);
-        });
+        //save the speech  lokal to add commands
+        speech = appState.Speech;
+        // init views  which adds speech commands
+        InitViews();
+        // init the hud after all speech commands have been added
+        InitHud();
+        // Finally start speech commands!
+        appState.Speech.StartListining();
     }
 
     void InitViews()
@@ -131,7 +113,7 @@ public class Initialize : MonoBehaviour
         appState.Config.Views.ForEach(v =>
         {
             var cmd = SwitchToSpeech + v.Name;
-            audioCommands.Add(cmd, " displays the view");
+            speech.audioCommands.Add(cmd, " displays the view");
 
             appState.Speech.Keywords.Add(cmd + v.Name, () =>
             {

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Windows.Speech;
 using MapzenGo.Helpers;
 using Assets.Scripts.Plugins;
+using HoloToolkit.Unity;
 
 namespace Assets.Scripts
 {
@@ -12,7 +13,10 @@ namespace Assets.Scripts
     {
         private AppState appState;
         private SessionManager sessionManager;
+        private SelectionHandler selectionHadnler;
+        public GameObject Hud;
         public Dictionary<string, Action> Keywords = new Dictionary<string, Action>();
+        public Dictionary<string, string> audioCommands;
         KeywordRecognizer keywordRecognizer = null;
 
         protected SpeechManager() { }
@@ -20,32 +24,64 @@ namespace Assets.Scripts
         public void Init()
         {
             Debug.Log("Initializing speech manager");
-            // Tell the KeywordRecognizer about our keywords.
+            audioCommands = new Dictionary<string, string>();
+            appState = AppState.Instance;
+            selectionHadnler = SelectionHandler.Instance;
+            AddDefaultKeywords();
+         
+           
+        }
+        /// <summary>
+        ///  start Listining only after all other scripts are done
+        /// </summary>
+        public void StartListining()
+        {   // Tell the KeywordRecognizer about our keywords.
             keywordRecognizer = new KeywordRecognizer(Keywords.Keys.ToArray());
-
             // Register a callback for the KeywordRecognizer and start recognizing!
             keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
             keywordRecognizer.Start();
 
-            appState = AppState.Instance;
-            sessionManager = SessionManager.Instance;
+        }
 
-            AddDefaultKeywords();
+        private void InitSessions()
+        {
+            if (sessionManager != null) return;
+            sessionManager = SessionManager.Instance;
         }
 
         private void AddDefaultKeywords()
         {
-            AddKeyword("Zoom in", () => SetZoomAndRange(1,0));
+
+            audioCommands.Add("Hide Commands", " Hides the voice commands");
+            appState.Speech.Keywords.Add("Hide Commands", () =>
+            {
+                Hud.SetActive(false);
+                // appState.TileManager.UpdateTiles();
+            });
+            audioCommands.Add("Show Commands", " Displays the voice commands");
+            appState.Speech.Keywords.Add("Show Commands", () =>
+            {
+                Hud.SetActive(true);
+                // appState.TileManager.UpdateTiles();
+            });
+            audioCommands.Add("Center table", " Places the table at your current position");
+            appState.Speech.Keywords.Add("Center Table", () =>
+            {
+                appState.Table.transform.position = new Vector3(gameObject.transform.position.x, 0.7f, gameObject.transform.position.z);
+                //Center = new Vector3(Center.x, Center.y, Center.z + 1);
+            });
+            AddKeyword("Place", () => selectionHadnler.releaseObj());//doNothing());
+            AddKeyword("Zoom in", () => SetZoomAndRange(1, 0));
             AddKeyword("Zoom out", () => SetZoomAndRange(-1, 0));
             AddKeyword("Increase range", () => SetZoomAndRange(0, 1));
             AddKeyword("Decrease range", () => SetZoomAndRange(0, -1));
-            var directions = new List<string> { "north", "south", "east", "west", "north east", "north west", "south east", "south west" };
-            directions.ForEach(dir => AddKeyword("Go " + dir, () => Go(dir)));
-            //directions.ForEach(dir => AddKeyword("Go go " + dir, () => Go(dir, 2)));
+            var directions = new List<string> { "North", "South", "East", "West", "North East", "North West", "South East", "South West" };
+            directions.ForEach(dir => AddKeyword("Move " + dir, () => Go(dir)));
         }
 
         private void SetZoomAndRange(int deltaZoom, int deltaRange)
         {
+            InitSessions();
             Debug.Log("Setting new view");
             var view = appState.Config.ActiveView;
             view.Zoom += deltaZoom;
@@ -56,6 +92,7 @@ namespace Assets.Scripts
 
         private void Go(string direction, int stepSize = 1)
         {
+            InitSessions();
             Debug.Log(string.Format("Go {0}...", direction));
             var view = appState.Config.ActiveView;
             var metersPerTile = view.Resolution * stepSize;

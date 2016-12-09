@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts;
+using Assets.Scripts.Classes;
 using Assets.Scripts.Plugins;
 using MapzenGo.Helpers;
 using UnityEngine;
@@ -7,7 +8,8 @@ namespace Symbols
 {
     public class SymbolTargetHandler : MonoBehaviour
     {
-        private readonly SessionManager sessionManager = SessionManager.Instance;
+        private SessionManager sessionManager = SessionManager.Instance;
+        private SelectionHandler selectionHandler = SelectionHandler.Instance;
         private readonly AppState appState = AppState.Instance;
 
         [SerializeField]
@@ -24,6 +26,7 @@ namespace Symbols
         // Use this for initialization
         void Start()
         {
+
             selectedMat = (Material)Resources.Load("Materials/cone-Color-J04", typeof(Material));
             selectedMat.color = AppState.Instance.Config.SelectionColor;
             coneRender = transform.FindChild("cone/Cone with Right Triangle/Component").gameObject.GetComponent<Renderer>();
@@ -32,53 +35,72 @@ namespace Symbols
         }
         public void OnSelect()
         {
-            selected = !selected;
+            if (!OtherUserSelected)
+            {
 
-            // If the user is in placing mode, display the spatial mapping mesh.
-            if (selected)
-            {
-                gui.SetActive(true);
-                sessionManager.UpdateSelectedFeature(Feature, true);
-                coneRender.material = selectedMat;
-            }
-            // If the user is not in placing mode, hide the spatial mapping mesh.
-            else
-            {
-                coneRender.material = oldMat;
-                sessionManager.UpdateSelectedFeature(Feature, false);
-                gui.SetActive(false);
+                selected = selectionHandler.GameObjectSelect(transform.gameObject, sessionManager.me) && !selected;
+
+                // If the user is in placing mode, display the spatial mapping mesh.
+                if (selected)
+                {
+                    gui.SetActive(true);
+                    sessionManager.UpdateSelectedFeature(Feature, true);
+                    coneRender.material = selectedMat;
+
+                }
+                // If the user is not in placing mode, hide the spatial mapping mesh.
+                else
+                {
+                    coneRender.material = oldMat;
+                    sessionManager.UpdateSelectedFeature(Feature, false);
+                    gui.SetActive(false);
+                    var userSelectedObject = selectionHandler.GetSelectedUser(transform.gameObject);
+                    if (userSelectedObject == null) return;
+                    if (userSelectedObject.Id == sessionManager.me.Id)
+                    {
+                        selectionHandler.releaseObj(sessionManager.me);
+                    }
+                }
             }
         }
 
-        public void OnSelect(Material selectedMat, GameObject otherCursor)
+        public void OnSelect(User u)
         {
-            OtherUserSelected = !OtherUserSelected;
-
-            // If the user is in placing mode, display the spatial mapping mesh.
-            if (OtherUserSelected)
+            Material selectedMat = u.UserMaterial; GameObject otherCursor = u.Cursor;
+            if (!selected)
             {
-                gui.SetActive(true);
 
-                coneRender.material = selectedMat;
-                this.otherCursor = otherCursor;
+                OtherUserSelected = selectionHandler.GameObjectSelect(transform.gameObject, u) && !OtherUserSelected;
+
+                // If the user is in placing mode, display the spatial mapping mesh.
+                if (OtherUserSelected)
+                {
+                    gui.SetActive(true);
+
+                    coneRender.material = selectedMat;
+                    this.otherCursor = otherCursor;
+                }
+                // If the user is not in placing mode, hide the spatial mapping mesh.
+                else
+                {
+                    coneRender.material = oldMat;
+                    gui.SetActive(false);
+                    transform.position = new Vector3(otherCursor.transform.position.x, otherCursor.transform.position.y, otherCursor.transform.position.z);
+
+                    // Now, update the lat/lon of the feature
+                    var sf = transform.parent.GetComponent<SymbolFactory>();
+                    var v0 = new Vector2d(transform.localPosition.x, transform.localPosition.z) + sf.CenterInMercator;
+                    // Debug.Log(string.Format("Meters x: {0}, y: {1}", v0.x, v0.y));
+                    var v3 = GM.MetersToLatLon(v0);
+                    Feature.SetLatLon(v3);
+                    otherCursor = null;
+                    if (selectionHandler.GetSelectedUser(transform.gameObject).Id == u.Id)
+                    {
+                        selectionHandler.releaseObj(u);
+
+                    }
+                }
             }
-            // If the user is not in placing mode, hide the spatial mapping mesh.
-            else
-            {
-                coneRender.material = oldMat;
-                gui.SetActive(false);
-                transform.position = new Vector3(otherCursor.transform.position.x, otherCursor.transform.position.y, otherCursor.transform.position.z);
-
-                // Now, update the lat/lon of the feature
-                var sf = transform.parent.GetComponent<SymbolFactory>();
-                var v0 = new Vector2d(transform.localPosition.x, transform.localPosition.z) + sf.CenterInMercator;
-                // Debug.Log(string.Format("Meters x: {0}, y: {1}", v0.x, v0.y));
-                var v3 = GM.MetersToLatLon(v0);
-                Feature.SetLatLon(v3);
-                otherCursor = null;
-
-            }
-
         }
 
         public void Show()

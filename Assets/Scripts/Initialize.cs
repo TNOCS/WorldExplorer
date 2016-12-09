@@ -8,12 +8,18 @@ using System.Text;
 public class Initialize : MonoBehaviour
 {
     private const string SwitchToSpeech = "Switch to ";
-    private string configUrl = "https://dl.dropboxusercontent.com/s/efkzvthcoz307vh/config_erik.json?dl=0";
+    private string configUrl = "https://dl.dropboxusercontent.com/s/qtfbgrpzeirrzn6/config_erik.json?dl=0";
 
-    // private string configUrl = "https://dl.dropboxusercontent.com/s/wv89vyug74u4gy5/config_ronald.json?dl=0";
+    //private string configUrl = "https://dl.dropboxusercontent.com/s/wv89vyug74u4gy5/config_ronaldb.json?dl=0";
 
     // Use this for initialization
+    /// <summary>
+    /// Your own cursor
+    /// </summary>
     private GameObject _cursorFab;
+    /// <summary>
+    /// Cursor for other users
+    /// </summary>
     private GameObject _cursorFabOther;
     private GameObject cursor;
     private GameObject HoloManagers;

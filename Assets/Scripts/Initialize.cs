@@ -23,7 +23,6 @@ public class Initialize : MonoBehaviour
     private Font font;
     private AudioClip fingerPressedSound;
     private SessionManager sessionMgr;
-    private SelectionHandler selectionHandler;
     void Awake()
     {
         Debug.Log("Waking up...");

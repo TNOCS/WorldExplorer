@@ -28,7 +28,13 @@ public class SelectionHandler : Singleton<SelectionHandler>
     }
     public bool UserHasSelection(User u)
     {
-        return selection[u] != null;
+        bool r = false;
+       foreach(var v in selection)
+        {
+            if (v.Key.Id != u.Id) continue;
+            r =v.Value != null;
+        }
+        return r;
     }
     public User GetSelectedUser(GameObject obj)
     {

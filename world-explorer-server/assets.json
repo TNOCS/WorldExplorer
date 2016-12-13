@@ -8,10 +8,9 @@
       "type": "Feature",
       "properties": {
         "asset": "ado",
-        "remove_from": "buildings",
         "name": "ADO Den Haag",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -22,10 +21,9 @@
       "type": "Feature",
       "properties": {
         "asset": "kurhaus",
-        "remove_from": "buildings",
         "name": "Kurhaus",
         "min_zoom": 16,
-        "id": 58578286,
+        "remove": { "buildings": [58578286] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -36,10 +34,9 @@
       "type": "Feature",
       "properties": {
         "asset": "circustheater",
-        "remove_from": "buildings",
         "name": "Circustheater",
         "min_zoom": 16,
-        "id": 58578266,
+        "remove": { "buildings": [58578266] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -50,10 +47,9 @@
       "type": "Feature",
       "properties": {
         "asset": "binnenhof",
-        "remove_from": "buildings",
         "name": "Binnenhof",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [58617260, -3576912, 140125471, -5503259, -3576906, 379056933, 58617258, 379056433] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -64,10 +60,9 @@
       "type": "Feature",
       "properties": {
         "asset": "ridderzaal",
-        "remove_from": "buildings",
         "name": "Ridderzaal",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [5861726] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -78,10 +73,9 @@
       "type": "Feature",
       "properties": {
         "asset": "noordeinde",
-        "remove_from": "buildings",
         "name": "Noordeinde",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [-3581478] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -92,10 +86,9 @@
       "type": "Feature",
       "properties": {
         "asset": "hoftoren",
-        "remove_from": "buildings",
         "name": "Hoftoren",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [360422212] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -106,10 +99,9 @@
       "type": "Feature",
       "properties": {
         "asset": "hs",
-        "remove_from": "buildings",
         "name": "Den Haag HS",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -120,10 +112,9 @@
       "type": "Feature",
       "properties": {
         "asset": "mauritshuis",
-        "remove_from": "buildings",
         "name": "Mauritshuis",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [58616683] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -134,10 +125,9 @@
       "type": "Feature",
       "properties": {
         "asset": "mesdag",
-        "remove_from": "buildings",
         "name": "Mesdag",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -148,10 +138,9 @@
       "type": "Feature",
       "properties": {
         "asset": "peace",
-        "remove_from": "buildings",
         "name": "Vredespaleis",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -162,10 +151,9 @@
       "type": "Feature",
       "properties": {
         "asset": "strijkijzer",
-        "remove_from": "buildings",
         "name": "Strijkijzer",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -176,10 +164,9 @@
       "type": "Feature",
       "properties": {
         "asset": "ministerie_bz",
-        "remove_from": "buildings",
         "name": "Ministerie van Binnenlandse Zaken",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -190,10 +177,9 @@
       "type": "Feature",
       "properties": {
         "asset": "wijnhavenkwartier",
-        "remove_from": "buildings",
         "name": "Ministeries",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }, {
@@ -204,10 +190,9 @@
       "type": "Feature",
       "properties": {
         "asset": "pier",
-        "remove_from": "buildings",
         "name": "Pier van Scheveningen",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/denhaag"
       }
     }
@@ -221,10 +206,9 @@
       "type": "Feature",
       "properties": {
         "asset": "flight forum",
-        "remove_from": "buildings",
         "name": "Flight forum",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/eindhoven"
       }
     }, {
@@ -235,10 +219,9 @@
       "type": "Feature",
       "properties": {
         "asset": "auditorium",
-        "remove_from": "buildings",
         "name": "Auditorium",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/eindhoven"
       }
     }, {
@@ -249,10 +232,9 @@
       "type": "Feature",
       "properties": {
         "asset": "evoluon",
-        "remove_from": "buildings",
         "name": "Evoluon",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/eindhoven"
       }
     }, {
@@ -263,10 +245,9 @@
       "type": "Feature",
       "properties": {
         "asset": "van abbe museum",
-        "remove_from": "buildings",
         "name": "Van Abbe Museum",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/eindhoven"
       }
     }, {
@@ -277,10 +258,9 @@
       "type": "Feature",
       "properties": {
         "asset": "witte dame",
-        "remove_from": "buildings",
         "name": "Witte dame",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/eindhoven"
       }
     }, {
@@ -291,24 +271,9 @@
       "type": "Feature",
       "properties": {
         "asset": "anton philips",
-        "assetassetbundle": "assets/buildings/eindhoven",
-        "remove_from": "pois",
         "name": "Anton Philips",
         "min_zoom": 17,
-        "id": 2610172136
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [5.479269, 51.436914]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "catharina kerk",
-        "remove_from": "buildings",
-        "name": "Catharina kerk",
-        "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "pois": [2610172136] },
         "assetbundle": "assets/buildings/eindhoven"
       }
     }, {
@@ -319,10 +284,22 @@
       "type": "Feature",
       "properties": {
         "asset": "catharina kerk",
-        "remove_from": "buildings",
         "name": "Catharina kerk",
         "min_zoom": 16,
-        "id": 271573902,
+        "remove": { "buildings": [271573902] },
+        "assetbundle": "assets/buildings/eindhoven"
+      }
+    }, {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [5.479269, 51.436914]
+      },
+      "type": "Feature",
+      "properties": {
+        "asset": "catharina kerk",
+        "name": "Catharina kerk",
+        "min_zoom": 16,
+        "remove": { "buildings": [271573902] },
         "assetbundle": "assets/buildings/eindhoven"
       }
     }, {
@@ -333,10 +310,9 @@
       "type": "Feature",
       "properties": {
         "asset": "stadhuis",
-        "remove_from": "buildings",
         "name": "Stadhuis",
         "min_zoom": 16,
-        "id": 271573917,
+        "remove": { "buildings": [271573917] },
         "assetbundle": "assets/buildings/eindhoven"
       }
     }, {
@@ -347,10 +323,9 @@
       "type": "Feature",
       "properties": {
         "asset": "station eindhoven",
-        "remove_from": "buildings",
         "name": "Station Eindhoven",
         "min_zoom": 16,
-        "id": 271557484,
+        "remove": { "buildings": [271557484] },
         "assetbundle": "assets/buildings/eindhoven"
       }
     }

@@ -1,5 +1,5 @@
 {
-  "server": "192.168.137.183",
+  "server": "192.168.137.126",
   "port": 10733,
   "port_note": "This port address is the only one that can be used in Unity with a local asset service (i.e. Unity does not support a URL with port for asset bundles).",
   "cache": "cache",

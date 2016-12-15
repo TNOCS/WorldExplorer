@@ -221,7 +221,7 @@
         "asset": "auditorium",
         "name": "Auditorium",
         "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
+        "remove": { "buildings": [107455966] },
         "assetbundle": "assets/buildings/eindhoven"
       }
     }, {
@@ -318,12 +318,142 @@
     }, {
       "geometry": {
         "type": "Point",
-        "coordinates": [5.47973981, 51.44295078]
+        "coordinates": [5.48004, 51.44228]
       },
       "type": "Feature",
       "properties": {
         "asset": "station eindhoven",
         "name": "Station Eindhoven",
+        "min_zoom": 16,
+        "remove": { "buildings": [271557484] },
+        "assetbundle": "assets/buildings/eindhoven"
+      }
+    }, {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [5.479104, 51.44346]
+      },
+      "type": "Feature",
+      "properties": {
+        "asset": "achterzijde_station",
+        "name": "Station Eindhoven",
+        "min_zoom": 16,
+        "remove": { "buildings": [271557486] },
+        "assetbundle": "assets/buildings/eindhoven"
+      }
+    }, {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [5.483343, 51.44183]
+      },
+      "type": "Feature",
+      "properties": {
+        "asset": "effenaar",
+        "name": "Effenaar",
+        "min_zoom": 16,
+        "remove": { "buildings": [271557484] },
+        "assetbundle": "assets/buildings/eindhoven"
+      }
+    }, {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [5.48057, 51.44531]
+      },
+      "type": "Feature",
+      "properties": {
+        "asset": "flyingpins",
+        "name": "Flying pins",
+        "min_zoom": 16,
+        "remove": { "pois": [356403135] },
+        "assetbundle": "assets/buildings/eindhoven"
+      }
+    }, {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [5.475616, 51.44483]
+      },
+      "type": "Feature",
+      "properties": {
+        "asset": "holiday_inn",
+        "name": "Holiday Inn",
+        "min_zoom": 16,
+        "remove": { "buildings": [427684952] },
+        "assetbundle": "assets/buildings/eindhoven"
+      }
+    }, {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [5.480452, 51.44407]
+      },
+      "type": "Feature",
+      "properties": {
+        "asset": "kennedygebouwen",
+        "name": "Kennedy gebouwen",
+        "min_zoom": 16,
+        "remove": { "buildings": [272087665, 44756246, 272087669] },
+        "assetbundle": "assets/buildings/eindhoven"
+      }
+    }, {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [5.480847, 51.44061]
+      },
+      "type": "Feature",
+      "properties": {
+        "asset": "pathe",
+        "name": "Pathe",
+        "min_zoom": 16,
+        "remove": { "buildings": [271557484] },
+        "assetbundle": "assets/buildings/eindhoven"
+      }
+    }, {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [5.467435, 51.44172]
+      },
+      "type": "Feature",
+      "properties": {
+        "asset": "philips stadion",
+        "name": "Philips stadion",
+        "min_zoom": 16,
+        "remove": { "buildings": [271557484] },
+        "assetbundle": "assets/buildings/eindhoven"
+      }
+    }, {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [5.478739, 51.44532]
+      },
+      "type": "Feature",
+      "properties": {
+        "asset": "rabobank",
+        "name": "Rabobank",
+        "min_zoom": 16,
+        "remove": { "buildings": [-3631449,-3631443,378554641] },
+        "assetbundle": "assets/buildings/eindhoven"
+      }
+    }, {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [5.484692, 51.42886]
+      },
+      "type": "Feature",
+      "properties": {
+        "asset": "schouwburg",
+        "name": "Schouwburg",
+        "min_zoom": 16,
+        "remove": { "buildings": [271557484] },
+        "assetbundle": "assets/buildings/eindhoven"
+      }
+    }, {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [5.48245, 51.43475]
+      },
+      "type": "Feature",
+      "properties": {
+        "asset": "van abbe museum",
+        "name": "Van Abbe museum",
         "min_zoom": 16,
         "remove": { "buildings": [271557484] },
         "assetbundle": "assets/buildings/eindhoven"

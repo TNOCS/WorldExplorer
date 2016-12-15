@@ -20,6 +20,7 @@ public class ModelFactory : Factory
     public int version = 1;
     public override string XmlTag { get { return "assets"; } }
     public float scale = 1F;
+    private HashSet<string> _active = new HashSet<string>();
 
     public override void Start()
     {
@@ -73,7 +74,15 @@ public class ModelFactory : Factory
     protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
     {
         var asset = geo["properties"]["asset"].str;
-        StartCoroutine(LoadAsset(tile, geo, asset));
+
+        if (!_active.Contains(asset))
+        {
+            _active.Add(asset);
+            Debug.Log("Loading asset: " + asset);
+            tile.Destroyed += (s, e) => { _active.Remove(asset); };
+            StartCoroutine(LoadAsset(tile, geo, asset));
+        }
+
         yield return null;
     }
 

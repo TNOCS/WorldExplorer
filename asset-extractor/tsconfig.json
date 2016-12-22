@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "declaration": false,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noImplicitAny": false,
+        "outDir": "./dist",
+        "preserveConstEnums": true,
+        "removeComments": false,
+        "sourceMap": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "pretty": true
+    },
+    "filesGlob": [
+        "src/**/*.ts",
+        "spec/**/*.ts"
+    ]
+}

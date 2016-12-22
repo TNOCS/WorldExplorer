@@ -1,0 +1,9 @@
+{
+  "globalDependencies": {
+    "geojson": "registry:dt/geojson#0.0.0+20160726205300",
+    "node": "registry:dt/node#6.0.0+20160919063032"
+  },
+  "dependencies": {
+    "command-line-args": "registry:npm/command-line-args#3.0.2+20161102220831"
+  }
+}

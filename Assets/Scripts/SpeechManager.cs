@@ -28,9 +28,8 @@ namespace Assets.Scripts
             appState = AppState.Instance;
             selectionHadnler = SelectionHandler.Instance;
             AddDefaultKeywords();
-         
-           
         }
+
         /// <summary>
         ///  start Listining only after all other scripts are done
         /// </summary>
@@ -53,8 +52,6 @@ namespace Assets.Scripts
 
         private void AddDefaultKeywords()
         {
-
-
             audioCommands.Add("Hide Commands", " Hides the voice commands");
             appState.Speech.Keywords.Add("Hide Commands", () =>
             {
@@ -152,16 +149,34 @@ namespace Assets.Scripts
             }
         }
 
+        /// <summary>
+        /// Note that a keyword may be overwritten
+        /// </summary>
+        /// <param name="speech"></param>
+        /// <param name="action"></param>
         public void AddKeyword(string speech, Action action)
         {
-            Keywords[speech] = action;
-            //if (Keywords.ContainsKey(speech)) return;
-            //Keywords.Add(speech, action);
+            if (!Keywords.ContainsKey(speech) && keywordRecognizer != null && keywordRecognizer.IsRunning)
+            {
+                Debug.Log(string.Format("You are trying to add the {0} keyword, but the speech manager is already running. Restarting..."));
+                keywordRecognizer.Stop();
+                Keywords[speech] = action;
+                StartListining();
+            }
+            else
+            {
+                Keywords[speech] = action;
+            }
         }
 
+        /// <summary>
+        /// Removing a keyword, after the speech manager has been initialized, will still trigger recognition.
+        /// However, we will ignore its behaviour.
+        /// </summary>
+        /// <param name="speech"></param>
         public void RemoveKeyword(string speech)
         {
-            if (Keywords.ContainsKey(speech)) Keywords[speech] = () => { return; };
+            if (Keywords.ContainsKey(speech)) Keywords[speech] = doNothing;
         }
 
     }

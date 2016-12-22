@@ -3,14 +3,14 @@ export type FeatureCollection = GeoJSON.FeatureCollection<GeoJSON.GeometryObject
 
 /**
  * Tile naming scheme follows TMS convention.
- * 
+ *
  * @export
  * @interface ITile
  */
 export interface ITile {
-  zoom: string;
   x: string;
   y: string;
+  zoom: string;
   layers: string[];
 }
 

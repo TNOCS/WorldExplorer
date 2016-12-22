@@ -43,14 +43,14 @@ export class GeoJSONUtils {
 
   /**
    * Compute the bounding box
-   * 
+   *
    * @static
    * @param {Array<Array<number[]>>} coords
    * @returns
-   * 
+   *
    * @memberOf GeoJSONUtils
    */
-  public static boundingBoxAroundPolyCoords(coords: Array<Array<number[]>>) {
+  public static boundingBoxAroundPolyCoords(coords: number[][] | number[][][]) {
     let xAll: number[] = [];
     let yAll: number[] = [];
 
@@ -68,7 +68,7 @@ export class GeoJSONUtils {
     ];
   }
 
-  public static pointInBoundingBox = function (point, bounds) {
+  public static pointInBoundingBox(point: GeoJSON.Point, bounds: number[][] ) {
     return !(point.coordinates[1] < bounds[0][0] || point.coordinates[1] > bounds[1][0] || point.coordinates[0] < bounds[0][1] || point.coordinates[0] > bounds[1][1]);
   };
 
@@ -98,15 +98,15 @@ export class GeoJSONUtils {
 
   /**
    * Get point in polygon
-   * 
+   *
    * @static
    * @param {any} p
    * @param {any} poly
    * @returns
-   * 
+   *
    * @memberOf GeoJSONUtils
    */
-  public static pointInPolygon(p, poly: GeoJSON.GeometryObject) {
+  public static pointInPolygon(p: GeoJSON.Point, poly: GeoJSON.Polygon) {
     let coords = (poly.type === 'Polygon') ? [poly.coordinates] : poly.coordinates;
 
     let insideBox = false;
@@ -124,7 +124,7 @@ export class GeoJSONUtils {
   }
 
   // support multi (but not donut) polygons
-  public static pointInMultiPolygon(p, poly) {
+  public static pointInMultiPolygon(p: GeoJSON.Point, poly: GeoJSON.MultiPolygon) {
     let coordsArray = (poly.type === 'MultiPolygon') ? [poly.coordinates] : poly.coordinates;
 
     let insideBox = false;
@@ -199,7 +199,7 @@ export class GeoJSONUtils {
   }
 
   // from http://www.movable-type.co.uk/scripts/latlong.html
-  public static pointDistance(pt1, pt2) {
+  public static pointDistance(pt1: GeoJSON.Point, pt2: GeoJSON.Point) {
     let lon1 = pt1.coordinates[0];
     let lat1 = pt1.coordinates[1];
     let lon2 = pt2.coordinates[0];
@@ -214,12 +214,12 @@ export class GeoJSONUtils {
 
   // checks if geometry lies entirely within a circle
   // works with Point, LineString, Polygon
-  public static geometryWithinRadius(geometry, center, radius) {
+  public static geometryWithinRadius(geometry: GeoJSON.Point | GeoJSON.LineString | GeoJSON.Polygon, center: GeoJSON.Point, radius: number) {
     if (geometry.type === 'Point') {
       return GeoJSONUtils.pointDistance(geometry, center) <= radius;
     } else if (geometry.type === 'LineString' || geometry.type === 'Polygon') {
-      let point = <{ coordinates: any }>{};
-      let coordinates: number[];
+      let point: GeoJSON.Point = { type: 'Point', coordinates: null };
+      let coordinates: number[][];
       if (geometry.type === 'Polygon') {
         // it's enough to check the exterior ring of the Polygon
         coordinates = geometry.coordinates[0];
@@ -240,11 +240,11 @@ export class GeoJSONUtils {
   /**
    * Compute the area of a polygon
    * adapted from http://paulbourke.net/geometry/polyarea/javascript.txt
-   * 
+   *
    * @static
    * @param {GeoJSON.GeometryObject} polygon
    * @returns
-   * 
+   *
    * @memberOf GeoJSONUtils
    */
   public static area(polygon: GeoJSON.GeometryObject) {
@@ -274,11 +274,11 @@ export class GeoJSONUtils {
   /**
    * Compute the (weighted) centroid of a polygon.
    * adapted from http://paulbourke.net/geometry/polyarea/javascript.txt
-   * 
+   *
    * @static
    * @param {GeoJSON.GeometryObject} polygon
    * @returns
-   * 
+   *
    * @memberOf GeoJSONUtils
    */
   public static centroid(polygon: GeoJSON.GeometryObject) {

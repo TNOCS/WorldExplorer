@@ -6,6 +6,7 @@ using Assets.Scripts.Classes;
 using MapzenGo.Models.Plugins;
 using UniRx;
 using Symbols;
+using MapzenGo.Models.Factories;
 
 namespace Assets.Scripts
 {
@@ -196,6 +197,13 @@ namespace Assets.Scripts
                 var buildings = new GameObject("BuildingFactory");
                 buildings.transform.SetParent(factories.transform, false);
                 var buildingFactory = buildings.AddComponent<BuildingFactory>();
+            }
+
+            if (iv.Mapzen.Contains("gebouwen"))
+            {
+                var bagBuildings = new GameObject("BagBuildingFactory");
+                bagBuildings.transform.SetParent(factories.transform, false);
+                var bagBuildingFactory = bagBuildings.AddComponent<BagBuildingFactory>();
             }
 
             //var flatBuildings = new GameObject("FlatBuildingFactory");

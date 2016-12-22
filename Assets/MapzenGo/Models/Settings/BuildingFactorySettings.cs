@@ -12,7 +12,6 @@ namespace MapzenGo.Models.Settings
         public BuildingSettings DefaultBuilding = new BuildingSettings();
         public List<BuildingSettings> SettingsBuildings;
 
-
         public override BuildingSettingsField GetSettingsFor<BuildingSettingsField>(Enum type)
         {
             if ((BuildingType)type == BuildingType.Unknown)

@@ -17,7 +17,7 @@ public class ModelFactory : Factory
     /// Specify the version number so you will download a new version.
     /// See http://answers.unity3d.com/questions/157563/how-do-you-set-an-assetbundles-version-number.html
     /// </summary>
-    public int version = 1;
+    public int version = 2;
     public override string XmlTag { get { return "assets"; } }
     public float scale = 1F;
     private HashSet<string> _active = new HashSet<string>();
@@ -92,9 +92,8 @@ public class ModelFactory : Factory
     /// <param name="tile"></param>
     /// <param name="geo"></param>
     /// <param name="assetName"></param>
-    /// <param name="version">Increment the version number so you will really download a new version</param>
     /// <returns></returns>
-    private IEnumerator LoadAsset(Tile tile, JSONObject geo, string assetName, int version = 1)
+    private IEnumerator LoadAsset(Tile tile, JSONObject geo, string assetName)
     {
         var bundleURL = geo["properties"].HasField("assetbundle") ? geo["properties"]["assetbundle"].str : BundleURL;
         var bundle = AssetBundleManager.getAssetBundle(bundleURL, version);

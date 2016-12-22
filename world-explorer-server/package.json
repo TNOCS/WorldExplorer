@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/TNOCS/WorldExplorerServer#readme",
   "dependencies": {
+    "apicache": "^0.7.2",
     "body-parser": "^1.15.2",
     "command-line-args": "^3.0.3",
     "command-line-usage": "^3.0.7",

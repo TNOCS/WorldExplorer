@@ -1,462 +1,1018 @@
 {
   "type": "FeatureCollection",
-  "features": [{
+  "features": [
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [4.38326, 52.06288]
+        "coordinates": [
+          5.479103613885035,
+          51.44345909393785
+        ]
       },
-      "type": "Feature",
-      "properties": {
-        "asset": "ado",
-        "name": "ADO Den Haag",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.281793, 52.1132]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "kurhaus",
-        "name": "Kurhaus",
-        "min_zoom": 16,
-        "remove": { "buildings": [58578286] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.282822, 52.11075]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "circustheater",
-        "name": "Circustheater",
-        "min_zoom": 16,
-        "remove": { "buildings": [58578266] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.312853, 52.07898]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "binnenhof",
-        "name": "Binnenhof",
-        "min_zoom": 16,
-        "remove": { "buildings": [58617260, -3576912, 140125471, -5503259, -3576906, 379056933, 58617258, 379056433] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.313377, 52.0797]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "ridderzaal",
-        "name": "Ridderzaal",
-        "min_zoom": 16,
-        "remove": { "buildings": [5861726] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.306511, 52.08089]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "noordeinde",
-        "name": "Noordeinde",
-        "min_zoom": 16,
-        "remove": { "buildings": [-3581478] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.322344, 52.08075]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "hoftoren",
-        "name": "Hoftoren",
-        "min_zoom": 16,
-        "remove": { "buildings": [360422212] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.322143, 52.06961]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "hs",
-        "name": "Den Haag HS",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.314269, 52.08045]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "mauritshuis",
-        "name": "Mauritshuis",
-        "min_zoom": 16,
-        "remove": { "buildings": [58616683] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.30441, 52.08492]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "mesdag",
-        "name": "Mesdag",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.295425, 52.08664]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "peace",
-        "name": "Vredespaleis",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.324214, 52.07164]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "strijkijzer",
-        "name": "Strijkijzer",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.319548, 52.07788]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "ministerie_bz",
-        "name": "Ministerie van Binnenlandse Zaken",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.321173, 52.07931]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "wijnhavenkwartier",
-        "name": "Ministeries",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [4.280773, 52.11681]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "pier",
-        "name": "Pier van Scheveningen",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/denhaag"
-      }
-    }
-    
-    
-    , {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [5.400205, 51.4463]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "flight forum",
-        "name": "Flight forum",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/eindhoven"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [5.484447, 51.44793]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "auditorium",
-        "name": "Auditorium",
-        "min_zoom": 16,
-        "remove": { "buildings": [107455966] },
-        "assetbundle": "assets/buildings/eindhoven"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [5.446927, 51.44324]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "evoluon",
-        "name": "Evoluon",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/eindhoven"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [5.48245, 51.43475]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "van abbe museum",
-        "name": "Van Abbe Museum",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/eindhoven"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [5.474108, 51.43935]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "witte dame",
-        "name": "Witte dame",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/eindhoven"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [5.48001842, 51.44180838]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "anton philips",
-        "name": "Anton Philips",
-        "min_zoom": 17,
-        "remove": { "pois": [2610172136] },
-        "assetbundle": "assets/buildings/eindhoven"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [5.479269, 51.436914]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "catharina kerk",
-        "name": "Catharina kerk",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/eindhoven"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [5.479269, 51.436914]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "catharina kerk",
-        "name": "Catharina kerk",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573902] },
-        "assetbundle": "assets/buildings/eindhoven"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [5.480878, 51.435068]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "stadhuis",
-        "name": "Stadhuis",
-        "min_zoom": 16,
-        "remove": { "buildings": [271573917] },
-        "assetbundle": "assets/buildings/eindhoven"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [5.48004, 51.44228]
-      },
-      "type": "Feature",
-      "properties": {
-        "asset": "station eindhoven",
-        "name": "Station Eindhoven",
-        "min_zoom": 16,
-        "remove": { "buildings": [271557484] },
-        "assetbundle": "assets/buildings/eindhoven"
-      }
-    }, {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [5.479104, 51.44346]
-      },
-      "type": "Feature",
       "properties": {
         "asset": "achterzijde_station",
-        "name": "Station Eindhoven",
         "min_zoom": 16,
-        "remove": { "buildings": [271557486] },
-        "assetbundle": "assets/buildings/eindhoven"
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.479103613885035,
+            51.44345909393785
+          ]
+        },
+        "remove": {
+          "buildings": [
+            271557486
+          ],
+          "gebouwen": [
+            "772100000296003",
+            "772100000294834"
+          ]
+        }
       }
-    }, {
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [5.483343, 51.44183]
+        "coordinates": [
+          4.383260243639553,
+          52.06287634298988
+        ]
       },
+      "properties": {
+        "asset": "ado",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.383260243639553,
+            52.06287634298988
+          ]
+        },
+        "remove": {
+          "buildings": [
+            255154893,
+            374994786
+          ]
+        }
+      }
+    },
+    {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.480031425904648,
+          51.44187581015049
+        ]
+      },
+      "properties": {
+        "asset": "anton philips",
+        "min_zoom": 16,
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.480031425904648,
+            51.44187581015049
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.484447160135417,
+          51.44793104515829
+        ]
+      },
+      "properties": {
+        "asset": "auditorium",
+        "min_zoom": 16,
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.484447160135417,
+            51.44793104515829
+          ]
+        },
+        "remove": {
+          "buildings": [
+            107455966
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.312771395615355,
+          52.07637631048851
+        ]
+      },
+      "properties": {
+        "asset": "bijenkorf",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.312771395615355,
+            52.07637631048851
+          ]
+        },
+        "remove": {
+          "buildings": [
+            266451356
+          ],
+          "gebouwen": [
+            "518100000230102"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.321121156482278,
+          52.080034547983445
+        ]
+      },
+      "properties": {
+        "asset": "castalia",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.321121156482278,
+            52.080034547983445
+          ]
+        },
+        "remove": {
+          "buildings": [
+            266242572
+          ],
+          "gebouwen": [
+            "518100000234102"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.312852796280144,
+          52.07897770988415
+        ]
+      },
+      "properties": {
+        "asset": "binnenhof",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.312852796280144,
+            52.07897770988415
+          ]
+        },
+        "remove": {
+          "buildings": [
+            -5503259
+          ],
+          "gebouwen": [
+            "518100000203597"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.479413932949669,
+          51.43704656908066
+        ]
+      },
+      "properties": {
+        "asset": "catharina kerk",
+        "min_zoom": 16,
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.479413932949669,
+            51.43704656908066
+          ]
+        },
+        "remove": {
+          "buildings": [
+            271573902
+          ],
+          "gebouwen": [
+            "772100000282608"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.282822239501712,
+          52.110749414713155
+        ]
+      },
+      "properties": {
+        "asset": "circustheater",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.282822239501712,
+            52.110749414713155
+          ]
+        },
+        "remove": {
+          "buildings": [
+            58578266
+          ],
+          "gebouwen": [
+            "518100000211276"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.483342813176193,
+          51.44183452667925
+        ]
+      },
       "properties": {
         "asset": "effenaar",
-        "name": "Effenaar",
         "min_zoom": 16,
-        "remove": { "buildings": [271557484] },
-        "assetbundle": "assets/buildings/eindhoven"
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.483342813176193,
+            51.44183452667925
+          ]
+        },
+        "remove": {
+          "buildings": [
+            271556617
+          ],
+          "gebouwen": [
+            "772100000354810"
+          ]
+        }
       }
-    }, {
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [5.48057, 51.44531]
+        "coordinates": [
+          5.4469271717402705,
+          51.443243939919796
+        ]
       },
+      "properties": {
+        "asset": "evoluon",
+        "min_zoom": 16,
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.4469271717402705,
+            51.443243939919796
+          ]
+        },
+        "remove": {
+          "buildings": [
+            265847914
+          ],
+          "gebouwen": [
+            "772100000294873"
+          ]
+        }
+      }
+    },
+    {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.400205,
+          51.446303
+        ]
+      },
+      "properties": {
+        "asset": "flight forum",
+        "min_zoom": 16,
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.400205,
+            51.446303
+          ]
+        },
+        "remove": {
+          "buildings": [
+            267568218
+          ],
+          "gebouwen": [
+            "772100001002047"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.4805705535855935,
+          51.445309602961935
+        ]
+      },
       "properties": {
         "asset": "flyingpins",
-        "name": "Flying pins",
         "min_zoom": 16,
-        "remove": { "pois": [356403135] },
-        "assetbundle": "assets/buildings/eindhoven"
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.4805705535855935,
+            51.445309602961935
+          ]
+        },
+        "remove": {
+          "buildings": [
+            -3631443
+          ]
+        }
       }
-    }, {
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [5.475616, 51.44483]
+        "coordinates": [
+          4.3223436176678165,
+          52.080755091674995
+        ]
       },
+      "properties": {
+        "asset": "hoftoren",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.3223436176678165,
+            52.080755091674995
+          ]
+        },
+        "remove": {
+          "buildings": [
+            360422212
+          ],
+          "gebouwen": [
+            "518100000274290"
+          ]
+        }
+      }
+    },
+    {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.475615817308068,
+          51.444830613709975
+        ]
+      },
       "properties": {
         "asset": "holiday_inn",
-        "name": "Holiday Inn",
         "min_zoom": 16,
-        "remove": { "buildings": [427684952] },
-        "assetbundle": "assets/buildings/eindhoven"
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.475615817308068,
+            51.444830613709975
+          ]
+        },
+        "remove": {
+          "buildings": [
+            272547162
+          ],
+          "gebouwen": [
+            "772100000296683"
+          ]
+        }
       }
-    }, {
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [5.480452, 51.44407]
+        "coordinates": [
+          4.322142563287672,
+          52.06961580410239
+        ]
       },
+      "properties": {
+        "asset": "hs",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.322142563287672,
+            52.06961580410239
+          ]
+        },
+        "remove": {
+          "buildings": [
+            342805682,
+            267127549
+          ],
+          "gebouwen": [
+            "518100001629618"
+          ]
+        }
+      }
+    },
+    {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.480451650299045,
+          51.44407266622536
+        ]
+      },
       "properties": {
         "asset": "kennedygebouwen",
-        "name": "Kennedy gebouwen",
         "min_zoom": 16,
-        "remove": { "buildings": [272087665, 44756246, 272087669] },
-        "assetbundle": "assets/buildings/eindhoven"
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.480451650299045,
+            51.44407266622536
+          ]
+        },
+        "remove": {
+          "buildings": [
+            44756246
+          ],
+          "gebouwen": [
+            "772100000354498"
+          ]
+        }
       }
-    }, {
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [5.480847, 51.44061]
+        "coordinates": [
+          4.281793031174331,
+          52.11320036433193
+        ]
       },
+      "properties": {
+        "asset": "kurhaus",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.281793031174331,
+            52.11320036433193
+          ]
+        },
+        "remove": {
+          "buildings": [
+            58578286
+          ],
+          "gebouwen": [
+            "518100000205738"
+          ]
+        }
+      }
+    },
+    {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.304409714363,
+          52.084917887529
+        ]
+      },
+      "properties": {
+        "asset": "mesdag",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.304409714363,
+            52.084917887529
+          ]
+        },
+        "remove": {
+          "buildings": [
+            58617298
+          ],
+          "gebouwen": [
+            "518100001670570"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.314268475569794,
+          52.080451776381864
+        ]
+      },
+      "properties": {
+        "asset": "mauritshuis",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.314268475569794,
+            52.080451776381864
+          ]
+        },
+        "remove": {
+          "buildings": [
+            58616683
+          ],
+          "gebouwen": [
+            "518100000300401"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.319548324449177,
+          52.077883385987306
+        ]
+      },
+      "properties": {
+        "asset": "ministerie_bz",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.319548324449177,
+            52.077883385987306
+          ]
+        },
+        "remove": {
+          "buildings": [
+            460402520
+          ],
+          "gebouwen": [
+            "518100000245486"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.306510925637156,
+          52.080890956842765
+        ]
+      },
+      "properties": {
+        "asset": "noordeinde",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.306510925637156,
+            52.080890956842765
+          ]
+        },
+        "remove": {
+          "buildings": [
+            -3581478
+          ],
+          "gebouwen": [
+            "518100000279145"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.480847,
+          51.44061
+        ]
+      },
       "properties": {
         "asset": "pathe",
-        "name": "Pathe",
         "min_zoom": 16,
-        "remove": { "buildings": [271557484] },
-        "assetbundle": "assets/buildings/eindhoven"
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.480847,
+            51.44061
+          ]
+        },
+        "remove": {
+          "buildings": [
+            271556774
+          ],
+          "gebouwen": [
+            "772100000291669"
+          ]
+        }
       }
-    }, {
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [5.467435, 51.44172]
+        "coordinates": [
+          4.295424898570068,
+          52.08663756369173
+        ]
       },
+      "properties": {
+        "asset": "peace",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.295424898570068,
+            52.08663756369173
+          ]
+        },
+        "remove": {
+          "buildings": [
+            -3590044
+          ],
+          "gebouwen": [
+            "518100000210611"
+          ]
+        }
+      }
+    },
+    {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.467435087214,
+          51.441720805294
+        ]
+      },
       "properties": {
         "asset": "philips stadion",
-        "name": "Philips stadion",
         "min_zoom": 16,
-        "remove": { "buildings": [271557484] },
-        "assetbundle": "assets/buildings/eindhoven"
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.467435087214,
+            51.441720805294
+          ]
+        }
       }
-    }, {
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [5.478739, 51.44532]
+        "coordinates": [
+          4.280773,
+          52.11681
+        ]
       },
+      "properties": {
+        "asset": "pier",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.280773,
+            52.11681
+          ]
+        },
+        "remove": {
+          "buildings": [
+            96229735
+          ]
+        }
+      }
+    },
+    {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.47873945020649,
+          51.445325416216846
+        ]
+      },
       "properties": {
         "asset": "rabobank",
-        "name": "Rabobank",
         "min_zoom": 16,
-        "remove": { "buildings": [-3631449,-3631443,378554641] },
-        "assetbundle": "assets/buildings/eindhoven"
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.47873945020649,
+            51.445325416216846
+          ]
+        },
+        "remove": {
+          "buildings": [
+            -3631443
+          ],
+          "gebouwen": [
+            "772100000950009"
+          ]
+        }
       }
-    }, {
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [5.484692, 51.42886]
+        "coordinates": [
+          4.313376917291158,
+          52.07969925711464
+        ]
       },
+      "properties": {
+        "asset": "ridderzaal",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.313376917291158,
+            52.07969925711464
+          ]
+        },
+        "remove": {
+          "buildings": [
+            58617260
+          ],
+          "gebouwen": [
+            "518100000211472"
+          ]
+        }
+      }
+    },
+    {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.4846918604013055,
+          51.42885733764135
+        ]
+      },
       "properties": {
         "asset": "schouwburg",
-        "name": "Schouwburg",
         "min_zoom": 16,
-        "remove": { "buildings": [271557484] },
-        "assetbundle": "assets/buildings/eindhoven"
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.4846918604013055,
+            51.42885733764135
+          ]
+        },
+        "remove": {
+          "buildings": [
+            270496905
+          ],
+          "gebouwen": [
+            "772100001009623"
+          ]
+        }
       }
-    }, {
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [5.48245, 51.43475]
+        "coordinates": [
+          5.480894223424073,
+          51.435097096675534
+        ]
       },
+      "properties": {
+        "asset": "stadhuis",
+        "min_zoom": 16,
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.480894223424073,
+            51.435097096675534
+          ]
+        },
+        "remove": {
+          "buildings": [
+            271573917
+          ],
+          "gebouwen": [
+            "772100001009905"
+          ]
+        }
+      }
+    },
+    {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.480039939661793,
+          51.44227440474042
+        ]
+      },
+      "properties": {
+        "asset": "station eindhoven",
+        "min_zoom": 16,
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.480039939661793,
+            51.44227440474042
+          ]
+        },
+        "remove": {
+          "buildings": [
+            271557484
+          ],
+          "gebouwen": [
+            "772100000294834"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.324214626634713,
+          52.07164349850911
+        ]
+      },
+      "properties": {
+        "asset": "strijkijzer",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.324214626634713,
+            52.07164349850911
+          ]
+        },
+        "remove": {
+          "buildings": [
+            37774391
+          ],
+          "gebouwen": [
+            "518100000225439"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.482449814950599,
+          51.43474937728891
+        ]
+      },
       "properties": {
         "asset": "van abbe museum",
-        "name": "Van Abbe museum",
         "min_zoom": 16,
-        "remove": { "buildings": [271557484] },
-        "assetbundle": "assets/buildings/eindhoven"
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.482449814950599,
+            51.43474937728891
+          ]
+        },
+        "remove": {
+          "buildings": [
+            -3621498
+          ],
+          "gebouwen": [
+            "772100000279681"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.321173172271314,
+          52.07930859885628
+        ]
+      },
+      "properties": {
+        "asset": "wijnhavenkwartier",
+        "min_zoom": 16,
+        "assetbundle": "buildings/denhaag",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            4.321173172271314,
+            52.07930859885628
+          ]
+        },
+        "remove": {
+          "buildings": [
+            266242634
+          ]
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.474107851797527,
+          51.439349425298055
+        ]
+      },
+      "properties": {
+        "asset": "witte dame",
+        "min_zoom": 16,
+        "assetbundle": "buildings/eindhoven",
+        "centroid": {
+          "type": "Point",
+          "coordinates": [
+            5.474107851797527,
+            51.439349425298055
+          ]
+        }
       }
     }
   ]

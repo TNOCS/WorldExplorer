@@ -116,18 +116,19 @@ namespace Assets.Scripts
             #region create map & terrain
 
             Terrain = new GameObject("terrain");
-            Terrain.transform.position = new Vector3(0f, 0f, 0f);
+            Terrain.transform.position = new Vector3(0f, t.Position, 0f);
+            Terrain.transform.localScale = new Vector3(t.Size, t.Size, t.Size);
 
-            Table = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            Table = GameObject.CreatePrimitive(PrimitiveType.Cube); // By default, a cube is 1x1x1m, so we must scale it.
             Table.name = "Table";
-            Table.transform.position = new Vector3(0f, 0.7f, 0f);
-            Table.transform.localScale = new Vector3(t.TableSize, t.TableHeight, t.TableSize);
+            Table.transform.position = new Vector3(0f, 0f, 0f);
+            Table.transform.localScale = new Vector3(1F, t.Thickness, 1F);
             Table.transform.SetParent(Terrain.transform, false);
 
 
             Map = new GameObject("Map");
             Map.transform.SetParent(Table.transform);
-            Map.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+            Map.transform.localPosition = new Vector3(0f, (t.Thickness / 2) / t.Thickness + 0.01F, 0f);
 
             #endregion
             InitMap();
@@ -150,7 +151,7 @@ namespace Assets.Scripts
             var i = av.Range;
             if (i > mapScales.Length) i = mapScales.Length;
             var mapScale = mapScales[i - 1];
-            Map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
+            Map.transform.localScale = new Vector3(mapScale, mapScale / Config.Table.Thickness, mapScale);
 
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);

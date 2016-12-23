@@ -1,4 +1,15 @@
 ﻿{
+  "tileServer": "",
+  "mqttServer": "localhost",
+  "mqttServer": "cool3.sensorlab.tno.nl",
+  "mqttPort": "8026",
+  "initialView": "Detail",
+  "sessionName": "one",
+  "table": {
+    "size": 1.5,
+    "height": 1.5,
+    "thickness": 0.2
+  },
   "layers": [
     {
       "title": "TopoLayer",
@@ -199,15 +210,5 @@
       "layers": [ "Gps" ],
       "tileLayers": [ "Satellite" ]
     }
-  ],
-  "tileServer": "",
-  "mqttServer": "localhost",
-  "mqttServer": "cool3.sensorlab.tno.nl",
-  "mqttPort": "8026",
-  "initialView": "Detail",
-  "sessionName": "one",
-  "table": {
-    "size": 1.5,
-    "height": 1.5
-  }
+  ]
 }

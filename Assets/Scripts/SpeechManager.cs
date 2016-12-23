@@ -61,23 +61,6 @@ namespace Assets.Scripts
             {
                 Hud.SetActive(true);
             });
-            audioCommands.Add("Center table", " Places the table at your current position");
-            appState.Speech.Keywords.Add("Center table", () =>
-            {
-                Debug.Log(string.Format("Center table at x={0}, z={1}", gameObject.transform.position.x, gameObject.transform.position.z));
-                appState.Table.transform.position = new Vector3(gameObject.transform.position.x, 0.7f, gameObject.transform.position.z);
-                //Center = new Vector3(Center.x, Center.y, Center.z + 1);
-            });
-            appState.Speech.Keywords.Add("Lower table", () =>
-            {
-                Debug.Log("Lower table");
-                appState.Table.transform.position = new Vector3(appState.Table.transform.position.x, appState.Table.transform.position.y - 0.1F, appState.Table.transform.position.z);
-            });
-            appState.Speech.Keywords.Add("Raise table", () =>
-            {
-                Debug.Log("Raise table");
-                appState.Table.transform.position = new Vector3(appState.Table.transform.position.x, appState.Table.transform.position.y + 0.1F, appState.Table.transform.position.z);
-            });
             AddKeyword("Place", () => selectionHandler.releaseObj());
             AddKeyword("Zoom in", () => SetZoomAndRange(1, 0));
             AddKeyword("Place", () => doNothing() );
@@ -87,6 +70,43 @@ namespace Assets.Scripts
             AddKeyword("Decrease range", () => SetZoomAndRange(0, -1));
             var directions = new List<string> { "North", "South", "East", "West", "North East", "North West", "South East", "South West" };
             directions.ForEach(dir => AddKeyword("Move " + dir, () => Go(dir)));
+        }
+
+        private void AddTableCommands()
+        {
+            var table = appState.Config.Table;
+            audioCommands.Add("Center|Lower|Raise|Shrink|Expand table", " Manipulates the table");
+            appState.Speech.Keywords.Add("Center table", () =>
+            {
+                Debug.Log("Center table");
+                appState.Terrain.transform.position = new Vector3(0F, table.Position, 0F);
+            });
+            appState.Speech.Keywords.Add("Shrink table", () =>
+            {
+                table.Size -= 0.1F;
+                var size = table.Size;
+                Debug.Log(string.Format("Shrink table to {0}", size));
+                appState.Terrain.transform.localScale = new Vector3(size, size, size);
+            });
+            appState.Speech.Keywords.Add("Expand table", () =>
+            {
+                table.Size += 0.1F;
+                var size = table.Size;
+                Debug.Log(string.Format("Expand table to {0}", size));
+                appState.Terrain.transform.localScale = new Vector3(size, size, size);
+            });
+            appState.Speech.Keywords.Add("Lower table", () =>
+            {
+                table.Height -= 0.1F;
+                Debug.Log("Lower table");
+                appState.Terrain.transform.position = new Vector3(appState.Terrain.transform.position.x, table.Position, appState.Terrain.transform.position.z);
+            });
+            appState.Speech.Keywords.Add("Raise table", () =>
+            {
+                table.Height += 0.1F;
+                Debug.Log("Raise table");
+                appState.Terrain.transform.position = new Vector3(appState.Terrain.transform.position.x, table.Position, appState.Terrain.transform.position.z);
+            });
         }
 
         private void SetZoomAndRange(int deltaZoom, int deltaRange)

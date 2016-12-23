@@ -60,7 +60,7 @@ export class Process {
         if (matches) feature.geometry.coordinates[1] = +matches[1];
 
         matches = line.match(assetRegex);
-        if (matches) feature.properties.assetbundle = matches[1];
+        if (matches) feature.properties.assetbundle = 'assets/' + matches[1];
       }
     });
 

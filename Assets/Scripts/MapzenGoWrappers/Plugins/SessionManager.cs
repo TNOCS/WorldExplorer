@@ -30,20 +30,21 @@ namespace Assets.Scripts.Plugins
         protected readonly List<User> users = new List<User>();
         protected readonly List<GameObject> cursors = new List<GameObject>();
         internal GameObject cursorPrefab;
-        private Dictionary<User, string> prevCommand;
+        //private Dictionary<User, string> prevCommand;
+
         private void Awake()
         {
             selectionHandler = appState.selectionHandler;
         }
+
         protected SessionManager()
         {
         } // guarantee this will be always a singleton only - can't use the constructor!
 
         public void Init(GameObject cursor)
         {
-          
             Debug.Log("Initializing SessionManager");
-            if(selectionHandler==null)selectionHandler= SelectionHandler.Instance;
+            if (selectionHandler == null) selectionHandler = SelectionHandler.Instance;
             selectionHandler.addUser(me);
             me.Name = appState.Config.UserName;
             me.SelectionColor = appState.Config.SelectionColor;

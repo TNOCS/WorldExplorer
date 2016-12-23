@@ -4,7 +4,7 @@ using Symbols;
 using UnityEngine;
 using UnityEngine.VR.WSA.Input;
 
-public class Cursor : HoloToolkit.Unity.CursorManager
+public class Cursor : CursorManager
 {
     // private MeshRenderer meshRenderer;
     // Represents the hologram that is currently being gazed at.
@@ -14,6 +14,7 @@ public class Cursor : HoloToolkit.Unity.CursorManager
   //  protected readonly SelectionHandler selectionHandler = SelectionHandler.Instance;
     private GameObject oldFocusObject;
     private bool mouse = false;
+
     // Use this for initialization
     void Start()
     {
@@ -23,20 +24,20 @@ public class Cursor : HoloToolkit.Unity.CursorManager
         {
             // Send an OnSelect message to the focused object and its ancestors.
             oldFocusObject = FocusedObject;
-            if (GazeManager.Instance.HitInfo.transform != null)
-            {
-                GameObject hitInfo = GazeManager.Instance.HitInfo.transform.gameObject;
-                if (hitInfo.tag == "symbol")
-                {
-                    // Send an OnSelect message to the focused object and its ancestors.
-                 //   if (oldFocusObject != hitInfo.transform.gameObject && selectionHandler.GameObjectIsSelected(hitInfo.transform.gameObject))
-                   // { FocusedObject = hitInfo.transform.gameObject;
+            //if (GazeManager.Instance.HitInfo.transform != null)
+            //{
+            //    GameObject hitInfo = GazeManager.Instance.HitInfo.transform.gameObject;
+            //    if (hitInfo.tag == "symbol")
+            //    {
+            //        // Send an OnSelect message to the focused object and its ancestors.
+            //     //   if (oldFocusObject != hitInfo.transform.gameObject && selectionHandler.GameObjectIsSelected(hitInfo.transform.gameObject))
+            //       // { FocusedObject = hitInfo.transform.gameObject;
 
-                  //  }
-                 // /  else
-                 //       FocusedObject = null;
-                }//
-            }
+            //      //  }
+            //     // /  else
+            //     //       FocusedObject = null;
+            //    }//
+            //}
             if (FocusedObject != oldFocusObject)
             {
                 if (oldFocusObject != null)
@@ -52,9 +53,9 @@ public class Cursor : HoloToolkit.Unity.CursorManager
     // {
     // }
 
-    private float nextActionTime = 1.0f;
+    //private float nextActionTime = 1.0f;
     // in seconds
-    private float period = 1.0f;
+    //private float period = 1.0f;
     // Update is called once per frame
     void Update()
     {

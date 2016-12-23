@@ -14,11 +14,10 @@ public class SelectionHandler : Singleton<SelectionHandler>
     void Start()
     {
         session = SessionManager.Instance;
-
     }
+
     public bool GameObjectIsSelected(GameObject obj)
     {
-        
         return selection.ContainsValue(obj);
     }
 
@@ -26,16 +25,18 @@ public class SelectionHandler : Singleton<SelectionHandler>
     {
         selection[u] = null;
     }
+
     public bool UserHasSelection(User u)
     {
         bool r = false;
-       foreach(var v in selection)
+        foreach (var v in selection)
         {
             if (v.Key.Id != u.Id) continue;
-            r =v.Value != null;
+            r = v.Value != null;
         }
         return r;
     }
+
     public User GetSelectedUser(GameObject obj)
     {
         User u = null;
@@ -46,6 +47,7 @@ public class SelectionHandler : Singleton<SelectionHandler>
         }
         return u;
     }
+
     /// <summary>
     /// Set gameobject as selected  by user however should it already be selected or user has a selected it will return false and not select
     /// </summary>
@@ -61,17 +63,13 @@ public class SelectionHandler : Singleton<SelectionHandler>
         else
             selection[user] = obj;
         return true;
-
     }
-    // Update is called once per frame
-    void Update()
-    {
 
-    }
     public void addUser(User m)
     {
         selection.Add(m, null);
     }
+
     public GameObject GetSelectedObject(User me)
     {
         return selection[me];

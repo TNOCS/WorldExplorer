@@ -127,10 +127,9 @@ namespace Symbols
                 var sf = transform.parent.GetComponent<SymbolFactory>();
                 var v0 = new Vector2d(transform.localPosition.x, transform.localPosition.z) + sf.CenterInMercator;
                 var v3 = GM.MetersToLatLon(v0);
-                Feature.SetLatLon(v3); transform.position = new Vector3(pos.x, pos.y, pos.z);
-
+                Feature.SetLatLon(v3);
+                transform.position = new Vector3(pos.x, pos.y, pos.z);
             }
-
 
             if (selected)
             {

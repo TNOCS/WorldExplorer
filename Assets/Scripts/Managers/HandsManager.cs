@@ -1,5 +1,4 @@
-﻿using HoloToolkit;
-using UnityEngine.VR.WSA.Input;
+﻿using UnityEngine.VR.WSA.Input;
 using UnityEngine;
 
 /// <summary>
@@ -47,19 +46,17 @@ namespace Assets.Scripts.Utils
         private void EnableAudioHapticFeedback()
         {
             // If this hologram has an audio clip, add an AudioSource with this clip.
-            if (FingerPressedSound != null)
+            if (FingerPressedSound == null) return;
+            audioSource = GetComponent<AudioSource>();
+            if (audioSource == null)
             {
-                audioSource = GetComponent<AudioSource>();
-                if (audioSource == null)
-                {
-                    audioSource = gameObject.AddComponent<AudioSource>();
-                }
-
-                audioSource.clip = FingerPressedSound;
-                audioSource.playOnAwake = false;
-                audioSource.spatialBlend = 1;
-                audioSource.dopplerLevel = 0;
+                audioSource = gameObject.AddComponent<AudioSource>();
             }
+
+            audioSource.clip = FingerPressedSound;
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 1;
+            audioSource.dopplerLevel = 0;
         }
 
         private void InteractionManager_SourceDetected(InteractionSourceState hand)

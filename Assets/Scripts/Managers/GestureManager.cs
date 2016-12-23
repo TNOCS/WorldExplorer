@@ -144,26 +144,22 @@ public class GestureManager : Singleton<GestureManager>
 
     private void ManipulationRecognizer_ManipulationStartedEvent(InteractionSourceKind source, Vector3 position, Ray ray)
     {
-        if (Assets.Scripts.Utils.HandsManager.Instance.FocusedGameObject != null)
-        {
-            IsManipulating = true;
+        if (Assets.Scripts.Utils.HandsManager.Instance.FocusedGameObject == null) return;
+        IsManipulating = true;
 
-            ManipulationPosition = position;
+        ManipulationPosition = position;
 
-            Assets.Scripts.Utils.HandsManager.Instance.FocusedGameObject.SendMessageUpwards("PerformManipulationStart", position);
-        }
+        Assets.Scripts.Utils.HandsManager.Instance.FocusedGameObject.SendMessageUpwards("PerformManipulationStart", position);
     }
 
     private void ManipulationRecognizer_ManipulationUpdatedEvent(InteractionSourceKind source, Vector3 position, Ray ray)
     {
-        if (Assets.Scripts.Utils.HandsManager.Instance.FocusedGameObject != null)
-        {
-            IsManipulating = true;
+        if (Assets.Scripts.Utils.HandsManager.Instance.FocusedGameObject == null) return;
+        IsManipulating = true;
 
-            ManipulationPosition = position;
+        ManipulationPosition = position;
 
-            Assets.Scripts.Utils.HandsManager.Instance.FocusedGameObject.SendMessageUpwards("PerformManipulationUpdate", position);
-        }
+        Assets.Scripts.Utils.HandsManager.Instance.FocusedGameObject.SendMessageUpwards("PerformManipulationUpdate", position);
     }
 
     private void ManipulationRecognizer_ManipulationCompletedEvent(InteractionSourceKind source, Vector3 position, Ray ray)

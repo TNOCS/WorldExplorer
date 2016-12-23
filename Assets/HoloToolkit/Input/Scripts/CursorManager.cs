@@ -53,7 +53,7 @@ namespace HoloToolkit.Unity
             }
             if (CursorOffHolograms != null)
             {
-                //  CursorOffHolograms.SetActive(!GazeManager.Instance.Hit);
+                // CursorOffHolograms.SetActive(!GazeManager.Instance.Hit);
                 CursorOffHolograms.SetActive(!GazeManager.Instance.Hit);
             }
 

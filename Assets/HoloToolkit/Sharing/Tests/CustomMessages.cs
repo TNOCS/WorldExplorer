@@ -125,7 +125,7 @@ public class CustomMessages : Singleton<CustomMessages>
         }
     }
 
-    void OnDestroy()
+    new void OnDestroy()
     {
         if (this.serverConnection != null)
         {

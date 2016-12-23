@@ -7,6 +7,8 @@ using MapzenGo.Models.Plugins;
 using UniRx;
 using Symbols;
 using MapzenGo.Models.Factories;
+using Assets.Scripts.Plugins;
+using MapzenGo.Helpers;
 
 namespace Assets.Scripts
 {
@@ -143,9 +145,9 @@ namespace Assets.Scripts
 
         public void InitMap()
         {
-            var iv = Config.ActiveView;
+            var av = Config.ActiveView;
 
-            var i = iv.Range;
+            var i = av.Range;
             if (i > mapScales.Length) i = mapScales.Length;
             var mapScale = mapScales[i - 1];
             Map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
@@ -154,6 +156,13 @@ namespace Assets.Scripts
             World.transform.SetParent(Map.transform, false);
             var gazeManager = World.AddComponent<HoloToolkit.Unity.GazeManager>();
             gazeManager.MaxGazeDistance = 3f;
+
+            // Set user CenterInMercator to convert the cursor location to lat/lon
+            var v2 = GM.LatLonToMeters(av.Lat, av.Lon);
+            var tile = GM.MetersToTile(v2, av.Zoom);
+            var centerTms = tile;
+            SessionManager.Instance.me.CenterInMercator = GM.TileBounds(centerTms, av.Zoom).Center;
+            SessionManager.Instance.me.Scale = mapScale / 2;
 
             // init map
 #if DEBUG
@@ -165,11 +174,11 @@ namespace Assets.Scripts
             //tm._mapzenUrl = "http://134.221.20.226:3999/{0}/{1}/{2}/{3}.{4}";
 #endif
             tm._mapzenUrl = "http://" + Config.TileServer + "/{0}/{1}/{2}/{3}.{4}"; // "http://169.254.80.80:10733/{0}/{1}/{2}/{3}.{4}";
-            tm.Latitude = iv.Lat;
-            tm.Longitude = iv.Lon;
-            tm.Range = iv.Range;
-            tm.Zoom = iv.Zoom;
-            tm.TileSize = iv.TileSize;
+            tm.Latitude = av.Lat;
+            tm.Longitude = av.Lon;
+            tm.Range = av.Range;
+            tm.Zoom = av.Zoom;
+            tm.TileSize = av.TileSize;
 
             TileManager = tm;
             #region UI
@@ -192,14 +201,14 @@ namespace Assets.Scripts
             var factories = new GameObject("Factories");
             factories.transform.SetParent(World.transform, false);
 
-            if (iv.Mapzen.Contains("buildings"))
+            if (av.Mapzen.Contains("buildings"))
             {
                 var buildings = new GameObject("BuildingFactory");
                 buildings.transform.SetParent(factories.transform, false);
                 var buildingFactory = buildings.AddComponent<BuildingFactory>();
             }
 
-            if (iv.Mapzen.Contains("gebouwen"))
+            if (av.Mapzen.Contains("gebouwen"))
             {
                 var bagBuildings = new GameObject("BagBuildingFactory");
                 bagBuildings.transform.SetParent(factories.transform, false);
@@ -210,48 +219,48 @@ namespace Assets.Scripts
             //flatBuildings.transform.SetParent(factories.transform, false);
             //var flatBuildingFactory = flatBuildings.AddComponent<FlatBuildingFactory>();
 
-            if (iv.Mapzen.Contains("roads"))
+            if (av.Mapzen.Contains("roads"))
             {
                 var roads = new GameObject("RoadFactory");
                 roads.transform.SetParent(factories.transform, false);
                 var roadFactory = roads.AddComponent<RoadFactory>();
             }
 
-            if (iv.Mapzen.Contains("buildings"))
+            if (av.Mapzen.Contains("buildings"))
             {
                 var water = new GameObject("WaterFactory");
                 water.transform.SetParent(factories.transform, false);
                 var waterFactory = water.AddComponent<WaterFactory>();
             }
-            if (iv.Mapzen.Contains("boundaries"))
+            if (av.Mapzen.Contains("boundaries"))
             {
                 var boundary = new GameObject("BoundaryFactory");
                 boundary.transform.SetParent(factories.transform, false);
                 var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
             }
 
-            if (iv.Mapzen.Contains("landuse"))
+            if (av.Mapzen.Contains("landuse"))
             {
                 var landuse = new GameObject("LanduseFactory");
                 landuse.transform.SetParent(factories.transform, false);
                 var landuseFactory = landuse.AddComponent<LanduseFactory>();
             }
 
-            if (iv.Mapzen.Contains("places"))
+            if (av.Mapzen.Contains("places"))
             {
                 var places = new GameObject("PlacesFactory");
                 places.transform.SetParent(factories.transform, false);
                 var placesFactory = places.AddComponent<PlacesFactory>();
             }
 
-            if (iv.Mapzen.Contains("pois"))
+            if (av.Mapzen.Contains("pois"))
             {
                 var pois = new GameObject("PoiFactory");
                 pois.transform.SetParent(factories.transform, false);
                 var poisFactory = pois.AddComponent<PoiFactory>();
             }
 
-            if (iv.Mapzen.Contains("assets")) // assets
+            if (av.Mapzen.Contains("assets")) // assets
             {
                 var models = new GameObject("ModelFactory");
                 models.transform.SetParent(factories.transform, false);
@@ -267,7 +276,7 @@ namespace Assets.Scripts
             Layers.transform.SetParent(Table.transform);
             Layers.transform.localPosition = new Vector3(0f, 0.5f, 0f);
             Layers.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
-            iv.Layers.ForEach(layer =>
+            av.Layers.ForEach(layer =>
             {
                 var l = Config.Layers.FirstOrDefault(k => k.Title == layer && k.Type == "geojson");
                 if (l != null)
@@ -290,7 +299,7 @@ namespace Assets.Scripts
             var tileLayer = new GameObject("TileLayer");
             tileLayer.transform.SetParent(tilePlugins.transform, false);
             var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
-            tileLayerPlugin.tileLayers = Config.Layers.Where(k => { return iv.TileLayers.Contains(k.Title) && k.Type.ToLower() == "tilelayer"; }).ToList();
+            tileLayerPlugin.tileLayers = Config.Layers.Where(k => { return av.TileLayers.Contains(k.Title) && k.Type.ToLower() == "tilelayer"; }).ToList();
 
             foreach (var tl in Config.Layers.Where(k => { return k.Type.ToLower() == "tilelayer"; }))
             {
@@ -299,8 +308,8 @@ namespace Assets.Scripts
                     if (tl.Group != null)
                     {
                         var ll = Config.Layers.Where(k => k.Type.ToLower() == "tilelayer" && k.Group == tl.Group).Select(k => k.Title);
-                        iv.TileLayers = iv.TileLayers.Where(k => !ll.Contains(k)).ToList();
-                        iv.TileLayers.Add(tl.Title);
+                        av.TileLayers = av.TileLayers.Where(k => !ll.Contains(k)).ToList();
+                        av.TileLayers.Add(tl.Title);
                         ResetMap();
                     }
                 });

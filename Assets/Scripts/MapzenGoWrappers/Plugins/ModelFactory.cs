@@ -17,7 +17,7 @@ public class ModelFactory : Factory
     /// Specify the version number so you will download a new version.
     /// See http://answers.unity3d.com/questions/157563/how-do-you-set-an-assetbundles-version-number.html
     /// </summary>
-    public int version = 2;
+    public int version = 3;
     public override string XmlTag { get { return "assets"; } }
     public float scale = 1F;
     private HashSet<string> _active = new HashSet<string>();

@@ -2,15 +2,14 @@
 using Assets.Scripts;
 using Assets.Scripts.Plugins;
 using UnityEngine.UI;
-using System.Collections.Generic;
 using System.Text;
 
 public class Initialize : MonoBehaviour
 {
     private const string SwitchToSpeech = "Switch to ";
-    //private string configUrl = "https://dl.dropboxusercontent.com/s/qtfbgrpzeirrzn6/config_erik.json?dl=0";
+    private string configUrl = "https://dl.dropboxusercontent.com/s/6p6xiulujj4j1bw/config_erik.json?dl=0";
     //private string configUrl = "https://www.dropbox.com/s/z2ttlfxbupodrkb/config_ronaldc.json?dl=0"; 
-    private string configUrl = "https://dl.dropboxusercontent.com/s/wv89vyug74u4gy5/config_ronald.json?dl=0";
+    //private string configUrl = "https://dl.dropboxusercontent.com/s/wv89vyug74u4gy5/config_ronald.json?dl=0";
     private SpeechManager speech;
     // Use this for initialization
     /// <summary>
@@ -46,6 +45,32 @@ public class Initialize : MonoBehaviour
         fingerPressedSound = (AudioClip)Resources.Load("FingerPressed");
     }
 
+    void Start()
+    {
+        Debug.Log("Initializing...");
+        appState.Camera = gameObject;
+        // init cursor next for sessionmanager
+        cursor = Instantiate(_cursorFab, new Vector3(0, 0, 1), transform.rotation);
+        cursor.name = "Cursor";
+        cursor.GetComponent<Cursor>().enabled = true;
+        // session manager is nesscary for speech so init that next
+        sessionMgr = SessionManager.Instance;
+        sessionMgr.cursorPrefab = _cursorFabOther;
+        sessionMgr.Init(cursor);
+        // then add the terrain this will build the symboltargethandler which needs the sessionmanagr
+        appState.AddTerrain();
+        // init the speech dictionarys but do not start listiningen to the commands yet
+        appState.Speech.Init();
+        //save the speech lokal to add commands
+        speech = appState.Speech;
+        // init views which adds speech commands
+        InitViews();
+        // init the hud after all speech commands have been added
+        InitHud();
+        // Finally start speech commands!
+        appState.Speech.StartListining();
+    }
+
     void InitHud()
     {
         HoloManagers = new GameObject("HoloManagers");
@@ -79,35 +104,6 @@ public class Initialize : MonoBehaviour
         rt.sizeDelta = new Vector2(350, (h + 1) * 25);
         panelimagert.sizeDelta = rt.sizeDelta;
         info.text = s.ToString();
-    }
-
-    void Start()
-    {
-
-        Debug.Log("Initializing...");
-        appState.Camera = gameObject;
-        //init cursor next for sessionmanager
-        cursor = Instantiate(_cursorFab, new Vector3(0, 0, -1), transform.rotation);
-        cursor.name = "Cursor";
-        cursor.GetComponent<Cursor>().enabled = true;
-        // session manager is nesscary for speech so init that next
-        sessionMgr = SessionManager.Instance;
-        sessionMgr.cursorPrefab = _cursorFabOther;
-        sessionMgr.Init(cursor);
-        // then add the terraion this will build the symboltargethandler which needs the sessionmanagr
-        appState.AddTerrain();
-        // init the speech dictionarys but do not start listiningen to the commands yet
-        appState.Speech.Init();
-
-        //save the speech  lokal to add commands
-        speech = appState.Speech;
-        // init views  which adds speech commands
-        InitViews();
-        // init the hud after all speech commands have been added
-        InitHud();
-        // Finally start speech commands!
-        appState.Speech.StartListining();
-
     }
 
     void InitViews()

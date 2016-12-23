@@ -124,7 +124,7 @@ namespace TriangleNet.IO
 				}
 				return false;
 			}
-			return flag;
+			// return flag;
 		}
 
 		public void Write(Mesh mesh, bool skip = false)

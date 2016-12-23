@@ -17,7 +17,7 @@
       padding: 0;
       margin: 0;
     }
-    
+
     html,
     body,
     #map {
@@ -28,78 +28,119 @@
   </style>
   <div id="map" />
   <script>
-        var client, map;
+    var client, map;
 
-        function getParameterByName(name, url) {
-          // http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
-          if (!url) {
-            url = window.location.href;
-          }
-          name = name.replace(/[\[\]]/g, "\\$&");
-          var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-              results = regex.exec(url);
-          if (!results) return null;
-          if (!results[2]) return '';
-          return decodeURIComponent(results[2].replace(/\+/g, " "));
+    function getParameterByName(name, url) {
+      // http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+      if (!url) {
+        url = window.location.href;
+      }
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    function setupMqtt(sessionName) {
+      client = mqtt.connect("ws://localhost:8028");
+      client.on('connect', function () {
+        console.log("connected");
+        client.subscribe(sessionName + '/view');
+        client.subscribe(sessionName + '/presence/#');
+        client.publish(sessionName + '/presence', 'Hello mqtt');
+      })
+
+      client.on("message", function (topic, payload) {
+        var subtopic = topic.substr(sessionName.length + 1);
+        var msg = payload.toString();
+        console.log(subtopic + ': ' + msg);
+        if (subtopic.match(/presence/)) {
+          return processPresenceMsg(subtopic, payload);
         }
-
-        function setupMqtt(sessionName) {
-            client = mqtt.connect("ws://localhost:8028");
-            client.on('connect', function() {
-                console.log("connected");
-                client.subscribe(sessionName + '/view');
-                client.subscribe(sessionName + '/presence/#');
-                client.publish(sessionName + '/presence', 'Hello mqtt');
-            })
-
-            client.on("message", function(topic, payload) {
-              var subtopic = topic.substr(sessionName.length + 1);
-              var msg = payload.toString();
-              console.log(subtopic + ': ' + msg);
-              switch (subtopic) {
-                case 'view':
-                  var view = JSON.parse(msg);
-                  map.setView(L.latLng(view.lat, view.lon), view.zoom);
-                  break;
-              }
-            });
+        switch (subtopic) {
+          case 'view':
+            var view = JSON.parse(msg);
+            map.setView(L.latLng(view.lat, view.lon), view.zoom);
+            break;
         }
+      });
+    }
 
-        function changeViewToCenterMap(map, sessionName) {
-          var center = map.getCenter();
-          var zoom = map.getZoom();
-          var view = {
-              lat: center.lat,
-              lon: center.lng,
-              zoom: zoom
-          };
-          if (client) {
-              client.publish(sessionName + '/view', JSON.stringify(view), { qos: 2, retain: true });
-          }
-          console.log(view);
-        }
+    function processPresenceMsg(subtopic, payload) {
+      const regex = /presence\/([\w._-]+)/;
+      var match = subtopic.match(regex);
+      if (match) {
+        console.log('Presence:' + match[1]);
+        var m = JSON.parse(payload);
+        if (!m.hasOwnProperty('loc')) return;
+        var location = L.latLng(m.loc.lat, m.loc.lon);
+        var selectionColor = selectionColorToHex(m.selectionColor);
+        showCursor(m.name, selectionColor, location);
+        console.log(JSON.stringify(m, null, 2));
+      }
+    }
 
-        function setupMap(sessionName) {
-            map = L.map('map').fitWorld();
-            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-                maxZoom: 18
-            }).addTo(map);
-            map.setView(new L.LatLng(52.0862573323384, 5.949096679687501), 8);
+    function selectionColorToHex(color) {
+      return '#' + padWithZeros((color.r * 255).toString(16)) + padWithZeros((color.g * 255).toString(16)) + padWithZeros((color.b * 255).toString(16));
+    }
 
-            L.easyButton('fa-globe fa-2x', function(btn, m){
-              changeViewToCenterMap(m, sessionName);
-            }).addTo(map);
-        }
+    function padWithZeros(str) {
+      return ('00'+str).substring(str.length);
+    }
 
-        function init() {
-          var sessionName = getParameterByName('session') || 'one'; // by default, join the first session.
-          setupMqtt(sessionName);
-          setupMap(sessionName);
-        }
+    var cursors = {};
 
-        init();
-    </script>
+    function showCursor(id, color, latLng) {
+      if (cursors.hasOwnProperty(id)) map.removeLayer(cursors[id]);
+      cursors[id] = L.circle(latLng, {
+        color: 'black',
+        fillColor: color,
+        fillOpacity: 0.5,
+        radius: 10
+      }).addTo(map);
+    }
+
+    function changeViewToCenterMap(map, sessionName) {
+      var center = map.getCenter();
+      var zoom = map.getZoom();
+      var view = {
+        lat: center.lat,
+        lon: center.lng,
+        zoom: zoom
+      };
+      if (client) {
+        client.publish(sessionName + '/view', JSON.stringify(view), {
+          qos: 2,
+          retain: true
+        });
+      }
+      console.log(view);
+    }
+
+    function setupMap(sessionName) {
+      map = L.map('map').fitWorld();
+      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        maxZoom: 18
+      }).addTo(map);
+      map.setView(new L.LatLng(52.0862573323384, 5.949096679687501), 8);
+
+      L.easyButton('fa-globe fa-2x', function (btn, m) {
+        changeViewToCenterMap(m, sessionName);
+      }).addTo(map);
+    }
+
+    function init() {
+      var sessionName = getParameterByName('session') || 'one'; // by default, join the first session.
+      setupMqtt(sessionName);
+      setupMap(sessionName);
+    }
+
+    init();
+
+  </script>
 </body>
 
 </html>

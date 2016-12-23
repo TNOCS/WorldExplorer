@@ -1,4 +1,5 @@
-﻿using Symbols;
+﻿using MapzenGo.Helpers;
+using Symbols;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,6 @@ namespace Assets.Scripts.Classes
         private DateTime lastUpdateReceived;
         public GameObject Cursor { get; set; }
         public Material UserMaterial { get; private set; }
-
 
         public User()
         {
@@ -43,6 +43,8 @@ namespace Assets.Scripts.Classes
             }
         }
 
+        public Vector2d CenterInMercator { get; set; }
+
         public Feature SelectedFeature { get; set; }
 
         /// <summary>
@@ -55,11 +57,20 @@ namespace Assets.Scripts.Classes
         }
 
         public string Name { get; set; }
+        public float Scale { get; internal set; }
 
         public override string ToString()
         {
             return string.Format(@"id: {0}, name: {6}, selectedFeatureId: {1}, selectionColor: r: {2}, g: {3}, b: {4}, a: {5}",
                     id, SelectedFeature.id, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name);
+        }
+
+        private string CursorLocationToJSON()
+        {
+            if (CenterInMercator == null) return string.Empty;
+            var v0 = new Vector2d(Cursor.transform.position.x / Scale, Cursor.transform.position.z / Scale) + CenterInMercator;
+            var v1 = GM.MetersToLatLon(v0);
+            return string.Format(@"""loc"":{{""lat"":{0},""lon"":{1}}}", v1.y, v1.x);
         }
 
         public string ToJSON()
@@ -68,20 +79,31 @@ namespace Assets.Scripts.Classes
             {
                 // Only send the ID
                 if (Cursor == null)
-                    return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"", ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, }}", id, Name, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a);
+                {
+                    return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"", ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, }}", 
+                        id, Name, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a);
+                }
                 else
-                    return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"", ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, ""cursor"":{{""xpos"":{6},""ypos"":{7},""zpos"":{8},""xrot"":{9},""yrot"":{10},""zrot"":{11} }}}}", id, Name, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Cursor.transform.position.x, Cursor.transform.position.y, Cursor.transform.position.z, Cursor.transform.rotation.x, Cursor.transform.rotation.y, Cursor.transform.rotation.z);
+                {
+                    return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"", ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, ""cursor"":{{""xpos"":{6},""ypos"":{7},""zpos"":{8},""xrot"":{9},""yrot"":{10},""zrot"":{11} }}, {12}}}",
+                        id, Name, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Cursor.transform.position.x, Cursor.transform.position.y, Cursor.transform.position.z, Cursor.transform.rotation.x, Cursor.transform.rotation.y, Cursor.transform.rotation.z, CursorLocationToJSON());
+                }
             }
             else
             {
                 Func<float, float> nearZero = x => Math.Abs(x) < 0.0001 ? 0F : x;
                 if (Cursor == null)
+                {
                     return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{6}"", ""selectedFeature"": {1}, ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }} }}", id, SelectedFeature.ToLimitedJSON(), selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name);
+                }
                 else
-                    return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{6}"", ""selectedFeature"": {1}, ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, ""cursor"":{{""xpos"":{7},""ypos"":{8},""zpos"":{9},""xrot"":{10},""yrot"":{11},""zrot"":{12} }} }}",
-                id, SelectedFeature.ToLimitedJSON(), selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name, 
-                nearZero(Cursor.transform.position.x), nearZero(Cursor.transform.position.y), nearZero(Cursor.transform.position.z), 
-                nearZero(Cursor.transform.rotation.x), nearZero(Cursor.transform.rotation.y), nearZero(Cursor.transform.rotation.z));
+                {
+                    return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{6}"", ""selectedFeature"": {1}, ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, ""cursor"":{{""xpos"":{7},""ypos"":{8},""zpos"":{9},""xrot"":{10},""yrot"":{11},""zrot"":{12} }}, {13}}}",
+                        id, SelectedFeature.ToLimitedJSON(), selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name,
+                        nearZero(Cursor.transform.position.x), nearZero(Cursor.transform.position.y), nearZero(Cursor.transform.position.z),
+                        nearZero(Cursor.transform.rotation.x), nearZero(Cursor.transform.rotation.y), nearZero(Cursor.transform.rotation.z),
+                        CursorLocationToJSON());
+                }
             }
         }
 
@@ -91,19 +113,18 @@ namespace Assets.Scripts.Classes
             var user = new User(jsonObj.GetString("id"));
             if (jsonObj.HasField("selectedFeature"))
             {
-
                 user.SelectedFeature = new Feature();
                 var sf = jsonObj["selectedFeature"];
                 user.SelectedFeature.id = sf.GetString("id");
-
                 user.SelectedFeature.SetLatLon(new Vector2d(sf.GetFloat("lon"), sf.GetFloat("lat")));
             }
             if (jsonObj.HasField("selectionColor"))
             {
-                var a = jsonObj["selectionColor"].GetFloat("a", 1);
-                var r = jsonObj["selectionColor"].GetFloat("r", 1);
-                var g = jsonObj["selectionColor"].GetFloat("g", 1);
-                var b = jsonObj["selectionColor"].GetFloat("b", 1);
+                var sc = jsonObj["selectionColor"];
+                var a = sc.GetFloat("a", 1);
+                var r = sc.GetFloat("r", 1);
+                var g = sc.GetFloat("g", 1);
+                var b = sc.GetFloat("b", 1);
                 user.SelectionColor = new Color(r, g, b, a);
             }
             if (jsonObj.HasField("cursor"))
@@ -117,17 +138,14 @@ namespace Assets.Scripts.Classes
                 var rotz = cur.GetFloat("zrot", 1);
                 if (user.Cursor == null && cursors != null && cursors.Count != 0)
                 {
-                    user.Cursor = cursors.Find(i => i.name == user.id + "-Cursor");
+                    var name = user.id + "-Cursor";
+                    user.Cursor = cursors.Find(i => i.name == name);
                 }
                 if (user.Cursor != null)
                 {
                     user.Cursor.transform.position = new Vector3(posx, posy, posz);
                     user.Cursor.transform.rotation = Quaternion.Euler(rotx, roty, rotz);
-
                 }
-
-
-
             }
 
             return user;

@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Windows.Speech;
 using MapzenGo.Helpers;
 using Assets.Scripts.Plugins;
-using HoloToolkit.Unity;
 
 namespace Assets.Scripts
 {
@@ -13,7 +12,7 @@ namespace Assets.Scripts
     {
         private AppState appState;
         private SessionManager sessionManager;
-        private SelectionHandler selectionHadnler;
+        private SelectionHandler selectionHandler;
         public GameObject Hud;
         public Dictionary<string, Action> Keywords = new Dictionary<string, Action>();
         public Dictionary<string, string> audioCommands;
@@ -26,7 +25,7 @@ namespace Assets.Scripts
             Debug.Log("Initializing speech manager");
             audioCommands = new Dictionary<string, string>();
             appState = AppState.Instance;
-            selectionHadnler = SelectionHandler.Instance;
+            selectionHandler = SelectionHandler.Instance;
             AddDefaultKeywords();
         }
 
@@ -56,21 +55,30 @@ namespace Assets.Scripts
             appState.Speech.Keywords.Add("Hide Commands", () =>
             {
                 Hud.SetActive(false);
-                // appState.TileManager.UpdateTiles();
             });
             audioCommands.Add("Show Commands", " Displays the voice commands");
             appState.Speech.Keywords.Add("Show Commands", () =>
             {
                 Hud.SetActive(true);
-                // appState.TileManager.UpdateTiles();
             });
             audioCommands.Add("Center table", " Places the table at your current position");
-            appState.Speech.Keywords.Add("Center Table", () =>
+            appState.Speech.Keywords.Add("Center table", () =>
             {
+                Debug.Log(string.Format("Center table at x={0}, z={1}", gameObject.transform.position.x, gameObject.transform.position.z));
                 appState.Table.transform.position = new Vector3(gameObject.transform.position.x, 0.7f, gameObject.transform.position.z);
                 //Center = new Vector3(Center.x, Center.y, Center.z + 1);
             });
-            AddKeyword("Place", () => selectionHadnler.releaseObj());//doNothing());
+            appState.Speech.Keywords.Add("Lower table", () =>
+            {
+                Debug.Log("Lower table");
+                appState.Table.transform.position = new Vector3(appState.Table.transform.position.x, appState.Table.transform.position.y - 0.1F, appState.Table.transform.position.z);
+            });
+            appState.Speech.Keywords.Add("Raise table", () =>
+            {
+                Debug.Log("Raise table");
+                appState.Table.transform.position = new Vector3(appState.Table.transform.position.x, appState.Table.transform.position.y + 0.1F, appState.Table.transform.position.z);
+            });
+            AddKeyword("Place", () => selectionHandler.releaseObj());
             AddKeyword("Zoom in", () => SetZoomAndRange(1, 0));
             AddKeyword("Place", () => doNothing() );
             AddKeyword("Zoom in", () => SetZoomAndRange(1,0));
@@ -104,25 +112,25 @@ namespace Assets.Scripts
             switch (direction.ToLowerInvariant())
             {
                 case "north":
-                    delta = new Vector2d(0, metersPerTile);
-                    break;
-                case "south":
-                    delta = new Vector2d(0, -metersPerTile);
-                    break;
-                case "east":
                     delta = new Vector2d(metersPerTile, 0);
                     break;
-                case "west":
+                case "south":
                     delta = new Vector2d(-metersPerTile, 0);
+                    break;
+                case "east":
+                    delta = new Vector2d(0, metersPerTile);
+                    break;
+                case "west":
+                    delta = new Vector2d(0, -metersPerTile);
                     break;
                 case "north east":
                     delta = new Vector2d(metersPerTile, metersPerTile);
                     break;
                 case "south east":
-                    delta = new Vector2d(metersPerTile, -metersPerTile);
+                    delta = new Vector2d(-metersPerTile, metersPerTile);
                     break;
                 case "north west":
-                    delta = new Vector2d(-metersPerTile, metersPerTile);
+                    delta = new Vector2d(metersPerTile, -metersPerTile);
                     break;
                 case "south west":
                     delta = new Vector2d(-metersPerTile, -metersPerTile);

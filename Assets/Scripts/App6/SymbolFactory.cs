@@ -9,6 +9,7 @@ using Assets.Scripts.Classes;
 using System.Text.RegularExpressions;
 using System.Text;
 using System.Globalization;
+using Assets.Scripts;
 
 namespace Symbols
 {
@@ -85,6 +86,7 @@ namespace Symbols
         [SerializeField]
         public string geojson;
         private GeoJson geoJson = new GeoJson();
+        private AppState appState = AppState.Instance;
 
         public Layer Layer { get; set; }
 
@@ -267,13 +269,13 @@ namespace Symbols
             symbolCom.Stick(target.transform);
 
             symbol.transform.SetParent(target.transform, true);
-            symbol.transform.localScale = new Vector3(Layer.Scale, Layer.Scale);
+            symbol.transform.localScale = new Vector3(Layer.Scale, Layer.Scale * 2 / appState.Config.Table.Thickness);
             symbol.transform.localPosition = new Vector3(0, 60f, 0);
 
             GameObject instance = Instantiate(Resources.Load("cone", typeof(GameObject)), target.transform) as GameObject;
             instance.name = "cone";
             instance.transform.localPosition = new Vector3(10f, 10f, 10f);
-            instance.transform.localScale = new Vector3(30f, 30f, 30f);
+            instance.transform.localScale = new Vector3(30f, 300f, 30f);
             //instance.transform.localRotation = new Quaternion(0f, 0f, 180f,0f);
 
             if (f.Stats != null)

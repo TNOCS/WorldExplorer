@@ -113,7 +113,7 @@ public class Initialize : MonoBehaviour
             var cmd = SwitchToSpeech + v.Name;
             speech.audioCommands.Add(cmd, " displays the view");
 
-            appState.Speech.Keywords.Add(cmd + v.Name, () =>
+            appState.Speech.Keywords.Add(cmd, () =>
             {
                 appState.Config.ActiveView = v.Clone();
                 appState.ResetMap();

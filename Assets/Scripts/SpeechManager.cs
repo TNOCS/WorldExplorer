@@ -61,8 +61,7 @@ namespace Assets.Scripts
             {
                 Hud.SetActive(true);
             });
-            AddKeyword("Place", () => selectionHandler.releaseObj());
-            AddKeyword("Zoom in", () => SetZoomAndRange(1, 0));
+            //AddKeyword("Place", () => selectionHandler.releaseObj());
             AddKeyword("Place", () => doNothing() );
             AddKeyword("Zoom in", () => SetZoomAndRange(1,0));
             AddKeyword("Zoom out", () => SetZoomAndRange(-1, 0));
@@ -184,12 +183,13 @@ namespace Assets.Scripts
         /// <param name="action"></param>
         public void AddKeyword(string speech, Action action)
         {
+            //Debug.Log(speech);
             if (!Keywords.ContainsKey(speech) && keywordRecognizer != null && keywordRecognizer.IsRunning)
             {
-                Debug.Log(string.Format("You are trying to add the {0} keyword, but the speech manager is already running. Restarting..."));
-                keywordRecognizer.Stop();
-                Keywords[speech] = action;
-                StartListining();
+                Debug.LogWarningFormat("You are trying to add the {0} keyword, but the speech manager is already running...", speech);
+                //keywordRecognizer.Stop();
+                //Keywords[speech] = action;
+                //StartListining();
             }
             else
             {

@@ -38,7 +38,10 @@ public class Initialize : MonoBehaviour
 
         appState = AppState.Instance;
         appState.LoadConfig(configUrl);
-        Hud = GameObject.Find("HUDCanvas");
+        Hud = GameObject.CreatePrimitive(PrimitiveType.Cube); // By default, a cube is 1x1x1m, so we must scale it.
+        Hud.name = "HUDCanvas";
+
+        //Hud = GameObject.Find("HUDCanvas");
         appState.Speech.Hud = Hud;
 
         font = Resources.GetBuiltinResource<Font>("Arial.ttf");

@@ -9,6 +9,7 @@ using Symbols;
 using MapzenGo.Models.Factories;
 using Assets.Scripts.Plugins;
 using MapzenGo.Helpers;
+using System.Threading;
 
 namespace Assets.Scripts
 {

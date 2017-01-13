@@ -3,6 +3,7 @@ using Assets.Scripts;
 using Assets.Scripts.Plugins;
 using UnityEngine.UI;
 using System.Text;
+using System.Collections;
 
 public class Initialize : MonoBehaviour
 {
@@ -37,9 +38,9 @@ public class Initialize : MonoBehaviour
         _cursorFabOther = Resources.Load("Prefabs\\Input\\CursorOther") as GameObject;
 
         appState = AppState.Instance;
-        appState.LoadConfig(configUrl);
-        //Hud = GameObject.CreatePrimitive(PrimitiveType.Cube); // By default, a cube is 1x1x1m, so we must scale it.
-        //Hud.name = "HUDCanvas";
+        //appState.LoadConfig(configUrl);
+        //yield return StartCoroutine(appState.LoadConfiguration(configUrl));
+        //LoadConfig();
 
         Hud = GameObject.Find("HUDCanvas");
         appState.Speech.Hud = Hud;
@@ -48,9 +49,16 @@ public class Initialize : MonoBehaviour
         fingerPressedSound = (AudioClip)Resources.Load("FingerPressed");
     }
 
-    void Start()
+    //private IEnumerator LoadConfig()
+    //{
+    //    yield return StartCoroutine(appState.LoadConfiguration(configUrl));
+    //}
+
+    IEnumerator Start()
     {
         Debug.Log("Initializing...");
+        yield return StartCoroutine(appState.LoadConfiguration(configUrl));
+
         appState.Camera = gameObject;
         // init cursor next for sessionmanager
         cursor = Instantiate(_cursorFab, new Vector3(0, 0, 1), transform.rotation);

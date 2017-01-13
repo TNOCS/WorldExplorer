@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using MapzenGo.Models;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Classes;
@@ -9,7 +10,6 @@ using Symbols;
 using MapzenGo.Models.Factories;
 using Assets.Scripts.Plugins;
 using MapzenGo.Helpers;
-using System.Threading;
 
 namespace Assets.Scripts
 {
@@ -21,6 +21,7 @@ namespace Assets.Scripts
         public GameObject World;
         public GameObject Terrain;
         public GameObject Table;
+        public GameObject Board;
         public GameObject Camera;
         public GameObject Map;
         public GameObject Layers;
@@ -61,11 +62,18 @@ namespace Assets.Scripts
 
         public void LoadConfig(string url)
         {
+            StartCoroutine(LoadConfiguration(url));
+        }
+
+        public IEnumerator LoadConfiguration(string url)
+        {
             string json;
 
             WWW www = new WWW(url);
 
-            while (!www.isDone) { Thread.Sleep(50); }
+            while (!www.isDone) { yield return new WaitForSeconds(0.05F); ; }
+
+            //yield return www;
 
             if (!string.IsNullOrEmpty(www.error))
             {
@@ -79,6 +87,7 @@ namespace Assets.Scripts
 
             Config = new AppConfig();
             Config.FromJson(new JSONObject(json));
+            yield return null;
         }
 
         public void ResetMap(ViewState view = null)
@@ -117,19 +126,31 @@ namespace Assets.Scripts
             #region create map & terrain
 
             Terrain = new GameObject("terrain");
-            Terrain.transform.position = new Vector3(0f, t.Position, 0f);
-            Terrain.transform.localScale = new Vector3(t.Size, t.Size, t.Size);
+            Terrain.transform.position = new Vector3(0f, 0f, 0f);
+            //Terrain.transform.position = new Vector3(0f, t.Position, 0f);
+            //Terrain.transform.localScale = new Vector3(t.Size, t.Size, t.Size);
 
-            Table = GameObject.CreatePrimitive(PrimitiveType.Cube); // By default, a cube is 1x1x1m, so we must scale it.
-            Table.name = "Table";
-            Table.transform.position = new Vector3(0f, 0f, 0f);
-            Table.transform.localScale = new Vector3(1F, t.Thickness, 1F);
+            //Table = GameObject.CreatePrimitive(PrimitiveType.Cube); // By default, a cube is 1x1x1m, so we must scale it.
+            //Table.name = "Table";
+            Table = new GameObject("Table"); // By default, a cube is 1x1x1m, so we must scale it.
+            Table.transform.position = new Vector3(0f, 0.7f, 0f);
+            Table.transform.localScale = new Vector3(t.Size, t.Height, t.Size);
+            //Table.transform.position = new Vector3(0f, 0f, 0f);
+            //Table.transform.localScale = new Vector3(1F, t.Thickness, 1F);
             Table.transform.SetParent(Terrain.transform, false);
+
+            Board = GameObject.Find("Board");
+            Board.transform.position = new Vector3(0f, t.Size - t.Thickness, 0f);
+            Board.transform.localScale = new Vector3(t.Size, t.Thickness, t.Size);
+            Board.transform.SetParent(Table.transform, true);
+            //Board = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            //Board.name = "Board";
 
 
             Map = new GameObject("Map");
             Map.transform.SetParent(Table.transform);
-            Map.transform.localPosition = new Vector3(0f, (t.Thickness / 2) / t.Thickness + 0.01F, 0f);
+            Map.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+            //Map.transform.localPosition = new Vector3(0f, (t.Thickness / 2) / t.Thickness + 0.01F, 0f);
 
             #endregion
             InitMap();
@@ -152,7 +173,8 @@ namespace Assets.Scripts
             var i = av.Range;
             if (i > mapScales.Length) i = mapScales.Length;
             var mapScale = mapScales[i - 1];
-            Map.transform.localScale = new Vector3(mapScale, mapScale / Config.Table.Thickness, mapScale);
+            //Map.transform.localScale = new Vector3(mapScale, mapScale / Config.Table.Thickness, mapScale);
+            Map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);

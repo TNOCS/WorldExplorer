@@ -22,6 +22,9 @@ Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worl
 # Lessons Learned / known issues
 Also see the [Lessons Learned](https://github.com/TNOCS/WorldExplorer/wiki/Lessons-Learned) section in the Wiki, which contains some tips to develop Hololens applications for Unity.
 
+# Inspiring projects and HoloLens resources
+Looking for inspiration, check out [this page](https://github.com/TNOCS/WorldExplorer/wiki/Interesting-HoloLens-projects)
+
 # Build instructions
 
 First, make sure that you can run the local tile server. See the build instructions in the [world-explorer-server](https://github.com/TNOCS/WorldExplorer/tree/master/world-explorer-server) folder.

@@ -78,7 +78,7 @@ namespace Assets.Scripts
             appState.Speech.Keywords.Add("Center table", () =>
             {
                 Debug.Log("Center table");
-                appState.Terrain.transform.position = new Vector3(0F, table.Position, 0F);
+                appState.Terrain.transform.position = new Vector3(0F, 0F, 0F);
             });
             appState.Speech.Keywords.Add("Shrink table", () =>
             {

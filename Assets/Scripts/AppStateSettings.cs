@@ -10,6 +10,7 @@ using Symbols;
 using MapzenGo.Models.Factories;
 using Assets.Scripts.Plugins;
 using MapzenGo.Helpers;
+using HoloToolkit.Unity;
 
 namespace Assets.Scripts
 {
@@ -25,6 +26,7 @@ namespace Assets.Scripts
         public GameObject Camera;
         public GameObject Map;
         public GameObject Layers;
+        public GameObject Cursor;
         public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
         public Vector3 Center { get; set; }
         public TileManager TileManager { get; set; }
@@ -72,8 +74,6 @@ namespace Assets.Scripts
             WWW www = new WWW(url);
 
             while (!www.isDone) { yield return new WaitForSeconds(0.05F); ; }
-
-            //yield return www;
 
             if (!string.IsNullOrEmpty(www.error))
             {
@@ -127,25 +127,20 @@ namespace Assets.Scripts
 
             Terrain = new GameObject("terrain");
             Terrain.transform.position = new Vector3(0f, 0f, 0f);
-            //Terrain.transform.position = new Vector3(0f, t.Position, 0f);
-            //Terrain.transform.localScale = new Vector3(t.Size, t.Size, t.Size);
+            // Add direction indicator
+            var di = Terrain.AddComponent<DirectionIndicator>();
+            di.DirectionIndicatorObject = Resources.Load<GameObject>("Components/DirectionalIndicator");
+            di.Cursor = Cursor;
 
-            //Table = GameObject.CreatePrimitive(PrimitiveType.Cube); // By default, a cube is 1x1x1m, so we must scale it.
-            //Table.name = "Table";
-            Table = new GameObject("Table"); // By default, a cube is 1x1x1m, so we must scale it.
+            Table = new GameObject("Table"); // Empty game object
             Table.transform.position = new Vector3(0f, 0.7f, 0f);
             Table.transform.localScale = new Vector3(t.Size, t.Height, t.Size);
-            //Table.transform.position = new Vector3(0f, 0f, 0f);
-            //Table.transform.localScale = new Vector3(1F, t.Thickness, 1F);
             Table.transform.SetParent(Terrain.transform, false);
 
-            Board = GameObject.Find("Board");
+            Board = GameObject.Find("Board"); // Although we could create the board in code, this way I can add buttons etc to the object in Unity.
             Board.transform.position = new Vector3(0f, t.Size - t.Thickness, 0f);
             Board.transform.localScale = new Vector3(t.Size, t.Thickness, t.Size);
             Board.transform.SetParent(Table.transform, true);
-            //Board = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            //Board.name = "Board";
-
 
             Map = new GameObject("Map");
             Map.transform.SetParent(Table.transform);

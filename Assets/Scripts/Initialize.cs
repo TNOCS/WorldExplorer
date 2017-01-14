@@ -61,9 +61,10 @@ public class Initialize : MonoBehaviour
 
         appState.Camera = gameObject;
         // init cursor next for sessionmanager
-        cursor = Instantiate(_cursorFab, new Vector3(0, 0, 1), transform.rotation);
-        cursor.name = "Cursor";
+        appState.Cursor = cursor = Instantiate(_cursorFab, new Vector3(0, 0, 1), transform.rotation);
         cursor.GetComponent<Cursor>().enabled = true;
+        cursor.name = "Cursor";
+
         // session manager is nesscary for speech so init that next
         sessionMgr = SessionManager.Instance;
         sessionMgr.cursorPrefab = _cursorFabOther;

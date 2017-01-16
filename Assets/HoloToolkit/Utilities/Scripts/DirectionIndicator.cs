@@ -22,12 +22,12 @@ namespace HoloToolkit.Unity
         public Color DirectionIndicatorColor = Color.blue;
 
         [Tooltip("Allowable percentage inside the holographic frame to continue to show a directional indicator.")]
-        [Range(-0.3f, 0.3f)]
-        public float VisibilitySafeFactor = 0.1f;
+        // [Range(-0.3f, 0.3f)]
+        public float VisibilitySafeFactor = -1.3f;
 
         [Tooltip("Multiplier to decrease the distance from the cursor center an object is rendered to keep it in view.")]
         [Range(0.1f, 1.0f)]
-        public float MetersFromCursor = 0.3f;
+        public float MetersFromCursor = 0.1f;
 
         // The default rotation of the cursor direction indicator.
         private Quaternion directionIndicatorDefaultRotation = Quaternion.identity;

@@ -62,6 +62,7 @@ namespace Assets.Scripts
                 Hud.SetActive(true);
             });
             //AddKeyword("Place", () => selectionHandler.releaseObj());
+            AddTableCommands();
             AddKeyword("Place", () => doNothing() );
             AddKeyword("Zoom in", () => SetZoomAndRange(1,0));
             AddKeyword("Zoom out", () => SetZoomAndRange(-1, 0));
@@ -78,21 +79,22 @@ namespace Assets.Scripts
             appState.Speech.Keywords.Add("Center table", () =>
             {
                 Debug.Log("Center table");
-                appState.Terrain.transform.position = new Vector3(0F, 0F, 0F);
+                var pos = Camera.main.transform.position;
+                appState.Terrain.transform.position = new Vector3(pos.x, table.Position, pos.z);
             });
             appState.Speech.Keywords.Add("Shrink table", () =>
             {
-                table.Size -= 0.1F;
+                table.Size -= 0.2F;
                 var size = table.Size;
                 Debug.Log(string.Format("Shrink table to {0}", size));
-                appState.Terrain.transform.localScale = new Vector3(size, size, size);
+                appState.Table.transform.localScale = new Vector3(size, table.Position, size);
             });
             appState.Speech.Keywords.Add("Expand table", () =>
             {
-                table.Size += 0.1F;
+                table.Size += 0.2F;
                 var size = table.Size;
                 Debug.Log(string.Format("Expand table to {0}", size));
-                appState.Terrain.transform.localScale = new Vector3(size, size, size);
+                appState.Table.transform.localScale = new Vector3(size, table.Position, size);
             });
             appState.Speech.Keywords.Add("Lower table", () =>
             {

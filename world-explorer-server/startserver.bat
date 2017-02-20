@@ -1,2 +1,1 @@
-node dist/server.js
-pause
+node dist/cli.js

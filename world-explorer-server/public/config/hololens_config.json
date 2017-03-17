@@ -1,0 +1,241 @@
+{
+  "userName": "Commander",
+  "selectionColor": {
+    "r": 1,
+    "g": 1,
+    "b": 0,
+    "a": 1
+  },
+  "tileServer": "134.221.20.226:10733",
+  "mqttServer": "134.221.20.226",
+  "mqttServer_tmp": "cool3.sensorlab.tno.nl",
+  "mqttPort": "8026",
+  "initialView": "Bunker",
+  "sessionName": "one",
+  "table": {
+    "size": 1.5,
+    "height": 0.6
+  },
+  "layers": [{
+      "title": "TopoLayer",
+      "url2": "http://134.221.20.239:8101/2102363017/{z}/{x}/{y}.png",
+      "url": "http://d.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+      "voiceCommand": "street map",
+      "useTransparency": true,
+      "height": 0.9,
+      "type": "tilelayer",
+      "group": "baselayer"
+    },
+    {
+      "title": "Flooding",
+      "url2": "http://134.221.20.239:8101/2102363017",
+      "url": "http://d.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+      "voiceCommand": "flooding",
+      "useTransparency": true,
+      "height": 1.1,
+      "type": "tilelayer"
+    },
+    {
+      "title": "Satellite",
+      "url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      "voiceCommand": "satellite",
+      "useTransparency": true,
+      "height": 0.9,
+      "type": "tilelayer",
+      "group": "baselayer"
+    },
+    {
+      "title": "Symboltest",
+      "url": "http://134.221.20.226:10733//test.json",
+      "IconUrl": "http://134.221.20.226:10733//test.json",
+      "voiceCommand": "symbol",
+      "useTransparency": true,
+      "height": 1.1,
+      "scale": 60,
+      "type": "geojson",
+      "Enabled": true
+    },
+    {
+      "title": "Police",
+      "url": "http://134.221.20.240:3000/api/layers/politie.actual",
+      "IconUrl": "http://134.221.20.240:3000/images/politie.png",
+      "voiceCommand": "police",
+      "useTransparency": true,
+      "height": 1.1,
+      "scale": 60,
+      "type": "geojson",
+      "Enabled": true
+    },
+
+    {
+      "title": "Ambulance",
+      "url": "http://134.221.20.240:3000/api/layers/ambulanceposten.actual",
+      "IconUrl": "http://134.221.20.240:3000/images/ambulanceposten.png",
+      "voiceCommand": "ambulance",
+      "useTransparency": true,
+      "height": 1.1,
+      "Refresh": 10,
+      "scale": 90,
+      "type": "geojson",
+      "Enabled": true
+    },
+    {
+      "title": "Gps",
+      "url": "http://217.169.227.210:3000/api/layers/gps.actual",
+      "Url1": "http://tnopresenter.nl/arnoud/test.json",
+      "IconUrl": "http://217.169.227.210:3000/images/gps/{role}.png",
+      "voiceCommand": "gps",
+      "useTransparency": true,
+      "Refresh": 10,
+      "scale": 120,
+      "height": 1.1,
+      "type": "geojson",
+      "Enabled": false
+    }
+  ],
+  "views": [{
+      "name": "Detail",
+      "lat": 52.4587,
+      "lon": 5.0431,
+      "zoom": 17,
+      "tileSize": 100,
+      "range": 4,
+      "scale": 1,
+      "mapzen": ["buildings", "pois", "assets"],
+      "layers": ["Symboltest"],
+      "tileLayers": ["TopoLayer"]
+    },
+    {
+      "name": "Beach",
+      "lat": 52.111077,
+      "lon": 4.285591,
+      "zoom": 17,
+      "tileSize": 100,
+      "range": 3,
+      "scale": 1,
+      "mapzen": ["buildings", "pois", "assets"],
+      "layers": [],
+      "tileLayers": ["TopoLayer"]
+    },
+    {
+      "name": "Station",
+      "lat": 51.44228,
+      "lon": 5.48004,
+      "zoom": 17,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": ["buildings", "water", "roads", "pois", "assets"],
+      "layers": [],
+      "tileLayers": ["TopoLayer"]
+    },
+    {
+      "name": "School",
+      "lat": 51.480699,
+      "lon": 5.450737,
+      "zoom": 17,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": ["buildings", "water", "roads", "pois"],
+      "layers": [],
+      "tileLayers": ["TopoLayer"]
+    },
+    {
+      "name": "City",
+      "lat": 51.438232,
+      "lon": 5.478346,
+      "zoom": 17,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": ["buildings", "water", "roads", "pois", "assets"],
+      "layers": [],
+      "tileLayers": ["TopoLayer"]
+    },
+    {
+      "name": "Bunker",
+      "lat": 51.44686947903695,
+      "lon": 5.479629635810852,
+      "zoom": 17,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": ["gebouwen", "pois", "assets"],
+      "layers": [],
+      "tileLayers": ["TopoLayer"]
+    },
+    {
+      "name": "Lhasa",
+      "lat": 29.641547,
+      "lon": 91.112160,
+      "zoom": 14,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": ["buildings", "water", "roads", "landuse", "pois"],
+      "layers": [],
+      "tileLayers": ["TopoLayer"]
+    },
+    {
+      "name": "Caves",
+      "lat": 50.862444,
+      "lon": 5.828960,
+      "zoom": 14,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": ["buildings", "water", "roads", "landuse", "pois"],
+      "layers": [],
+      "tileLayers": ["TopoLayer"]
+    },
+    {
+      "name": "Venlo",
+      "lat": 51.355980,
+      "lon": 6.186556,
+      "zoom": 14,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": ["buildings", "water", "roads", "landuse", "pois"],
+      "layers": ["Police", "Ambulance"],
+      "tileLayers": ["TopoLayer"]
+    },
+    {
+      "name": "Water",
+      "lat": 52.453924,
+      "lon": 5.047512,
+      "zoom": 15,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": ["buildings", "water", "roads", "landuse", "pois"],
+      "layers": ["Police", "Ambulance"],
+      "tileLayers": ["TopoLayer"]
+    },
+    {
+      "name": "Military",
+      "lat": 52.144168,
+      "lon": 5.337196,
+      "zoom": 16,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": ["buildings", "water", "roads", "landuse", "water"],
+      "layers": ["Gps"],
+      "tileLayers": ["Satellite"]
+    },
+    {
+      "name": "Kazerne",
+      "lat": 52.1286229,
+      "lon": 5.3065116,
+      "zoom": 17,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": ["buildings", "water", "roads", "pois", "assets"],
+      "layers": [],
+      "tileLayers": ["TopoLayer"]
+    },
+  ]
+}

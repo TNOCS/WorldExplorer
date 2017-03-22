@@ -44,7 +44,7 @@
     }
 
     function setupMqtt(sessionName) {
-      client = mqtt.connect("ws://localhost:8028");
+      client = mqtt.connect("ws://134.221.20.240:8028");
       client.on('connect', function () {
         console.log("connected");
         client.subscribe(sessionName + '/view');

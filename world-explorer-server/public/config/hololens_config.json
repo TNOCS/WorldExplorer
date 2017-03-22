@@ -37,8 +37,8 @@
     },
     {
       "title": "Flooding",
-      "url2": "http://134.221.20.240:8101/2102363017",
-      "url": "http://d.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+      "url": "http://134.221.20.240:8101/2102363017",
+      // "url": "http://d.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
       "voiceCommand": "flooding",
       "useTransparency": true,
       "height": 1.1,

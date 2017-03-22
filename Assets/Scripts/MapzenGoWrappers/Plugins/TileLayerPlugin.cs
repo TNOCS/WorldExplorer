@@ -16,45 +16,39 @@ namespace MapzenGo.Models.Plugins
 
             foreach (var tileLayer in tileLayers)
             {
-                
-                    //AppState.Instance.Speech.Keywords.Add("Enable " + tileLayer.VoiceCommand, () =>
-                    // {
-                    //     if (tileLayer.Group())
-                    // });
-                   
-                        var go = GameObject.CreatePrimitive(PrimitiveType.Quad).transform;
-                        go.name = "tilelayer-" + tileLayer.Title;
-                        go.SetParent(tile.transform, false);
-                        go.localScale = new Vector3((float)tile.Rect.Width, (float)tile.Rect.Width, 1);
-                        go.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
-                        //go.localPosition = Vector3.zero;
-                        go.localPosition += new Vector3(0, tileLayer.Height, 0);
-                        var rend = go.GetComponent<Renderer>();
-                        rend.material = tile.Material;
-                        
+                //AppState.Instance.Speech.Keywords.Add("Enable " + tileLayer.VoiceCommand, () =>
+                // {
+                //     if (tileLayer.Group())
+                // });
 
-                       // var url = string.Format("{0}/{1}/{2}/{3}.png", tileLayer.Url, tile.Zoom, tile.TileTms.x, tile.TileTms.y);
-                        var url = tileLayer.Url.Replace("{z}", tile.Zoom.ToString()).Replace("{x}", tile.TileTms.x.ToString()).Replace("{y}", tile.TileTms.y.ToString());
-                Debug.Log(url);
-                        ObservableWWW.GetWWW(url).Subscribe(
-                            success =>
-                            {
-                                if (rend)
-                                {
-                                    rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
-                                    success.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
-                                }
-                            },
-                            error =>
-                            {
-                                Debug.Log(error);
-                            }
-                        );
+                var go = GameObject.CreatePrimitive(PrimitiveType.Quad).transform;
+                go.name = "tilelayer-" + tileLayer.Title;
+                go.SetParent(tile.transform, false);
+                go.localScale = new Vector3((float)tile.Rect.Width, (float)tile.Rect.Width, 1);
+                go.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
+                //go.localPosition = Vector3.zero;
+                go.localPosition += new Vector3(0, tileLayer.Height, 0);
+                var rend = go.GetComponent<Renderer>();
+                rend.material = tile.Material;
+
+                // var url = string.Format("{0}/{1}/{2}/{3}.png", tileLayer.Url, tile.Zoom, tile.TileTms.x, tile.TileTms.y);
+                var url = tileLayer.Url.Replace("{z}", tile.Zoom.ToString()).Replace("{x}", tile.TileTms.x.ToString()).Replace("{y}", tile.TileTms.y.ToString());
+                //Debug.Log(url);
+                ObservableWWW.GetWWW(url).Subscribe(
+                    success =>
+                    {
+                        if (rend)
+                        {
+                            rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
+                            success.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
+                        }
+                    },
+                    error =>
+                    {
+                        Debug.Log(error);
                     }
-                
-                    
-            
+                );
+            }
         }
-
     }
 }

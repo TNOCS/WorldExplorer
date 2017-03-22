@@ -1,9 +1,9 @@
 {
-  "userName": "Commander",
+  "userName": "Arnoud",
   "selectionColor": {
-    "r": 0,
-    "g": 0,
-    "b": 1,
+    "r": 1,
+    "g": 1,
+    "b": 0,
     "a": 1
   },
   "tileServer": "134.221.20.240:3999",
@@ -11,7 +11,7 @@
   "mqttServer_tmp": "cool3.sensorlab.tno.nl",
   "mqttPort": "8026",
   "initialView": "Uitdam",
-  "sessionName": "one",
+  "sessionName": "two",
   "table": {
     "size": 1.5,
     "height": 0.6

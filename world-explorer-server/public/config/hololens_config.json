@@ -27,8 +27,8 @@
       "group": "baselayer"
     }, {
       "title": "Lufo",
-      "url2": "http://134.221.20.240:8101/2102363017/{z}/{x}/{y}.png",
-      "url": "http://134.221.20.240:8101/2102363017/{z}/{x}/{y}.png",
+      "url2": "http://134.221.20.240:3456/HR_LUFO/{z}/{x}/{y}.png",
+      "url": "http://134.221.20.240:3456/HR_LUFO/{z}/{x}/{y}.png",
       "voiceCommand": "street map",
       "useTransparency": true,
       "height": 0.9,

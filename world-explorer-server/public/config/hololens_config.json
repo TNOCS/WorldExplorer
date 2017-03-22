@@ -10,7 +10,7 @@
   "mqttServer": "134.221.20.240",
   "mqttServer_tmp": "cool3.sensorlab.tno.nl",
   "mqttPort": "8026",
-  "initialView": "Bunker",
+  "initialView": "Uitdam",
   "sessionName": "one",
   "table": {
     "size": 1.5,
@@ -26,7 +26,8 @@
       "type": "tilelayer",
       "group": "baselayer"
     }, {
-      "title": "HR_LUFO",
+      "title": "Lufo",
+      "url2": "http://134.221.20.240:8101/2102363017/{z}/{x}/{y}.png",
       "url": "http://134.221.20.240:8101/2102363017/{z}/{x}/{y}.png",
       "voiceCommand": "street map",
       "useTransparency": true,
@@ -102,16 +103,16 @@
     }
   ],
   "views": [{
-      "name": "Detail",
-      "lat": 52.4587,
-      "lon": 5.0431,
+      "name": "Uitdam",
+      "lat": 52.419386,
+      "lon": 5.0710455,
       "zoom": 17,
       "tileSize": 100,
       "range": 4,
       "scale": 1,
-      "mapzen": ["buildings", "pois", "assets"],
-      "layers": ["Symboltest"],
-      "tileLayers": ["TopoLayer"]
+      "mapzen": ["gebouwen", "pois", "assets"],
+      "layers": ["Flooding"],
+      "tileLayers": ["Lufo"]
     },
     {
       "name": "Beach",
@@ -171,7 +172,7 @@
       "scale": 1,
       "mapzen": ["gebouwen", "pois", "assets"],
       "layers": [],
-      "tileLayers": ["HR_LUFO"]
+      "tileLayers": ["Lufo"]
     },
     {
       "name": "Lhasa",

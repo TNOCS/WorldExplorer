@@ -11,6 +11,7 @@ namespace MapzenGo.Models.Plugins
         public enum TileServices
         {
             Default,
+            Holland,
             Satellite,
             Terrain,
             Toner,
@@ -21,6 +22,7 @@ namespace MapzenGo.Models.Plugins
 
         private string[] TileServiceUrls = new string[] {
             "http://b.tile.openstreetmap.org/",
+            "http://134.221.20.240:3456/HR_LUFO/",
             "http://b.tile.openstreetmap.us/usgs_large_scale/",
             "http://tile.stamen.com/terrain-background/",
             "http://a.tile.stamen.com/toner/",

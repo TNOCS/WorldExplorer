@@ -294,18 +294,6 @@ namespace Assets.Scripts
 
             #endregion
 
-            Layers = new GameObject("Layers");
-            Layers.transform.SetParent(Table.transform);
-            Layers.transform.localPosition = new Vector3(0f, 0.5f, 0f);
-            Layers.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
-            av.Layers.ForEach(layer =>
-            {
-                var l = Config.Layers.FirstOrDefault(k => k.Title == layer && k.Type == "geojson");
-                if (l != null)
-                {
-                    InitGeojsonLayer(l);
-                }
-            });
             #endregion
 
             #region TILE PLUGINS
@@ -323,6 +311,28 @@ namespace Assets.Scripts
             var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
             tileLayerPlugin.tileLayers = Config.Layers.Where(k => { return av.TileLayers.Contains(k.Title) && k.Type.ToLower() == "tilelayer"; }).ToList();
 
+            Layers = new GameObject("Layers");
+            Layers.transform.SetParent(Table.transform);
+            Layers.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+            Layers.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
+            av.Layers.ForEach(layer =>
+            {
+                var l = Config.Layers.FirstOrDefault(k => k.Title == layer);
+                if (l != null)
+                {
+                    switch (l.Type)
+                    {
+                        case "geojson":
+                            InitGeojsonLayer(l);
+                            break;
+                        case "tilelayer":
+                            tileLayerPlugin.tileLayers.Add(l);
+                            break;
+                    }
+
+                }
+            });
+
             foreach (var tl in Config.Layers.Where(k => { return k.Type.ToLower() == "tilelayer"; }))
             {
                 Speech.AddKeyword(ShowLayerSpeech + tl.VoiceCommand, () =>
@@ -336,9 +346,7 @@ namespace Assets.Scripts
                     }
                 });
             }
-
             #endregion
-
         }
 
         public void DestroyGeojsonLayer(Layer l)

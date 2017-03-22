@@ -18,8 +18,16 @@
   },
   "layers": [{
       "title": "TopoLayer",
-      "url2": "http://134.221.20.239:8101/2102363017/{z}/{x}/{y}.png",
+      "url2": "http://134.221.20.240:8101/2102363017/{z}/{x}/{y}.png",
       "url": "http://d.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+      "voiceCommand": "street map",
+      "useTransparency": true,
+      "height": 0.9,
+      "type": "tilelayer",
+      "group": "baselayer"
+    }, {
+      "title": "HR_LUFO",
+      "url": "http://134.221.20.240:8101/2102363017/{z}/{x}/{y}.png",
       "voiceCommand": "street map",
       "useTransparency": true,
       "height": 0.9,
@@ -28,7 +36,7 @@
     },
     {
       "title": "Flooding",
-      "url2": "http://134.221.20.239:8101/2102363017",
+      "url2": "http://134.221.20.240:8101/2102363017",
       "url": "http://d.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
       "voiceCommand": "flooding",
       "useTransparency": true,
@@ -163,7 +171,7 @@
       "scale": 1,
       "mapzen": ["gebouwen", "pois", "assets"],
       "layers": [],
-      "tileLayers": ["TopoLayer"]
+      "tileLayers": ["HR_LUFO"]
     },
     {
       "name": "Lhasa",

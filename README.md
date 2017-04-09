@@ -1,4 +1,7 @@
 # WorldExplorer
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e07d4236d72f494cb1b44d5e57b8caa8)](https://www.codacy.com/app/erikvullings/WorldExplorer?utm_source=github.com&utm_medium=referral&utm_content=TNOCS/WorldExplorer&utm_campaign=badger)
+
 A Hololens application to increase your situational awareness. Using OpenStreetMap data, it renders the world. You can share a session with multiple users, editing layers of information. Even though we can share our world, different users can display different layers of information.  
 Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worlds as hologram. [Video 1](https://youtu.be/dyVc-hZAiek), [Video 2](https://vimeo.com/187078876).
 

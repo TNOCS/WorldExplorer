@@ -62,6 +62,7 @@ export class AssetTileService {
       if (!collection.hasOwnProperty(k) || !this.idsToRemove.hasOwnProperty(k)) { continue; }
       let ids = this.idsToRemove[k];
       let fc = collection[k];
+      if (!fc || !fc.features) { continue; }
       fc.features = fc.features.filter(f => {
         return f.hasOwnProperty('properties') && f.properties.hasOwnProperty('id') && ids.indexOf(f.properties.id) < 0;
       });

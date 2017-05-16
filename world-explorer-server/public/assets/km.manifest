@@ -1,0 +1,36 @@
+ManifestFileVersion: 0
+CRC: 647080262
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: e1a03a3cd360933687d400f199ec66fb
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: d4e22bca998c188582dba61b6c905222
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/km-enforcer+13000+v4.skp
+- Assets/km-dutch+fleet2.skp
+- Assets/km-1800+halifax.skp
+- Assets/km-dutch+fleet1.skp
+- Assets/km-de+ruyter+1936.skp
+- Assets/km-dutch+fleet3.skp
+- Assets/km-dutch+fleet0.skp
+Dependencies: []

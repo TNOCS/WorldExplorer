@@ -14,6 +14,7 @@ namespace Assets.Scripts
         private SessionManager sessionManager;
         private SelectionHandler selectionHandler;
         public GameObject Hud;
+        private AudioClip launchSound;
         public Dictionary<string, Action> Keywords = new Dictionary<string, Action>();
         public Dictionary<string, string> audioCommands;
         KeywordRecognizer keywordRecognizer = null;
@@ -26,6 +27,13 @@ namespace Assets.Scripts
             audioCommands = new Dictionary<string, string>();
             appState = AppState.Instance;
             selectionHandler = SelectionHandler.Instance;
+            //launchSound = (AudioClip)Resources.Load("Sounds/MissileLaunch");
+            //AudioClip[] audioClips = FindObjectsOfType(typeof(AudioClip)) as AudioClip[];
+            //foreach (var clip in audioClips)
+            //{
+            //    if (clip.name != "MissileLaunch") continue;
+            //    launchSound = clip;
+            //}
             AddDefaultKeywords();
         }
 
@@ -63,6 +71,7 @@ namespace Assets.Scripts
             });
             //AddKeyword("Place", () => selectionHandler.releaseObj());
             AddTableCommands();
+            AddMissileLaunchCommand();
             AddKeyword("Place", () => doNothing() );
             AddKeyword("Zoom in", () => SetZoomAndRange(1,0));
             AddKeyword("Zoom out", () => SetZoomAndRange(-1, 0));
@@ -70,6 +79,23 @@ namespace Assets.Scripts
             AddKeyword("Decrease range", () => SetZoomAndRange(0, -1));
             var directions = new List<string> { "North", "South", "East", "West", "North East", "North West", "South East", "South West" };
             directions.ForEach(dir => AddKeyword("Move " + dir, () => Go(dir)));
+        }
+
+        private void AddMissileLaunchCommand()
+        {
+            var audioContainer = GameObject.Find("AudioContainer");
+            var audioSource = audioContainer.GetComponent<AudioSource>();
+
+            appState.Speech.Keywords.Add("Launch Missile", () =>
+            {
+                // var audioSource = GetComponent<AudioSource>();
+                audioSource.Play();
+            });
+            appState.Speech.Keywords.Add("Launch Sharepoint", () =>
+            {
+                // var audioSource = GetComponent<AudioSource>();
+                audioSource.Play();
+            });
         }
 
         private void AddTableCommands()

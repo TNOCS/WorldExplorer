@@ -298,10 +298,10 @@ namespace Symbols
                             var bar = Instantiate(_bar);
                             bar.transform.SetParent(info.transform, false);
                             bar.transform.localScale = new Vector3(100, 100);
-                            var BarFill = bar.transform.FindChild("Bar-Background").FindChild("Bar-Fill").gameObject.GetComponentInChildren<Image>().fillAmount = (float.Parse(f.Stats[i]["value"].ToString().Replace(@"""", "")) / float.Parse(f.Stats[i]["maxValue"].ToString().Replace(@"""", "")));//calculate fill stat value
+                            var BarFill = bar.transform.Find("Bar-Background").Find("Bar-Fill").gameObject.GetComponentInChildren<Image>().fillAmount = (float.Parse(f.Stats[i]["value"].ToString().Replace(@"""", "")) / float.Parse(f.Stats[i]["maxValue"].ToString().Replace(@"""", "")));//calculate fill stat value
 
                             // Image voor balk:
-                            var ICO = bar.transform.FindChild("ICO").gameObject.GetComponent<Image>();
+                            var ICO = bar.transform.Find("ICO").gameObject.GetComponent<Image>();
                             ICO.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0));
                             count++;
                             break;

@@ -75,6 +75,9 @@ namespace MapzenGo.Models.Factories
             poi.transform.localScale = new Vector3(.2f, .2f, .2f);
             poi.transform.SetParent(target.transform, true);
 
+            var spriteRend = poi.GetComponent<SpriteRenderer>();
+            spriteRend.sortingOrder = -2;
+
             SetProperties(geo, poi, typeSettings);
             targetScript.Name = (poi.Name != null) ? poi.Name : poi.name;
             targetScript.Kind = poi.Kind;

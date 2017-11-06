@@ -1,6 +1,7 @@
 ﻿using System;
 using MapzenGo.Helpers.VectorD;
 using UnityEngine;
+using MapzenGo.Helpers;
 
 namespace MapzenGo.Models
 {
@@ -18,6 +19,7 @@ namespace MapzenGo.Models
         public Vector3d TileCenter { get; set; }
         public bool UseLayers { get; set; }
         public Material Material { get; set; }
+    
 
         public void OnDestroy()
         {

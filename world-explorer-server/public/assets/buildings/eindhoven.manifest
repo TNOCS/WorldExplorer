@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1690500116
+CRC: 1108518036
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 58ae08df2d04d44a9abcb6e5a02ddd72
+    Hash: 2320de98ada7510997fe552de78ec4bd
   TypeTreeHash:
     serializedVersion: 2
-    Hash: d4e22bca998c188582dba61b6c905222
+    Hash: d27a9ed7ed5c7a459d780b0a0a375c27
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -33,6 +33,10 @@ Assets:
 - Assets/effenaar.skp
 - Assets/catharina kerk.skp
 - Assets/philips stadion.skp
+- Assets/tue+hoofdgebouw.skp
+- Assets/parking+mathildalaan+-+mediamarkt.skp
+- Assets/natuurk.skp
+- Assets/kp2.skp
 - Assets/rabobank.skp
 - Assets/stadhuis.skp
 - Assets/flight forum.skp
@@ -42,6 +46,7 @@ Assets:
 - Assets/pathe.skp
 - Assets/evoluon.skp
 - Assets/kennedygebouwen.skp
+- Assets/gaslab2.skp
 - Assets/holiday_inn.skp
 - Assets/flyingpins.skp
 Dependencies: []

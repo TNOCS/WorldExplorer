@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using HoloToolkit.Unity;
 
 public delegate bool MessageHandlerDelegate(BaseMessage message);
 

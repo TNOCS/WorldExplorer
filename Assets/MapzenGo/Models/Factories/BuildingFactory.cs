@@ -65,6 +65,8 @@ namespace MapzenGo.Models.Factories
                 var building = new GameObject("Building").AddComponent<Building>();
                 var mesh = building.GetComponent<MeshFilter>().mesh;
 
+
+
                 var buildingCenter = ChangeToRelativePositions(buildingCorners);
                 building.transform.localPosition = buildingCenter;
 
@@ -226,6 +228,7 @@ namespace MapzenGo.Models.Factories
             building.Kind = typeSettings.Type.ToString();
             // building.Type = typeSettings.Type.ToString();
             building.GetComponent<MeshRenderer>().material = typeSettings.Material;
+
         }
 
         private void CreateMesh(List<Vector3> corners, float min_height, float height, BuildingSettings typeSettings, MeshData data, Vector2 min, Vector2 size)
@@ -343,6 +346,14 @@ namespace MapzenGo.Models.Factories
             go.GetComponent<MeshRenderer>().material = FactorySettings.GetSettingsFor<BuildingSettings>(kind).Material;
             go.transform.position += Vector3.up * Order;
             go.transform.SetParent(main.transform, false);
+            var col = go.AddComponent<MeshCollider>();
+            col.convex = true;
+            col.isTrigger = true;
+            /*
+            go.tag = "spawnobject";
+            go.AddComponent<ObjectTapHandler>();
+            go.AddComponent<ObjectNavigationHandler>();*/
+            
         }
     }
 }

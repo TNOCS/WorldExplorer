@@ -1,0 +1,60 @@
+ManifestFileVersion: 0
+CRC: 4075521571
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 57209eaad43f0cc264824683aea51740
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: d27a9ed7ed5c7a459d780b0a0a375c27
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/rdam-postkantoor.skp
+- Assets/rdam-blaak+555-rotterdam.skp
+- Assets/rdam-untitled-1.skp
+- Assets/rdam-statendam.skp
+- Assets/rdam-stadhuis.skp
+- Assets/rdam-hoog+drakenburg+rotterdam.skp
+- Assets/rdam-redapple.skp
+- Assets/rdam-alleen+metrostation+spijkenisse+(2).skp
+- Assets/rdam-ot_theatre_rotterdam.skp
+- Assets/rdam-zeepolitie.skp
+- Assets/rdam-rotterdamschelloyd.skp
+- Assets/rdam-schieland.skp
+- Assets/rdam-maastowerlite+(1).skp
+- Assets/rdam-het_witte_huis2[1].skp
+- Assets/rdam-euromast+goed+af.skp
+- Assets/rdam-poort.skp
+- Assets/rdam-watertoren.skp
+- Assets/rdam-derotterdam.skp
+- Assets/rdam-maritime+museum+rotterdam.skp
+- Assets/rdam-stc+rotterdam.skp
+- Assets/rdam-080426_cafe_dudok_ts.skp
+- Assets/rdam-autosave_de+kuip.skp
+- Assets/rdam-ghg.skp
+- Assets/rdam-wtc.skp
+- Assets/rdam-hofplein+rotterdam.skp
+- Assets/rdam-beurs+oud.skp
+- Assets/rdam-brien.skp
+- Assets/rdam-hny.skp
+- Assets/rdam-schielandtoren.skp
+- Assets/rdam-hoek+van+holland2.skp
+- Assets/rdam-schiecentrale-4b.skp
+Dependencies: []

@@ -1,0 +1,31 @@
+ManifestFileVersion: 0
+CRC: 853693928
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: buildings/eindhoven
+      Dependencies: {}
+    Info_1:
+      Name: buildings/denhaag
+      Dependencies: {}
+    Info_2:
+      Name: buildings/venlo
+      Dependencies: {}
+    Info_3:
+      Name: buildings/amsterdam
+      Dependencies: {}
+    Info_4:
+      Name: buildings/schiphol
+      Dependencies: {}
+    Info_5:
+      Name: buildings/rotterdam
+      Dependencies: {}
+    Info_6:
+      Name: buildings/utrecht
+      Dependencies: {}
+    Info_7:
+      Name: km
+      Dependencies: {}
+    Info_8:
+      Name: navy
+      Dependencies: {}

@@ -1,16 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+
+#if UNITY_WSA
 using UnityEngine;
 using UnityEngine.VR.WSA.Input;
+#endif
 
-namespace HoloToolkit.Unity
+namespace HoloToolkit.Unity.InputModule
 {
     /// <summary>
     /// Show a hand guidance indicator when the user's hand is close to leaving the camera's view.
     /// </summary>
     public class HandGuidance : Singleton<HandGuidance>
     {
+#if UNITY_WSA
         [Tooltip("The Cursor object the HandGuidanceIndicator will be positioned around.")]
         public GameObject Cursor;
 
@@ -28,8 +32,9 @@ namespace HoloToolkit.Unity
 
         private uint? currentlyTrackedHand = null;
 
-        void Awake()
+        protected  void Awake()
         {
+         //  base.Awake();
             if (HandGuidanceIndicator == null)
             {
                 Debug.LogError("Please include a GameObject for the Hand Guidance Indicator.");
@@ -100,7 +105,7 @@ namespace HoloToolkit.Unity
 
             // Subtract direction from origin so that the indicator is between the hand and the origin.
             position = Cursor.transform.position - hand.properties.sourceLossMitigationDirection * distanceFromCenter;
-            rotation = Quaternion.LookRotation(Camera.main.transform.forward, hand.properties.sourceLossMitigationDirection);
+            rotation = Quaternion.LookRotation(CameraCache.Main.transform.forward, hand.properties.sourceLossMitigationDirection);
         }
 
         private void InteractionManager_SourceUpdated(InteractionSourceState hand)
@@ -156,11 +161,14 @@ namespace HoloToolkit.Unity
             }
         }
 
-        void OnDestroy()
+        protected override void OnDestroy()
         {
             InteractionManager.SourceLost -= InteractionManager_SourceLost;
             InteractionManager.SourceUpdated -= InteractionManager_SourceUpdated;
             InteractionManager.SourceReleased -= InteractionManager_SourceReleased;
+
+            base.OnDestroy();
         }
+#endif
     }
 }

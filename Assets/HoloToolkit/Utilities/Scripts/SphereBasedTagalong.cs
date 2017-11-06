@@ -17,6 +17,9 @@ namespace HoloToolkit.Unity
         [Tooltip("How fast the object will move to the target position.")]
         public float MoveSpeed = 2.0f;
 
+        [Tooltip("When moving, use unscaled time. This is useful for games that have a pause mechanism or otherwise adjust the game timescale.")]
+        public bool UseUnscaledTime = true;
+
         [Tooltip("Display the sphere in red wireframe for debugging purposes.")]
         public bool DebugDisplaySphere = false;
 
@@ -29,18 +32,23 @@ namespace HoloToolkit.Unity
 
         void Start()
         {
-            initialDistanceToCamera = Vector3.Distance(this.transform.position, Camera.main.transform.position);
+            initialDistanceToCamera = Vector3.Distance(this.transform.position, CameraCache.Main.transform.position);
         }
 
         void Update()
         {
-            optimalPosition = Camera.main.transform.position + Camera.main.transform.forward * initialDistanceToCamera;
+            optimalPosition = CameraCache.Main.transform.position + CameraCache.Main.transform.forward * initialDistanceToCamera;
 
             Vector3 offsetDir = this.transform.position - optimalPosition;
             if (offsetDir.magnitude > SphereRadius)
             {
                 targetPosition = optimalPosition + offsetDir.normalized * SphereRadius;
-                this.transform.position = Vector3.Lerp(this.transform.position, targetPosition, MoveSpeed * Time.deltaTime);
+
+                float deltaTime = UseUnscaledTime
+                    ? Time.unscaledDeltaTime
+                    : Time.deltaTime;
+
+                this.transform.position = Vector3.Lerp(this.transform.position, targetPosition, MoveSpeed * deltaTime);
             }
         }
 

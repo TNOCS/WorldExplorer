@@ -1,9 +1,13 @@
-﻿using UnityEngine;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 
-namespace HoloToolkit.Unity
+using UnityEngine;
+
+namespace HoloToolkit.Unity.InputModule
 {
     /// <summary>
     /// Allows the user to place and rotate GameObjects using a game controller.
+    /// TODO This should be converted to an input source.
     /// </summary>
     /// <remarks>Make sure to enable the HumanInterfaceDevice capability before using.</remarks>
     public class GameControllerManipulator : MonoBehaviour
@@ -61,7 +65,7 @@ namespace HoloToolkit.Unity
             }
             else
             {
-                objectToManipulate = lastAffectedObject ?? GazeManager.Instance.FocusedObject;
+                objectToManipulate = lastAffectedObject ?? GazeManager.Instance.HitObject;
             }
 
             if (objectToManipulate == null)
@@ -69,7 +73,7 @@ namespace HoloToolkit.Unity
                 return;
             }
 
-            var cameraTransform = Camera.main.transform;
+            var cameraTransform = CameraCache.Main.transform;
 
             //Rotate
             var noRotateModifier = string.IsNullOrEmpty(RotateModifierButtonName);

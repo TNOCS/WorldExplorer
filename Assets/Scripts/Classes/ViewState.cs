@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Assets.Scripts.Classes

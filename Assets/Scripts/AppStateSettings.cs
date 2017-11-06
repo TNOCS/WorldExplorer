@@ -11,6 +11,7 @@ using MapzenGo.Models.Factories;
 using Assets.Scripts.Plugins;
 using MapzenGo.Helpers;
 using HoloToolkit.Unity;
+using HoloToolkit.Unity.InputModule;
 
 namespace Assets.Scripts
 {
@@ -23,11 +24,19 @@ namespace Assets.Scripts
         public GameObject Terrain;
         public GameObject Table;
         public GameObject Board;
+        public GameObject BoardVisual;
         public GameObject Camera;
         public GameObject Map;
         public GameObject Layers;
         public GameObject Cursor;
-        public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
+        public GameObject UI;
+        public GameObject UIMain;
+
+        public Vector3 worldOffset;
+        public Vector3 scaleOffset;
+
+        //public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
+        public float[] mapScales = new float[] { 0.008f, 0.004f, 0.00286f, 0.00222f, 0.00182f, 0.00154f, 0.001332f };
         public Vector3 Center { get; set; }
         public TileManager TileManager { get; set; }
         public AppConfig Config { get; set; }
@@ -35,19 +44,21 @@ namespace Assets.Scripts
         public SpeechManager Speech { get; set; }
         public List<string> MapzenTags = new List<string>(new string[] { "buildings", "water", "roads", "pois", "landuse" });
         public SelectionHandler selectionHandler;
-        protected AppState() { } // guarantee this will be always a singleton only - can't use the constructor!
+        public UIInteraction uiInteraction;
+        protected AppState() { } // guarantee this will be always a singleton only - can't use the constructor!\
 
-        public void Awake()
+       protected  void Awake() 
         {
-            Speech = SpeechManager.Instance;
+           // base.Awake();
+           // Speech = SpeechManager.Instance;
             selectionHandler = SelectionHandler.Instance;
         }
 
         public void Init()
         {
-            MapzenTags.ForEach(k => Speech.AddKeyword(ToggleSpeech + k, () => ToggleMapzen(k)));
+           // MapzenTags.ForEach(k => Speech.AddKeyword(ToggleSpeech + k, () => ToggleMapzen(k)));
         }
-
+       
         private void ToggleMapzen(string tag)
         {
             if (Config == null || Config.ActiveView == null) return;
@@ -105,16 +116,26 @@ namespace Assets.Scripts
                 DestroyGeojsonLayer(l);
             });
 
-            foreach (var tl in Config.Layers)
+          /*  foreach (var tl in Config.Layers)
             {
                 if (tl.Type.ToLower() == "tilelayer")
                 {
                     Speech.RemoveKeyword(ShowLayerSpeech + tl.VoiceCommand);
                 };
-            }
+            }*/
 
             DoDeleteAll(World);
             DoDeleteAll(Layers);
+
+            // Sets each object inactive. Is reactivated in CustomObjectsPlugin.cs
+            foreach (SpawnedObject go in InventoryObjectInteraction.Instance.spawnedObjectsList)
+            {
+                go.obj.SetActive(false);
+            }
+
+            UIInteraction.Instance.MapPanel.SetActive(false);
+            UIInteraction.Instance.HandlerPanel.SetActive(false);
+
             InitMap();
         }
 
@@ -130,25 +151,38 @@ namespace Assets.Scripts
 
             Table = new GameObject("Table"); // Empty game object
             Table.transform.position = new Vector3(0f, t.Position, 0f);
-            Table.transform.localScale = new Vector3(t.Size, t.Size, t.Size);
+            //Table.transform.localScale = new Vector3(t.Size, t.Size, t.Size);
+            Table.transform.localScale = new Vector3(1, 1, 1);
             Table.transform.SetParent(Terrain.transform, false);
 
             Board = GameObject.Find("Board"); // Although we could create the board in code, this way I can add buttons etc to the object in Unity.
-            Board.transform.position = new Vector3(0f, t.Position, 0f);
-            Board.transform.localScale = new Vector3(t.Size, t.Thickness, t.Size);
-            Board.transform.SetParent(Table.transform, true);
+            Board.AddComponent<BoardTapHandler>();
+            Board.transform.position = new Vector3(0f,0f, 0f);
+            //Board.transform.localScale = new Vector3(t.Size *2, t.Thickness*2, t.Size*2);
 
-            // Add direction indicator
-            var di = Board.AddComponent<DirectionIndicator>();
-            di.DirectionIndicatorObject = Resources.Load<GameObject>("Components/DirectionalIndicator");
-            di.Cursor = Cursor;
+            // Has to be 1,1,1 for the Lat Longs to work properly.
+            Board.transform.localScale = new Vector3(1, 1, 1);
+            Board.transform.SetParent(Table.transform, false);
+
+            BoardVisual = GameObject.Find("BoardVisual");
+            BoardVisual.transform.SetParent(Table.transform, false);
 
             Map = new GameObject("Map");
             Map.transform.SetParent(Table.transform);
-            Map.transform.localPosition = new Vector3(0f, t.Thickness/2, 0f);
+            Map.transform.localPosition = new Vector3(0f, 0f, 0f);
             //Map.transform.localPosition = new Vector3(0f, (t.Thickness / 2) / t.Thickness + 0.01F, 0f);
+            
+            UIMain = new GameObject("UIMain");
+            UIMain.transform.SetParent(Table.transform, false);
 
-            Terrain.transform.position = new Vector3(Terrain.transform.position.x, t.Position, Terrain.transform.position.z);
+            UI = GameObject.Find("UI");
+            UI.transform.SetParent(UIMain.transform, false);
+            //UI.transform.localScale = new Vector3(Board.transform.localScale.x * 1.01f, Terrain.transform.localScale.y * 1.02f, UI.transform.localScale.z * 2.05f);
+            UIMain.transform.localScale = new Vector3(2,2,2);
+            //UIMain.transform.position = new Vector3(UIMain.transform.position.x, -0.1f, -0.499f);
+            
+            Terrain.transform.position = new Vector3(Terrain.transform.position.x, Terrain.transform.position.y - 2, Terrain.transform.position.z + 3);
+                     
 
             #endregion
             InitMap();
@@ -176,13 +210,38 @@ namespace Assets.Scripts
 
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);
-            var gazeManager = World.AddComponent<HoloToolkit.Unity.GazeManager>();
-            gazeManager.MaxGazeDistance = 3f;
+            //var gazeManager = World.AddComponent<HoloToolkit.Unity.GazeManager>();
+            //gazeManager.MaxGazeDistance = 3f;
 
             // Set user CenterInMercator to convert the cursor location to lat/lon
             var v2 = GM.LatLonToMeters(av.Lat, av.Lon);
             var tile = GM.MetersToTile(v2, av.Zoom);
             var centerTms = tile;
+
+            switch (av.Zoom)
+            {
+                case 15:
+                    mapScale = 0.001f;
+                    break;
+                case 16:
+                    mapScale = 0.002f;
+                    break;
+                case 17:
+                    mapScale = 0.004f;
+                    break;
+                case 18:
+                    mapScale = 0.008f;
+                    break;
+                case 19:
+                    mapScale = 0.016f;
+                    break;                    
+                case 20:
+                    mapScale = 0.032f;
+                    break;
+                default:
+                    break;
+            }
+
             SessionManager.Instance.me.CenterInMercator = GM.TileBounds(centerTms, av.Zoom).Center;
             SessionManager.Instance.me.Scale = mapScale / 2;
 
@@ -196,6 +255,7 @@ namespace Assets.Scripts
             //tm._mapzenUrl = "http://134.221.20.226:3999/{0}/{1}/{2}/{3}.{4}";
 #endif
             tm._mapzenUrl = "http://" + Config.TileServer + "/{0}/{1}/{2}/{3}.{4}"; // "http://169.254.80.80:10733/{0}/{1}/{2}/{3}.{4}";
+            Debug.Log(tm._mapzenUrl);
             tm.Latitude = av.Lat;
             tm.Longitude = av.Lon;
             tm.Range = av.Range;
@@ -288,8 +348,10 @@ namespace Assets.Scripts
                 models.transform.SetParent(factories.transform, false);
                 var modelFactory = models.AddComponent<ModelFactory>();
                 modelFactory.scale = Table.transform.localScale.x;
-                modelFactory.BundleURL = "http://134.221.20.226:3999/assets/buildings/eindhoven";
-                modelFactory.version = 6;
+                //modelFactory.BundleURL = "http://134.221.20.226:3999/assets/buildings/eindhoven";
+                modelFactory.BundleURL = "http://www.thomvdm.com/assets/buildings/eindhoven";
+                modelFactory.version = 21;
+                //modelFactory.version = 6;
             }
 
             #endregion
@@ -306,10 +368,15 @@ namespace Assets.Scripts
             //var mapImagePlugin = mapImage.AddComponent<MapImagePlugin>();
             //mapImagePlugin.TileService = MapImagePlugin.TileServices.Default;
 
+            var customObjects = new GameObject("CustomObjects");
+            customObjects.transform.SetParent(tilePlugins.transform, false);
+            var customObjectsPlugin = customObjects.AddComponent<CustomObjectPlugin>();
+
             var tileLayer = new GameObject("TileLayer");
             tileLayer.transform.SetParent(tilePlugins.transform, false);
             var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
             tileLayerPlugin.tileLayers = Config.Layers.Where(k => { return av.TileLayers.Contains(k.Title) && k.Type.ToLower() == "tilelayer"; }).ToList();
+            //var terrainHeightPlugin = tileLayer.AddComponent<_TerrainHeightPlugin>();
 
             Layers = new GameObject("Layers");
             Layers.transform.SetParent(Table.transform);
@@ -333,7 +400,7 @@ namespace Assets.Scripts
                 }
             });
 
-            foreach (var tl in Config.Layers.Where(k => { return k.Type.ToLower() == "tilelayer"; }))
+           /* foreach (var tl in Config.Layers.Where(k => { return k.Type.ToLower() == "tilelayer"; }))
             {
                 Speech.AddKeyword(ShowLayerSpeech + tl.VoiceCommand, () =>
                 {
@@ -345,14 +412,15 @@ namespace Assets.Scripts
                         ResetMap();
                     }
                 });
-            }
+            }*/
             #endregion
+
         }
 
         public void DestroyGeojsonLayer(Layer l)
         {
-            Speech.RemoveKeyword(ShowLayerSpeech + l.VoiceCommand);
-            Speech.RemoveKeyword(HideLayerSpeech + l.VoiceCommand);
+           // Speech.RemoveKeyword(ShowLayerSpeech + l.VoiceCommand);
+           // Speech.RemoveKeyword(HideLayerSpeech + l.VoiceCommand);
 
             if (l._refreshTimer != null)
             {
@@ -366,7 +434,7 @@ namespace Assets.Scripts
         {
             AddGeojsonLayer(l);
 
-            Speech.AddKeyword(ShowLayerSpeech + l.VoiceCommand, () =>
+            /*Speech.AddKeyword(ShowLayerSpeech + l.VoiceCommand, () =>
             {
                 AddGeojsonLayer(l);
             });
@@ -375,7 +443,7 @@ namespace Assets.Scripts
             {
                 RemoveGeojsonLayer(l);
             });
-
+            */
             if (l.Refresh > 0)
             {
                 var interval = l.Refresh * 1000;

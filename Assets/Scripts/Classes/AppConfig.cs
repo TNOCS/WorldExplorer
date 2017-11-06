@@ -8,6 +8,7 @@ namespace Assets.Scripts.Classes
     {
         public void FromJson(JSONObject json)
         {
+            Debug.Log(json);
             TileServer = json.GetString("tileServer");
             MqttServer = json.GetString("mqttServer");
             MqttPort = json.GetString("mqttPort");

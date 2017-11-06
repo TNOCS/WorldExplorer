@@ -1,10 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using System.Text;
-using uPLibrary.Networking.M2Mqtt;
+// using uPLibrary.Networking.M2Mqtt;
 using System.Collections.Generic;
 using Assets.Scripts.Classes;
 using Symbols;
+using HoloToolkit.Unity;
+using uPLibrary.Networking.M2Mqtt;
 
 namespace Assets.Scripts.Plugins
 {
@@ -37,6 +39,17 @@ namespace Assets.Scripts.Plugins
             selectionHandler = appState.selectionHandler;
         }
 
+        private void OnApplicationQuit()
+        {
+            try
+            {
+                client.Disconnect();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
+         }
         protected SessionManager()
         {
         } // guarantee this will be always a singleton only - can't use the constructor!
@@ -47,14 +60,15 @@ namespace Assets.Scripts.Plugins
             if (selectionHandler == null) selectionHandler = SelectionHandler.Instance;
             selectionHandler.addUser(me);
             me.Name = appState.Config.UserName;
-            me.SelectionColor = appState.Config.SelectionColor;
+            //me.SelectionColor = appState.Config.SelectionColor;
             me.Cursor = cursor;
             me.Cursor.name = me.Id + "-Cursor";
-            me.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = me.UserMaterial;
+           // me.Cursor.transform.Find("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = me.UserMaterial;
+           // me.Cursor.transform.Find("CursorOnHolograms").GetComponent<MeshRenderer>().material = Resources.Load<Material>("ring_shadow");
             var mtd = gameObject.AddComponent<UnityMainThreadDispatcher>();
             InitMqtt();
             var sessions = new List<string> { "one", "two", "three" };
-            sessions.ForEach(session => appState.Speech.AddKeyword(NewSessionKeyword + session, () => JoinSession(session)));
+            //sessions.ForEach(session => appState.Speech.AddKeyword(NewSessionKeyword + session, () => JoinSession(session)));
             JoinSession(appState.Config.SessionName);
         }
 
@@ -168,10 +182,11 @@ namespace Assets.Scripts.Plugins
                 var cursor = cursors.Find(u => u.name == user.Id + "-Cursor");
                 if (cursor == null)
                 {
-                    user.Cursor = Instantiate(cursorPrefab, new Vector3(0, 1, 0), transform.rotation);
+                  /*  user.Cursor = GameObject.Find("Cursor");
+                    //user.Cursor = Instantiate(cursorPrefab, new Vector3(0, 1, 0), transform.rotation);
                     user.Cursor.name = user.Id + "-Cursor";
-                    user.Cursor.transform.FindChild("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = user.UserMaterial;
-                    cursors.Add(user.Cursor);
+                    user.Cursor.transform.Find("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = user.UserMaterial;
+                    cursors.Add(user.Cursor);*/ 
                 }
                 else
                     user.Cursor = cursor;
@@ -270,7 +285,7 @@ namespace Assets.Scripts.Plugins
         /// <param name="retain">Retain the message</param>
         protected void SendJsonMessage(string subtopic, string json, bool retain = true)
         {
-            Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));
+            //Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));
             client.Publish(string.Format("{0}/{1}", sessionName, subtopic), Encoding.UTF8.GetBytes(json), uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, retain);
         }
     }

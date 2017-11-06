@@ -1,0 +1,11 @@
+9	Interior_Wood_1 with: ColorIntensity, and Lightness variations
+	Current totale: 9
+	
+9	Exterior_Flooring_Wood_1 with: ColorIntensity, and Lightness variations
+	Current totale: 18
+	
+18	Old_Painted_Wood_1 with: Color, and CoatingAmount variations
+	Current totale: 36
+	
+4	Wood_Bark_1 with: with: 4 diffrent bark cells sizes
+	Current totale: 40

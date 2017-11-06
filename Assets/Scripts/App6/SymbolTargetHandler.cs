@@ -29,7 +29,7 @@ namespace Symbols
 
             selectedMat = (Material)Resources.Load("Materials/cone-Color-J04", typeof(Material));
             selectedMat.color = AppState.Instance.Config.SelectionColor;
-            coneRender = transform.FindChild("cone/Cone with Right Triangle/Component").gameObject.GetComponent<Renderer>();
+            coneRender = transform.Find("cone/Cone with Right Triangle/Component").gameObject.GetComponent<Renderer>();
             oldMat = coneRender.material;
             cursor = GameObject.Find(sessionManager.me.Id + "-Cursor");
         }

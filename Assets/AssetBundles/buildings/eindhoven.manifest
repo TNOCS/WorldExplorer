@@ -1,0 +1,52 @@
+ManifestFileVersion: 0
+CRC: 932757021
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 2320de98ada7510997fe552de78ec4bd
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: d27a9ed7ed5c7a459d780b0a0a375c27
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/van abbe museum.skp
+- Assets/achterzijde_station.skp
+- Assets/auditorium.skp
+- Assets/schouwburg.skp
+- Assets/effenaar.skp
+- Assets/catharina kerk.skp
+- Assets/philips stadion.skp
+- Assets/tue+hoofdgebouw.skp
+- Assets/parking+mathildalaan+-+mediamarkt.skp
+- Assets/natuurk.skp
+- Assets/kp2.skp
+- Assets/rabobank.skp
+- Assets/stadhuis.skp
+- Assets/flight forum.skp
+- Assets/anton philips.skp
+- Assets/witte dame.skp
+- Assets/station eindhoven.skp
+- Assets/pathe.skp
+- Assets/evoluon.skp
+- Assets/kennedygebouwen.skp
+- Assets/gaslab2.skp
+- Assets/holiday_inn.skp
+- Assets/flyingpins.skp
+Dependencies: []

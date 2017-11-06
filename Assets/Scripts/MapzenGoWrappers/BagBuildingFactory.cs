@@ -292,6 +292,7 @@ namespace MapzenGo.Models.Factories
             building.Kind = typeSettings.Type.ToString();
             // building.Type = typeSettings.Type.ToString();
             building.GetComponent<MeshRenderer>().material = typeSettings.Material;
+
         }
 
         private void CreateMesh(List<Vector3> corners, float min_height, float height, BagBuildingSettings typeSettings, MeshData data, Vector2 min, Vector2 size)
@@ -410,6 +411,12 @@ namespace MapzenGo.Models.Factories
             go.GetComponent<MeshRenderer>().material = FactorySettings.GetSettingsFor<BagBuildingSettings>(kind).Material;
             go.transform.position += Vector3.up * Order;
             go.transform.SetParent(main.transform, false);
+
+            // Removes objects if they touch the collider handler cubes, to make sure no objects stick out of the table
+            var col = go.gameObject.AddComponent<MeshCollider>();
+            col.convex = true;
+            col.isTrigger = true;
+            }
         }
     }
-}
+

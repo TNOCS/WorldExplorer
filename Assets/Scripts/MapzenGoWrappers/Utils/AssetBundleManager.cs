@@ -53,7 +53,6 @@ static public class AssetBundleManager
                 yield return www;
                 /*if (www.error != ull)
                     throw new Exception("WWW download:" + www.error);*/
-                Debug.Log(keyName);
                 AssetBundleRef abRef = new AssetBundleRef(url, version);
                 abRef.assetBundle = www.assetBundle;
                 dictAssetBundleRefs.Add(keyName, abRef);

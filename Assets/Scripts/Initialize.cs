@@ -39,13 +39,12 @@ public class Initialize : MonoBehaviour
         fingerPressedSound = (AudioClip)Resources.Load("FingerPressed");
 
         appState = AppState.Instance;
-
     }
 
     IEnumerator Start()
     {
         Debug.Log("Initializing...");
-        CursorManagerThom.Instance.InitCursor();
+        CursorManagerCustom.Instance.InitCursor();
         UIManager.Instance.currentMode = "MoveBtn";
 
         yield return StartCoroutine(appState.LoadConfiguration(configUrl));
@@ -70,7 +69,6 @@ public class Initialize : MonoBehaviour
 
         // then add the terrain this will build the symboltargethandler which needs the sessionmanagr
         appState.AddTerrain();
-        InitViews();
 
 
     }
@@ -78,36 +76,11 @@ public class Initialize : MonoBehaviour
     // Update is called once per frame
     void Update()
     { 
-        if (appState.Config == null) return;
-       /* for (var i = 0; i < Mathf.Min(9, appState.Config.Views.Count); i++)
-        {
-            if (!Input.GetKeyDown(string.Format("{0}", i + 1))) continue;
-            appState.Config.ActiveView = appState.Config.Views[i].Clone();
-            appState.ResetMap();
-            SessionManager.Instance.UpdateView(appState.Config.ActiveView);
-            return;
-        }*/
     }
     public void SetOverlay()
     {
         appState.Config.ActiveView = appState.Config.Views[2].Clone();
         appState.ResetMap();
         SessionManager.Instance.UpdateView(appState.Config.ActiveView);
-    }
-
-    void InitViews()
-    {
-      /*  appState.Config.Views.ForEach(v =>
-        {
-            var cmd = SwitchToSpeech + v.Name;
-            speech.audioCommands.Add(cmd, " displays the view");
-
-            appState.Speech.Keywords.Add(cmd, () =>
-            {
-                appState.Config.ActiveView = v.Clone();
-                appState.ResetMap();
-                SessionManager.Instance.UpdateView(appState.Config.ActiveView);
-            });
-        });*/
     }
 }

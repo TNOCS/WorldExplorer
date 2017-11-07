@@ -49,14 +49,7 @@ namespace Assets.Scripts
 
        protected  void Awake() 
         {
-           // base.Awake();
-           // Speech = SpeechManager.Instance;
             selectionHandler = SelectionHandler.Instance;
-        }
-
-        public void Init()
-        {
-           // MapzenTags.ForEach(k => Speech.AddKeyword(ToggleSpeech + k, () => ToggleMapzen(k)));
         }
        
         private void ToggleMapzen(string tag)
@@ -255,7 +248,6 @@ namespace Assets.Scripts
             //tm._mapzenUrl = "http://134.221.20.226:3999/{0}/{1}/{2}/{3}.{4}";
 #endif
             tm._mapzenUrl = "http://" + Config.TileServer + "/{0}/{1}/{2}/{3}.{4}"; // "http://169.254.80.80:10733/{0}/{1}/{2}/{3}.{4}";
-            Debug.Log(tm._mapzenUrl);
             tm.Latitude = av.Lat;
             tm.Longitude = av.Lon;
             tm.Range = av.Range;
@@ -400,28 +392,12 @@ namespace Assets.Scripts
                 }
             });
 
-           /* foreach (var tl in Config.Layers.Where(k => { return k.Type.ToLower() == "tilelayer"; }))
-            {
-                Speech.AddKeyword(ShowLayerSpeech + tl.VoiceCommand, () =>
-                {
-                    if (tl.Group != null)
-                    {
-                        var ll = Config.Layers.Where(k => k.Type.ToLower() == "tilelayer" && k.Group == tl.Group).Select(k => k.Title);
-                        av.TileLayers = av.TileLayers.Where(k => !ll.Contains(k)).ToList();
-                        av.TileLayers.Add(tl.Title);
-                        ResetMap();
-                    }
-                });
-            }*/
             #endregion
 
         }
 
         public void DestroyGeojsonLayer(Layer l)
         {
-           // Speech.RemoveKeyword(ShowLayerSpeech + l.VoiceCommand);
-           // Speech.RemoveKeyword(HideLayerSpeech + l.VoiceCommand);
-
             if (l._refreshTimer != null)
             {
                 l._refreshTimer.Dispose();
@@ -433,17 +409,6 @@ namespace Assets.Scripts
         public void InitGeojsonLayer(Layer l)
         {
             AddGeojsonLayer(l);
-
-            /*Speech.AddKeyword(ShowLayerSpeech + l.VoiceCommand, () =>
-            {
-                AddGeojsonLayer(l);
-            });
-
-            Speech.AddKeyword(HideLayerSpeech + l.VoiceCommand, () =>
-            {
-                RemoveGeojsonLayer(l);
-            });
-            */
             if (l.Refresh > 0)
             {
                 var interval = l.Refresh * 1000;

@@ -125,7 +125,13 @@
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 18
       }).addTo(map);
-      map.setView(new L.LatLng(52.0862573323384, 5.949096679687501), 8);
+
+      L.tileLayer('http://134.221.20.240:8101/2102363017/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        maxZoom: 18
+      }).addTo(map);
+
+      map.setView(new L.LatLng(52.419386, 5.0710455), 16);
 
       L.easyButton('fa-globe fa-2x', function (btn, m) {
         changeViewToCenterMap(m, sessionName);

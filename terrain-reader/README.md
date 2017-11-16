@@ -19,10 +19,11 @@ docker run --mount type=bind,source="C:\tmp",target=/data -t -i homme/cesium-ter
 Inside the container, you can now convert the source.tif (GeoTIFF in WGS84 format) to Cesium terrain tiles using the following command:
 
 ```bash
-mkdir /data/tiles && ctb-tile -s 21 -o /data/tiles /data/source.tif
+mkdir /data/tiles && ctb-tile -s 20 --profile mercator -o /data/tiles /data/source.tif
 ```
+Please note that the output tiles are generated in the less-used TMS format instead of [slippy maps](http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_numbers_to_lon..2Flat.). For a comparison of the two systems, see [here](http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection). In order to convert them, you need to reproject the y value according to this [gist](https://gist.github.com/tmcw/4954720): y = (2^z) - y - 1. 
 
-Other options are documented [here](https://github.com/geo-data/cesium-terrain-builder). In this case, the only non-default option is to start at zoom level 21 and convert upwards. Now, drink a coffee or two and wait for the conversion to finish.
+Other options are documented [here](https://github.com/geo-data/cesium-terrain-builder). In this case, the only non-default option is to start at zoom level 20 and convert upwards. Now, drink a coffee or two and wait for the conversion to finish (as this takes a very long time, I did restart Docker to use all 4 CPUs and give it plenty of memory).
 
 ## Serving .terrain files
 

@@ -10,7 +10,7 @@ namespace HoloToolkit.Unity.InputModule
     /// <summary>
     /// The gaze manager manages everything related to a gaze ray that can interact with other objects.
     /// </summary>
-    public class GazeManager : Singleton<GazeManager>
+    public class GazeManager : SingletonCustom<GazeManager>
     {
         public delegate void FocusedChangedDelegate(GameObject previousObject, GameObject newObject);
 

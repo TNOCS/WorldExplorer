@@ -1,0 +1,160 @@
+fileFormatVersion: 2
+guid: 2d922cc89a2aae64e90ea326e19fa878
+timeCreated: 1511262788
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: DS0_CH_02
+    100002: DS0_LOD0_FenceGreenTile
+    100004: DS0_LOD1_FenceGreenTile
+    100006: DS0_LOD2_FenceGreenTile
+    100008: DS1_CH_01
+    100010: DS1_CH_02
+    100012: DS1_CH_03
+    100014: DS1_CH_04
+    100016: DS1_LOD0_FenceGreenTile
+    100018: DS1_LOD1_FenceGreenTile
+    100020: DS1_LOD2_FenceGreenTile
+    100022: DS2_LOD0_FenceGreenTile
+    100024: DS2_LOD1_FenceGreenTile
+    100026: DS2_LOD2_FenceGreenTile
+    100028: METADATA
+    100030: //RootNode
+    400000: DS0_CH_02
+    400002: DS0_LOD0_FenceGreenTile
+    400004: DS0_LOD1_FenceGreenTile
+    400006: DS0_LOD2_FenceGreenTile
+    400008: DS1_CH_01
+    400010: DS1_CH_02
+    400012: DS1_CH_03
+    400014: DS1_CH_04
+    400016: DS1_LOD0_FenceGreenTile
+    400018: DS1_LOD1_FenceGreenTile
+    400020: DS1_LOD2_FenceGreenTile
+    400022: DS2_LOD0_FenceGreenTile
+    400024: DS2_LOD1_FenceGreenTile
+    400026: DS2_LOD2_FenceGreenTile
+    400028: METADATA
+    400030: //RootNode
+    2300000: DS0_CH_02
+    2300002: DS0_LOD0_FenceGreenTile
+    2300004: DS0_LOD1_FenceGreenTile
+    2300006: DS0_LOD2_FenceGreenTile
+    2300008: DS1_CH_01
+    2300010: DS1_CH_02
+    2300012: DS1_CH_03
+    2300014: DS1_CH_04
+    2300016: DS1_LOD0_FenceGreenTile
+    2300018: DS1_LOD1_FenceGreenTile
+    2300020: DS1_LOD2_FenceGreenTile
+    2300022: DS2_LOD0_FenceGreenTile
+    2300024: DS2_LOD1_FenceGreenTile
+    2300026: DS2_LOD2_FenceGreenTile
+    3300000: DS0_CH_02
+    3300002: DS0_LOD0_FenceGreenTile
+    3300004: DS0_LOD1_FenceGreenTile
+    3300006: DS0_LOD2_FenceGreenTile
+    3300008: DS1_CH_01
+    3300010: DS1_CH_02
+    3300012: DS1_CH_03
+    3300014: DS1_CH_04
+    3300016: DS1_LOD0_FenceGreenTile
+    3300018: DS1_LOD1_FenceGreenTile
+    3300020: DS1_LOD2_FenceGreenTile
+    3300022: DS2_LOD0_FenceGreenTile
+    3300024: DS2_LOD1_FenceGreenTile
+    3300026: DS2_LOD2_FenceGreenTile
+    4300000: DS0_LOD0_FenceGreenTile
+    4300002: DS0_CH_02
+    4300004: DS0_LOD1_FenceGreenTile
+    4300006: DS0_LOD2_FenceGreenTile
+    4300008: DS1_LOD0_FenceGreenTile
+    4300010: DS1_LOD1_FenceGreenTile
+    4300012: DS1_LOD2_FenceGreenTile
+    4300014: DS2_LOD0_FenceGreenTile
+    4300016: DS2_LOD1_FenceGreenTile
+    4300018: DS2_LOD2_FenceGreenTile
+    4300020: DS1_CH_01
+    4300022: DS1_CH_02
+    4300024: DS1_CH_03
+    4300026: DS1_CH_04
+    20500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages:
+    - 0.25
+    - 0.125
+    - 0.01
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

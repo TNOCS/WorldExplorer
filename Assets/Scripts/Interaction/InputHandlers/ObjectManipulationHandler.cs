@@ -1,33 +1,36 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using HoloToolkit.Unity.InputModule;
-using System;
 
 public class ObjectManipulationHandler : MonoBehaviour, IManipulationHandler {
 
+    private AudioClip clickFeedback;
+    private AudioSource audioSource;
+
     void Start()
-    {
-        // To be able to enable / disable handler in inspector.
+    { 
+        var audioContainer = GameObject.Find("AudioContainer");
+        audioSource = audioContainer.GetComponents<AudioSource>()[1];
+        clickFeedback = Resources.Load<AudioClip>("Audio/highclick");
     }
 
     public void OnManipulationStarted(ManipulationEventData eventData)
     {
-        ObjectInteraction.Instance.StartNavigatingOrManipulatingObject(gameObject);
+    //   audioSource.PlayOneShot(clickFeedback, 0.1f);
+    //   ObjectInteraction.Instance.StartNavigatingOrManipulatingObject(gameObject);
     }
 
     public void OnManipulationUpdated(ManipulationEventData eventData)
     {
-        ObjectInteraction.Instance.UpdateManipulatingObject(gameObject, eventData);
+        //ObjectInteraction.Instance.UpdateManipulatingObject(gameObject, eventData);
     }
 
     public void OnManipulationCompleted(ManipulationEventData eventData)
     {
-        ObjectInteraction.Instance.StopNavigatingOrManipulatingObject();
+       // ObjectInteraction.Instance.StopNavigatingOrManipulatingObject();
     }
 
     public void OnManipulationCanceled(ManipulationEventData eventData)
     {
-        ObjectInteraction.Instance.StopNavigatingOrManipulatingObject();
+       // ObjectInteraction.Instance.StopNavigatingOrManipulatingObject();
     }
 }

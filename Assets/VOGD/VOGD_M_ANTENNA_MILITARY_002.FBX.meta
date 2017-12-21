@@ -1,0 +1,256 @@
+fileFormatVersion: 2
+guid: 03c11596f265fee49a689df9c4eccee9
+timeCreated: 1511262777
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: center bar hold 006
+    100002: center bar hold 009
+    100004: center bar hold 3
+    100006: center bars 012
+    100008: center bars 013
+    100010: center bars 014
+    100012: center bars 015
+    100014: center bars 016
+    100016: center bars 017
+    100018: hitbox 1
+    100020: hitbox 10
+    100022: hitbox 11
+    100024: hitbox 12
+    100026: hitbox 13
+    100028: hitbox 14
+    100030: hitbox 15
+    100032: hitbox 16
+    100034: hitbox 17
+    100036: hitbox 18
+    100038: hitbox 19
+    100040: hitbox 2
+    100042: hitbox 20
+    100044: hitbox 21
+    100046: hitbox 22
+    100048: hitbox 23
+    100050: hitbox 24
+    100052: hitbox 25
+    100054: hitbox 3
+    100056: hitbox 4
+    100058: hitbox 5
+    100060: hitbox 6
+    100062: hitbox 7
+    100064: hitbox 8
+    100066: hitbox 9
+    100068: METADATA
+    100070: //RootNode
+    400000: center bar hold 006
+    400002: center bar hold 009
+    400004: center bar hold 3
+    400006: center bars 012
+    400008: center bars 013
+    400010: center bars 014
+    400012: center bars 015
+    400014: center bars 016
+    400016: center bars 017
+    400018: hitbox 1
+    400020: hitbox 10
+    400022: hitbox 11
+    400024: hitbox 12
+    400026: hitbox 13
+    400028: hitbox 14
+    400030: hitbox 15
+    400032: hitbox 16
+    400034: hitbox 17
+    400036: hitbox 18
+    400038: hitbox 19
+    400040: hitbox 2
+    400042: hitbox 20
+    400044: hitbox 21
+    400046: hitbox 22
+    400048: hitbox 23
+    400050: hitbox 24
+    400052: hitbox 25
+    400054: hitbox 3
+    400056: hitbox 4
+    400058: hitbox 5
+    400060: hitbox 6
+    400062: hitbox 7
+    400064: hitbox 8
+    400066: hitbox 9
+    400068: METADATA
+    400070: //RootNode
+    2300000: center bar hold 006
+    2300002: center bar hold 009
+    2300004: center bar hold 3
+    2300006: center bars 012
+    2300008: center bars 013
+    2300010: center bars 014
+    2300012: center bars 015
+    2300014: center bars 016
+    2300016: center bars 017
+    2300018: hitbox 1
+    2300020: hitbox 10
+    2300022: hitbox 11
+    2300024: hitbox 12
+    2300026: hitbox 13
+    2300028: hitbox 14
+    2300030: hitbox 15
+    2300032: hitbox 16
+    2300034: hitbox 17
+    2300036: hitbox 18
+    2300038: hitbox 19
+    2300040: hitbox 2
+    2300042: hitbox 20
+    2300044: hitbox 21
+    2300046: hitbox 22
+    2300048: hitbox 23
+    2300050: hitbox 24
+    2300052: hitbox 25
+    2300054: hitbox 3
+    2300056: hitbox 4
+    2300058: hitbox 5
+    2300060: hitbox 6
+    2300062: hitbox 7
+    2300064: hitbox 8
+    2300066: hitbox 9
+    3300000: center bar hold 006
+    3300002: center bar hold 009
+    3300004: center bar hold 3
+    3300006: center bars 012
+    3300008: center bars 013
+    3300010: center bars 014
+    3300012: center bars 015
+    3300014: center bars 016
+    3300016: center bars 017
+    3300018: hitbox 1
+    3300020: hitbox 10
+    3300022: hitbox 11
+    3300024: hitbox 12
+    3300026: hitbox 13
+    3300028: hitbox 14
+    3300030: hitbox 15
+    3300032: hitbox 16
+    3300034: hitbox 17
+    3300036: hitbox 18
+    3300038: hitbox 19
+    3300040: hitbox 2
+    3300042: hitbox 20
+    3300044: hitbox 21
+    3300046: hitbox 22
+    3300048: hitbox 23
+    3300050: hitbox 24
+    3300052: hitbox 25
+    3300054: hitbox 3
+    3300056: hitbox 4
+    3300058: hitbox 5
+    3300060: hitbox 6
+    3300062: hitbox 7
+    3300064: hitbox 8
+    3300066: hitbox 9
+    4300000: center bar hold 3
+    4300002: center bar hold 006
+    4300004: hitbox 24
+    4300006: hitbox 23
+    4300008: hitbox 22
+    4300010: hitbox 21
+    4300012: hitbox 20
+    4300014: hitbox 19
+    4300016: hitbox 18
+    4300018: hitbox 17
+    4300020: hitbox 16
+    4300022: hitbox 15
+    4300024: hitbox 14
+    4300026: hitbox 13
+    4300028: hitbox 12
+    4300030: hitbox 11
+    4300032: hitbox 10
+    4300034: hitbox 9
+    4300036: hitbox 25
+    4300038: hitbox 8
+    4300040: hitbox 7
+    4300042: hitbox 6
+    4300044: hitbox 5
+    4300046: hitbox 4
+    4300048: hitbox 3
+    4300050: hitbox 2
+    4300052: hitbox 1
+    4300054: center bar hold 009
+    4300056: center bars 012
+    4300058: center bars 013
+    4300060: center bars 014
+    4300062: center bars 015
+    4300064: center bars 016
+    4300066: center bars 017
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

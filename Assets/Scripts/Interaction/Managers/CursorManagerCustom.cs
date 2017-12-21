@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts;
+using HoloToolkit.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,6 +34,12 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
     private void Update()
     {
         CursorVisualHandler();
+
+        // Disables tutorial when user switches out of rotate or scale mode before the animation has ended.
+        if (UIManager.Instance.currentMode != "RotateBtn" && UIManager.Instance.currentMode != "ScaleBtn")
+        {
+            NavigateTutorial.SetActive(false);
+        }
     }
 
     public void SetCursorIcon(string currentMode)
@@ -76,10 +83,12 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
             var currentMode = UIManager.Instance.currentMode;
             if (rayCastFocus.tag == "uistatic" || rayCastFocus.tag == "uibutton" || rayCastFocus.tag == "inventoryobject" || rayCastFocus.name == "FrontSide")
             {
-                Instance.CursorVisual.SetActive(false);
-
-                // Except if ui button is currentmode
-                if (rayCastFocus.name == currentMode)
+                if (rayCastFocus.name != currentMode)
+                {
+                    Instance.CursorVisual.SetActive(false);
+                }
+                // Except if raycast target is current modse for extra visual feedback.
+                else
                 {
                     CursorVisual.SetActive(true);
                 }
@@ -103,12 +112,20 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
                 }
             }
 
-            // Sets icons green if it is an interactible object.
+            // Sets icons green if it is an interactible object
             if (rayCastFocus.tag == "spawnobject" )
             {
                 if (currentMode != "ZoomInBtn" && currentMode != "ZoomOutBtn" && currentMode != "CenterBtn")
                 {
-                    InteractionPossible();
+                    // Exception: when current mode is "Scale", but the object is unscalable (like a jeep).
+                    if (currentMode == "ScaleBtn" && rayCastFocus.gameObject.GetComponent<PrefabObjectData>().scaleable == false)
+                    {
+                        InteractionNotPossible();
+                    }
+                    else
+                    {
+                        InteractionPossible();
+                    }
                 }
                 else
                 {
@@ -125,8 +142,14 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
                 }
             }
 
-            // If minimum zoom level is already reached
-                if (AppState.Instance.Config != null && BoardInteraction.Instance != null)
+            // Quick fix before demo: This is contradicting to the above code and should be fixed (=remove turning red in above code instead of turning it back green here) asap.
+            if (currentMode == "ZoomInBtn" || currentMode == "ZoomOutBtn" || currentMode == "CenterBtn")
+            {
+                InteractionPossible();
+            }
+
+            // If minimum zoom level is already reached, the user can not zoom out more.
+            if (AppState.Instance.Config != null && BoardInteraction.Instance != null)
                 {
                     if (AppState.Instance.Config.ActiveView.Zoom == BoardInteraction.Instance.maxZoomLevel)
                     {
@@ -137,7 +160,7 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
                     }
                 }
 
-                // If maximum zoom level is already reached...
+                // If maximum zoom level is already reached, the user can not zoom in more.
                 if (AppState.Instance.Config != null && BoardInteraction.Instance != null)
                 {
                     if (AppState.Instance.Config.ActiveView.Zoom == BoardInteraction.Instance.minZoomLevel)
@@ -173,6 +196,20 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
                 InteractionPossibleIcon.SetActive(true);
                 PlacementPossibleIcon.SetActive(false);
             }
+
+            // If the user is in the Info mode, the cursor should turn green when it hits building.
+            if (currentMode == "InfoBtn")
+            {
+                if (rayCastFocus.name.Contains(" Buildings"))
+                {
+                    InteractionPossible();
+                }
+                else
+                {
+                    InteractionNotPossible();
+                }
+            }
+
         }
         // If Raycast is not hitting anything.
         else

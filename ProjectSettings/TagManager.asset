@@ -13,6 +13,8 @@ TagManager:
   - collisionhandler
   - boardobject
   - newspawnobject
+  - poi
+  - boardbuilding
   layers:
   - Default
   - TransparentFX

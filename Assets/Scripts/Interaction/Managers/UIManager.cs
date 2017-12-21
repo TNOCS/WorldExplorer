@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using HoloToolkit.Unity;
 using Assets.Scripts;
 using System;
-using Assets.Scripts.Plugins;
 using System.Linq;
-
-public class UIManager : Singleton<UIManager> {
+public class UIManager : SingletonCustom<UIManager>
+{
 
     // Set by taps on UI components.
     public string currentMode;
@@ -17,23 +14,32 @@ public class UIManager : Singleton<UIManager> {
     private GameObject terrain;
     public TextMesh CurrentOverlayText;
 
-    // UI Sprite.
-    private SpriteRenderer coloredSprite;
-
     // Zoom Min and Max handlers.
     private GameObject ZoomInBtn;
     private GameObject ZoomOutBtn;
     private GameObject ZoomMaxReached;
     private GameObject ZoomMinReached;
 
+    // Terrain.
+    private GameObject TerrainBtn;
+    private GameObject TerrainUnavailable;
+
     // Compass.
-    private GameObject CompassUp, CompassLeft, CompassDown, CompassRight;
     private GameObject CompassUpStatic, CompassLeftStatic, CompassDownStatic, CompassRightStatic;
 
     // UI Positioning.
     public string currentUIPosition;
     private Transform frontSide, leftSide, rightSide, backSide;
-    public Quaternion originalUIRotation;    
+    public Quaternion originalUIRotation;
+
+
+    // Other.
+    private SpriteRenderer coloredSprite;
+
+    // Inventory Buttons.
+    private GameObject inventoryButton;
+    private GameObject inventoryUnavailable;
+    private GameObject inventoryText;
 
     private Dictionary<string, int> locationDict = new Dictionary<string, int>()
     {
@@ -45,14 +51,14 @@ public class UIManager : Singleton<UIManager> {
         {"BunkerBtn", 5 },
         {"LhasaBtn", 6 },
         {"CavesBtn", 7 },
-        {"VenloBtn", 8 },
+        {"CompoundBtn", 8 },
         {"WaterBtn", 9 },
         {"MilitaryBtn", 10 },
         {"KazerneBtn", 11 }
     };
 
     void Awake()
-    {        
+    {
         CurrentOverlayText = GameObject.Find("CurrentViewText").GetComponent<TextMesh>();
         CompassUpStatic = GameObject.Find("CompassUpStatic");
         CompassLeftStatic = GameObject.Find("CompassLeftStatic");
@@ -66,6 +72,9 @@ public class UIManager : Singleton<UIManager> {
 
         ZoomInBtn = GameObject.Find("ZoomInBtn");
         ZoomOutBtn = GameObject.Find("ZoomOutBtn");
+
+        //TerrainBtn = GameObject.Find("ToggleTerrainBtn");
+        //TerrainUnavailable = GameObject.Find("TerrainUnavailable");
     }
 
 
@@ -78,12 +87,15 @@ public class UIManager : Singleton<UIManager> {
         if (AppState.Instance.Config != null)
         {
             SetZoomLevelMinMaxIcons();
-        }        
+            //SetTerrainUnavailableIcon();
+        }
     }
 
     private void SetZoomLevelMinMaxIcons()
     {
-        if (AppState.Instance.Config.ActiveView.Zoom == BoardInteraction.Instance.minZoomLevel)
+        var av = AppState.Instance.Config.ActiveView;
+
+        if (av.Zoom == BoardInteraction.Instance.minZoomLevel)
         {
             ZoomMaxReached.SetActive(true);
             ZoomOutBtn.SetActive(false);
@@ -94,17 +106,33 @@ public class UIManager : Singleton<UIManager> {
             ZoomOutBtn.SetActive(true);
         }
 
-        if (AppState.Instance.Config.ActiveView.Zoom == BoardInteraction.Instance.maxZoomLevel)
+        if (av.Zoom == BoardInteraction.Instance.maxZoomLevel)
         {
             ZoomMinReached.SetActive(true);
             ZoomInBtn.SetActive(false);
         }
         else
         {
-            ZoomMinReached.SetActive(false);
-            ZoomInBtn.SetActive(true);
+            // Demo purposes. Remove when all .pngs are available.
+            if (av.Name == "Compound" && av.Zoom >= 18)
+            {
+                ZoomMinReached.SetActive(true);
+                ZoomInBtn.SetActive(false);
+            }
+            else
+            {
+                ZoomMinReached.SetActive(false);
+                ZoomInBtn.SetActive(true);
+            }
         }
-      }
+    }
+
+
+    // public void SetTerrainUnavailableIcon()
+    // {
+    //     TerrainUnavailable.SetActive(!AppState.Instance.Config.ActiveView.TerrainHeightsAvailable);
+    //     TerrainBtn.SetActive(AppState.Instance.Config.ActiveView.TerrainHeightsAvailable);
+    // }
 
     public void InitUI()
     {
@@ -127,6 +155,35 @@ public class UIManager : Singleton<UIManager> {
         }
     }
 
+    public void SetInventoryWindowBasedOnZoom()
+    {
+        // Disables inventory when at zoom level 16 or lower, as objects would become too small.
+        if (AppState.Instance.Config.ActiveView.Zoom <= 17)
+        {
+            if (inventoryButton == null || inventoryUnavailable == null || inventoryText == null)
+            {
+                inventoryButton = GameObject.Find("InventoryBtn");
+                inventoryText = GameObject.Find("InventoryTxt");
+                inventoryUnavailable = GameObject.Find("InventoryUnavailableTxt");
+            }
+            inventoryButton.SetActive(false);
+            inventoryText.GetComponent<TextMesh>().text = "Inventory";
+            inventoryUnavailable.SetActive(true);
+        }
+        else
+        {
+            if (inventoryButton == null || inventoryUnavailable == null || inventoryText == null)
+            {
+                inventoryButton = GameObject.Find("InventoryBtn");
+                inventoryText = GameObject.Find("InventoryTxt");
+                inventoryUnavailable = GameObject.Find("InventoryUnavailableTxt");
+            }
+            inventoryButton.SetActive(true);
+            inventoryText.GetComponent<TextMesh>().text = "Open \nInventory";
+            inventoryUnavailable.SetActive(false);
+        }
+    }
+
     private void SetCompassStatic(string up, string left, string right, string down)
     {
         CompassUpStatic.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(up);
@@ -137,15 +194,19 @@ public class UIManager : Singleton<UIManager> {
 
     public void SetSpriteColor(GameObject go)
     {
-        if (coloredSprite != null)
+        try
         {
-            coloredSprite.color = Color.white;
-        }      
-
-        coloredSprite = go.GetComponent<SpriteRenderer>();
-        coloredSprite.color = Color.black;
-        Debug.Log("Setting " + go.name + " to black");
-
+            if (coloredSprite != null)
+            {
+                coloredSprite.color = Color.white;
+            }
+            coloredSprite = go.GetComponent<SpriteRenderer>();
+            coloredSprite.color = Color.black;
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Sprite not set, probably because function was called through speechmanager." + e);
+        }
     }
 
     private void CheckUIPosition()
@@ -183,41 +244,27 @@ public class UIManager : Singleton<UIManager> {
             {
                 UI.transform.localRotation = Quaternion.Euler(originalUIRotation.x, originalUIRotation.y, originalUIRotation.z);
                 currentUIPosition = "Front";
-
-                //SetCompass("N", "W", "E", "S");
                 SetCompassStatic("CompassArrow", null, null, null);
             }
             if (nearestSide == distanceToLeftSide && currentUIPosition != "Left")
             {
                 UI.transform.localRotation = Quaternion.Euler(originalUIRotation.x, originalUIRotation.y + 90, originalUIRotation.z);
                 currentUIPosition = "Left";
-                //SetCompass("E", "N", "S", "W");
                 SetCompassStatic(null, "CompassArrow", null, null);
             }
             if (nearestSide == distanceToBackSide && currentUIPosition != "Back")
             {
                 UI.transform.localRotation = Quaternion.Euler(originalUIRotation.x, originalUIRotation.y + 180, originalUIRotation.z);
                 currentUIPosition = "Back";
-                //SetCompass("S", "E", "W", "N");
                 SetCompassStatic(null, null, null, "CompassArrow");
             }
             if (nearestSide == distanceToRightSide && currentUIPosition != "right")
             {
                 UI.transform.localRotation = Quaternion.Euler(originalUIRotation.x, originalUIRotation.y + 270, originalUIRotation.z);
                 currentUIPosition = "Right";
-                //SetCompass("W", "S", "N", "E");
                 SetCompassStatic(null, null, "CompassArrow", null);
             }
         }
-    }
-
-
-    public void InitInventory()
-    {
-        //Get all Inventory objects from Resources/Inventory
-        //Load them in a List
-        //Display each listitem as GameObject
-        //For each 9th object, create new page
     }
 
     public void Tap(GameObject go)
@@ -240,22 +287,33 @@ public class UIManager : Singleton<UIManager> {
                 break;
             case "BoardHandlersBtn":
                 UIInteraction.Instance.SetDragHandlerWindow();
+                UIInteraction.Instance.SwitchMode("");
                 break;
-            case "TileMinBtn":
-                BoardInteraction.Instance.DecreaseTiles();
-                break;
-            case "TilePlusBtn":
-                BoardInteraction.Instance.IncreaseTiles();
-                break;
+            // case "TileMinBtn":
+            //     BoardInteraction.Instance.DecreaseTiles();
+            //     break;
+            // case "TilePlusBtn":
+            //     BoardInteraction.Instance.IncreaseTiles();
+            //     break;
             case "MarkMapBtn":
                 currentMode = keyword;
                 InventoryObjectInteraction.Instance.Spawn("MarkMapBtn");
                 break;
-            case "InventoryTxt":
+            case "InventoryBtn":
                 UIInteraction.Instance.SetInventoryWindow();
                 break;
-            case "ResetInteractable":
+            case "ResetTableInteractable":
                 BoardInteraction.Instance.ResetTable();
+                break;
+            case "FinishedInteractable":
+                UIInteraction.Instance.SetDragHandlerWindow();
+                UIInteraction.Instance.SwitchMode("BoardBtn");
+                break;
+            // case "ResetSceneInteractable":
+            //     BoardInteraction.Instance.ResetScene();
+            //     break;
+            case "ToggleTerrainBtn":
+                BoardInteraction.Instance.ToggleTerrainHeights();
                 break;
             case "UitdamBtn":
             case "BeachBtn":
@@ -265,7 +323,7 @@ public class UIManager : Singleton<UIManager> {
             case "BunkerBtn":
             case "LhasaBtn":
             case "CavesBtn":
-            case "VenloBtn":
+            case "CompoundBtn":
             case "WaterBtn":
             case "MilitaryBtn":
             case "KazerneBtn":

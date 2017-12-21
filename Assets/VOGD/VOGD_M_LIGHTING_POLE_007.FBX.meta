@@ -1,0 +1,169 @@
+fileFormatVersion: 2
+guid: bf6a1dc1b20d11242a051a774bbf0068
+timeCreated: 1511262818
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: Dummy001
+    100002: Fspot001
+    100004: mesh
+    100006: mesh 1
+    100008: mesh_01
+    100010: mesh_01 1
+    100012: mesh_02
+    100014: mesh_02 1
+    100016: mesh_03
+    100018: Object001
+    100020: Object002
+    100022: Object003
+    100024: Object004
+    100026: Object005
+    100028: Object006
+    100030: Object007
+    100032: Object008
+    100034: Object009
+    100036: //RootNode
+    400000: Dummy001
+    400002: Fspot001
+    400004: mesh
+    400006: mesh 1
+    400008: mesh_01
+    400010: mesh_01 1
+    400012: mesh_02
+    400014: mesh_02 1
+    400016: mesh_03
+    400018: Object001
+    400020: Object002
+    400022: Object003
+    400024: Object004
+    400026: Object005
+    400028: Object006
+    400030: Object007
+    400032: Object008
+    400034: Object009
+    400036: //RootNode
+    2300000: mesh
+    2300002: mesh 1
+    2300004: mesh_01
+    2300006: mesh_01 1
+    2300008: mesh_02
+    2300010: mesh_02 1
+    2300012: mesh_03
+    2300014: Object001
+    2300016: Object002
+    2300018: Object003
+    2300020: Object004
+    2300022: Object005
+    2300024: Object006
+    2300026: Object007
+    2300028: Object008
+    2300030: Object009
+    3300000: mesh
+    3300002: mesh 1
+    3300004: mesh_01
+    3300006: mesh_01 1
+    3300008: mesh_02
+    3300010: mesh_02 1
+    3300012: mesh_03
+    3300014: Object001
+    3300016: Object002
+    3300018: Object003
+    3300020: Object004
+    3300022: Object005
+    3300024: Object006
+    3300026: Object007
+    3300028: Object008
+    3300030: Object009
+    4300000: mesh
+    4300002: Object001
+    4300004: Object002
+    4300006: Object003
+    4300008: Object004
+    4300010: Object005
+    4300012: Object006
+    4300014: Object007
+    4300016: Object008
+    4300018: Object009
+    4300020: mesh_01
+    4300022: mesh_02
+    4300024: mesh_02
+    4300026: mesh_01
+    4300028: mesh_03
+    4300030: mesh
+    10800000: Fspot001
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

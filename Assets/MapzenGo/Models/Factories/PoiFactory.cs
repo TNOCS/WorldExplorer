@@ -54,6 +54,7 @@ namespace MapzenGo.Models.Factories
             var go = new GameObject("Poi"); //Instantiate(_labelPrefab);
             var poi = go.AddComponent<Poi>();
             go.name = "poi-" + tile.name;
+            go.tag = "poi";
             //RJ added spriteRenderer
             var sprite = go.AddComponent<SpriteRenderer>();
             sprite.sprite = typeSettings.Sprite;

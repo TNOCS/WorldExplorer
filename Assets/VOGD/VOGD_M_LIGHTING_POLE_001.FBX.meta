@@ -1,0 +1,267 @@
+fileFormatVersion: 2
+guid: d982a6ec814703a4bb21a8ae9c2c55f1
+timeCreated: 1511262823
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: DS0_Hitbox01
+    100002: DS0_Hitbox02
+    100004: DS0_Hitbox03
+    100006: DS0_Hitbox04
+    100008: DS0_Hitbox05
+    100010: DS0_Hitbox06
+    100012: DS0_Hitbox07
+    100014: DS0_Hitbox08
+    100016: DS0_Hitbox09
+    100018: DS0_Hitbox10
+    100020: DS0_Hitbox11
+    100022: DS0_Hitbox12_light
+    100024: DS0_Hitbox13_Light
+    100026: DS0_Lantaarn LOD0
+    100028: DS0_Lantaarn LOD1
+    100030: DS0_Lantaarn LOD2
+    100032: DS0_Light_high
+    100034: DS0_Light_low
+    100036: DS1_Hitbox1
+    100038: DS1_Hitbox10
+    100040: DS1_Hitbox11
+    100042: DS1_Hitbox12
+    100044: DS1_Hitbox13
+    100046: DS1_Hitbox2
+    100048: DS1_Hitbox3
+    100050: DS1_Hitbox4
+    100052: DS1_Hitbox5
+    100054: DS1_Hitbox6
+    100056: DS1_Hitbox7
+    100058: DS1_Hitbox8
+    100060: DS1_Hitbox9
+    100062: DS1_Lantaarn LOD0
+    100064: DS1_Lantaarn LOD1
+    100066: DS1_Lantaarn LOD2
+    100068: DS2_Lantaarn LOD0
+    100070: DS2_Lantaarn LOD1
+    100072: DS2_Lantaarn LOD2
+    100074: Dummy001
+    100076: //RootNode
+    400000: DS0_Hitbox01
+    400002: DS0_Hitbox02
+    400004: DS0_Hitbox03
+    400006: DS0_Hitbox04
+    400008: DS0_Hitbox05
+    400010: DS0_Hitbox06
+    400012: DS0_Hitbox07
+    400014: DS0_Hitbox08
+    400016: DS0_Hitbox09
+    400018: DS0_Hitbox10
+    400020: DS0_Hitbox11
+    400022: DS0_Hitbox12_light
+    400024: DS0_Hitbox13_Light
+    400026: DS0_Lantaarn LOD0
+    400028: DS0_Lantaarn LOD1
+    400030: DS0_Lantaarn LOD2
+    400032: DS0_Light_high
+    400034: DS0_Light_low
+    400036: DS1_Hitbox1
+    400038: DS1_Hitbox10
+    400040: DS1_Hitbox11
+    400042: DS1_Hitbox12
+    400044: DS1_Hitbox13
+    400046: DS1_Hitbox2
+    400048: DS1_Hitbox3
+    400050: DS1_Hitbox4
+    400052: DS1_Hitbox5
+    400054: DS1_Hitbox6
+    400056: DS1_Hitbox7
+    400058: DS1_Hitbox8
+    400060: DS1_Hitbox9
+    400062: DS1_Lantaarn LOD0
+    400064: DS1_Lantaarn LOD1
+    400066: DS1_Lantaarn LOD2
+    400068: DS2_Lantaarn LOD0
+    400070: DS2_Lantaarn LOD1
+    400072: DS2_Lantaarn LOD2
+    400074: Dummy001
+    400076: //RootNode
+    2300000: DS0_Hitbox01
+    2300002: DS0_Hitbox02
+    2300004: DS0_Hitbox03
+    2300006: DS0_Hitbox04
+    2300008: DS0_Hitbox05
+    2300010: DS0_Hitbox06
+    2300012: DS0_Hitbox07
+    2300014: DS0_Hitbox08
+    2300016: DS0_Hitbox09
+    2300018: DS0_Hitbox10
+    2300020: DS0_Hitbox11
+    2300022: DS0_Hitbox12_light
+    2300024: DS0_Hitbox13_Light
+    2300026: DS0_Lantaarn LOD0
+    2300028: DS0_Lantaarn LOD1
+    2300030: DS0_Lantaarn LOD2
+    2300032: DS1_Hitbox1
+    2300034: DS1_Hitbox10
+    2300036: DS1_Hitbox11
+    2300038: DS1_Hitbox12
+    2300040: DS1_Hitbox13
+    2300042: DS1_Hitbox2
+    2300044: DS1_Hitbox3
+    2300046: DS1_Hitbox4
+    2300048: DS1_Hitbox5
+    2300050: DS1_Hitbox6
+    2300052: DS1_Hitbox7
+    2300054: DS1_Hitbox8
+    2300056: DS1_Hitbox9
+    2300058: DS1_Lantaarn LOD0
+    2300060: DS1_Lantaarn LOD1
+    2300062: DS1_Lantaarn LOD2
+    2300064: DS2_Lantaarn LOD0
+    2300066: DS2_Lantaarn LOD1
+    2300068: DS2_Lantaarn LOD2
+    3300000: DS0_Hitbox01
+    3300002: DS0_Hitbox02
+    3300004: DS0_Hitbox03
+    3300006: DS0_Hitbox04
+    3300008: DS0_Hitbox05
+    3300010: DS0_Hitbox06
+    3300012: DS0_Hitbox07
+    3300014: DS0_Hitbox08
+    3300016: DS0_Hitbox09
+    3300018: DS0_Hitbox10
+    3300020: DS0_Hitbox11
+    3300022: DS0_Hitbox12_light
+    3300024: DS0_Hitbox13_Light
+    3300026: DS0_Lantaarn LOD0
+    3300028: DS0_Lantaarn LOD1
+    3300030: DS0_Lantaarn LOD2
+    3300032: DS1_Hitbox1
+    3300034: DS1_Hitbox10
+    3300036: DS1_Hitbox11
+    3300038: DS1_Hitbox12
+    3300040: DS1_Hitbox13
+    3300042: DS1_Hitbox2
+    3300044: DS1_Hitbox3
+    3300046: DS1_Hitbox4
+    3300048: DS1_Hitbox5
+    3300050: DS1_Hitbox6
+    3300052: DS1_Hitbox7
+    3300054: DS1_Hitbox8
+    3300056: DS1_Hitbox9
+    3300058: DS1_Lantaarn LOD0
+    3300060: DS1_Lantaarn LOD1
+    3300062: DS1_Lantaarn LOD2
+    3300064: DS2_Lantaarn LOD0
+    3300066: DS2_Lantaarn LOD1
+    3300068: DS2_Lantaarn LOD2
+    4300000: DS0_Lantaarn LOD0
+    4300002: DS0_Hitbox01
+    4300004: DS0_Hitbox02
+    4300006: DS0_Hitbox03
+    4300008: DS0_Hitbox04
+    4300010: DS0_Hitbox05
+    4300012: DS0_Hitbox06
+    4300014: DS0_Hitbox07
+    4300016: DS0_Hitbox08
+    4300018: DS0_Hitbox09
+    4300020: DS0_Hitbox10
+    4300022: DS0_Hitbox11
+    4300024: DS0_Lantaarn LOD1
+    4300026: DS0_Lantaarn LOD2
+    4300028: DS1_Lantaarn LOD0
+    4300030: DS1_Lantaarn LOD1
+    4300032: DS1_Lantaarn LOD2
+    4300034: DS2_Lantaarn LOD2
+    4300036: DS2_Lantaarn LOD1
+    4300038: DS2_Lantaarn LOD0
+    4300040: DS1_Hitbox1
+    4300042: DS1_Hitbox2
+    4300044: DS1_Hitbox3
+    4300046: DS1_Hitbox4
+    4300048: DS1_Hitbox5
+    4300050: DS1_Hitbox6
+    4300052: DS1_Hitbox7
+    4300054: DS1_Hitbox8
+    4300056: DS1_Hitbox9
+    4300058: DS1_Hitbox10
+    4300060: DS1_Hitbox11
+    4300062: DS1_Hitbox12
+    4300064: DS1_Hitbox13
+    4300066: DS0_Hitbox12_light
+    4300068: DS0_Hitbox13_Light
+    10800000: DS0_Light_high
+    10800002: DS0_Light_low
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

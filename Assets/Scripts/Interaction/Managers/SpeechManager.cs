@@ -11,8 +11,7 @@ public class SpeechManager : MonoBehaviour {
     }
 
     public void SetEditMode(string keyword)
-    {
-        Debug.Log("yo");
+    { 
         UIManager.Instance.CallFunctions(keyword);
         Debug.Log("Speech Recognized, calling " + keyword);
     }
@@ -21,5 +20,10 @@ public class SpeechManager : MonoBehaviour {
     {
         UIManager.Instance.CallFunctions(keyword);
         Debug.Log("Speech Recognized, calling " + keyword);
+    }
+
+    public void ToggleVideoMode(string keyword)
+    {
+        DebugExplorer.Instance.ToggleVideoMode();
     }
 }

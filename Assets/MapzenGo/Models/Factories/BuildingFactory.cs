@@ -44,14 +44,14 @@ namespace MapzenGo.Models.Factories
 
                 var typeSettings = FactorySettings.GetSettingsFor<BuildingSettings>(kind);
                 var buildingCorners = new List<Vector3>();
-                //foreach (var bb in geo["geometry"]["coordinates"].list)
-                //{
+
                 float minx = float.MaxValue, miny = float.MaxValue, maxx = float.MinValue, maxy = float.MinValue;
                 var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
                 for (int i = 0; i < bb.list.Count - 1; i++)
                 {
                     var c = bb.list[i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
+                    
                     var localMercPos = dotMerc - tile.Rect.Center;
 
                     if (localMercPos.x < minx) minx = (float)localMercPos.x;
@@ -236,7 +236,6 @@ namespace MapzenGo.Models.Factories
             var vertsStartCount = _useTriangulationNet
                     ? CreateRoofTriangulation(corners, height, data)
                     : CreateRoofClass(corners, height, data);
-
             foreach (var c in corners)
             {
                 data.UV.Add(new Vector2((c.x - min.x), (c.z - min.y)));
@@ -349,10 +348,9 @@ namespace MapzenGo.Models.Factories
             var col = go.AddComponent<MeshCollider>();
             col.convex = true;
             col.isTrigger = true;
-            /*
-            go.tag = "spawnobject";
+            
+            go.tag = "boardbuilding";
             go.AddComponent<ObjectTapHandler>();
-            go.AddComponent<ObjectNavigationHandler>();*/
             
         }
     }

@@ -11,7 +11,7 @@ namespace Assets.Scripts.Classes
 
     public class User
     {
-        private string id;
+        public string id;
         private Color selectionColor;
         private DateTime lastUpdateReceived;
         public GameObject Cursor { get; set; }
@@ -86,11 +86,14 @@ namespace Assets.Scripts.Classes
                 Debug.Log("Cursor is null, setting");
                 Cursor = GameObject.Find("Cursor");
             }
-            
+
             // Offset to account for a repositioned world.
-            AppState.Instance.worldOffset = AppState.Instance.Terrain.transform.position;
+                AppState.Instance.worldOffset = AppState.Instance.Terrain.transform.position;
+
             var cursorPosition = (Cursor.transform.position - AppState.Instance.worldOffset);
-            var v0 = new Vector2d(cursorPosition.x / Scale, cursorPosition.z / Scale) + CenterInMercator;
+            float newScale;
+            newScale = Scale * GameObject.Find("terrain").transform.localScale.x;
+            var v0 = new Vector2d(cursorPosition.x / newScale, cursorPosition.z / newScale) + CenterInMercator;
             //var v0 = new Vector2d(Cursor.transform.position.x / Scale, Cursor.transform.position.z / Scale) + CenterInMercator;
             var v1 = GM.MetersToLatLon(v0);
             //Debug.Log(string.Format(@"""loc"":{{""lat"":{0},""lon"":{1}}}", v1.y, v1.x));

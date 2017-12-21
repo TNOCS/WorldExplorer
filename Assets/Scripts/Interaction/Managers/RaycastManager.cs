@@ -1,13 +1,14 @@
-﻿using System;
+﻿using HoloToolkit.Unity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class RaycastManager : Singleton<RaycastManager>
+public class RaycastManager : SingletonCustom<RaycastManager>
 {
     [SerializeField]
-    private float uiScalefactor = 1.35f;
+    private float uiScalefactor = 1.25f;
     private bool enlarged = false;
     private bool animationPlaying = false;
     private Quaternion originalRotation;
@@ -15,12 +16,6 @@ public class RaycastManager : Singleton<RaycastManager>
     public GameObject enlargedObject;
     public AudioClip gazeFeedback;
     public AudioSource audioSource;
-
-
-    public Animation MoveAnimation;
-    private Animation RotateAnimation;
-    private Animation TiltAnimation;
-    private Animation ResizeAnimation;
 
     private void Start()
     {
@@ -41,53 +36,26 @@ public class RaycastManager : Singleton<RaycastManager>
         {
            var rayCastFocus = Raycast().collider.gameObject;
 
-            if (rayCastFocus.name == "DragInteractable" || rayCastFocus.name == "RotateInteractable" || rayCastFocus.name == "TiltInteractable" || rayCastFocus.name == "ResizeInteractable")
-            {
-                PlayAnimation(rayCastFocus);
-            }
-            else
-            {
-                if (animationPlaying)
-                {
-                    StopAnimations();
-                }
-            }
-
             // Enlarges elements that are being gazed and plays a low key sounds.
             if (rayCastFocus.tag == "inventoryobject" || rayCastFocus.tag == "uibutton")
             {
                 // If it's an inventory item, also start rotating.
-                if (rayCastFocus.tag == "inventoryobject")
-                {
-                    var originalRotation = rayCastFocus.transform.rotation;
-                    if (rotatingObject == null)
-                    {
-                        rotatingObject = rayCastFocus;
-                    }
-
-                    if (rotatingObject != rayCastFocus)
-                    {
-                        rotatingObject.transform.rotation = originalRotation;
-                        rotatingObject = rayCastFocus;
-                    }
-                    rayCastFocus.transform.Rotate(Vector3.up * Time.deltaTime * 50);
-                }
-
-                if (rayCastFocus.tag == "uibutton")
-                {
-                    if (rayCastFocus.gameObject.name == "InventoryTxt")
-                    {
-                        uiScalefactor = 1.2f;
-                    }
-                    else if (rayCastFocus.gameObject.name.Contains("Interactable"))
-                    {
-                        uiScalefactor = 1.2f;
-                    }
-                    else
-                    {
-                        uiScalefactor = 1.35f;
-                    }
-                }               
+                // ROTATION DISABLED UNTIL TNO MODELS HAVE CORRET PIVOT POINT.
+               // if (rayCastFocus.tag == "inventoryobject")
+               //{
+               //   var originalRotation = rayCastFocus.transform.rotation;
+               //   if (rotatingObject == null)
+               //   {
+               //       rotatingObject = rayCastFocus;
+               //   }
+               //
+               //   if (rotatingObject != rayCastFocus)
+               //   {
+               //       rotatingObject.transform.rotation = originalRotation;
+               //       rotatingObject = rayCastFocus;
+               //   }
+               //   rayCastFocus.transform.Rotate(Vector3.up * Time.deltaTime * 50);
+               //  }            
 
                 // Enlarges
                 if (!enlarged)
@@ -131,76 +99,9 @@ public class RaycastManager : Singleton<RaycastManager>
                 enlargedObject = null;
                 enlarged = false;
             }
-            // Stop all animations
-            if (animationPlaying)
-            {
-                StopAnimations();
-            }
         }
     }
-
-    public void PlayAnimation(GameObject rayCastFocus)
-    {
-        if (MoveAnimation == null)
-        {
-            MoveAnimation = GameObject.Find("MoveAnimation").GetComponent<Animation>();
-        }
-        if (RotateAnimation == null)
-        {
-            RotateAnimation = GameObject.Find("RotateAnimation").GetComponent<Animation>();
-        }
-        if (TiltAnimation == null)
-        {
-            TiltAnimation = GameObject.Find("TiltAnimation").GetComponent<Animation>();
-        }
-        if (ResizeAnimation == null)
-        {
-            ResizeAnimation = GameObject.Find("ResizeAnimation").GetComponent<Animation>();
-        }
-
-
-        if (rayCastFocus.name == "DragInteractable")
-        {
-            RotateAnimation.Stop();
-            TiltAnimation.Stop();
-            ResizeAnimation.Stop();
-            MoveAnimation.Play();
-        }
-        if (rayCastFocus.name == "RotateInteractable")
-        {
-            MoveAnimation.Stop();
-            TiltAnimation.Stop();
-            ResizeAnimation.Stop();
-            RotateAnimation.Play();
-        }
-        if (rayCastFocus.name == "TiltInteractable")
-        {
-            MoveAnimation.Stop();
-            RotateAnimation.Stop();
-            ResizeAnimation.Stop();
-            TiltAnimation.Play();
-        }
-        if (rayCastFocus.name == "ResizeInteractable")
-        {
-            MoveAnimation.Stop();
-            RotateAnimation.Stop();
-            TiltAnimation.Stop();
-            ResizeAnimation.Play();
-        }
-        animationPlaying = true;
-    }
-
-    private void StopAnimations()
-    {
-        MoveAnimation.Stop();
-        RotateAnimation.Stop();
-        TiltAnimation.Stop();
-        ResizeAnimation.Stop();
-        animationPlaying = false;
-    }
-
-
-    // TODO: replace with IFocusable interface (?)
+    
     public RaycastHit Raycast()
     {
         RaycastHit hit;

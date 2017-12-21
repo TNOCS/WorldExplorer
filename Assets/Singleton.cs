@@ -7,23 +7,23 @@
 /// 
 /// As a note, this is made as MonoBehaviour because we need Coroutines.
 /// </summary>
-public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+public class SingletonCustom<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
 
     private static object _lock = new object();
 
-    
-        /// <summary>
-        /// Returns whether the instance has been initialized or not.
-        /// </summary>
-        public  bool IsInitialized
+
+    /// <summary>
+    /// Returns whether the instance has been initialized or not.
+    /// </summary>
+    public bool IsInitialized
+    {
+        get
         {
-            get
-            {
-                return _instance != null;
-            }
+            return _instance != null;
         }
+    }
 
     public static T Instance
     {
@@ -59,14 +59,14 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
                         DontDestroyOnLoad(singleton);
 
-                        Debug.Log("[Singleton] An instance of " + typeof(T) +
-                            " is needed in the scene, so '" + singleton +
-                            "' was created with DontDestroyOnLoad.");
+                       // Debug.Log("[Singleton] An instance of " + typeof(T) +
+                       //     " is needed in the scene, so '" + singleton +
+                       //     "' was created with DontDestroyOnLoad.");
                     }
                     else
                     {
-                        Debug.Log("[Singleton] Using instance already created: " +
-                            _instance.gameObject.name);
+                      // Debug.Log("[Singleton] Using instance already created: " +
+                      //     _instance.gameObject.name);
                     }
                 }
 

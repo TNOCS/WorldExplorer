@@ -6,9 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Plugins;
 using UnityEngine;
-using Assets.Scripts.Classes;
 
-public class ObjectInteraction : Singleton<ObjectInteraction> {
+public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
 
     // Object being manipulated.
     public GameObject objectInFocus;
@@ -22,9 +21,13 @@ public class ObjectInteraction : Singleton<ObjectInteraction> {
     private float rotationFactor;
     private float minimumScale = 0.001f;
     private float maximumScale = 2f;
-    private float scaleSpeed = 0.01f;
+    private float scaleSpeed = 0.02f;
     private Vector3 drawPoint1, drawPoint2;
-    private GameObject lrObject;
+    private float rotationSensitivity = 1.5f;
+
+    // Info label
+    public GameObject infoLabel;
+    public GameObject tooltipObject = null;
 
     private void Awake()
     {
@@ -39,18 +42,16 @@ public class ObjectInteraction : Singleton<ObjectInteraction> {
         var latShip = 52.9591529941637;
         var lonShip = 4.78603529997701;
         var latLonv2 = new Vector2d(latShip, lonShip);
-        var metersShip = GM.LatLonToMeters(latLonv2);
+        //var metersShip = GM.LatLonToMeters(latLonv2);
 
-
-        SpawnedObject spawnedObject = new SpawnedObject(ship, ship.transform.TransformDirection(ship.transform.position), latShip, lonShip, metersShip);
-        Debug.Log("ADding" + spawnedObject.obj + " to list");
+        SpawnedObject spawnedObject = new SpawnedObject(ship, ship.transform.TransformDirection(ship.transform.position), latShip, lonShip, ship.transform.localScale, ship.transform.rotation);
         InventoryObjectInteraction.Instance.spawnedObjectsList.Add(spawnedObject);
         ship.tag = "spawnobject";
     }
 
     private void Update()
     {
-        if (moving)
+        if (moving && objectInFocus != null)
         {
             objectInFocus.transform.position = new Vector3(CursorManagerCustom.Instance.Cursor.transform.position.x, CursorManagerCustom.Instance.Cursor.transform.position.y, CursorManagerCustom.Instance.Cursor.transform.position.z);
         }    
@@ -68,6 +69,18 @@ public class ObjectInteraction : Singleton<ObjectInteraction> {
                 break;
             case "CopyBtn":
                 Copy(go);
+                break;
+            case "InfoBtn":
+                ShowInfo(go);
+                break;
+            case "ZoomInBtn":
+                BoardInteraction.Instance.Zoom(1, SessionManager.Instance.me.CursorLocationToVector2d());
+                break;
+            case "ZoomOutBtn":
+                BoardInteraction.Instance.Zoom(0, SessionManager.Instance.me.CursorLocationToVector2d());
+                break;
+            case "CenterBtn":
+                BoardInteraction.Instance.CenterMap(SessionManager.Instance.me.CursorLocationToVector2d());
                 break;
             default:
                 break;
@@ -87,7 +100,6 @@ public class ObjectInteraction : Singleton<ObjectInteraction> {
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 20.0f, layerMask))
             {
                 tile = hit.collider.gameObject;
-                Debug.Log(tile);
                 if (tile.name.StartsWith("tilelayer"))
                 {   
 
@@ -105,6 +117,7 @@ public class ObjectInteraction : Singleton<ObjectInteraction> {
                             {
                                 so.lat = cursorLatLon.x;
                                 so.lon = cursorLatLon.y;
+                                SessionManager.Instance.UpdateExistingObject(so);
                             }
                         }
                     }
@@ -112,15 +125,18 @@ public class ObjectInteraction : Singleton<ObjectInteraction> {
                     // If it's a new object, add it to the list.
                     if (objectInFocus.tag == "newspawnobject")
                     {
-                        SpawnedObject spawnedObject = new SpawnedObject(objectInFocus, objectInFocus.transform.TransformDirection(objectInFocus.transform.position), /*objectScale,*/ cursorLatLon.x, cursorLatLon.y, cursorMeter);
+                        SpawnedObject spawnedObject = new SpawnedObject(objectInFocus, objectInFocus.transform.TransformDirection(objectInFocus.transform.position), /*objectScale,*/ cursorLatLon.x, cursorLatLon.y, objectInFocus.transform.localScale, objectInFocus.transform.rotation);
                         InventoryObjectInteraction.Instance.spawnedObjectsList.Add(spawnedObject);
                         objectInFocus.tag = "spawnobject";
+
+                        // Let other users know there is either a new or editted object.
+                        SessionManager.Instance.UpdateNewObject(spawnedObject);
                     }
 
                     objectInFocus.layer = 0;
                     objectInFocus = null;
                     UIManager.Instance.currentMode = "MoveBtn";
-                    CursorManagerCustom.Instance.SetCursorIcon(UIManager.Instance.currentMode);
+                    CursorManagerCustom.Instance.SetCursorIcon(UIManager.Instance.currentMode);                   
                 }
                 else
                 {
@@ -132,11 +148,14 @@ public class ObjectInteraction : Singleton<ObjectInteraction> {
 
     public void StartMoving(GameObject go)
     {
-        UIManager.Instance.currentMode = "Placing";        
-        objectInFocus = go;
-        objectInFocus.layer = 2;
-        moving = true;
-        go.layer = 2;
+        if (!go.name.Contains("Buildings"))
+        {
+            UIManager.Instance.currentMode = "Placing";
+            objectInFocus = go;
+            objectInFocus.layer = 2;
+            moving = true;
+            go.layer = 2;
+        }
     }
 
     public void StartNavigatingOrManipulatingObject(GameObject go)
@@ -148,21 +167,23 @@ public class ObjectInteraction : Singleton<ObjectInteraction> {
     }
 
     // Rotating
-    public void UpdateManipulatingObject(GameObject go, ManipulationEventData eventData)
+    public void UpdateNavigatingObject(GameObject go, NavigationEventData eventData)
     {
         if (UIManager.Instance.currentMode == "RotateBtn")
         {
-            drawPoint2 = new Vector3(go.transform.position.x + eventData.CumulativeDelta.x, drawPoint1.y, drawPoint1.z + eventData.CumulativeDelta.z);
-            go.transform.LookAt(drawPoint2);
+            // drawPoint2 = new Vector3(go.transform.position.x + eventData.CumulativeDelta.x, drawPoint1.y, drawPoint1.z + eventData.CumulativeDelta.z);
+            // go.transform.LookAt(drawPoint2);
+            var rotationFactor = eventData.CumulativeDelta.x * rotationSensitivity;
+            go.transform.Rotate(new Vector3(0, -1 * rotationFactor, 0));
+            UpdateObjectToOtherUsers(go);
         }
     }
 
     // Scaling
-    public void UpdateNavigatingObject(GameObject go, NavigationEventData eventData)
+    public void _UpdateNavigatingObject(GameObject go, NavigationEventData eventData)
     {        
-        if (UIManager.Instance.currentMode == "ScaleBtn")
+        if (UIManager.Instance.currentMode == "ScaleBtn" && go.GetComponent<PrefabObjectData>().scaleable)
         {
-            // Scales object and draws a line on a rails as visual feedback.
             if (eventData.CumulativeDelta.x >= 0)
             {
                 if (go.transform.localScale.x < maximumScale && go.transform.localScale.y < maximumScale && go.transform.localScale.z < maximumScale)
@@ -177,8 +198,9 @@ public class ObjectInteraction : Singleton<ObjectInteraction> {
                 {
                     go.transform.localScale -= new Vector3((go.transform.localScale.x * scaleSpeed), (go.transform.localScale.y * scaleSpeed), (go.transform.localScale.z * scaleSpeed));
                 }
-                    
             }
+
+            UpdateObjectToOtherUsers(go);         
         }
     }
 
@@ -186,45 +208,113 @@ public class ObjectInteraction : Singleton<ObjectInteraction> {
     {
         InputManager.Instance.OverrideFocusedObject = null;
         popUpHolder.SetActive(false);
-//        Destroy(lrObject);
     }
 
-    private void Delete(GameObject go)
+    public void Delete(GameObject go)
     {
         foreach (SpawnedObject spawnedObject in InventoryObjectInteraction.Instance.spawnedObjectsList)
         {
             if (spawnedObject.obj == go)
             {
                 InventoryObjectInteraction.Instance.spawnedObjectsList.Remove(spawnedObject);
+                SessionManager.Instance.UpdateDeletedObject(spawnedObject);
+                Destroy(go);
             }
-        }
-
-        Destroy(go);            
+        }                  
     }
 
     private void Copy(GameObject go)
     {
         GameObject copyObject;
         copyObject = Instantiate(go, go.transform.position, go.transform.rotation) as GameObject;
+
+        // Unique objectname is needed for MQTT references.
+        var name = copyObject.name;
+        int index = name.IndexOf("-");
+        if (index > 0)
+            name = name.Substring(0, index);
+
+        copyObject.name = name + "-" + (Time.deltaTime * 1000).ToString();
+
         copyObject.transform.parent = go.transform.parent;
         copyObject.transform.localScale = go.transform.localScale;
+        copyObject.tag = "newspawnobject";
         StartMoving(copyObject);
         copyObject = null;
     }
-    /*
-    public void DrawLine(Vector3 drawPoint1, Vector3 drawPoint2)
-    {
-        lrObject = new GameObject();
-        LineRenderer lr = lrObject.AddComponent<LineRenderer>();
-        var color1 = Color.white;
-        var color2 = new Color(1, 1, 1, 0);
-        lr.material = new Material(Shader.Find("Custom/AlwaysOnTop"));
-        lr.startColor = color1;
-        lr.endColor = color2;
 
-        lr.startWidth = 0.015f;
-        lr.endWidth = 0.015f;
-        lr.SetPosition(0, drawPoint1);
-        lr.SetPosition(1, drawPoint2);
-    }*/
+    public void ShowInfo(GameObject go)
+    {
+        if (infoLabel == null)
+        {
+            infoLabel = GameObject.Find("InfoLabel");
+        }
+
+        if (tooltipObject != null)            
+        {
+            if (go == tooltipObject)
+            {
+                infoLabel.SetActive(false);
+                tooltipObject = null;
+            }
+            else
+            {
+                SetLabel(go);
+            }            
+        }
+        else
+        {
+            SetLabel(go);
+        }
+        UIInteraction.Instance.MapPanel.SetActive(false);
+    }
+
+    public void SetLabel(GameObject go)
+    {
+        infoLabel.SetActive(true);
+        tooltipObject = go;
+
+        // Gets the purpose of a building, based on material name (commercial, industrial, etc).
+        var buildingPurpose = go.GetComponent<MeshRenderer>().material.name;
+        int index = buildingPurpose.IndexOf(" ");
+        if (index > 0)
+        {
+            buildingPurpose = buildingPurpose.Substring(0, index);
+        }
+
+        var xCoordinates = SessionManager.Instance.me.CursorLocationToVector2d().x.ToString();
+        xCoordinates = (xCoordinates).Remove(xCoordinates.Length - 7);
+        var yCoordinates = SessionManager.Instance.me.CursorLocationToVector2d().y.ToString();
+        yCoordinates = (yCoordinates).Remove(yCoordinates.Length - 7);
+
+        infoLabel.transform.GetChild(0).gameObject.transform.GetChild(1).GetComponent<TextMesh>().text = go.name;
+        infoLabel.transform.GetChild(0).gameObject.transform.GetChild(2).GetComponent<TextMesh>().text =
+            "The " + go.name + " are located in the '" + AppState.Instance.Config.ActiveView.Name.ToString() + "' area. \nThe coordinates are (" + xCoordinates + ", " + yCoordinates + "). \nThe purpose of this building is " + buildingPurpose + ". \n\nTap the building again to close this message.";
+        infoLabel.transform.position = new Vector3(go.transform.position.x, go.transform.position.y + 0.4f, go.transform.position.z);
+        infoLabel.transform.LookAt(Camera.main.transform);
+    }
+
+    public void CloseLabel()
+    {
+        if (infoLabel == null)
+        {
+            infoLabel = GameObject.Find("InfoLabel");
+        }
+        if (infoLabel.activeInHierarchy)
+        {
+            infoLabel.SetActive(false);
+        }
+    }
+
+    public void UpdateObjectToOtherUsers(GameObject go)
+    {
+        // Find SpawnedObject instance of GameObject and uses it as a reference to update the data to other users.
+        foreach (SpawnedObject spawnedObject in InventoryObjectInteraction.Instance.spawnedObjectsList)
+        {
+            if (spawnedObject.obj == go)
+            {
+                SessionManager.Instance.UpdateExistingObject(spawnedObject);
+            }
+        }
+    }
 }

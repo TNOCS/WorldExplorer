@@ -1,9 +1,10 @@
 ﻿using Assets.Scripts;
+using HoloToolkit.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DemoShip : Singleton<DemoShip>
+public class DemoShip : SingletonCustom<DemoShip>
 {
     public GameObject ship;
     public GameObject largeShip;

@@ -3,6 +3,7 @@
 
 using UnityEngine;
 using System;
+using Assets.Scripts.Plugins;
 
 namespace HoloToolkit.Unity.InputModule
 {
@@ -89,17 +90,15 @@ namespace HoloToolkit.Unity.InputModule
             if (UIHolder == null) {
                 UIHolder = GameObject.Find("UIMain");
             }
-            if (RaycastManager.Instance.MoveAnimation == null)
-            {
-                RaycastManager.Instance.MoveAnimation = GameObject.Find("MoveAnimation").GetComponent<Animation>();
-            }
             if (HostTransform == null && UIHolder != null)
             {
                 HostTransform = UIHolder.transform.root;
             }
             if (IsDraggingEnabled && isDragging)
             {
+                gameObject.GetComponent<Renderer>().material = BoardInteraction.Instance.boundingBoxSelected;
                 UpdateDragging();
+                SessionManager.Instance.UpdateTable();
             }
         }
 
@@ -117,8 +116,6 @@ namespace HoloToolkit.Unity.InputModule
             {
                 return;
             }
-
-            Debug.Log("start dragging");
             
             // Add self as a modal input handler, to get all inputs during the manipulation
             InputManager.Instance.PushModalInputHandler(gameObject);
@@ -250,7 +247,7 @@ namespace HoloToolkit.Unity.InputModule
 
             // Remove self as a modal input handler
             InputManager.Instance.PopModalInputHandler();
-
+            gameObject.GetComponent<Renderer>().material = BoardInteraction.Instance.boundingBoxInitial;
             isDragging = false;
             currentInputSource = null;
             StoppedDragging.RaiseEvent();
@@ -297,7 +294,6 @@ namespace HoloToolkit.Unity.InputModule
 
         public void OnInputDown(InputEventData eventData)
         {
-            Debug.Log("inputdown");
             if (isDragging)
             {
                 // We're already handling drag input, so we can't start a new drag operation.

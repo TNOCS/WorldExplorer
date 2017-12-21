@@ -416,7 +416,10 @@ namespace MapzenGo.Models.Factories
             var col = go.gameObject.AddComponent<MeshCollider>();
             col.convex = true;
             col.isTrigger = true;
-            }
+
+            go.tag = "boardbuilding";
+            go.AddComponent<ObjectTapHandler>();
+        }
         }
     }
 

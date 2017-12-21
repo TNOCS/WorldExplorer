@@ -10,16 +10,11 @@ using Symbols;
 using MapzenGo.Models.Factories;
 using Assets.Scripts.Plugins;
 using MapzenGo.Helpers;
-using HoloToolkit.Unity;
-using HoloToolkit.Unity.InputModule;
 
 namespace Assets.Scripts
 {
-    public class AppState : Singleton<AppState>
+    public class AppState : SingletonCustom<AppState>
     {
-        public const string ShowLayerSpeech = "Show ";
-        public const string HideLayerSpeech = "Show ";
-        public const string ToggleSpeech = "Toggle ";
         public GameObject World;
         public GameObject Terrain;
         public GameObject Table;
@@ -31,9 +26,11 @@ namespace Assets.Scripts
         public GameObject Cursor;
         public GameObject UI;
         public GameObject UIMain;
+        public Shader twoSidedShader;
 
         public Vector3 worldOffset;
         public Vector3 scaleOffset;
+        public Vector3 rotationOffset;
 
         //public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
         public float[] mapScales = new float[] { 0.008f, 0.004f, 0.00286f, 0.00222f, 0.00182f, 0.00154f, 0.001332f };
@@ -109,14 +106,6 @@ namespace Assets.Scripts
                 DestroyGeojsonLayer(l);
             });
 
-          /*  foreach (var tl in Config.Layers)
-            {
-                if (tl.Type.ToLower() == "tilelayer")
-                {
-                    Speech.RemoveKeyword(ShowLayerSpeech + tl.VoiceCommand);
-                };
-            }*/
-
             DoDeleteAll(World);
             DoDeleteAll(Layers);
 
@@ -128,6 +117,7 @@ namespace Assets.Scripts
 
             UIInteraction.Instance.MapPanel.SetActive(false);
             UIInteraction.Instance.HandlerPanel.SetActive(false);
+            ObjectInteraction.Instance.CloseLabel();        
 
             InitMap();
         }
@@ -152,8 +142,7 @@ namespace Assets.Scripts
             Board.AddComponent<BoardTapHandler>();
             Board.transform.position = new Vector3(0f,0f, 0f);
             //Board.transform.localScale = new Vector3(t.Size *2, t.Thickness*2, t.Size*2);
-
-            // Has to be 1,1,1 for the Lat Longs to work properly.
+            
             Board.transform.localScale = new Vector3(1, 1, 1);
             Board.transform.SetParent(Table.transform, false);
 
@@ -170,12 +159,10 @@ namespace Assets.Scripts
 
             UI = GameObject.Find("UI");
             UI.transform.SetParent(UIMain.transform, false);
-            //UI.transform.localScale = new Vector3(Board.transform.localScale.x * 1.01f, Terrain.transform.localScale.y * 1.02f, UI.transform.localScale.z * 2.05f);
             UIMain.transform.localScale = new Vector3(2,2,2);
-            //UIMain.transform.position = new Vector3(UIMain.transform.position.x, -0.1f, -0.499f);
-            
-            Terrain.transform.position = new Vector3(Terrain.transform.position.x, Terrain.transform.position.y - 2, Terrain.transform.position.z + 3);
-                     
+            Terrain.transform.position = new Vector3(Terrain.transform.position.x, Terrain.transform.position.y - 2, Terrain.transform.position.z + 5);
+
+            BoardInteraction.Instance.terrain = Terrain;
 
             #endregion
             InitMap();
@@ -192,7 +179,7 @@ namespace Assets.Scripts
         }
 
         public void InitMap()
-        {
+        {            
             var av = Config.ActiveView;
 
             var i = av.Range;
@@ -203,14 +190,24 @@ namespace Assets.Scripts
 
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);
-            //var gazeManager = World.AddComponent<HoloToolkit.Unity.GazeManager>();
-            //gazeManager.MaxGazeDistance = 3f;
+
+            //UIInteraction.Instance.SetTileRangeButtons(av.Range);
 
             // Set user CenterInMercator to convert the cursor location to lat/lon
             var v2 = GM.LatLonToMeters(av.Lat, av.Lon);
             var tile = GM.MetersToTile(v2, av.Zoom);
             var centerTms = tile;
 
+            // Demo purposes. Remove when all .pngs are available.
+            if (av.Name == "Compound")
+            {
+                BoardInteraction.Instance.maxZoomLevel = 18;
+            }
+            else
+            {
+                BoardInteraction.Instance.maxZoomLevel = 19;
+            }
+            
             switch (av.Zoom)
             {
                 case 15:
@@ -272,80 +269,83 @@ namespace Assets.Scripts
             #region FACTORIES
 
             #region defaultfactories
+            
             var factories = new GameObject("Factories");
             factories.transform.SetParent(World.transform, false);
+                if (av.Mapzen.Contains("buildings"))
+                {
+                    var buildings = new GameObject("BuildingFactory");
+                    buildings.transform.SetParent(factories.transform, false);
+                    var buildingFactory = buildings.AddComponent<BuildingFactory>();
+                }
 
-            if (av.Mapzen.Contains("buildings"))
-            {
-                var buildings = new GameObject("BuildingFactory");
-                buildings.transform.SetParent(factories.transform, false);
-                var buildingFactory = buildings.AddComponent<BuildingFactory>();
-            }
+                if (av.Mapzen.Contains("gebouwen"))
+                {
+                    var bagBuildings = new GameObject("BagBuildingFactory");
+                    bagBuildings.transform.SetParent(factories.transform, false);
+                    if (av.Zoom >= 17)
+                    {
+                        var bagBuildingFactory = bagBuildings.AddComponent<BagBuildingFactory>();
+                    }
+                }
 
-            if (av.Mapzen.Contains("gebouwen"))
-            {
-                var bagBuildings = new GameObject("BagBuildingFactory");
-                bagBuildings.transform.SetParent(factories.transform, false);
-                var bagBuildingFactory = bagBuildings.AddComponent<BagBuildingFactory>();
-            }
+                //var flatBuildings = new GameObject("FlatBuildingFactory");
+                //flatBuildings.transform.SetParent(factories.transform, false);
+                //var flatBuildingFactory = flatBuildings.AddComponent<FlatBuildingFactory>();
 
-            //var flatBuildings = new GameObject("FlatBuildingFactory");
-            //flatBuildings.transform.SetParent(factories.transform, false);
-            //var flatBuildingFactory = flatBuildings.AddComponent<FlatBuildingFactory>();
+                if (av.Mapzen.Contains("roads"))
+                {
+                    var roads = new GameObject("RoadFactory");
+                    roads.transform.SetParent(factories.transform, false);
+                    var roadFactory = roads.AddComponent<RoadFactory>();
+                }
 
-            if (av.Mapzen.Contains("roads"))
-            {
-                var roads = new GameObject("RoadFactory");
-                roads.transform.SetParent(factories.transform, false);
-                var roadFactory = roads.AddComponent<RoadFactory>();
-            }
+                if (av.Mapzen.Contains("buildings"))
+                {
+                    var water = new GameObject("WaterFactory");
+                    water.transform.SetParent(factories.transform, false);
+                    var waterFactory = water.AddComponent<WaterFactory>();
+                }
+                if (av.Mapzen.Contains("boundaries"))
+                {
+                    var boundary = new GameObject("BoundaryFactory");
+                    boundary.transform.SetParent(factories.transform, false);
+                    var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
+                }
 
-            if (av.Mapzen.Contains("buildings"))
-            {
-                var water = new GameObject("WaterFactory");
-                water.transform.SetParent(factories.transform, false);
-                var waterFactory = water.AddComponent<WaterFactory>();
-            }
-            if (av.Mapzen.Contains("boundaries"))
-            {
-                var boundary = new GameObject("BoundaryFactory");
-                boundary.transform.SetParent(factories.transform, false);
-                var boundaryFactory = boundary.AddComponent<BoundaryFactory>();
-            }
+                if (av.Mapzen.Contains("landuse"))
+                {
+                    var landuse = new GameObject("LanduseFactory");
+                    landuse.transform.SetParent(factories.transform, false);
+                    var landuseFactory = landuse.AddComponent<LanduseFactory>();
+                }
 
-            if (av.Mapzen.Contains("landuse"))
-            {
-                var landuse = new GameObject("LanduseFactory");
-                landuse.transform.SetParent(factories.transform, false);
-                var landuseFactory = landuse.AddComponent<LanduseFactory>();
-            }
+                if (av.Mapzen.Contains("places"))
+                {
+                    var places = new GameObject("PlacesFactory");
+                    places.transform.SetParent(factories.transform, false);
+                    var placesFactory = places.AddComponent<PlacesFactory>();
+                }
 
-            if (av.Mapzen.Contains("places"))
-            {
-                var places = new GameObject("PlacesFactory");
-                places.transform.SetParent(factories.transform, false);
-                var placesFactory = places.AddComponent<PlacesFactory>();
-            }
+                if (av.Mapzen.Contains("pois"))
+                {
+                    var pois = new GameObject("PoiFactory");
+                    pois.transform.SetParent(factories.transform, false);
+                    var poisFactory = pois.AddComponent<PoiFactory>();
+                }
 
-            if (av.Mapzen.Contains("pois"))
-            {
-                var pois = new GameObject("PoiFactory");
-                pois.transform.SetParent(factories.transform, false);
-                var poisFactory = pois.AddComponent<PoiFactory>();
-            }
-
-            if (av.Mapzen.Contains("assets")) // assets
-            {
-                var models = new GameObject("ModelFactory");
-                models.transform.SetParent(factories.transform, false);
-                var modelFactory = models.AddComponent<ModelFactory>();
-                modelFactory.scale = Table.transform.localScale.x;
-                //modelFactory.BundleURL = "http://134.221.20.226:3999/assets/buildings/eindhoven";
-                modelFactory.BundleURL = "http://www.thomvdm.com/assets/buildings/eindhoven";
-                modelFactory.version = 21;
-                //modelFactory.version = 6;
-            }
-
+                if (av.Mapzen.Contains("assets")) // assets
+                {
+                    var models = new GameObject("ModelFactory");
+                    models.transform.SetParent(factories.transform, false);
+                    var modelFactory = models.AddComponent<ModelFactory>();
+                    modelFactory.scale = Table.transform.localScale.x;
+                    //modelFactory.BundleURL = "http://134.221.20.226:3999/assets/buildings/eindhoven";
+                    modelFactory.BundleURL = "http://www.thomvdm.com/assets/buildings/eindhoven";
+                    modelFactory.version = 21;
+                    //modelFactory.version = 6;
+                }
+        
             #endregion
 
             #endregion
@@ -359,10 +359,16 @@ namespace Assets.Scripts
             //mapImage.transform.SetParent(tilePlugins.transform, false);
             //var mapImagePlugin = mapImage.AddComponent<MapImagePlugin>();
             //mapImagePlugin.TileService = MapImagePlugin.TileServices.Default;
-
+                        
             var customObjects = new GameObject("CustomObjects");
             customObjects.transform.SetParent(tilePlugins.transform, false);
             var customObjectsPlugin = customObjects.AddComponent<CustomObjectPlugin>();
+
+            // Checks if VMG objects (which are only available in the Compound area) should be loaded).
+            if (av.Name == "Compound")
+            {
+                customObjectsPlugin.hasVMGObjects = true;
+            }
 
             var tileLayer = new GameObject("TileLayer");
             tileLayer.transform.SetParent(tilePlugins.transform, false);

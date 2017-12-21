@@ -124,8 +124,6 @@ namespace MapzenGo.Models
             Tiles.Add(tileTms, tile);
             tile.transform.position = (rect.Center - centerInMercator).ToVector3();
             tile.transform.SetParent(TileHost, false);
-            // TODO: Remove, as it only works on Satellite view
-
           
 
             LoadTile(tileTms, tile);

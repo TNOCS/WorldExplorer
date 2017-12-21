@@ -18,8 +18,8 @@ public class ObjectTapHandler : MonoBehaviour, IInputClickHandler {
 
     public void OnInputClicked(InputClickedEventData eventData)
     {
-        ObjectInteraction.Instance.Tap(gameObject);
         audioSource.PlayOneShot(clickFeedback, 0.1f);
+        ObjectInteraction.Instance.Tap(gameObject);        
     }
 
 }

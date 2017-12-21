@@ -8,10 +8,11 @@ namespace Assets.Scripts.Classes
     {
         public void FromJson(JSONObject json)
         {
-            Debug.Log(json);
             TileServer = json.GetString("tileServer");
+            HeightServer = json.GetString("heightServer");
             MqttServer = json.GetString("mqttServer");
             MqttPort = json.GetString("mqttPort");
+            ObjectServer = json.GetString("vmgObjectServer"); 
             SessionName = json.GetString("sessionName");
             UserName = json.GetString("userName", "John Doe");
             if (json.HasField("selectionColor"))
@@ -52,8 +53,10 @@ namespace Assets.Scripts.Classes
 
         public List<Layer> Layers { get; set; }
         public string TileServer { get; set; }
+        public string HeightServer { get; set; }
         public string MqttServer { get; set; }
         public string MqttPort { get; set; }
+        public string ObjectServer { get; set; }
         public List<ViewState> Views { get; set; }
         public Table Table { get; set; }
         public ViewState ActiveView { get; set; }

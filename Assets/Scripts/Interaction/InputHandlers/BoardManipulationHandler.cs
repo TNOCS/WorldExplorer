@@ -6,14 +6,16 @@ using System;
 
 public class BoardManipulationHandler : MonoBehaviour, IManipulationHandler {
 
+    // Currently unused.
+
     public void OnManipulationCanceled(ManipulationEventData eventData)
     {
-        BoardInteraction.Instance.StopManipulatingTable();
+        BoardInteraction.Instance.StopManipulatingTable(gameObject);
     }
 
     public void OnManipulationCompleted(ManipulationEventData eventData)
     {
-        BoardInteraction.Instance.StopManipulatingTable();
+        BoardInteraction.Instance.StopManipulatingTable(gameObject);
     }
 
     public void OnManipulationStarted(ManipulationEventData eventData)
@@ -25,7 +27,7 @@ public class BoardManipulationHandler : MonoBehaviour, IManipulationHandler {
     {
         if (gameObject.name == "TiltInteractable")
         {
-            BoardInteraction.Instance.UpdateTableTilt(eventData);
+            //BoardInteraction.Instance.UpdateTableTilt(eventData);
         }
     }
 }

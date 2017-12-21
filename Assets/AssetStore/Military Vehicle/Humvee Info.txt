@@ -1,0 +1,17 @@
+Humvee model
+
+851 Polys
+
+Length: 3.3 meters
+
+All wheels and suspension are seperate objects and parented to the main body.
+
+1 X 1K TIF texture map in original uncompressed format. This can be scaled to your needs.
+
+ANy other parts, details or animations let me know.
+
+ENJOY!!!
+
+duane_mayberry@yahoo.co.uk
+
+www.duanesmind.co.uk

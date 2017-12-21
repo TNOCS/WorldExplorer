@@ -1,11 +1,14 @@
 ﻿using Assets.Scripts;
+using HoloToolkit.Unity;
 using MapzenGo.Helpers;
 using MapzenGo.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryObjectInteraction : Singleton<InventoryObjectInteraction> {
+public class InventoryObjectInteraction : SingletonCustom<InventoryObjectInteraction>
+{
 
     private GameObject newlySpawned;
     public GameObject copyObject;
@@ -13,7 +16,7 @@ public class InventoryObjectInteraction : Singleton<InventoryObjectInteraction> 
     [SerializeField]
     public List<SpawnedObject> spawnedObjectsList = new List<SpawnedObject>();
 
-    private void Awake()
+    public void Start()
     {
         newlySpawned = GameObject.Find("NewlySpawned");
     }
@@ -24,7 +27,7 @@ public class InventoryObjectInteraction : Singleton<InventoryObjectInteraction> 
     }
 
     // Factors for scaling upon zoom.
-    private Dictionary<int, float> spawnScaleFactors = new Dictionary<int, float>
+    public Dictionary<int, float> spawnScaleFactors = new Dictionary<int, float>
     {
         {15, 0.5f},
         {16, 0.5f},
@@ -42,30 +45,17 @@ public class InventoryObjectInteraction : Singleton<InventoryObjectInteraction> 
 
         if (goName == "MarkMapBtn")
         {
-            copyObject = Instantiate(Resources.Load("Pin")) as GameObject;
-            copyObject.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
-            copyObject.AddComponent<BoxCollider>();
-            var col = copyObject.GetComponent<BoxCollider>();
-            col.center = new Vector3(0, 50, 0);
-            col.size = new Vector3(50, 100, 50);
-            col.isTrigger = true;
+            goName = "Pin";
+        }
+        var zoom = AppState.Instance.Config.ActiveView.Zoom;
+        copyObject = Instantiate(Resources.Load("Prefabs/Inventory/" + goName)) as GameObject;
+        copyObject.transform.localScale = copyObject.transform.localScale * spawnScaleFactors[zoom] * BoardInteraction.Instance.terrain.transform.localScale.x;
+        copyObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+        var col = copyObject.GetComponent<BoxCollider>();
+        col.isTrigger = true;
 
-            copyObject.AddComponent<ObjectTapHandler>();
-            copyObject.AddComponent<ObjectNavigationHandler>();
-            copyObject.AddComponent<ObjectManipulationHandler>();
-            copyObject.AddComponent<ScriptEnabler>();
-        }
-        else
-        {
-            var zoom = AppState.Instance.Config.ActiveView.Zoom;
-            //copyObject = Instantiate(go, go.transform.position, go.transform.rotation) as GameObject;
-            copyObject = Instantiate(Resources.Load("Prefabs/" + goName)) as GameObject;
-            //copyObject.transform.localScale = go.transform.localScale * spawnScaleFactors[zoom];
-            copyObject.transform.localScale = copyObject.transform.localScale * spawnScaleFactors[zoom];
-            copyObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-            var col = copyObject.GetComponent<BoxCollider>();
-            col.isTrigger = true;
-        }
+        // Unique objectname is needed for MQTT references.
+        copyObject.name = copyObject.name + "-" + (Time.deltaTime * 1000).ToString();
 
         // Ignore Raycast layer.
         copyObject.layer = 2;

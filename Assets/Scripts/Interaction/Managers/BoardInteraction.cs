@@ -1,43 +1,43 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Assets.Scripts;
 using Assets.Scripts.Plugins;
 using MapzenGo.Helpers;
-using MapzenGo.Models;
 using HoloToolkit.Unity.InputModule;
-using System;
 
-public class BoardInteraction : Singleton<BoardInteraction>{
 
+public class BoardInteraction : SingletonCustom<BoardInteraction>
+{
     //The scaling difference per zoom level.
-    public float scaleFactor = 1.5f;
-    public int minZoomLevel = 17;
+    public float scaleFactor = 2f;
+    public int minZoomLevel = 16;
     public int maxZoomLevel = 19;
 
     public float dragSensitivity = 0.1f;
     public float rotationSensitivity = 0.5f;
     public float tiltSensitivity = 3f;
-    public float scaleSpeed = 0.0005f;
-    public float minimumScale = 0.2f; // TODO: find correct values
-    public float maximumScale = 2.5f; // TODO: find correct values
+    public float scaleSpeed = 0.0050f;
+    public float minimumScale = 0.2f;
+    public float maximumScale = 2.5f;
     public float maxTileRange = 4;
     public float minTileRange = 1;
 
     private bool tableIsTilted = false;
-
     public bool tableIsRotating = false;
 
     public Vector3 originalTablePosition;
     public Vector3 originalTableScale;
     public Quaternion originalTableRotation;
 
-    [SerializeField]
-    private GameObject terrain;
+    public GameObject terrain;
+    public bool terrainHeights = true;
+
+    public Material boundingBoxInitial;
+    public Material boundingBoxSelected;
 
     void Start()
-    {      
-        Invoke("SetObjects", 3);       
+    {
+        // Invoked as a slow internet connection might otherwise cause errors.
+        Invoke("SetObjects", 3);
     }
 
     private void SetObjects()
@@ -46,6 +46,9 @@ public class BoardInteraction : Singleton<BoardInteraction>{
         originalTablePosition = terrain.transform.position;
         originalTableRotation = terrain.transform.rotation;
         originalTableScale = terrain.transform.localScale;
+
+        boundingBoxInitial = Resources.Load("Textures/BoundingBoxInitial", typeof(Material)) as Material;
+        boundingBoxSelected = Resources.Load("Textures/BoundingBoxSelected", typeof(Material)) as Material;
     }
 
     public void Tap(Vector2d tappedPosition)
@@ -53,21 +56,18 @@ public class BoardInteraction : Singleton<BoardInteraction>{
         if (ObjectInteraction.Instance.objectInFocus != null)
         {
             ObjectInteraction.Instance.Place();
-        }    
+        }
 
         if (UIManager.Instance.currentMode == "ZoomInBtn")
         {
-            Debug.Log("ZoomIn to " + tappedPosition);
             Zoom(1, tappedPosition);
         }
         if (UIManager.Instance.currentMode == "ZoomOutBtn")
         {
-            Debug.Log("ZoomOut to " + tappedPosition);
             Zoom(0, tappedPosition);
         }
         if (UIManager.Instance.currentMode == "CenterBtn")
         {
-            Debug.Log("Center to " + tappedPosition);
             CenterMap(tappedPosition);
         }
     }
@@ -80,9 +80,11 @@ public class BoardInteraction : Singleton<BoardInteraction>{
         }
 
         var view = AppState.Instance.Config.ActiveView;
-        var latLonv2 = Extensions.ToVector2(tappedPosition);
+        var latLonv2 = MapzenGo.Helpers.Extensions.ToVector2(tappedPosition);
         view.SetView(latLonv2.x, latLonv2.y, view.Zoom, view.Range);
-        AppState.Instance.ResetMap(view);
+
+        //AppState.Instance.ResetMap(view);
+        SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView);
     }
 
     public void Zoom(int zoomDirection, Vector2d tappedPosition)
@@ -93,49 +95,42 @@ public class BoardInteraction : Singleton<BoardInteraction>{
         }
 
         var view = AppState.Instance.Config.ActiveView;
-        Vector2 latLonv2 = Extensions.ToVector2(tappedPosition);
+        Vector2 latLonv2 = MapzenGo.Helpers.Extensions.ToVector2(tappedPosition);
 
         // ZoomDirection 0 = out 1 = in
         if (zoomDirection == 0 && view.Zoom > minZoomLevel)
         {
-            Debug.Log("Current Zoom level: " + view.Zoom + " | New Zoom level =  " + (view.Zoom - 1));   
             view.Zoom -= 1;
-
             view.SetView(latLonv2.x, latLonv2.y, view.Zoom, view.Range);
-            //UIManager.Instance.SetTextValues();
-            RescaleBoardObjects(zoomDirection);
-            var boardColSize = AppState.Instance.Board.GetComponent<BoxCollider>().size;
+
             AppState.Instance.ResetMap(view);
-            AppState.Instance.Board.GetComponent<BoxCollider>().size = new Vector3(boardColSize.x, boardColSize.y / 2, boardColSize.z);
+            SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView, "out");
         }
 
         if (zoomDirection == 1 && view.Zoom < maxZoomLevel)
         {
-            Debug.Log("Current Zoom level: " + view.Zoom + " | New Zoom level =  " + (view.Zoom + 1));
             view.Zoom += 1;
-
             view.SetView(latLonv2.x, latLonv2.y, view.Zoom, view.Range);
-           // UIManager.Instance.SetTextValues();
-            RescaleBoardObjects(zoomDirection);
-            var boardColSize = AppState.Instance.Board.GetComponent<BoxCollider>().size;
+
             AppState.Instance.ResetMap(view);
-            AppState.Instance.Board.GetComponent<BoxCollider>().size = new Vector3(boardColSize.x, boardColSize.y * 2, boardColSize.z);
+            SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView, "in");
         }
     }
-    
-    private void RescaleBoardObjects(int zoomDirection)
+
+    public void ToggleTerrainHeights()
     {
-        foreach (var spawnedObject in InventoryObjectInteraction.Instance.spawnedObjectsList)
+        if (AppState.Instance.Config.ActiveView.TerrainHeightsAvailable == true)
         {
-            // Zoom out
-            if (zoomDirection == 1)
+            terrainHeights = !terrainHeights;
+            AppState.Instance.ResetMap();
+
+            if (terrainHeights)
             {
-                spawnedObject.obj.transform.localScale = spawnedObject.obj.transform.localScale * scaleFactor;
+                GameObject.Find("ToggleTerrainBtn").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("terrainicon");
             }
-            // Zoom in
-            if (zoomDirection == 0)
+            else
             {
-                spawnedObject.obj.transform.localScale = spawnedObject.obj.transform.localScale / scaleFactor;
+                GameObject.Find("ToggleTerrainBtn").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("terrainiconflat");
             }
         }
     }
@@ -143,10 +138,21 @@ public class BoardInteraction : Singleton<BoardInteraction>{
     public void SwitchMapOverlay(int view, string name, int zoomLevel)
     {
         AppState.Instance.Config.ActiveView = AppState.Instance.Config.Views[view].Clone();
-        AppState.Instance.Config.ActiveView.Zoom = 17;
+
+        // Demo purpose. Remove complete if statement when all .pngs are available.
+        if (AppState.Instance.Config.ActiveView.Name == "Compound")
+        {
+            maxZoomLevel = 18;
+        }
+        else
+        {
+            maxZoomLevel = 19;
+        }
+
+        terrainHeights = false;
+        //GameObject.Find("ToggleTerrainBtn").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("terrainiconflat");
         AppState.Instance.ResetMap();
         SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView);
-        UIManager.Instance.CurrentOverlayText.text = AppState.Instance.Config.ActiveView.Name.ToString();
     }
 
     public void ResetTable()
@@ -154,15 +160,20 @@ public class BoardInteraction : Singleton<BoardInteraction>{
         terrain.transform.localScale = originalTableScale;
         terrain.transform.rotation = originalTableRotation;
         tableIsTilted = false;
+
+        SessionManager.Instance.UpdateTable();
     }
 
     public void ResetTableTilt()
     {
         terrain.transform.rotation = originalTableRotation;
+        SessionManager.Instance.UpdateTable();
     }
 
     public void StartManipulatingTable(GameObject go, string manipulationMode)
     {
+        //go.GetComponent<Renderer>().material = boundingBoxSelected;
+
         if (terrain == null)
         {
             terrain = GameObject.Find("terrain");
@@ -170,128 +181,122 @@ public class BoardInteraction : Singleton<BoardInteraction>{
 
         if (manipulationMode == "RotateInteractable")
         {
-            tableIsRotating = true;           
+            tableIsRotating = true;
         }
 
         InputManager.Instance.OverrideFocusedObject = go;
-        //UIInteraction.Instance.HandlerPanel.SetActive(false);
         UIInteraction.Instance.MapPanel.SetActive(false);
         UIInteraction.Instance.InventoryPanel.SetActive(false);
         UIInteraction.Instance.InventoryTextMesh.text = "Open \nInventory";
     }
 
-    public void StopManipulatingTable()
+    public void StopManipulatingTable(GameObject go)
     {
+        go.GetComponent<Renderer>().material = boundingBoxInitial;
         InputManager.Instance.OverrideFocusedObject = null;
-        tableIsRotating = false;       
+        tableIsRotating = false;
+        SessionManager.Instance.UpdateTable();
     }
 
     public void UpdateTableRotation(NavigationEventData eventData)
     {
         var rotationFactor = eventData.CumulativeDelta.x * rotationSensitivity;
         terrain.transform.Rotate(new Vector3(0, -1 * rotationFactor, 0));
-        UIManager.Instance.SetOriginalRotation();
+        //UIManager.Instance.SetOriginalRotation();
+        SessionManager.Instance.UpdateTable();
     }
 
-    public void UpdateTableTilt(ManipulationEventData eventData)
+    //public void UpdateTableTilt(ManipulationEventData eventData)
+    //{
+    //    var tableOrientation = UIManager.Instance.currentUIPosition;
+    //    tableIsTilted = true;
+    //    var tiltFactorX = eventData.CumulativeDelta.x * tiltSensitivity;
+    //    var tiltFactorY = eventData.CumulativeDelta.y * tiltSensitivity;
+    //
+    //    switch (tableOrientation)
+    //    {
+    //        case "Front":
+    //            terrain.transform.Rotate(new Vector3(tiltFactorY, 0, -1 * tiltFactorX));
+    //            break;
+    //        case "Left":
+    //            terrain.transform.Rotate(new Vector3(-1 * tiltFactorX, 0, -1 * tiltFactorY));
+    //            break;
+    //        case "Right":
+    //            terrain.transform.Rotate(new Vector3(tiltFactorX, 0, tiltFactorY));
+    //            break;
+    //        case "Back":
+    //            terrain.transform.Rotate(new Vector3(-1 * tiltFactorY, 0, tiltFactorX));
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //
+    //     // Save new rotation
+    //     UIManager.Instance.SetOriginalRotation();
+    //     SessionManager.Instance.UpdateTable();
+    // }
+
+    public void UpdateTableSize(NavigationEventData eventData, int direction)
     {
-        var tableOrientation = UIManager.Instance.currentUIPosition;
-        tableIsTilted = true;
-        var tiltFactorX = eventData.CumulativeDelta.x * tiltSensitivity;
-        var tiltFactorY = eventData.CumulativeDelta.y * tiltSensitivity;
-        //var tiltFactorZ = eventData.CumulativeDelta.z * tiltSensitivity;
-        
-
-        switch (tableOrientation)
-        {
-            case "Front":
-                terrain.transform.Rotate(new Vector3(tiltFactorY, 0, -1 * tiltFactorX));
-                break;
-            case "Left":
-                terrain.transform.Rotate(new Vector3(-1 * tiltFactorX, 0, -1 * tiltFactorY));
-                break;
-
-            case "Right":
-                terrain.transform.Rotate(new Vector3(tiltFactorX, 0, tiltFactorY));
-                break;
-
-            case "Back":
-                terrain.transform.Rotate(new Vector3( -1* tiltFactorY, 0,tiltFactorX));
-                break;
-
-            default:
-                break;
-        }
-
-        // Save new rotation
-        UIManager.Instance.SetOriginalRotation();
-    }
-
-    public void UpdateTableSize(NavigationEventData eventData)
-    {        
         // Size up.
         if (eventData.CumulativeDelta.x >= 0)
         {
             if (terrain.transform.localScale.x < maximumScale && terrain.transform.localScale.y < maximumScale && terrain.transform.localScale.z < maximumScale)
             {
-                terrain.transform.localScale += new Vector3((terrain.transform.localScale.x * scaleSpeed), (terrain.transform.localScale.y * scaleSpeed), (terrain.transform.localScale.z * scaleSpeed));
+                terrain.transform.localScale += new Vector3((terrain.transform.localScale.x * scaleSpeed * direction), (terrain.transform.localScale.y * scaleSpeed * direction), (terrain.transform.localScale.z * scaleSpeed * direction));
             }
         }
 
         // Size down.
         if (eventData.CumulativeDelta.x <= 0)
         {
-            Debug.Log("Try Scaling down");
             if (terrain.transform.localScale.x > minimumScale && terrain.transform.localScale.y > minimumScale && terrain.transform.localScale.z > minimumScale)
             {
-                Debug.Log("Scaling down");
-                terrain.transform.localScale -= new Vector3((terrain.transform.localScale.x * scaleSpeed), (terrain.transform.localScale.y * scaleSpeed), (terrain.transform.localScale.z * scaleSpeed));
+                terrain.transform.localScale -= new Vector3((terrain.transform.localScale.x * scaleSpeed * direction), (terrain.transform.localScale.y * scaleSpeed * direction), (terrain.transform.localScale.z * scaleSpeed * direction));
             }
-
         }
+
+        SessionManager.Instance.UpdateTable();
     }
 
-    public void IncreaseTiles()
-    {
-        var av = AppState.Instance.Config.ActiveView;
-        var currentRange = av.Range;
-        var newRange = av.Range + 1;
+    //  public void IncreaseTiles()
+    //  {
+    //      var av = AppState.Instance.Config.ActiveView;
+    //      var currentRange = av.Range;
+    //      var newRange = av.Range + 1;
+    //
+    //      if (newRange <= maxTileRange)
+    //      {
+    //          AppState.Instance.Config.ActiveView.TileSize = 150;
+    //          AppState.Instance.Config.ActiveView.Range = newRange;
+    //          //UIInteraction.Instance.SetTileRangeButtons(AppState.Instance.Config.ActiveView.Range);
+    //          //AppState.Instance.ResetMap();
+    //          SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView);
+    //      }
+    //  }
+    //
+    //  public void DecreaseTiles()
+    //  {
+    //      var av = AppState.Instance.Config.ActiveView;
+    //      var currentRange = av.Range;
+    //      var newRange = av.Range - 1;
+    //      if (newRange >= minTileRange)
+    //      {
+    //          if (newRange == 1)
+    //          {
+    //              AppState.Instance.Config.ActiveView.TileSize = 125;
+    //          }
+    //          AppState.Instance.Config.ActiveView.Range = newRange;
+    //          //UIInteraction.Instance.SetTileRangeButtons(newRange);
+    //          //AppState.Instance.ResetMap();
+    //          SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView);
+    //      }
+    //  }
 
-        if (newRange <= maxTileRange)
-        {
-            AppState.Instance.Config.ActiveView.TileSize = 150;
-            AppState.Instance.Config.ActiveView.Range = newRange;
-            UIInteraction.Instance.SetTileRangeButtons(AppState.Instance.Config.ActiveView.Range);
-            AppState.Instance.ResetMap();
-            SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView);
-        }
-    }
-
-    public void DecreaseTiles()
+    public void Go(string direction)
     {
-        var av = AppState.Instance.Config.ActiveView;
-        var currentRange = av.Range;
-        var newRange = av.Range - 1;
-        if (newRange >= minTileRange)
-        { 
-            if (newRange == 1)
-            {
-                AppState.Instance.Config.ActiveView.TileSize = 125;
-            }
-            AppState.Instance.Config.ActiveView.Range = newRange;
-            UIInteraction.Instance.SetTileRangeButtons(newRange);
-            AppState.Instance.ResetMap();
-            SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView);
-        }
-    }
-
-    public void Go(string direction/*, int stepSize = 1*/)
-    {
-       // InitSessions();
-        Debug.Log(string.Format("Go {0}...", direction));
         var view = AppState.Instance.Config.ActiveView;
-        var metersPerTile = view.Resolution/* * stepSize*/;
-        Debug.Log(string.Format("Moving {0} meters {1}...", metersPerTile, direction));
+        var metersPerTile = view.Resolution;
         var merc = GM.LatLonToMeters(new Vector2d(view.Lon, view.Lat));
         Vector2d delta;
 

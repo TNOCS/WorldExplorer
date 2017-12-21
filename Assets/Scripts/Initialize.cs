@@ -9,7 +9,6 @@ public class Initialize : MonoBehaviour
 {
     private const string SwitchToSpeech = "Switch to ";
     private string configUrl = "http://thomvdm.com/hololensconfig.json";
-    //private SpeechManager speech;
     // Use this for initialization
     /// <summary>
     /// Your own cursor

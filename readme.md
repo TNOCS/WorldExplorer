@@ -97,8 +97,8 @@ public class CreateAssetBundles
 - sessionName : name of the Session.
 - table : size and height of the table.
 
-Layers are the layers used for the tile images.
-Views are the bookmark locations. 
+- Layers are the layers used for the tile images.
+- Views are the bookmark locations: 
 	- 'Lat' and 'Lon' can be changed to adjust the location. 
 	- Zoom levels can changed to adjust initial zoom level.
 	- tileSize and range can be changed to change the size of the tiles.
@@ -114,5 +114,5 @@ To add inventory objects.
 4. Add the object to the inventory in hierarchy as a new item (break prefab link). Make sure the name matches.
 
 ## Authors
-* **Erik Vullings** - *Initial work: generation of tiles, mqtt connection, integration of MapZenGo, buildings and objects, basic navigation. *
+* **Erik Vullings** (initial work) - *Including generation of tiles, mqtt connection, integration of MapZenGo, buildings and objects, basic navigation.*
 * **Thom van de Moosdijk** (graduation project) - *Addition of interaction system, user interfaction and other enhancements.*

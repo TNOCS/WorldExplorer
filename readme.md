@@ -84,18 +84,19 @@ public class CreateAssetBundles
 
 ## Configuration file
 [Pastebin](https://pastebin.com/ECm6yGM2)
-
-- userName : the user name for shared sessions.
-- selectionColor : color of the cursor.
-- tileServer : server that provided the tiles.
-- heightServer : server that provides height data of each tile.
-- vmgBuildingServer : server that provided JSON data of buildings in the german "virtuele missie gebieden" (german training grounds).
-- vmgObjectServer : server that provided JSON data of objects in the german "virtuele missie gebieden" (german training grounds).
-- mqttServer : the server used for MQTT connection between users.z
-- mqttPort : the port used for the MQTT connection.
-- initialView : the view loaded upon launch of application.
-- sessionName : name of the Session.
-- table : size and height of the table.
+```
+userName : the user name for shared sessions.
+selectionColor : color of the cursor.
+tileServer : server that provided the tiles.
+heightServer : server that provides height data of each tile.
+vmgBuildingServer : server that provided JSON data of buildings in the german "virtuele missie gebieden" (german training grounds).
+vmgObjectServer : server that provided JSON data of objects in the german "virtuele missie gebieden" (german training grounds).
+mqttServer : the server used for MQTT connection between users.z
+mqttPort : the port used for the MQTT connection.
+initialView : the view loaded upon launch of application.
+sessionName : name of the Session.
+table : size and height of the table.
+```
 
 - Layers are the layers used for the tile images.
 - Views are the bookmark locations: 

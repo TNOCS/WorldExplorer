@@ -2,7 +2,7 @@
 A HoloLens application that allows users to view and interact with automatically generated area's. The world is rendered using OpenStreepMapData, and shows the users the world on a squared table. Sessions can be shared with other users, allowing for collaboration anywhere in the world. 
 Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worlds as hologram. 
 [Video](https://vimeo.com/247794077)
-[Example](https://imgur.com/a/zaLWt)
+![Example](https://imgur.com/a/zaLWt)
 
 # Features
 - Render the world based on several datasets.
@@ -22,12 +22,12 @@ Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worl
 
 ### Prerequisites
 Required software:
-Unity v5.6 or higher. (Currently recommended: latest Unity 2017).
-Visual Studio 2017.
-Windows 10 Fall Creators Update.
+- Unity v5.6 or higher. (Currently recommended: latest Unity 2017).
+- Visual Studio 2017.
+- Windows 10 Fall Creators Update.
 
 Required hardware:
-Microsoft HoloLens.
+- Microsoft HoloLens.
 
 ## Getting Started - Development
 1. Open Unity (if there is a version mismatch waring, make sure there is a backup and automatically upgrade the project).
@@ -85,25 +85,25 @@ public class CreateAssetBundles
 ## Configuration file
 [Pastebin](https://pastebin.com/ECm6yGM2)
 
-userName : the user name for shared sessions.
-selectionColor : color of the cursor.
-tileServer : server that provided the tiles.
-heightServer : server that provides height data of each tile.
-vmgBuildingServer : server that provided JSON data of buildings in the german "virtuele missie gebieden" (german training grounds).
-vmgObjectServer : server that provided JSON data of objects in the german "virtuele missie gebieden" (german training grounds).
-mqttServer : the server used for MQTT connection between users.
-mqttPort : the port used for the MQTT connection.
-initialView : the view loaded upon launch of application.
-sessionName : name of the Session.
-table : size and height of the table.
+- userName : the user name for shared sessions.
+- selectionColor : color of the cursor.
+- tileServer : server that provided the tiles.
+- heightServer : server that provides height data of each tile.
+- vmgBuildingServer : server that provided JSON data of buildings in the german "virtuele missie gebieden" (german training grounds).
+- vmgObjectServer : server that provided JSON data of objects in the german "virtuele missie gebieden" (german training grounds).
+- mqttServer : the server used for MQTT connection between users.z
+- mqttPort : the port used for the MQTT connection.
+- initialView : the view loaded upon launch of application.
+- sessionName : name of the Session.
+- table : size and height of the table.
 
 Layers are the layers used for the tile images.
 Views are the bookmark locations. 
-	'Lat' and 'Lon' can be changed to adjust the location. 
-	Zoom levels can changed to adjust initial zoom level.
-	tileSize and range can be changed to change the size of the tiles.
-	mapzen, layers and tileLayers can be adjusted to enable or disable certain visualizations.
-	terrainHeightAvailable should be enabled when terrain height data is available.
+	- 'Lat' and 'Lon' can be changed to adjust the location. 
+	- Zoom levels can changed to adjust initial zoom level.
+	- tileSize and range can be changed to change the size of the tiles.
+	- mapzen, layers and tileLayers can be adjusted to enable or disable certain visualizations.
+	- terrainHeightAvailable should be enabled when terrain height data is available.
 
 ## Adding inventory objects
 To add inventory objects.
@@ -114,5 +114,5 @@ To add inventory objects.
 4. Add the object to the inventory in hierarchy as a new item (break prefab link). Make sure the name matches.
 
 ## Authors
-* **Erik Vullings** - *Initial work*
-* **Thom van de Moosdijk** = *Addition of interaction and user interaction system and other enhancements.*
+* **Erik Vullings** - *Initial work: generation of tiles, mqtt connection, integration of MapZenGo, buildings and objects, basic navigation. *
+* **Thom van de Moosdijk** (graduation project) - *Addition of interaction system, user interfaction and other enhancements.*

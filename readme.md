@@ -2,7 +2,7 @@
 A HoloLens application that allows users to view and interact with automatically generated area's. The world is rendered using OpenStreepMapData, and shows the users the world on a squared table. Sessions can be shared with other users, allowing for collaboration anywhere in the world. 
 Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worlds as hologram. 
 [Video](https://vimeo.com/247794077)
-![Example](https://imgur.com/a/zaLWt)
+![Example](https://github.com/TNOCS/WorldExplorer/blob/ui-and-interaction/Assets/UIHDUpdatedIcons%20(3).png?raw=true)
 
 # Features
 - Render the world based on several datasets.

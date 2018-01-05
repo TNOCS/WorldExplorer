@@ -36,17 +36,18 @@ namespace MapzenGo.Models.Plugins
                 }
             }
 
+            // If the area has VMGObjects, and if the zoom level is 17 or higher (no need to load objects when zoomed out further as it would cause a lot of stress on the loading for not a lot of added value).
             if (hasVMGObjects)
             {
                 var zoom = tile.Zoom;
-                var x = tile.TileTms.x;
-                var y = tile.TileTms.y;
-
-                var url = "http://" + AppState.Instance.Config.ObjectServer + "/" + zoom + "/" + x + "/" + y + ".geojson";
-                //var url = "http://" + AppState.Instance.Config.ObjectServer + "/" + newZoom + "/" + Math.Round(x, 0) + "/" + Math.Round(y, 0) + ".geojson";
-                //var url = "http://www.thomvdm.com/testJSONobjects.json";
-                //var url = "http://134.221.20.240:8777/vogd_01_building_a_wgs84.min/14/8723/5389.geojson";
-                StartCoroutine(VMGObjectsFactory.Instance.GetJSON(url, tile));
+                if (zoom >= 17)
+                {
+                    var x = tile.TileTms.x;
+                    var y = tile.TileTms.y;
+                    var url = "http://" + AppState.Instance.Config.ObjectServer + "/" + zoom + "/" + x + "/" + y + ".geojson";
+                   
+                    StartCoroutine(VMGObjectsFactory.Instance.GetJSON(url, tile));
+                }
             }
         }
     }

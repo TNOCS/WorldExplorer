@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 public class UIManager : SingletonCustom<UIManager>
 {
-
     // Set by taps on UI components.
     public string currentMode;
 
@@ -32,8 +31,7 @@ public class UIManager : SingletonCustom<UIManager>
     private Transform frontSide, leftSide, rightSide, backSide;
     public Quaternion originalUIRotation;
 
-
-    // Other.
+    // Sprites.
     private SpriteRenderer coloredSprite;
 
     // Inventory Buttons.
@@ -73,10 +71,9 @@ public class UIManager : SingletonCustom<UIManager>
         ZoomInBtn = GameObject.Find("ZoomInBtn");
         ZoomOutBtn = GameObject.Find("ZoomOutBtn");
 
-        //TerrainBtn = GameObject.Find("ToggleTerrainBtn");
-        //TerrainUnavailable = GameObject.Find("TerrainUnavailable");
+        TerrainBtn = GameObject.Find("ToggleTerrainBtn");
+        TerrainUnavailable = GameObject.Find("TerrainUnavailable");
     }
-
 
     void Update()
     {
@@ -87,7 +84,7 @@ public class UIManager : SingletonCustom<UIManager>
         if (AppState.Instance.Config != null)
         {
             SetZoomLevelMinMaxIcons();
-            //SetTerrainUnavailableIcon();
+            SetTerrainUnavailableIcon();
         }
     }
 
@@ -113,7 +110,6 @@ public class UIManager : SingletonCustom<UIManager>
         }
         else
         {
-            // Demo purposes. Remove when all .pngs are available.
             if (av.Name == "Compound" && av.Zoom >= 18)
             {
                 ZoomMinReached.SetActive(true);
@@ -128,11 +124,11 @@ public class UIManager : SingletonCustom<UIManager>
     }
 
 
-    // public void SetTerrainUnavailableIcon()
-    // {
-    //     TerrainUnavailable.SetActive(!AppState.Instance.Config.ActiveView.TerrainHeightsAvailable);
-    //     TerrainBtn.SetActive(AppState.Instance.Config.ActiveView.TerrainHeightsAvailable);
-    // }
+    public void SetTerrainUnavailableIcon()
+    {
+        TerrainUnavailable.SetActive(!AppState.Instance.Config.ActiveView.TerrainHeightsAvailable);
+        TerrainBtn.SetActive(AppState.Instance.Config.ActiveView.TerrainHeightsAvailable);
+    }
 
     public void InitUI()
     {
@@ -209,6 +205,7 @@ public class UIManager : SingletonCustom<UIManager>
         }
     }
 
+    // Checks the UI position relative to the user and adjusts the compass accordingly.
     private void CheckUIPosition()
     {
         frontSide = GameObject.Find("FrontSide").transform;
@@ -309,9 +306,6 @@ public class UIManager : SingletonCustom<UIManager>
                 UIInteraction.Instance.SetDragHandlerWindow();
                 UIInteraction.Instance.SwitchMode("BoardBtn");
                 break;
-            // case "ResetSceneInteractable":
-            //     BoardInteraction.Instance.ResetScene();
-            //     break;
             case "ToggleTerrainBtn":
                 BoardInteraction.Instance.ToggleTerrainHeights();
                 break;

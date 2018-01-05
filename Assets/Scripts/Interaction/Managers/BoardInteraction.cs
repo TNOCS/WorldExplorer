@@ -34,9 +34,10 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
     public Material boundingBoxInitial;
     public Material boundingBoxSelected;
 
+    public Shader twoSidedShader;
+
     void Start()
     {
-        // Invoked as a slow internet connection might otherwise cause errors.
         Invoke("SetObjects", 3);
     }
 
@@ -57,7 +58,6 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
         {
             ObjectInteraction.Instance.Place();
         }
-
         if (UIManager.Instance.currentMode == "ZoomInBtn")
         {
             Zoom(1, tappedPosition);
@@ -80,10 +80,9 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
         }
 
         var view = AppState.Instance.Config.ActiveView;
-        var latLonv2 = MapzenGo.Helpers.Extensions.ToVector2(tappedPosition);
+        var latLonv2 = Extensions.ToVector2(tappedPosition);
         view.SetView(latLonv2.x, latLonv2.y, view.Zoom, view.Range);
 
-        //AppState.Instance.ResetMap(view);
         SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView);
     }
 
@@ -127,10 +126,15 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
             if (terrainHeights)
             {
                 GameObject.Find("ToggleTerrainBtn").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("terrainicon");
+                var UI = GameObject.Find("UIMain");
+                UI.transform.position = new Vector3(UI.transform.position.x, UI.transform.position.y - 0.05f, UI.transform.position.z);
             }
             else
             {
                 GameObject.Find("ToggleTerrainBtn").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("terrainiconflat");
+                var UI = GameObject.Find("UIMain");
+                UI.transform.position = new Vector3(UI.transform.position.x, UI.transform.position.y + 0.05f, UI.transform.position.z);
+
             }
         }
     }
@@ -139,7 +143,7 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
     {
         AppState.Instance.Config.ActiveView = AppState.Instance.Config.Views[view].Clone();
 
-        // Demo purpose. Remove complete if statement when all .pngs are available.
+        // Compound has no .pngs at level 19.
         if (AppState.Instance.Config.ActiveView.Name == "Compound")
         {
             maxZoomLevel = 18;
@@ -150,7 +154,11 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
         }
 
         terrainHeights = false;
-        //GameObject.Find("ToggleTerrainBtn").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("terrainiconflat");
+
+        if (GameObject.Find("ToggleTerrainBtn") != null)
+        {
+            GameObject.Find("ToggleTerrainBtn").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("terrainiconflat");
+        }
         AppState.Instance.ResetMap();
         SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView);
     }
@@ -172,8 +180,6 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
 
     public void StartManipulatingTable(GameObject go, string manipulationMode)
     {
-        //go.GetComponent<Renderer>().material = boundingBoxSelected;
-
         if (terrain == null)
         {
             terrain = GameObject.Find("terrain");
@@ -202,7 +208,6 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
     {
         var rotationFactor = eventData.CumulativeDelta.x * rotationSensitivity;
         terrain.transform.Rotate(new Vector3(0, -1 * rotationFactor, 0));
-        //UIManager.Instance.SetOriginalRotation();
         SessionManager.Instance.UpdateTable();
     }
 

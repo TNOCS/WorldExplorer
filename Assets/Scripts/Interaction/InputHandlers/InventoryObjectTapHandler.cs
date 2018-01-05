@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using HoloToolkit.Unity.InputModule;
 
 public class InventoryObjectTapHandler : MonoBehaviour, IInputClickHandler

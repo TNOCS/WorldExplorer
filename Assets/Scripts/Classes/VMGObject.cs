@@ -9,8 +9,6 @@ public class VMGObject : MonoBehaviour {
     public string objName;
     public float lat;
     public float lon;
-    // Angle of Orientation.
-    // public float aoo;
 
     public VMGObject(string id, string objName, float lat, float lon)
     {

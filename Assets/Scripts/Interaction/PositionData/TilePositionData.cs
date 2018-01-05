@@ -1,12 +1,11 @@
 ﻿using MapzenGo.Helpers;
 using MapzenGo.Models;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TilePositionData : MonoBehaviour {
+public class TilePositionData : MonoBehaviour
+{
 
-    // TODO: remove or disable for release. Class is unused, only used for inspector debugging.
+    // Only used for debugging purposes.
 
     // Vector positions of tiles.
     public Vector3 topLeft;
@@ -29,6 +28,7 @@ public class TilePositionData : MonoBehaviour {
         // Gets local points.
         var boundPoint1 = GetComponent<MeshCollider>().bounds.min;
         var boundPoint2 = GetComponent<MeshCollider>().bounds.max;
+
         // Gets world spaces.
         topLeft = transform.TransformPoint(new Vector3(boundPoint1.x, boundPoint1.y, boundPoint2.z));
         topRight = transform.TransformPoint(new Vector3(boundPoint2.x, boundPoint1.y, boundPoint2.z));

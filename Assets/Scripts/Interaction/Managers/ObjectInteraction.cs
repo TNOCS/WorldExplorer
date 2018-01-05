@@ -1,22 +1,19 @@
 ﻿using Assets.Scripts;
 using HoloToolkit.Unity.InputModule;
 using MapzenGo.Helpers;
-using MapzenGo.Models;
-using System.Collections;
-using System.Collections.Generic;
 using Assets.Scripts.Plugins;
 using UnityEngine;
 
-public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
-
-    // Object being manipulated.
+public class ObjectInteraction : SingletonCustom<ObjectInteraction>
+{
+    // The object being manipulated.
     public GameObject objectInFocus;
-   
+
+    // If an object is moving.
     [SerializeField]
     private bool moving = false;
 
     // Rotation and scaling
-    public GameObject popUpHolder;
     public float RotationSensitivity = 5.0f;
     private float rotationFactor;
     private float minimumScale = 0.001f;
@@ -29,39 +26,19 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
     public GameObject infoLabel;
     public GameObject tooltipObject = null;
 
-    private void Awake()
-    {
-        popUpHolder = GameObject.Find("PopUpHolder");
-        popUpHolder.SetActive(false);
-    }
-
-    private void Start()
-    {
-        // Demo Ship
-        var ship = GameObject.Find("Ship");
-        var latShip = 52.9591529941637;
-        var lonShip = 4.78603529997701;
-        var latLonv2 = new Vector2d(latShip, lonShip);
-        //var metersShip = GM.LatLonToMeters(latLonv2);
-
-        SpawnedObject spawnedObject = new SpawnedObject(ship, ship.transform.TransformDirection(ship.transform.position), latShip, lonShip, ship.transform.localScale, ship.transform.rotation);
-        InventoryObjectInteraction.Instance.spawnedObjectsList.Add(spawnedObject);
-        ship.tag = "spawnobject";
-    }
-
     private void Update()
     {
         if (moving && objectInFocus != null)
         {
             objectInFocus.transform.position = new Vector3(CursorManagerCustom.Instance.Cursor.transform.position.x, CursorManagerCustom.Instance.Cursor.transform.position.y, CursorManagerCustom.Instance.Cursor.transform.position.z);
-        }    
+        }
     }
 
     public void Tap(GameObject go)
     {
         switch (UIManager.Instance.currentMode)
         {
-            case "MoveBtn":                
+            case "MoveBtn":
                 StartMoving(go);
                 break;
             case "DeleteBtn":
@@ -93,15 +70,15 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
         {
             GameObject tile;
             RaycastHit hit;
-            int layerMask =  (1 << 7);
+            int layerMask = (1 << 7);
             layerMask |= Physics.IgnoreRaycastLayer;
             layerMask = ~layerMask;
-            
+
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 20.0f, layerMask))
             {
                 tile = hit.collider.gameObject;
                 if (tile.name.StartsWith("tilelayer"))
-                {   
+                {
 
                     var cursorLatLon = SessionManager.Instance.me.CursorLocationToVector2d();
                     var cursorMeter = GM.LatLonToMeters(cursorLatLon);
@@ -136,14 +113,14 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
                     objectInFocus.layer = 0;
                     objectInFocus = null;
                     UIManager.Instance.currentMode = "MoveBtn";
-                    CursorManagerCustom.Instance.SetCursorIcon(UIManager.Instance.currentMode);                   
+                    CursorManagerCustom.Instance.SetCursorIcon(UIManager.Instance.currentMode);
                 }
                 else
                 {
                     Debug.Log("Collider is no tile");
                 }
-            }            
-        }        
+            }
+        }
     }
 
     public void StartMoving(GameObject go)
@@ -161,9 +138,6 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
     public void StartNavigatingOrManipulatingObject(GameObject go)
     {
         InputManager.Instance.OverrideFocusedObject = go;
-        popUpHolder.SetActive(true);
-        popUpHolder.transform.position = go.transform.position;
-        drawPoint1 = popUpHolder.transform.position;
     }
 
     // Rotating
@@ -171,8 +145,6 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
     {
         if (UIManager.Instance.currentMode == "RotateBtn")
         {
-            // drawPoint2 = new Vector3(go.transform.position.x + eventData.CumulativeDelta.x, drawPoint1.y, drawPoint1.z + eventData.CumulativeDelta.z);
-            // go.transform.LookAt(drawPoint2);
             var rotationFactor = eventData.CumulativeDelta.x * rotationSensitivity;
             go.transform.Rotate(new Vector3(0, -1 * rotationFactor, 0));
             UpdateObjectToOtherUsers(go);
@@ -181,7 +153,7 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
 
     // Scaling
     public void _UpdateNavigatingObject(GameObject go, NavigationEventData eventData)
-    {        
+    {
         if (UIManager.Instance.currentMode == "ScaleBtn" && go.GetComponent<PrefabObjectData>().scaleable)
         {
             if (eventData.CumulativeDelta.x >= 0)
@@ -200,14 +172,13 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
                 }
             }
 
-            UpdateObjectToOtherUsers(go);         
+            UpdateObjectToOtherUsers(go);
         }
     }
 
     public void StopNavigatingOrManipulatingObject()
     {
         InputManager.Instance.OverrideFocusedObject = null;
-        popUpHolder.SetActive(false);
     }
 
     public void Delete(GameObject go)
@@ -220,7 +191,7 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
                 SessionManager.Instance.UpdateDeletedObject(spawnedObject);
                 Destroy(go);
             }
-        }                  
+        }
     }
 
     private void Copy(GameObject go)
@@ -250,7 +221,7 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
             infoLabel = GameObject.Find("InfoLabel");
         }
 
-        if (tooltipObject != null)            
+        if (tooltipObject != null)
         {
             if (go == tooltipObject)
             {
@@ -260,12 +231,13 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
             else
             {
                 SetLabel(go);
-            }            
+            }
         }
         else
         {
             SetLabel(go);
         }
+
         UIInteraction.Instance.MapPanel.SetActive(false);
     }
 
@@ -300,6 +272,7 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction> {
         {
             infoLabel = GameObject.Find("InfoLabel");
         }
+
         if (infoLabel.activeInHierarchy)
         {
             infoLabel.SetActive(false);

@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using HoloToolkit.Unity.InputModule;
 using Assets.Scripts.Plugins;
-using System;
 
 public class BoardTapHandler : MonoBehaviour, IInputClickHandler
 {

@@ -6,7 +6,7 @@ using System;
 
 public class BoardManipulationHandler : MonoBehaviour, IManipulationHandler {
 
-    // Currently unused.
+    // Currently unused. Should be re-enabled for tilting the table.
 
     public void OnManipulationCanceled(ManipulationEventData eventData)
     {

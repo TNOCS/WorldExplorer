@@ -1,9 +1,4 @@
-﻿using HoloToolkit.Unity;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class RaycastManager : SingletonCustom<RaycastManager>
 {
@@ -22,42 +17,24 @@ public class RaycastManager : SingletonCustom<RaycastManager>
         var audioContainer = GameObject.Find("AudioContainer");
         audioSource = audioContainer.GetComponents<AudioSource>()[0];
         gazeFeedback = Resources.Load<AudioClip>("Audio/lowclick");
-    }  
-   
+    }
+
     public void Update()
     {
         // Enlarges elements being gazed at.
         EmphasizeGazeTargets();
-    } 
+    }
 
     private void EmphasizeGazeTargets()
     {
         if (Raycast().collider != null)
         {
-           var rayCastFocus = Raycast().collider.gameObject;
+            var rayCastFocus = Raycast().collider.gameObject;
 
             // Enlarges elements that are being gazed and plays a low key sounds.
             if (rayCastFocus.tag == "inventoryobject" || rayCastFocus.tag == "uibutton")
             {
-                // If it's an inventory item, also start rotating.
-                // ROTATION DISABLED UNTIL TNO MODELS HAVE CORRET PIVOT POINT.
-               // if (rayCastFocus.tag == "inventoryobject")
-               //{
-               //   var originalRotation = rayCastFocus.transform.rotation;
-               //   if (rotatingObject == null)
-               //   {
-               //       rotatingObject = rayCastFocus;
-               //   }
-               //
-               //   if (rotatingObject != rayCastFocus)
-               //   {
-               //       rotatingObject.transform.rotation = originalRotation;
-               //       rotatingObject = rayCastFocus;
-               //   }
-               //   rayCastFocus.transform.Rotate(Vector3.up * Time.deltaTime * 50);
-               //  }            
-
-                // Enlarges
+                // Enlarges.
                 if (!enlarged)
                 {
                     rayCastFocus.transform.localScale = rayCastFocus.transform.localScale * uiScalefactor;
@@ -65,7 +42,8 @@ public class RaycastManager : SingletonCustom<RaycastManager>
                     enlargedObject = rayCastFocus;
                     enlarged = true;
                 }
-                // 'Unlarges'
+
+                // 'Unlarges'.
                 if (enlarged && rayCastFocus != enlargedObject)
                 {
                     enlargedObject.transform.localScale = enlargedObject.transform.localScale / uiScalefactor;
@@ -75,24 +53,25 @@ public class RaycastManager : SingletonCustom<RaycastManager>
             }
             else
             {
-                // Scales elements back down
+                // Scales elements back down.
                 if (enlargedObject != null)
                 {
                     enlargedObject.transform.localScale = enlargedObject.transform.localScale / uiScalefactor;
                     enlargedObject = null;
                     enlarged = false;
-                }                
+                }
             }
         }
         else
         {
-            // Stop rotating objects
+            // Stop rotating objects.
             if (rotatingObject != null)
             {
                 rotatingObject.transform.rotation = originalRotation;
                 rotatingObject = null;
             }
-            // Scales elements back down
+
+            // Scales elements back down.
             if (enlargedObject != null)
             {
                 enlargedObject.transform.localScale = enlargedObject.transform.localScale / uiScalefactor;
@@ -101,7 +80,7 @@ public class RaycastManager : SingletonCustom<RaycastManager>
             }
         }
     }
-    
+
     public RaycastHit Raycast()
     {
         RaycastHit hit;

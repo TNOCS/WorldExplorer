@@ -66,7 +66,8 @@ namespace Symbols
 
         public void OnSelect(User u)
         {
-            Material selectedMat = u.UserMaterial; GameObject otherCursor = u.Cursor;
+            Material selectedMat = u.UserMaterial;
+            GameObject otherCursor = u.Cursor;
             if (!selected)
             {
 

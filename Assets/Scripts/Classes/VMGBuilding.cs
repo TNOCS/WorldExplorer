@@ -7,8 +7,6 @@ public class VMGBuilding : MonoBehaviour
 {
     public string id;
     public List<Vector2> latLonList = new List<Vector2>();
-    // public float lat;
-    // public float lon;
     public float height;
     public float aoo; // Angle of orientation.
 

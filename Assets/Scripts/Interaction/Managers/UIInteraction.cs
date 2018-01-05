@@ -33,6 +33,7 @@ public class UIInteraction : SingletonCustom<UIInteraction>
         DrawUI.SetActive(false);
     }
 
+    // Handles the switching between board, object and draw menu.
     public void SwitchMode(string mode)
     {
         switch (mode)
@@ -51,7 +52,7 @@ public class UIInteraction : SingletonCustom<UIInteraction>
                     HandlerPanel.SetActive(false);
                     MapPanel.SetActive(false);
                     InventoryPanel.SetActive(false);
-                    ObjectInteraction.Instance.CloseLabel();                    
+                    ObjectInteraction.Instance.CloseLabel();
                 }
                 break;
             case "EditBtn":
@@ -76,7 +77,7 @@ public class UIInteraction : SingletonCustom<UIInteraction>
                     {
                         InventoryTextMesh.text = "Open \nInventory";
                     }
-                    //SetTileRangeButtons(AppState.Instance.Config.ActiveView..Range);
+                    //SetTileRangeButtons(AppState.Instance.Config.ActiveView.Range);
                 }
                 break;
             case "DrawBtn":
@@ -111,10 +112,7 @@ public class UIInteraction : SingletonCustom<UIInteraction>
         {
             Destroy(ObjectInteraction.Instance.objectInFocus);
         }
-        
-        
     }
-
 
     public void SetMapWindow()
     {
@@ -136,8 +134,6 @@ public class UIInteraction : SingletonCustom<UIInteraction>
         ObjectInteraction.Instance.CloseLabel();
         if (InventoryPanel.activeInHierarchy)
         {
-            // Set inventory items based on zoom.
-            // InventoryManager.Instance.SetItemVisibility();
             InventoryTextMesh.text = "Close \nInventory";
         }
         else
@@ -199,8 +195,6 @@ public class UIInteraction : SingletonCustom<UIInteraction>
     {
         InventoryPanel.SetActive(true);
         InventoryTextMesh.text = "Close \nInventory";
-        // Set inventory items based on zoom.
-        InventoryManager.Instance.SetItemVisibility();
     }
 
     public void CloseInventory()

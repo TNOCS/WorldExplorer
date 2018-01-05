@@ -40,21 +40,19 @@ namespace MapzenGo.Models.Plugins
                 var x = tile.TileTms.x;
                 var y = tile.TileTms.y;
                 y = Math.Pow(2, zoom) - y - 1;  // Slippy to TMS.
-                
+
                 var fileName = zoom.ToString() + "/" + x.ToString() + "/" + y.ToString();
                 var terrainUrl = "http://" + AppState.Instance.Config.HeightServer + "/" + fileName + ".terrain";
-                Debug.Log(terrainUrl);
 
                 // Sets terrain heights for each tile.
-                // TODO: if first tile fails to load terrain height data, don't try for the rest.
                 if (BoardInteraction.Instance.terrainHeights)
                 {
                     StartCoroutine(CheckIfHeightsAvailable(terrainUrl, tile, tileLayer, go));
                 }
                 else
                 {
-                  go.localPosition += new Vector3(0, tileLayer.Height, 0);
-                  go.localScale = new Vector3((float)tile.Rect.Width, (float)tile.Rect.Width, 1);
+                    go.localPosition += new Vector3(0, tileLayer.Height, 0);
+                    go.localScale = new Vector3((float)tile.Rect.Width, (float)tile.Rect.Width, 1);
                 }
 
                 go.gameObject.tag = "board";
@@ -74,20 +72,21 @@ namespace MapzenGo.Models.Plugins
                             if (BoardInteraction.Instance.terrainHeights)
                             {
                                 // This plugin gets destroyed upon reload, so the reference of the shader has to be saved somewhere else.
-                                if (AppState.Instance.twoSidedShader == null)
+                                if (BoardInteraction.Instance.twoSidedShader == null)
                                 {
-                                    AppState.Instance.twoSidedShader = Resources.Load("Shaders/FastConfigurable/Shaders/FastConfigurable2Sided", typeof(Shader)) as Shader;
+                                  //  BoardInteraction.Instance.twoSidedShader = Resources.Load("Shaders/FastConfigurable/Shaders/FastConfigurable2Sided", typeof(Shader)) as Shader;
                                 }
-                                go.gameObject.GetComponent<Renderer>().material.shader = AppState.Instance.twoSidedShader;
+                                //go.gameObject.GetComponent<Renderer>().material.shader = BoardInteraction.Instance.twoSidedShader;
                             }
 
                         }
                     },
                     error =>
                     {
-//                        Debug.Log(error + " loading url: " + url);
+                        Debug.Log(error + " loading url: " + url);
                     }
                 );
+
             }
         }
 
@@ -126,18 +125,6 @@ namespace MapzenGo.Models.Plugins
                         var i = 0;
                         var j = 0;
                         var pos = 0;
-
-                        //       // Hardcoded as .length doesn't work on WebRequest.Create 
-                        //       var streamLength = 65 * 65 * 2;
-                        //       //var streamLength = (int)binaryStream.BaseStream.Length;
-                        //       var minStreamLength = 65 * 65 * 2;
-                        //
-                        //       if (streamLength < minStreamLength)
-                        //       {
-                        //           throw new Exception("File length is too short: length is " + streamLength);
-                        //       }
-                        //
-                        //       var length = Math.Min(minStreamLength, streamLength); // Limit to the 65x65 terrain info, skip rest
 
                         var length = Math.Min(65 * 65 * 2, (int)binaryStream.BaseStream.Length); // Limit to the 65x65 terrain info, skip rest
                         while (pos < length)
@@ -180,7 +167,7 @@ namespace MapzenGo.Models.Plugins
             int counter = 0;
             int index = 0;
             Mesh mesh;
-            var scaleFactor = 1f;
+            var scaleFactor = 1.5f;
             mesh = go.gameObject.GetComponent<MeshFilter>().mesh;
             Vector2[] uvs = new Vector2[vertices.Length];
             for (int x = 0; x < 65; x++)
@@ -194,7 +181,6 @@ namespace MapzenGo.Models.Plugins
                     uvs[index++] = new Vector2(x / 64.0f, z / 64.0f);
                     counter++;
                 }
-
             }
 
             // Creates two triangles for each quad
@@ -231,32 +217,33 @@ namespace MapzenGo.Models.Plugins
             // Only works for squared meshes (like tiles).
             go.transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.y);
 
-            // Dirty fix to scale and position tiles correctly (my apologies for this...).
+            // Fix to scale and position tiles correctly.
             // The tile and tilelayer scaling and positioning breaks when generating a new mesh instead of using the quad primitive. 
             // Either fix it like this or find a way to keep the original Quad mesh scaling and positioning for the new mesh with correct vertex aligning.
             var scaleFactor = 19.4f;
             var positionFactor = -600;
+            var heightFactor = 700;
             switch (tile.Zoom)
             {
                 case 15:
                     go.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-                    go.transform.localPosition = new Vector3(positionFactor, 1200, positionFactor);
+                    go.transform.localPosition = new Vector3(positionFactor, 700, positionFactor);
                     break;
                 case 16:
                     go.localScale = new Vector3(scaleFactor / 2, scaleFactor / 2, scaleFactor / 3);
-                    go.transform.localPosition = new Vector3(positionFactor / 2, 600, positionFactor / 2);
+                    go.transform.localPosition = new Vector3(positionFactor / 2, 351, positionFactor / 2);
                     break;
                 case 17:
                     go.localScale = new Vector3(scaleFactor / 4, scaleFactor / 4, scaleFactor / 6);
-                    go.transform.localPosition = new Vector3(positionFactor / 4, 300, positionFactor / 4);
+                    go.transform.localPosition = new Vector3(positionFactor / 4, 182, positionFactor / 4);
                     break;
                 case 18:
                     go.localScale = new Vector3(scaleFactor / 8, scaleFactor / 8, scaleFactor / 12);
-                    go.transform.localPosition = new Vector3(positionFactor / 8, 150, positionFactor / 8);
+                    go.transform.localPosition = new Vector3(positionFactor / 8, 93, positionFactor / 8);
                     break;
                 case 19:
                     go.localScale = new Vector3(scaleFactor / 16, scaleFactor / 16, scaleFactor / 24);
-                    go.transform.localPosition = new Vector3(positionFactor / 16, 75, positionFactor / 16);
+                    go.transform.localPosition = new Vector3(positionFactor / 16, heightFactor / 45, positionFactor / 16);
                     break;
             }
         }

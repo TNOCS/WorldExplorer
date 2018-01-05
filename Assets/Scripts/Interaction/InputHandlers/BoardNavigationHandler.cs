@@ -28,7 +28,7 @@ public class BoardNavigationHandler : MonoBehaviour, INavigationHandler, IInputH
     public void OnNavigationStarted(NavigationEventData eventData)
     {
         audioSource.PlayOneShot(clickFeedback, 0.1f);
-        BoardInteraction.Instance.StartManipulatingTable(gameObject, gameObject.name);       
+        BoardInteraction.Instance.StartManipulatingTable(gameObject, gameObject.name);
     }
 
     public void OnInputDown(InputEventData eventData)
@@ -46,7 +46,7 @@ public class BoardNavigationHandler : MonoBehaviour, INavigationHandler, IInputH
         {
             BoardInteraction.Instance.UpdateTableSize(eventData, -1);
         }
-        
+
         if (gameObject.name == "ResizeInteractableRight" || gameObject.name == "ResizeInteractable")
         {
             BoardInteraction.Instance.UpdateTableSize(eventData, 1);

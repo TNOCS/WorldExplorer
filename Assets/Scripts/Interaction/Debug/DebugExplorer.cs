@@ -1,14 +1,8 @@
 ﻿using Assets.Scripts;
-using Assets.Scripts.Classes;
 using Assets.Scripts.Plugins;
-using HoloToolkit.Unity;
-using MapzenGo.Helpers;
-using MapzenGo.Models;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public class DebugExplorer : SingletonCustom<DebugExplorer> {
+public class DebugExplorer : SingletonCustom<DebugExplorer>
+{
 
     public bool debugMode;
     public string currentView;
@@ -17,36 +11,23 @@ public class DebugExplorer : SingletonCustom<DebugExplorer> {
     public Vector3 devicePosition;
     public Vector3 gazeDirection;
 
-    // Videomode
+    // For Videomode
     public GameObject Holograms;
     public GameObject[] pois = new GameObject[33];
 
-    private void Awake()
+    void Start()
     {
-       
-
-    }
-    // Use this for initialization
-    void Start() {
-        
         debugCoordsText = GameObject.Find("DebugCursorCoords");
         UI = GameObject.Find("UI");
-        
+
         if (debugMode)
         {
-            Debug.Log("REMINDER: DEBUG MODE IS ON. SESSIONMANAGER DISABLED");
+            Debug.Log("REMINDER: DEBUG MODE IS ON.");
         }
-
-    }
-
-    private void DisableExternalConnections()
-    {
-        //Disable Assetbundles.
-
     }
 
     public void ToggleVideoMode()
-    {       
+    {
         if (Holograms == null)
         {
             Holograms = GameObject.Find("Holograms");
@@ -67,33 +48,24 @@ public class DebugExplorer : SingletonCustom<DebugExplorer> {
     }
 
     // Update is called once per frame
-    void Update() {
-      /*  devicePosition = Camera.main.transform.position;
-        gazeDirection = Camera.main.transform.forward;
-        UI.transform.position = new Vector3(devicePosition.x, devicePosition.y -1f, devicePosition.z +2);
-        UI.transform.rotation = Quaternion.LookRotation(gazeDirection);
+    void Update()
+    {
 
+        // Enable to view lat lon of cursor in the Scene.
+        /*
+        var view = AppState.Instance.Config.ActiveView;
+        var cursorCoords = SessionManager.Instance.me.CursorLocationToVector2d();
+        var cursorCoordsv2 = MapzenGo.Helpers.Extensions.ToVector2(cursorCoords);
+        var latv2 = cursorCoordsv2.x;
+        var lonv2 = cursorCoordsv2.y;        
+        var text = debugCoordsText.GetComponent<TextMesh>();        
+        text.text = latv2.ToString() + " \n " + lonv2.ToString() + " \n ";
         */
-
-        // var view = appState.Config.ActiveView;
-      
-     //var cursorCoords = SessionManager.Instance.me.CursorLocationToVector2d();
-     //var cursorCoordsv2 = MapzenGo.Helpers.Extensions.ToVector2(cursorCoords);
-     //
-     //var latv2 = cursorCoordsv2.x;
-     //var lonv2 = cursorCoordsv2.y;
-     //
-     //var text = debugCoordsText.GetComponent<TextMesh>();
-     //
-     //text.text = latv2.ToString() + " \n " + lonv2.ToString() + " \n ";
-         
-   
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
             BoardInteraction.Instance.ToggleTerrainHeights();
         }
-
 
         if (Input.GetKeyDown(KeyCode.X))
         {
@@ -120,4 +92,4 @@ public class DebugExplorer : SingletonCustom<DebugExplorer> {
             CursorManagerCustom.Instance.SetCursorIcon("MoveBtn");
         }
     }
-        } 
+}

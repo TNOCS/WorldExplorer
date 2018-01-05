@@ -1,4 +1,0 @@
-C:\Afstudeerstage\UnityProjects\WorldExplorer-WIP\App\WorldExplorer46\GeneratedProjects\UWP\Assembly-CSharp\Assembly-CSharp.csproj;x86
-C:\Afstudeerstage\UnityProjects\WorldExplorer-WIP\App\WorldExplorer46\GeneratedProjects\UWP\Assembly-CSharp-firstpass\Assembly-CSharp-firstpass.csproj;x86
-C:\Afstudeerstage\UnityProjects\WorldExplorer-WIP\App\WorldExplorer46\GeneratedProjects\UWP\Assembly-CSharp-firstpass\Assembly-CSharp-firstpass.csproj;x86
-C:\Afstudeerstage\UnityProjects\WorldExplorer-WIP\App\WorldExplorer46\WorldExplorer2\WorldExplorer2.csproj;x86

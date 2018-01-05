@@ -67,14 +67,22 @@ namespace Assets.Scripts.Classes
 
         public string CursorLocationToJSON()
         {
-          //  if (Cursor == null){
-          //      Debug.Log("Cursor is null, setting");
-          //      Cursor = GameObject.Find("Cursor");
-          //  }
+            if (Cursor == null)
+            {
+                Debug.Log("Cursor is null, setting");
+                Cursor = GameObject.Find("Cursor");
+            }
 
-            if (CenterInMercator == null) return string.Empty;
-            var v0 = new Vector2d(Cursor.transform.position.x / Scale, Cursor.transform.position.z / Scale) + CenterInMercator;
+            // Offset to account for a repositioned world.
+            AppState.Instance.worldOffset = AppState.Instance.Terrain.transform.position;
+
+            var cursorPosition = (Cursor.transform.position - AppState.Instance.worldOffset);
+            float newScale;
+            newScale = Scale * GameObject.Find("terrain").transform.localScale.x;
+            var v0 = new Vector2d(cursorPosition.x / newScale, cursorPosition.z / newScale) + CenterInMercator;
+            //var v0 = new Vector2d(Cursor.transform.position.x / Scale, Cursor.transform.position.z / Scale) + CenterInMercator;
             var v1 = GM.MetersToLatLon(v0);
+
             //Debug.Log(string.Format(@"""loc"":{{""lat"":{0},""lon"":{1}}}", v1.y, v1.x));
             return string.Format(@"""loc"":{{""lat"":{0},""lon"":{1}}}", v1.y, v1.x);
         }
@@ -88,7 +96,7 @@ namespace Assets.Scripts.Classes
             }
 
             // Offset to account for a repositioned world.
-                AppState.Instance.worldOffset = AppState.Instance.Terrain.transform.position;
+            AppState.Instance.worldOffset = AppState.Instance.Terrain.transform.position;
 
             var cursorPosition = (Cursor.transform.position - AppState.Instance.worldOffset);
             float newScale;
@@ -112,8 +120,9 @@ namespace Assets.Scripts.Classes
                 }
                 else
                 {
-                    return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"", ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, ""cursor"":{{""xpos"":{6},""ypos"":{7},""zpos"":{8},""xrot"":{9},""yrot"":{10},""zrot"":{11} }}, {12}}}",
-                        id, Name, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Cursor.transform.position.x, Cursor.transform.position.y, Cursor.transform.position.z, Cursor.transform.rotation.x, Cursor.transform.rotation.y, Cursor.transform.rotation.z, CursorLocationToJSON());
+                    return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"", ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5}, ""xpos"":{6},""ypos"":{7},""zpos"":{8},""xrot"":{9},""yrot"":{10},""zrot"":{11}, ""lat"":{12}, ""lon"":{13} }}",
+                    //return string.Format(@"{{ ""id"": ""{0}"", ""name"": ""{1}"", ""selectionColor"": {{ ""r"": {2}, ""g"": {3}, ""b"": {4}, ""a"": {5} }}, ""cursor"":{{""xpos"":{6},""ypos"":{7},""zpos"":{8},""xrot"":{9},""yrot"":{10},""zrot"":{11} }}, ""lat"":{12}, ""lon"":{13} }}",
+                        id, Name, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Cursor.transform.position.x, Cursor.transform.position.y, Cursor.transform.position.z, Cursor.transform.rotation.x, Cursor.transform.rotation.y, Cursor.transform.rotation.z, CursorLocationToVector2d().x, CursorLocationToVector2d().y);
                 }
             }
             else
@@ -165,13 +174,13 @@ namespace Assets.Scripts.Classes
                 var rotz = cur.GetFloat("zrot", 1);
                 if (user.Cursor == null && cursors != null && cursors.Count != 0)
                 {
-                    var name = user.id + "-Cursor";
-                    user.Cursor = cursors.Find(i => i.name == name);
+                   // var name = user.id + "-Cursor";
+                   // user.Cursor = cursors.Find(i => i.name == name);
                 }
                 if (user.Cursor != null)
                 {
-                    user.Cursor.transform.position = new Vector3(posx, posy, posz);
-                    user.Cursor.transform.rotation = Quaternion.Euler(rotx, roty, rotz);
+                   // user.Cursor.transform.position = new Vector3(posx, posy, posz);
+                    //user.Cursor.transform.rotation = Quaternion.Euler(rotx, roty, rotz);
                 }
             }
 

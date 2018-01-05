@@ -1,8 +1,6 @@
 ﻿using Assets.Scripts;
 using HoloToolkit.Unity;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CursorManagerCustom : Singleton<CursorManagerCustom>
@@ -87,7 +85,7 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
                 {
                     Instance.CursorVisual.SetActive(false);
                 }
-                // Except if raycast target is current modse for extra visual feedback.
+                // Except if raycast target is the current mode, to increase visual feedback.
                 else
                 {
                     CursorVisual.SetActive(true);
@@ -113,7 +111,7 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
             }
 
             // Sets icons green if it is an interactible object
-            if (rayCastFocus.tag == "spawnobject" )
+            if (rayCastFocus.tag == "spawnobject")
             {
                 if (currentMode != "ZoomInBtn" && currentMode != "ZoomOutBtn" && currentMode != "CenterBtn")
                 {
@@ -131,7 +129,7 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
                 {
                     InteractionNotPossible();
                 }
-                
+
             }
             // Otherwise turn them red.
             else
@@ -142,7 +140,7 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
                 }
             }
 
-            // Quick fix before demo: This is contradicting to the above code and should be fixed (=remove turning red in above code instead of turning it back green here) asap.
+            // Semi dirty fix to stop a bug that displays the wrong colors.
             if (currentMode == "ZoomInBtn" || currentMode == "ZoomOutBtn" || currentMode == "CenterBtn")
             {
                 InteractionPossible();
@@ -150,28 +148,28 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
 
             // If minimum zoom level is already reached, the user can not zoom out more.
             if (AppState.Instance.Config != null && BoardInteraction.Instance != null)
+            {
+                if (AppState.Instance.Config.ActiveView.Zoom == BoardInteraction.Instance.maxZoomLevel)
                 {
-                    if (AppState.Instance.Config.ActiveView.Zoom == BoardInteraction.Instance.maxZoomLevel)
+                    if (currentMode == "ZoomInBtn")
                     {
-                        if (currentMode == "ZoomInBtn")
-                        {
-                            InteractionNotPossible();
-                        }
+                        InteractionNotPossible();
                     }
                 }
+            }
 
-                // If maximum zoom level is already reached, the user can not zoom in more.
-                if (AppState.Instance.Config != null && BoardInteraction.Instance != null)
+            // If maximum zoom level is already reached, the user can not zoom in more.
+            if (AppState.Instance.Config != null && BoardInteraction.Instance != null)
+            {
+                if (AppState.Instance.Config.ActiveView.Zoom == BoardInteraction.Instance.minZoomLevel)
                 {
-                    if (AppState.Instance.Config.ActiveView.Zoom == BoardInteraction.Instance.minZoomLevel)
+                    if (currentMode == "ZoomOutBtn")
                     {
-                        if (currentMode == "ZoomOutBtn")
-                        {
-                            InteractionNotPossible();
-                        }
+                        InteractionNotPossible();
                     }
                 }
-            
+            }
+
 
             // If the user is placing an object, turn the icons green when it can be placed.
             if (currentMode == "Placing")
@@ -217,4 +215,4 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
             CursorVisual.SetActive(false);
         }
     }
-    }
+}

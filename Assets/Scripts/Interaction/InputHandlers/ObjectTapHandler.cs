@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using HoloToolkit.Unity.InputModule;
-using System;
 
-public class ObjectTapHandler : MonoBehaviour, IInputClickHandler {
-    
+public class ObjectTapHandler : MonoBehaviour, IInputClickHandler
+{
     private AudioClip clickFeedback;
     private AudioSource audioSource;
 
@@ -19,7 +16,6 @@ public class ObjectTapHandler : MonoBehaviour, IInputClickHandler {
     public void OnInputClicked(InputClickedEventData eventData)
     {
         audioSource.PlayOneShot(clickFeedback, 0.1f);
-        ObjectInteraction.Instance.Tap(gameObject);        
+        ObjectInteraction.Instance.Tap(gameObject);
     }
-
 }

@@ -1,15 +1,9 @@
 ﻿using Assets.Scripts;
-using HoloToolkit.Unity;
-using MapzenGo.Helpers;
-using MapzenGo.Models;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class InventoryObjectInteraction : SingletonCustom<InventoryObjectInteraction>
 {
-
     private GameObject newlySpawned;
     public GameObject copyObject;
 
@@ -54,7 +48,7 @@ public class InventoryObjectInteraction : SingletonCustom<InventoryObjectInterac
         var col = copyObject.GetComponent<BoxCollider>();
         col.isTrigger = true;
 
-        // Unique objectname is needed for MQTT references.
+        // An unique objectname is needed for MQTT references.
         copyObject.name = copyObject.name + "-" + (Time.deltaTime * 1000).ToString();
 
         // Ignore Raycast layer.

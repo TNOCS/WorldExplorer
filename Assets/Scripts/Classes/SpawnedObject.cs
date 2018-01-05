@@ -15,8 +15,6 @@ public class SpawnedObject {
     public double lat;
     public double lon;
     public Vector2d meters;
-    // String for visualization in Inspector (Vector2d can't be displayed)
-    public string meterString;
     
     public SpawnedObject(GameObject go, Vector3 centerPos, double lat, double lon, Vector3 scale, Quaternion rotation /*Vector2d meters*/)
     {
@@ -27,7 +25,5 @@ public class SpawnedObject {
         this.localScale = scale;
         this.rotation = rotation;
         //this.meters = meters;
-        //meterString = meters.ToString();
-//        Debug.Log("New Object Created: " + obj + " at position: " + centerPosition + "at lat: "+ lat + " and lon: " + lon);
     }    
 }

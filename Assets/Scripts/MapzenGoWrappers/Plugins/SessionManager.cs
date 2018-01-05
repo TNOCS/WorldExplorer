@@ -5,9 +5,7 @@ using System.Text;
 using System.Collections.Generic;
 using Assets.Scripts.Classes;
 using Symbols;
-using HoloToolkit.Unity;
 using uPLibrary.Networking.M2Mqtt;
-using MapzenGo.Helpers;
 
 namespace Assets.Scripts.Plugins
 {
@@ -34,7 +32,7 @@ namespace Assets.Scripts.Plugins
         protected readonly List<User> users = new List<User>();
         protected readonly List<GameObject> cursors = new List<GameObject>();
         internal GameObject cursorPrefab;
-        //private Dictionary<User, string> prevCommand;
+        public Material UserMaterial;
 
         private void Awake()
         {
@@ -61,12 +59,16 @@ namespace Assets.Scripts.Plugins
             Debug.Log("Initializing SessionManager");
             if (selectionHandler == null) selectionHandler = SelectionHandler.Instance;
             selectionHandler.addUser(me);
+
             me.Name = appState.Config.UserName;
-            //me.SelectionColor = appState.Config.SelectionColor;
+            me.SelectionColor = appState.Config.SelectionColor;
             me.Cursor = cursor;
             me.Cursor.name = me.Id + "-Cursor";
-            // me.Cursor.transform.Find("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = me.UserMaterial;
-            // me.Cursor.transform.Find("CursorOnHolograms").GetComponent<MeshRenderer>().material = Resources.Load<Material>("ring_shadow");
+            me.Cursor.transform.Find("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = me.UserMaterial;
+            me.Cursor.transform.Find("CursorOnHolograms").GetComponent<MeshRenderer>().material = Resources.Load<Material>("ring_shadow");
+
+            UserMaterial = new Material(Shader.Find("HoloToolkit/Cursor"));
+
             var mtd = gameObject.AddComponent<UnityMainThreadDispatcher>();
             InitMqtt();
             var sessions = new List<string> { "one", "two", "three" };
@@ -315,9 +317,6 @@ namespace Assets.Scripts.Plugins
             GameObject newObject;
 
             newObject = Instantiate(Resources.Load("Prefabs/Inventory/" + prefabName)) as GameObject;
-            //var col = newObject.GetComponent<BoxCollider>();
-            //col.isTrigger = true;               
-
             newObject.name = name;
 
             // Puts it under the same parent as objects created by the user of this instance.
@@ -427,9 +426,44 @@ namespace Assets.Scripts.Plugins
         /// <param name="json"></param>
         protected void UpdateUsersPresence(string json)
         {
-            var user = User.FromJSON(json, cursors);
-            if (user.Id == me.Id) return; // Do not update yourself
+            var data = new JSONObject(json);
+            var id = data.GetString("id");
 
+            if (id == me.Id) return; // Do not update yourself
+            Debug.Log("Update presence for " + id);
+            var cursor = GameObject.Find(id + "-Cursor");
+            if (cursor == null)
+            {                  
+                cursor = Instantiate(cursorPrefab, new Vector3(0, 1, 0), transform.rotation);
+                cursor.name = id + "-Cursor";
+                Debug.Log("Instantiated cursor: " + cursor.name);
+                cursor.transform.Find("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = UserMaterial;
+                var r = data.GetInt("r");
+                var g = data.GetInt("g");
+                var b = data.GetInt("b");
+                //Debug.Log(r + " " + g + " " + b);
+                var selectionColor = new Color(r, g, b);
+                cursor.transform.GetChild(0).GetComponent<Renderer>().material.color = selectionColor;
+            }
+
+            if (cursor != null)
+            {
+                var xpos = data.GetFloat("xpos");
+                var ypos = data.GetFloat("ypos");
+                var zpos = data.GetFloat("zpos");
+
+                var xrot = data.GetFloat("xrot");
+                var yrot = data.GetFloat("yrot");
+                var zrot = data.GetFloat("zrot");                
+
+                cursor.transform.position = new Vector3(xpos, ypos, zpos);
+                cursor.transform.rotation = Quaternion.Euler(270, yrot, zrot);
+            //    Debug.Log("Setting " + cursor.name + " to " + cursor.transform.position);                
+            }
+
+
+            //======
+            /*
             var found = false;
             User existingUser = null;
             int i = -1;
@@ -445,11 +479,12 @@ namespace Assets.Scripts.Plugins
                 var cursor = cursors.Find(u => u.name == user.Id + "-Cursor");
                 if (cursor == null)
                 {
-                    /*  user.Cursor = GameObject.Find("Cursor");
-                      //user.Cursor = Instantiate(cursorPrefab, new Vector3(0, 1, 0), transform.rotation);
+                      //user.Cursor = GameObject.Find(user.Id + "-Cursor");                    
+                      user.Cursor = Instantiate(cursorPrefab, new Vector3(0, 1, 0), transform.rotation);
                       user.Cursor.name = user.Id + "-Cursor";
+                    Debug.Log("Other cursors cursor: " + user.Cursor);
                       user.Cursor.transform.Find("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = user.UserMaterial;
-                      cursors.Add(user.Cursor);*/
+                      cursors.Add(user.Cursor);
                 }
                 else
                     user.Cursor = cursor;
@@ -465,7 +500,7 @@ namespace Assets.Scripts.Plugins
                 if (user.SelectedFeature != null && existingUser.SelectedFeature != null)
                     UpdateUserSelection(existingUser.SelectedFeature, user);
                 users[i] = user;
-            }
+            }*/
         }
 
         /// <summary>
@@ -475,11 +510,11 @@ namespace Assets.Scripts.Plugins
         /// <param name="user">If user does not exist, remove the current selection.</param>
         protected void UpdateUserSelection(Feature selectedFeature, User user = null)
         {
-            var gameobj = GameObject.Find(selectedFeature.id);
-            if (gameobj == null) return;
-            GameObject selectedObject = gameobj.transform.parent.gameObject;
-            SymbolTargetHandler handler = selectedObject.GetComponent<SymbolTargetHandler>();
-            handler.OnSelect(user);
+         //  var gameobj = GameObject.Find(selectedFeature.id);
+         //  if (gameobj == null) return;
+         //  GameObject selectedObject = gameobj.transform.parent.gameObject;
+         //  SymbolTargetHandler handler = selectedObject.GetComponent<SymbolTargetHandler>();
+         //  handler.OnSelect(user);
         }
 
         /// <summary>
@@ -520,16 +555,16 @@ namespace Assets.Scripts.Plugins
         /// <param name="isSelected"></param>
         public void UpdateSelectedFeature(Feature feature, bool isSelected)
         {
-            if (isSelected)
-            {
-                me.SelectedFeature = feature;
-                UpdatePresence();
-            }
-            else
-            {
-                UpdatePresence();
-                me.SelectedFeature = null;
-            }
+          //if (isSelected)
+          //{
+          //    me.SelectedFeature = feature;
+          //    UpdatePresence();
+          //}
+          //else
+          //{
+          //    UpdatePresence();
+          //    me.SelectedFeature = null;
+          // }
         }
 
         #endregion Room management
@@ -548,7 +583,7 @@ namespace Assets.Scripts.Plugins
         /// <param name="retain">Retain the message</param>
         protected void SendJsonMessage(string subtopic, string json, bool retain = true)
         {
-            //            Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));
+            //Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));
             client.Publish(string.Format("{0}/{1}", sessionName, subtopic), Encoding.UTF8.GetBytes(json), uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, retain);
         }
     }

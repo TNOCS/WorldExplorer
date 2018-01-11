@@ -2,7 +2,7 @@
 A HoloLens application that allows users to view and interact with automatically generated area's. The world is rendered using OpenStreepMapData, and shows the users the world on a squared table. Sessions can be shared with other users, allowing for collaboration anywhere in the world. 
 Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worlds as hologram. 
 [Video](https://vimeo.com/247794077)
-![Example](https://github.com/TNOCS/WorldExplorer/blob/ui-and-interaction/Assets/UIHDUpdatedIcons%20(3).png?raw=true)
+![Example](https://imgur.com/a/t4Ogd)
 
 # Features
 - Render the world based on several datasets.
@@ -114,6 +114,24 @@ To add inventory objects.
 3. Check if the scale is realistic.
 4. Add the object to the inventory in hierarchy as a new item (break prefab link). Make sure the name matches.
 
+## Additional notes
+- Button names should always end in ‘Btn’.
+- Buttons should always have the tag ‘uibutton’.
+- Objects with the tag ‘uistatic’ are ignored by raycasts and other interactions.
+- The ‘Managers’ object, or a child of this object, contains all singleton scripts. A few exceptions exist (like the initialize.cs on the Main Camera).
+
+- Most new custom scripts (exceptions are custom scripts that are direct extensions of used libraries/frameworks, like the VMGFactory in the Factories folder) are categorized in the ‘Scripts’ folder.
+
+Interaction:
+- InputHandler scripts handle direct user-input and communicate with relevant managers.
+- Interaction (…Interaction.cs) scripts perform the actions related to the input.
+- Manager (…Manager.cs) scripts handle any indirect functions caused by user input, like the adjustment of the UI.
+
+- Inventory items are saved under ‘Prefabs/Inventory’. When adding new items, make sure the components are identical to existing inventory items.
+- Sprite rendering is based on the ‘Order in Layer’ and range between 0 and 5. (Higher number = rendered on top of others).
+- If you want to add text in the scene, use the 3DTextPrefab object in the project.
+
+
 ## Authors
-* **Erik Vullings** (initial work) - *Including generation of tiles, mqtt connection, integration of MapZenGo, buildings and objects, basic navigation.*
-* **Thom van de Moosdijk** (graduation project) - *Addition of interaction system, user interfaction and other enhancements.*
+* **Erik Vullings** (initial work) - *Initial work including generation of tiles, mqtt connection, integration of MapZenGo, buildings and objects, basic navigation.*
+* **Thom van de Moosdijk** (graduation project) - *Addition of interaction system, user interface and other enhancements.*

@@ -30,10 +30,10 @@ Required hardware:
 - Microsoft HoloLens.
 
 ## Getting Started - Development
-1. Open Unity (if there is a version mismatch waring, make sure there is a backup and automatically upgrade the project).
+1. Open Unity (if there is a version mismatch warning, make sure there is a backup and automatically upgrade the project).
 2. Open the MainScene.scene.
 
-The Manager gameobject contains many script that allow for easy editting, debugging and adding voice commands.
+The Manager gameobject contains many script that allow for easy editing, debugging and adding voice commands.
 
 The generation of buildings and objects are done through Factories.
 Interaction is called through the relevant InputHandlers.
@@ -61,7 +61,7 @@ In order to show 3D models, you need to create an asset bundle that contains the
 - Go to [3dwarehouse.sketchup.com](3dwarehouse.sketchup.com) and download your models
 - Create a new Unity project
 - Optionally, if you cannot open them in Unity, or the model has a terrain: Open them in Sketchup, e.g. to remove the underground (unlock the model), and save them as Sketchup 2015 project
-- Import the model into Unity (menu Assets|Import New Asset...): in the inspecter, underneath the image, specify a name for the asset bundle (e.g. buildings/eindhoven). If you don't specify the name, it won't be exported. Also note the geo location in the inspector, which should be used in the `assets.json` file in the `world-explorer-server` project folder.
+- Import the model into Unity (menu Assets|Import New Asset...): in the inspector, underneath the image, specify a name for the asset bundle (e.g. buildings/eindhoven). If you don't specify the name, it won't be exported. Also note the geo location in the inspector, which should be used in the `assets.json` file in the `world-explorer-server` project folder.
 - Optionally, change the model name, as this is how you load it from Unity: e.g. I only use lowercase names.
 - Import all models until you are done.
 - In the `Assets` folder, create a new folder named `AssetBundles` (the name used in the script below).

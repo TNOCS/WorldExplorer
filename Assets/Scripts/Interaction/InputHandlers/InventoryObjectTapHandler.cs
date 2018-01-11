@@ -3,6 +3,10 @@ using HoloToolkit.Unity.InputModule;
 
 public class InventoryObjectTapHandler : MonoBehaviour, IInputClickHandler
 {
+    /// <summary>
+    /// Handles the users taps on inventory objects.
+    /// </summary>
+    
     private AudioClip clickFeedback;
     private AudioSource audioSource;
 

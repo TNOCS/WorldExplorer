@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 using HoloToolkit.Unity.InputModule;
 
-public class UITapHandler : MonoBehaviour, IInputClickHandler {
-
+public class UITapHandler : MonoBehaviour, IInputClickHandler
+{
+    /// <summary>
+    /// Handles the users taps on the UI.
+    /// </summary>
+    
     private AudioClip clickFeedback;
     private AudioSource audioSource;
 

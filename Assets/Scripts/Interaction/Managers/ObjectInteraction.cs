@@ -6,6 +6,10 @@ using UnityEngine;
 
 public class ObjectInteraction : SingletonCustom<ObjectInteraction>
 {
+    /// <summary>
+    /// Handles any interaction with an interactable object, including moving, rotating, deleting and showing info.
+    /// </summary>
+    
     // The object being manipulated.
     public GameObject objectInFocus;
 

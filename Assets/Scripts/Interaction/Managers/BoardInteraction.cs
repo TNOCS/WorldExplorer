@@ -4,10 +4,13 @@ using Assets.Scripts.Plugins;
 using MapzenGo.Helpers;
 using HoloToolkit.Unity.InputModule;
 
-
 public class BoardInteraction : SingletonCustom<BoardInteraction>
 {
-    //The scaling difference per zoom level.
+    /// <summary>
+    /// Handles any interaction with the table/board, including zooming, panning, adjusting the table, toggling terrain heights and opening/switching map locations.
+    /// </summary>    
+
+    // The scaling difference per zoom level.
     public float scaleFactor = 2f;
     public int minZoomLevel = 16;
     public int maxZoomLevel = 19;

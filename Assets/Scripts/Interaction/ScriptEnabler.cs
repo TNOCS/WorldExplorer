@@ -2,6 +2,12 @@
 
 public class ScriptEnabler : MonoBehaviour
 {
+    /// <summary>
+    /// Switches between the two scripts: one for handlign navigation input and one for manipulation input, based on the current mode.,
+    /// This is done as the HoloLens is unable to detect both at the same time.
+    /// 
+    /// Currently unused. Enable if you want to enable scaling
+    /// </summary>
 
     void Update()
     {
@@ -12,8 +18,8 @@ public class ScriptEnabler : MonoBehaviour
         {
             foreach (SpawnedObject spawnedObject in objectList)
             {
-             //  spawnedObject.obj.GetComponent<ObjectNavigationHandler>().enabled = false;
-             //  spawnedObject.obj.GetComponent<ObjectManipulationHandler>().enabled = true;
+                //  spawnedObject.obj.GetComponent<ObjectNavigationHandler>().enabled = false;
+                //  spawnedObject.obj.GetComponent<ObjectManipulationHandler>().enabled = true;
             }
 
         }

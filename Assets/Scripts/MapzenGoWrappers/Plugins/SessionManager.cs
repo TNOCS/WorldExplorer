@@ -541,7 +541,6 @@ namespace Assets.Scripts.Plugins
                 {
                     if (user.SelectedFeature != null && !string.IsNullOrEmpty(user.SelectedFeature.id)) UpdateUserSelection(user.SelectedFeature, user);
                     {
-                        //todo remove cursor object and clean the list
                         users.RemoveAt(i);
                     }
                 }

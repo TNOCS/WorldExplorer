@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class InventoryObjectInteraction : SingletonCustom<InventoryObjectInteraction>
 {
+    /// <summary>
+    /// Handles the interaction with inventory objects, including spawning them.
+    /// </summary>
+    
     private GameObject newlySpawned;
     public GameObject copyObject;
 

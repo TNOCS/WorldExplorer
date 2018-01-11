@@ -31,12 +31,12 @@ Required hardware:
 - Clicker (suggested).
 
 ## Getting Started - Development
-1. Open Unity (if there is a version mismatch warning, make sure there is a backup and automatically upgrade the project).
+1. Open Unity (if there is a version mismatch warning, automatically upgrade the project. Make a backup if you already edited the project).
 2. Open the MainScene.scene.
 
-The `Managers` gameobject contains many script that allow for easy editing, debugging and adding voice commands.
+The `Managers` gameobject contains several scripts that allow for easy editing, debugging and adding voice commands.
 
-The generation of buildings and objects are done through Factories.
+The generation of buildings and objects is done through Factories.
 Interaction is called through the relevant InputHandlers.
 Interaction and user interface functionalities are performed through the relevant scripts in the Scripts/Interaction folder.
 
@@ -50,7 +50,7 @@ Interaction and user interface functionalities are performed through the relevan
 	- SDK: `Latest installed`.
 	- Build and run on: `Local machine`.
 	- Unity C# projects checked (for debugging purposes only).
-4. Make sure "Virtual Reality Supported" is checked under Player Settings.
+4. Make sure `Virtual Reality Supported` is checked under Player Settings.
 5. Press Build and select the App folder, and choose a name.
 6. Open the Visual Studio Solution in the created folder.
 7. Build as `Release`, `x86` and either to `Device` (when deploying over USB) or `Remote Machine` (when deploying over Wi-Fi). 
@@ -106,6 +106,61 @@ table : size and height of the table.
 	- `tileSize` and `range` can be changed to change the size of the tiles.
 	- `mapzen`, `layers` and `tileLayers` can be adjusted to enable or disable certain visualizations.
 	- `terrainHeightAvailable` should be enabled when terrain height data is available.
+
+## SessionManager JSON messages
+[Pastebin](https://pastebin.com/tcjRX6tv)
+```
+UpdateView()
+view : the new view of the map.
+direction : the direction of the zoom (0 = zoom in, 1 = zoom out);
+
+UpdateNewObject()
+Name : name of the new object.
+prefabname : name of the prefab linked to new object.
+lat : latitude of the new object.
+lon : longitude of the new object.
+scaleX : x scale of new object.
+scaleY : y scale of new object.
+scaleZ : z scale of new object.
+rotX : x rotation of new object.
+rotY : y rotation of new object.
+rotZ : z rotation of new object.
+centerPosX : x center position of new object.
+centerPosY : y center position of new object.
+centerPosZ : z center position of new object.
+
+UpdateTable()
+posX : current x position of the table.
+posY : current y position of the table.
+posZ : current z position of the table.
+rotX : current x rotation of the table.
+rotY : current y rotation of the table.
+rotZ : current z rotation of the table.
+scaleX : current x scale of the table.
+scaleY : current y scale of the table.
+scaleZ : current z scale of the table.
+user : id of the user.
+
+UpdateExistingObject()
+Name:
+posX : new x position of the object.
+posY : new y position of the object.
+posZ : new z position of the object.
+lat : new latitude of the object.
+lon : new longitude of the object.
+scaleX : new x scale of the object.
+scaleY : new y scale of the object.
+scaleZ : new z scale of the object.
+rotX : new x rotation of the object.
+rotY : new y rotation of the object.
+rotZ : new z rotation of the object.
+user : id of the user.
+
+UpdateDeletedObject()
+Name : name of the object that has been deleted.
+user: id of the user.
+```
+
 
 ## Adding inventory objects
 To add inventory objects.

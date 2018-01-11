@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SpeechManager : MonoBehaviour
 {
+    /// <summary>
+    /// Handles the Speech input (works in conjunction with the HoloToolKits speech scripts).
+    /// </summary>
 
     public void SetUIMode(string keyword)
     {

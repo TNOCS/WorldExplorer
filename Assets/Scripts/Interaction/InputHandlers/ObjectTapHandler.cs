@@ -3,6 +3,10 @@ using HoloToolkit.Unity.InputModule;
 
 public class ObjectTapHandler : MonoBehaviour, IInputClickHandler
 {
+    /// <summary>
+    /// Handles the users taps on objects.
+    /// </summary>
+    /// 
     private AudioClip clickFeedback;
     private AudioSource audioSource;
 

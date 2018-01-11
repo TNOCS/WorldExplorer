@@ -15,6 +15,10 @@ namespace MapzenGo.Models.Plugins
 {
     public class TileLayerPlugin : Plugin
     {
+        /// <summary>
+        /// Handles the spawning of tiles, as well as the terrain heights if the user has enabled them.
+        /// </summary>
+
         public List<Layer> tileLayers;
         string objectJSONString;
 
@@ -74,7 +78,7 @@ namespace MapzenGo.Models.Plugins
                                 // This plugin gets destroyed upon reload, so the reference of the shader has to be saved somewhere else.
                                 if (BoardInteraction.Instance.twoSidedShader == null)
                                 {
-                                  //  BoardInteraction.Instance.twoSidedShader = Resources.Load("Shaders/FastConfigurable/Shaders/FastConfigurable2Sided", typeof(Shader)) as Shader;
+                                    //  BoardInteraction.Instance.twoSidedShader = Resources.Load("Shaders/FastConfigurable/Shaders/FastConfigurable2Sided", typeof(Shader)) as Shader;
                                 }
                                 //go.gameObject.GetComponent<Renderer>().material.shader = BoardInteraction.Instance.twoSidedShader;
                             }
@@ -176,6 +180,8 @@ namespace MapzenGo.Models.Plugins
                 {
                     // Sets each spot in the vertices index (0,0 to 64,64) with the heightnumbers.
                     //vertices[index++] = new Vector3(x, z, int.Parse(GetString(arrayValuesString[counter])) / scaleFactor);
+
+                    // Careful: enabling this log freezes Unity for about a minute.
                     //Debug.Log("Tile: " + go.parent.name + " " + index + " X: " + x + " z: " + z + " height: " + (int.Parse(GetString(arrayValuesString[counter]).ToString()) + "counter: " + counter));
                     vertices[index] = new Vector3(x, z, int.Parse(GetString(arrayValuesString[counter])) / scaleFactor);
                     uvs[index++] = new Vector2(x / 64.0f, z / 64.0f);

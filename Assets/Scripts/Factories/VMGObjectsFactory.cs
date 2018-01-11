@@ -11,6 +11,10 @@ using UnityEngine.Networking;
 
 public class VMGObjectsFactory : SingletonCustom<VMGObjectsFactory>
 {
+    /// <summary>
+    /// Retrieved JSON data from the provided URL in the config, and loops through it to spawn all objects on the map.
+    /// </summary>
+
     private float vmgScaleFactor = 1000;
 
     public IEnumerator GetJSON(string url, Tile tile)

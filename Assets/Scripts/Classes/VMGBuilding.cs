@@ -5,6 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public class VMGBuilding : MonoBehaviour
 {
+    /// <summary>
+    /// The data of a VMG Building.
+    /// </summary>
+
     public string id;
     public List<Vector2> latLonList = new List<Vector2>();
     public float height;

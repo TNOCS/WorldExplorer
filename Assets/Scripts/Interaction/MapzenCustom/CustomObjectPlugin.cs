@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace MapzenGo.Models.Plugins
 {
+    /// <summary>
+    /// Spawns placed objects and VMGObjects on each tile when they are initialized.
+    /// </summary>
+
     public class CustomObjectPlugin : Plugin
     {
         public bool hasVMGObjects = false;
@@ -45,7 +49,7 @@ namespace MapzenGo.Models.Plugins
                     var x = tile.TileTms.x;
                     var y = tile.TileTms.y;
                     var url = "http://" + AppState.Instance.Config.ObjectServer + "/" + zoom + "/" + x + "/" + y + ".geojson";
-                   
+
                     StartCoroutine(VMGObjectsFactory.Instance.GetJSON(url, tile));
                 }
             }

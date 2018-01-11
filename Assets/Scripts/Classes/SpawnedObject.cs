@@ -8,6 +8,9 @@ using UnityEngine;
 [System.Serializable]
 public class SpawnedObject {
 
+    /// <summary>
+    /// The data of a spawned object.
+    /// </summary>
     public GameObject obj;
     public Vector3 centerPosition;
     public Vector3 localScale;

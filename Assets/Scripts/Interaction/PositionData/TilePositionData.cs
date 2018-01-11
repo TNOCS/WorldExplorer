@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class TilePositionData : MonoBehaviour
 {
-
-    // Only used for debugging purposes.
+    /// <summary>
+    /// Holds data of each tile. Currently only used for debugging purposes.
+    /// </summary>
 
     // Vector positions of tiles.
     public Vector3 topLeft;

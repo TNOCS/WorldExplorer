@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class CursorManagerCustom : Singleton<CursorManagerCustom>
 {
+    /// <summary>
+    /// Handles the users own cursor, including feedback through icons and color.
+    /// </summary>
+    
     public GameObject Cursor;
     public GameObject CursorOnHolograms;
     public GameObject CursorVisual;

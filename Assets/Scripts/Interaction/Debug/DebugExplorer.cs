@@ -3,6 +3,9 @@ using Assets.Scripts.Plugins;
 using UnityEngine;
 public class DebugExplorer : SingletonCustom<DebugExplorer>
 {
+    /// <summary>
+    /// For debugging and testing during development.
+    /// </summary>
 
     public bool debugMode;
     public string currentView;

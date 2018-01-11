@@ -4,6 +4,10 @@ using Assets.Scripts.Plugins;
 
 public class BoardTapHandler : MonoBehaviour, IInputClickHandler
 {
+    /// <summary>
+    /// Handles the users tap on the board itself.
+    /// </summary>
+    
     private AudioClip clickFeedback;
     private AudioSource audioSource;
 

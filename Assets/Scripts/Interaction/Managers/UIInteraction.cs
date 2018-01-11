@@ -2,6 +2,10 @@
 
 public class UIInteraction : SingletonCustom<UIInteraction>
 {
+    /// <summary>
+    /// Handles the interaction with the UI, including switching modes and (de)activating panels/text/buttons.
+    /// </summary>
+
     public GameObject BoardUI;
     public GameObject EditUI;
     public GameObject DrawUI;

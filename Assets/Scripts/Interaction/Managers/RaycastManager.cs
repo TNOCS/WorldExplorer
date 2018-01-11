@@ -2,6 +2,10 @@
 
 public class RaycastManager : SingletonCustom<RaycastManager>
 {
+    /// <summary>
+    /// Handles the raycast from the users point of view, including the emphasizing of gaze targets.
+    /// </summary>
+    
     [SerializeField]
     private float uiScalefactor = 1.25f;
     private bool enlarged = false;

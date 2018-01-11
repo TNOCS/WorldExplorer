@@ -3,7 +3,10 @@ using HoloToolkit.Unity.InputModule;
 
 public class ObjectNavigationHandler : MonoBehaviour, INavigationHandler
 {
-
+    /// <summary>
+    /// Handles the navigationdata that the user inputs to adjust objects.
+    /// </summary>
+    
     private AudioClip clickFeedback;
     private AudioSource audioSource;
 

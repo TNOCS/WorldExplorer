@@ -6,6 +6,10 @@ using System;
 
 public class BoardManipulationHandler : MonoBehaviour, IManipulationHandler {
 
+    /// <summary>
+    /// Handles the manipulationdata that the user inputs to tilt the table.
+    /// </summary>
+
     // Currently unused. Should be re-enabled for tilting the table.
 
     public void OnManipulationCanceled(ManipulationEventData eventData)

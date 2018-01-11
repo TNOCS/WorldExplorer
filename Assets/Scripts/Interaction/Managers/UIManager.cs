@@ -3,8 +3,13 @@ using UnityEngine;
 using Assets.Scripts;
 using System;
 using System.Linq;
+
 public class UIManager : SingletonCustom<UIManager>
 {
+    /// <summary>
+    /// Handles the UI visualization, including the compass, sprites as well as the taps on the buttons.
+    /// </summary>
+
     // Set by taps on UI components.
     public string currentMode;
 

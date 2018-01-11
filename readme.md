@@ -122,7 +122,7 @@ To add inventory objects.
 
 - Most new custom scripts (exceptions are custom scripts that are direct extensions of used libraries/frameworks, like the VMGFactory in the Factories folder) are categorized in the ‘Scripts’ folder.
 
-Interaction:
+**Interaction:**
 - InputHandler scripts handle direct user-input and communicate with relevant managers.
 - Interaction (…Interaction.cs) scripts perform the actions related to the input.
 - Manager (…Manager.cs) scripts handle any indirect functions caused by user input, like the adjustment of the UI.

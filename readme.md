@@ -28,12 +28,13 @@ Required software:
 
 Required hardware:
 - Microsoft HoloLens.
+- Clicker (suggested).
 
 ## Getting Started - Development
 1. Open Unity (if there is a version mismatch warning, make sure there is a backup and automatically upgrade the project).
 2. Open the MainScene.scene.
 
-The Manager gameobject contains many script that allow for easy editing, debugging and adding voice commands.
+The `Managers` gameobject contains many script that allow for easy editing, debugging and adding voice commands.
 
 The generation of buildings and objects are done through Factories.
 Interaction is called through the relevant InputHandlers.
@@ -43,20 +44,20 @@ Interaction and user interface functionalities are performed through the relevan
 1. Press CTRL-B (Build Project).
 2. Add the current scene.
 3. Make sure the following settings are selected:
-	- Universal Windows Platform.
-	- Target device: HoloLens.
-	- Build Type: D3D.
-	- SDK: Latest installed.
-	- Build and run on: Local machine.
+	- `Universal Windows Platform`.
+	- Target device: `HoloLens`.
+	- Build Type: `D3D`.
+	- SDK: `Latest installed`.
+	- Build and run on: `Local machine`.
 	- Unity C# projects checked (for debugging purposes only).
 4. Make sure "Virtual Reality Supported" is checked under Player Settings.
 5. Press Build and select the App folder, and choose a name.
 6. Open the Visual Studio Solution in the created folder.
-7. Build as "Release", "x86" and either to "Device" (when deploying over USB) or "Remote Machine" (when deploying over Wi-Fi). 
+7. Build as `Release`, `x86` and either to `Device` (when deploying over USB) or `Remote Machine` (when deploying over Wi-Fi). 
 
-NOTE: In Initialize.cs, the config.json is specified. Replace this with a version of your own if you want to edit anything related to the configuration.
+NOTE: In `initialize.cs`, the config.json is specified. Replace this with a version of your own if you want to edit anything related to the configuration.
 
-## Creating asset bundles
+## Creating AssetBundles
 In order to show 3D models, you need to create an asset bundle that contains these models. Currently, I do the following:
 - Go to [3dwarehouse.sketchup.com](3dwarehouse.sketchup.com) and download your models
 - Create a new Unity project
@@ -98,13 +99,13 @@ sessionName : name of the Session.
 table : size and height of the table.
 ```
 
-- Layers are the layers used for the tile images.
-- Views are the bookmark locations: 
-	- 'Lat' and 'Lon' can be changed to adjust the location. 
+- `layers` are the layers used for the tile images.
+- `view` is the bookmark locations: 
+	- `Lat` and `Lon` can be changed to adjust the location. 
 	- Zoom levels can changed to adjust initial zoom level.
-	- tileSize and range can be changed to change the size of the tiles.
-	- mapzen, layers and tileLayers can be adjusted to enable or disable certain visualizations.
-	- terrainHeightAvailable should be enabled when terrain height data is available.
+	- `tileSize` and `range` can be changed to change the size of the tiles.
+	- `mapzen`, `layers` and `tileLayers` can be adjusted to enable or disable certain visualizations.
+	- `terrainHeightAvailable` should be enabled when terrain height data is available.
 
 ## Adding inventory objects
 To add inventory objects.
@@ -116,20 +117,20 @@ To add inventory objects.
 
 ## Additional notes
 - Button names should always end in ‘Btn’.
-- Buttons should always have the tag ‘uibutton’.
-- Objects with the tag ‘uistatic’ are ignored by raycasts and other interactions.
-- The ‘Managers’ object, or a child of this object, contains all singleton scripts. A few exceptions exist (like the initialize.cs on the Main Camera).
+- Buttons should always have the tag `uibutton`.
+- Objects with the tag `uistatic` are ignored by raycasts and other interactions.
+- The `Managers` object, or a child of this object, contains all singleton scripts. A few exceptions exist (like the `initialize.cs` on the `Main Camera`).
 
-- Most new custom scripts (exceptions are custom scripts that are direct extensions of used libraries/frameworks, like the VMGFactory in the Factories folder) are categorized in the ‘Scripts’ folder.
+- Most new custom scripts (exceptions are custom scripts that are direct extensions of used libraries/frameworks, like the `VMGFactory.cs` in the Factories folder) are categorized in the `Scripts` folder.
 
 **Interaction:**
 - InputHandler scripts handle direct user-input and communicate with relevant managers.
-- Interaction (…Interaction.cs) scripts perform the actions related to the input.
-- Manager (…Manager.cs) scripts handle any indirect functions caused by user input, like the adjustment of the UI.
+- Interaction (`…Interaction.cs`) scripts perform the actions related to the input.
+- Manager (`…Manager.cs`) scripts handle any indirect functions caused by user input, like the adjustment of the UI.
 
-- Inventory items are saved under ‘Prefabs/Inventory’. When adding new items, make sure the components are identical to existing inventory items.
+- Inventory items are saved under `Prefabs/Inventory`. When adding new items, make sure the components are identical to existing inventory items.
 - Sprite rendering is based on the ‘Order in Layer’ and range between 0 and 5. (Higher number = rendered on top of others).
-- If you want to add text in the scene, use the 3DTextPrefab object in the project.
+- If you want to add text in the scene, use the `3DTextPrefab` object in the project.
 
 
 ## Authors

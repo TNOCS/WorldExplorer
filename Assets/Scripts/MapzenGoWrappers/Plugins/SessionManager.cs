@@ -23,16 +23,19 @@ namespace Assets.Scripts.Plugins
         protected readonly AppState appState = AppState.Instance;
         protected SelectionHandler selectionHandler;
         public readonly User me = new User();
+        public List<string> userStrings = new List<string>();
         protected MqttClient client;
         protected string topic;
         protected string sessionName;
         /// <summary>
         /// Other users in the session
         /// </summary>
-        protected readonly List<User> users = new List<User>();
+        public readonly List<User> users = new List<User>();
         protected readonly List<GameObject> cursors = new List<GameObject>();
         internal GameObject cursorPrefab;
         public Material UserMaterial;
+        // Dictates if table position, rotation and scale is shared.
+        public bool ShareTable = true;
 
         private void Awake()
         {
@@ -142,7 +145,10 @@ namespace Assets.Scripts.Plugins
                             SetDeleteObject(msg);
                             break;
                         case "table":
-                            SetTable(msg);
+                            if (ShareTable)
+                            {
+                                SetTable(msg);
+                            }
                             break;
                     }
                     //GameObject _3dText = GameObject.Find("tbTemp");
@@ -374,10 +380,13 @@ namespace Assets.Scripts.Plugins
 
         public void UpdateTable()
         {
-            var terrain = BoardInteraction.Instance.terrain.transform;
-            var tableData = string.Format(@"{{ ""posX"": {0}, ""posY"": {1}, ""posZ"": {2}, ""rotX"": {3}, ""rotY"": {4}, ""rotZ"": {5}, ""scaleX"": {6}, ""scaleY"": {7}, ""scaleZ"": {8}, ""user"": ""{9}"" }}",
-                terrain.position.x, terrain.position.y, terrain.position.z, terrain.rotation.eulerAngles.x, terrain.rotation.eulerAngles.y, terrain.rotation.eulerAngles.z, terrain.localScale.x, terrain.localScale.y, terrain.localScale.z, me.id);
-            SendJsonMessage("table", tableData, false);
+            if (ShareTable)
+            {
+                var terrain = BoardInteraction.Instance.terrain.transform;
+                var tableData = string.Format(@"{{ ""posX"": {0}, ""posY"": {1}, ""posZ"": {2}, ""rotX"": {3}, ""rotY"": {4}, ""rotZ"": {5}, ""scaleX"": {6}, ""scaleY"": {7}, ""scaleZ"": {8}, ""user"": ""{9}"" }}",
+                    terrain.position.x, terrain.position.y, terrain.position.z, terrain.rotation.eulerAngles.x, terrain.rotation.eulerAngles.y, terrain.rotation.eulerAngles.z, terrain.localScale.x, terrain.localScale.y, terrain.localScale.z, me.id);
+                SendJsonMessage("table", tableData, false);
+            }            
         }
 
         public void SetTable(string msg)
@@ -428,8 +437,11 @@ namespace Assets.Scripts.Plugins
         {
             var data = new JSONObject(json);
             var id = data.GetString("id");
+            var name = data.GetString("name");
 
             if (id == me.Id) return; // Do not update yourself
+            Debug.Log("User: " + name);
+            userStrings.Add(name);
             Debug.Log("Update presence for " + id);
             var cursor = GameObject.Find(id + "-Cursor");
             if (cursor == null)

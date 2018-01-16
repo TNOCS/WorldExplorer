@@ -3,6 +3,8 @@ using UnityEngine;
 using Assets.Scripts;
 using System;
 using System.Linq;
+using Assets.Scripts.Classes;
+using Assets.Scripts.Plugins;
 
 public class UIManager : SingletonCustom<UIManager>
 {
@@ -35,6 +37,14 @@ public class UIManager : SingletonCustom<UIManager>
     public string currentUIPosition;
     private Transform frontSide, leftSide, rightSide, backSide;
     public Quaternion originalUIRotation;
+
+    // Inventory.
+    public GameObject InventoryItemHolder;
+    public GameObject InventoryPrevious, InventoryNext;
+    public int currentPage;
+    public float pages;
+    public List<GameObject> InventoryItems;
+    public int itemsPerPage = 16;
 
     // Sprites.
     private SpriteRenderer coloredSprite;
@@ -73,11 +83,24 @@ public class UIManager : SingletonCustom<UIManager>
         ZoomMinReached.SetActive(false);
         ZoomMaxReached.SetActive(false);
 
+        InventoryItemHolder = GameObject.Find("InventoryItems");
+        InventoryPrevious = GameObject.Find("InventoryPreviousBtn");
+        InventoryNext = GameObject.Find("InventoryNextBtn");
+        InventoryItems = new List<GameObject>();
+
         ZoomInBtn = GameObject.Find("ZoomInBtn");
         ZoomOutBtn = GameObject.Find("ZoomOutBtn");
 
         TerrainBtn = GameObject.Find("ToggleTerrainBtn");
         TerrainUnavailable = GameObject.Find("TerrainUnavailable");
+    }
+
+    void Start()
+    {
+        foreach (Transform child in InventoryItemHolder.transform)
+        {
+            InventoryItems.Add(child.gameObject);
+        }
     }
 
     void Update()
@@ -90,6 +113,80 @@ public class UIManager : SingletonCustom<UIManager>
         {
             SetZoomLevelMinMaxIcons();
             SetTerrainUnavailableIcon();
+        }
+
+        SetSettings();
+    }
+
+    public void PreviousInventoryPage()
+    {
+        if (currentPage != 1)
+        {
+            currentPage--;
+            SetInventoryArrows();
+        }
+    }
+
+    public void NextInventoryPage()
+    {
+        if (currentPage != pages)
+        {
+            currentPage++;
+            SetInventoryArrows();
+        }
+    }
+
+    public void SetInventoryArrows()
+    {
+        pages = Mathf.CeilToInt(((float)InventoryItemHolder.transform.childCount / itemsPerPage));
+
+        // If last page has been reached.
+        if (currentPage == pages)
+        {
+            InventoryNext.SetActive(false);
+            if (pages == 1)
+            {
+                InventoryPrevious.SetActive(false);
+            }
+            else
+            {
+                InventoryPrevious.SetActive(true);
+            }
+        }
+        // If there are more pages left after the current one.
+        else if (pages > currentPage)
+        {
+            InventoryNext.SetActive(true);
+            if (currentPage == 1)
+            {
+                InventoryPrevious.SetActive(false);
+            }
+        }
+
+        // If there are more pages before the current one and the current page is not the last one.
+        if (currentPage > 1 && currentPage < pages)
+        {
+            InventoryPrevious.SetActive(true);
+            InventoryNext.SetActive(true);
+        }
+
+        SetItems();
+    }
+
+    // Enables the right inventory items.
+    public void SetItems()
+    {
+        int amountOfItemsToSkip = currentPage * itemsPerPage - itemsPerPage;
+        for (int i = 0; i < InventoryItems.Count; i++)
+        {
+            if (i >= amountOfItemsToSkip && i < amountOfItemsToSkip + itemsPerPage)
+            {
+                InventoryItems[i].SetActive(true);
+            }
+            else
+            {
+                InventoryItems[i].SetActive(false);
+            }
         }
     }
 
@@ -269,6 +366,36 @@ public class UIManager : SingletonCustom<UIManager>
         }
     }
 
+    public void SetSettings()
+    {
+        if (UIInteraction.Instance.SettingsPanel.activeInHierarchy == true)
+        {
+            var nameTxt = GameObject.Find("SettingsNameTxt").GetComponent<TextMesh>();
+            var sessionNameTxt = GameObject.Find("SettingsSessionTxt").GetComponent<TextMesh>();
+            var otherUsersTxt = GameObject.Find("OtherUsersTxt").GetComponent<TextMesh>();
+
+            if (AppState.Instance.Config != null)
+            {
+                nameTxt.text = AppState.Instance.Config.UserName;
+                sessionNameTxt.text = "Session " + AppState.Instance.Config.SessionName;
+                string otherUsers = " ";
+                foreach (string user in SessionManager.Instance.userStrings)
+                {
+                    if (!otherUsers.Contains(user))
+                    {
+                        otherUsers = otherUsers + user + "\n";
+                    }
+                    else
+                    {
+                        Debug.Log("Already contains " + user);
+                    }
+                }
+
+                otherUsersTxt.text = otherUsers;
+            }
+        }
+    }
+
     public void Tap(GameObject go)
     {
         CallFunctions(go.name, go);
@@ -338,6 +465,18 @@ public class UIManager : SingletonCustom<UIManager>
             case "SouthWestBtn":
                 var subString = keyword.Substring(0, keyword.Length - 3).ToLower();
                 BoardInteraction.Instance.Go(subString);
+                break;
+            case "SettingsTxt":
+                UIInteraction.Instance.ToggleSettings();
+                break;
+            case "ToggleSharedTableBtn":
+                UIInteraction.Instance.ToggleSharedTable();
+                break;
+            case "InventoryPreviousBtn":
+                PreviousInventoryPage();
+                break;
+            case "InventoryNextBtn":
+                NextInventoryPage();
                 break;
             default:
                 // For all functions that require more actions than just a single tap.

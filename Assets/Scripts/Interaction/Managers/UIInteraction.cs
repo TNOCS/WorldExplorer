@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Plugins;
+using UnityEngine;
 
 public class UIInteraction : SingletonCustom<UIInteraction>
 {
@@ -13,6 +14,8 @@ public class UIInteraction : SingletonCustom<UIInteraction>
     public GameObject MapPanel;
     public GameObject HandlerPanel;
     public GameObject InventoryPanel;
+    public GameObject SettingsPanel;
+    public TextMesh TableShareText;
     public GameObject minTileRangeButton;
     public GameObject plusTileRangeButton;
     public TextMesh InventoryTextMesh;
@@ -26,6 +29,9 @@ public class UIInteraction : SingletonCustom<UIInteraction>
         MapPanel = GameObject.Find("MapPanel");
         HandlerPanel = GameObject.Find("HandlerPanel");
         InventoryPanel = GameObject.Find("InventoryPanel");
+        SettingsPanel = GameObject.Find("SettingsPanel");
+        TableShareText = GameObject.Find("ToggleSharedTableBtn").GetComponent<TextMesh>();
+        SettingsPanel.SetActive(false);
         InventoryTextMesh = GameObject.Find("InventoryTxt").GetComponent<TextMesh>();
 
         SwitchMode("");
@@ -139,6 +145,9 @@ public class UIInteraction : SingletonCustom<UIInteraction>
         if (InventoryPanel.activeInHierarchy)
         {
             InventoryTextMesh.text = "Close \nInventory";
+            UIManager.Instance.currentPage = 1;
+            UIManager.Instance.SetInventoryArrows();
+            UIManager.Instance.SetItems();
         }
         else
         {
@@ -172,6 +181,25 @@ public class UIInteraction : SingletonCustom<UIInteraction>
     //     }
     // }
 
+    public void ToggleSettings()
+    {
+        SettingsPanel.SetActive(!SettingsPanel.activeInHierarchy);
+    }
+
+    public void ToggleSharedTable()
+    {
+        SessionManager.Instance.ShareTable = !SessionManager.Instance.ShareTable;
+
+        if (SessionManager.Instance.ShareTable)
+        {
+            TableShareText.text = "Sharing of your \ntable position is ON. \nTap to change.";
+        }
+        else
+        {
+            TableShareText.text = "Sharing of your \ntable position is OFF. \nTap to change.";
+        }
+    }
+
     #region SpeechManager Functions
     public void OpenHandlers()
     {
@@ -198,6 +226,9 @@ public class UIInteraction : SingletonCustom<UIInteraction>
     public void OpenInventory()
     {
         InventoryPanel.SetActive(true);
+        UIManager.Instance.currentPage = 1;
+        UIManager.Instance.SetInventoryArrows();
+        UIManager.Instance.SetItems();
         InventoryTextMesh.text = "Close \nInventory";
     }
 

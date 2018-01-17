@@ -30,7 +30,7 @@ public class UIInteraction : SingletonCustom<UIInteraction>
         HandlerPanel = GameObject.Find("HandlerPanel");
         InventoryPanel = GameObject.Find("InventoryPanel");
         SettingsPanel = GameObject.Find("SettingsPanel");
-        TableShareText = GameObject.Find("ToggleSharedTableBtn").GetComponent<TextMesh>();
+        TableShareText = GameObject.Find("ToggleSharedTableTxt").GetComponent<TextMesh>();
         SettingsPanel.SetActive(false);
         InventoryTextMesh = GameObject.Find("InventoryTxt").GetComponent<TextMesh>();
 

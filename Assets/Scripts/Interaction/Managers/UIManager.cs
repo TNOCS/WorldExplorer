@@ -466,7 +466,7 @@ public class UIManager : SingletonCustom<UIManager>
                 var subString = keyword.Substring(0, keyword.Length - 3).ToLower();
                 BoardInteraction.Instance.Go(subString);
                 break;
-            case "SettingsTxt":
+            case "SettingsBtn":
                 UIInteraction.Instance.ToggleSettings();
                 break;
             case "ToggleSharedTableBtn":

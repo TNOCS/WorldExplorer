@@ -3,6 +3,10 @@ using HoloToolkit.Unity.InputModule;
 
 public class BoardNavigationHandler : MonoBehaviour, INavigationHandler, IInputHandler
 {
+    /// <summary>
+    /// Handles the navigationdata that the user inputs to adjust the table.
+    /// </summary>
+
     private AudioClip clickFeedback;
     private AudioSource audioSource;
 

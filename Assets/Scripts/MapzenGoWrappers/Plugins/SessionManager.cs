@@ -178,13 +178,8 @@ namespace Assets.Scripts.Plugins
             if (av.Equal(lat, lon, zoom, range)) return;
             av.SetView(lat, lon, zoom, range);
             if (!appState.TileManager) return;
-
-            UIManager.Instance.CurrentOverlayText.text = AppState.Instance.Config.ActiveView.Name.ToString();
-
-            // Zoom out (e.g. 19 to 18) is 1
-            // Zoom in (e.g. 18 to 19) is -1
-
             appState.ResetMap(av);
+            UIManager.Instance.CurrentOverlayText.text = AppState.Instance.Config.ActiveView.Name.ToString();
         }
 
 
@@ -440,7 +435,7 @@ namespace Assets.Scripts.Plugins
             var name = data.GetString("name");
 
             if (id == me.Id) return; // Do not update yourself
-            Debug.Log("User: " + name);
+            //Debug.Log("User: " + name);
             userStrings.Add(name);
             Debug.Log("Update presence for " + id);
             var cursor = GameObject.Find(id + "-Cursor");

@@ -33,6 +33,7 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
 
     public GameObject terrain;
     public bool terrainHeights = true;
+    public bool terrainLeveled = false;
 
     public Material boundingBoxInitial;
     public Material boundingBoxSelected;
@@ -131,12 +132,14 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
                 GameObject.Find("ToggleTerrainBtn").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("terrainicon");
                 var UI = GameObject.Find("UIMain");
                 UI.transform.position = new Vector3(UI.transform.position.x, UI.transform.position.y - 0.05f, UI.transform.position.z);
+                terrainLeveled = true;
             }
             else
             {
                 GameObject.Find("ToggleTerrainBtn").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("terrainiconflat");
                 var UI = GameObject.Find("UIMain");
                 UI.transform.position = new Vector3(UI.transform.position.x, UI.transform.position.y + 0.05f, UI.transform.position.z);
+                terrainLeveled = false;
 
             }
         }
@@ -157,12 +160,22 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
         }
 
         terrainHeights = false;
+       
+        AppState.Instance.ResetMap();
+
+        if (terrainLeveled)
+        {
+            var UI = GameObject.Find("UIMain");
+            UI.transform.position = new Vector3(UI.transform.position.x, UI.transform.position.y + 0.05f, UI.transform.position.z);
+            terrainLeveled = false;
+        }
 
         if (GameObject.Find("ToggleTerrainBtn") != null)
         {
             GameObject.Find("ToggleTerrainBtn").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("terrainiconflat");
         }
-        AppState.Instance.ResetMap();
+
+        UIManager.Instance.CurrentOverlayText.text = AppState.Instance.Config.ActiveView.Name.ToString();
         SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView);
     }
 

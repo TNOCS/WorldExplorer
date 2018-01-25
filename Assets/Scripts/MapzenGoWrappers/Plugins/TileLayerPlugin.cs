@@ -49,7 +49,7 @@ namespace MapzenGo.Models.Plugins
                 var terrainUrl = "http://" + AppState.Instance.Config.HeightServer + "/" + fileName + ".terrain";
 
                 // Sets terrain heights for each tile.
-                if (BoardInteraction.Instance.terrainHeights)
+                if (BoardInteraction.Instance.terrainHeights && AppState.Instance.Config.ActiveView.Name == "Compound")
                 {
                     StartCoroutine(CheckIfHeightsAvailable(terrainUrl, tile, tileLayer, go));
                 }

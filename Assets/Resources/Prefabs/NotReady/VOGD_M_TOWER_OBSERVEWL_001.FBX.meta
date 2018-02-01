@@ -1,0 +1,281 @@
+fileFormatVersion: 2
+guid: cc5ea01390cc88b4fb401c17e455106e
+timeCreated: 1512034088
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: DUMMY
+    100002: mesh_01
+    100004: mesh_01 1
+    100006: mesh_02
+    100008: mesh_02 1
+    100010: mesh_03
+    100012: mesh_03 1
+    100014: mesh_04
+    100016: mesh_04 1
+    100018: mesh_05
+    100020: mesh_05 1
+    100022: mesh_06
+    100024: mesh_06 1
+    100026: mesh_07
+    100028: mesh_07 1
+    100030: mesh_08
+    100032: mesh_08 1
+    100034: mesh_09
+    100036: mesh_09 1
+    100038: mesh_10
+    100040: mesh_10 1
+    100042: mesh_11
+    100044: mesh_11 1
+    100046: mesh_12
+    100048: mesh_12 1
+    100050: mesh_13
+    100052: mesh_13 1
+    100054: mesh_14
+    100056: mesh_15
+    100058: mesh_16
+    100060: mesh_17
+    100062: OBSERVE-WL
+    100064: OBSERVE-WL 1
+    100066: OBSERVE-WL 2
+    100068: OBSERVE-WL 3
+    100070: OBSERVE-WL 4
+    100072: OBSERVE-WL 5
+    100074: OBSERVE-WL 6
+    100076: OBSERVE-WL 7
+    100078: OBSERVE-WL 8
+    100080: //RootNode
+    400000: DUMMY
+    400002: mesh_01
+    400004: mesh_01 1
+    400006: mesh_02
+    400008: mesh_02 1
+    400010: mesh_03
+    400012: mesh_03 1
+    400014: mesh_04
+    400016: mesh_04 1
+    400018: mesh_05
+    400020: mesh_05 1
+    400022: mesh_06
+    400024: mesh_06 1
+    400026: mesh_07
+    400028: mesh_07 1
+    400030: mesh_08
+    400032: mesh_08 1
+    400034: mesh_09
+    400036: mesh_09 1
+    400038: mesh_10
+    400040: mesh_10 1
+    400042: mesh_11
+    400044: mesh_11 1
+    400046: mesh_12
+    400048: mesh_12 1
+    400050: mesh_13
+    400052: mesh_13 1
+    400054: mesh_14
+    400056: mesh_15
+    400058: mesh_16
+    400060: mesh_17
+    400062: OBSERVE-WL
+    400064: OBSERVE-WL 1
+    400066: OBSERVE-WL 2
+    400068: OBSERVE-WL 3
+    400070: OBSERVE-WL 4
+    400072: OBSERVE-WL 5
+    400074: OBSERVE-WL 6
+    400076: OBSERVE-WL 7
+    400078: OBSERVE-WL 8
+    400080: //RootNode
+    2300000: mesh_01
+    2300002: mesh_01 1
+    2300004: mesh_02
+    2300006: mesh_02 1
+    2300008: mesh_03
+    2300010: mesh_03 1
+    2300012: mesh_04
+    2300014: mesh_04 1
+    2300016: mesh_05
+    2300018: mesh_05 1
+    2300020: mesh_06
+    2300022: mesh_06 1
+    2300024: mesh_07
+    2300026: mesh_07 1
+    2300028: mesh_08
+    2300030: mesh_08 1
+    2300032: mesh_09
+    2300034: mesh_09 1
+    2300036: mesh_10
+    2300038: mesh_10 1
+    2300040: mesh_11
+    2300042: mesh_11 1
+    2300044: mesh_12
+    2300046: mesh_12 1
+    2300048: mesh_13
+    2300050: mesh_13 1
+    2300052: mesh_14
+    2300054: mesh_15
+    2300056: mesh_16
+    2300058: mesh_17
+    2300060: OBSERVE-WL
+    2300062: OBSERVE-WL 1
+    2300064: OBSERVE-WL 2
+    2300066: OBSERVE-WL 3
+    2300068: OBSERVE-WL 4
+    2300070: OBSERVE-WL 5
+    2300072: OBSERVE-WL 6
+    2300074: OBSERVE-WL 7
+    2300076: OBSERVE-WL 8
+    3300000: mesh_01
+    3300002: mesh_01 1
+    3300004: mesh_02
+    3300006: mesh_02 1
+    3300008: mesh_03
+    3300010: mesh_03 1
+    3300012: mesh_04
+    3300014: mesh_04 1
+    3300016: mesh_05
+    3300018: mesh_05 1
+    3300020: mesh_06
+    3300022: mesh_06 1
+    3300024: mesh_07
+    3300026: mesh_07 1
+    3300028: mesh_08
+    3300030: mesh_08 1
+    3300032: mesh_09
+    3300034: mesh_09 1
+    3300036: mesh_10
+    3300038: mesh_10 1
+    3300040: mesh_11
+    3300042: mesh_11 1
+    3300044: mesh_12
+    3300046: mesh_12 1
+    3300048: mesh_13
+    3300050: mesh_13 1
+    3300052: mesh_14
+    3300054: mesh_15
+    3300056: mesh_16
+    3300058: mesh_17
+    3300060: OBSERVE-WL
+    3300062: OBSERVE-WL 1
+    3300064: OBSERVE-WL 2
+    3300066: OBSERVE-WL 3
+    3300068: OBSERVE-WL 4
+    3300070: OBSERVE-WL 5
+    3300072: OBSERVE-WL 6
+    3300074: OBSERVE-WL 7
+    3300076: OBSERVE-WL 8
+    4300000: OBSERVE-WL
+    4300002: OBSERVE-WL
+    4300004: OBSERVE-WL
+    4300006: mesh_01
+    4300008: mesh_02
+    4300010: mesh_03
+    4300012: mesh_04
+    4300014: mesh_05
+    4300016: mesh_06
+    4300018: mesh_07
+    4300020: mesh_08
+    4300022: mesh_09
+    4300024: mesh_10
+    4300026: mesh_11
+    4300028: mesh_17
+    4300030: mesh_12
+    4300032: mesh_13
+    4300034: mesh_14
+    4300036: mesh_15
+    4300038: mesh_16
+    4300040: OBSERVE-WL
+    4300042: OBSERVE-WL
+    4300044: OBSERVE-WL
+    4300046: OBSERVE-WL
+    4300048: OBSERVE-WL
+    4300050: OBSERVE-WL
+    4300052: mesh_01
+    4300054: mesh_02
+    4300056: mesh_03
+    4300058: mesh_04
+    4300060: mesh_05
+    4300062: mesh_06
+    4300064: mesh_07
+    4300066: mesh_08
+    4300068: mesh_09
+    4300070: mesh_10
+    4300072: mesh_11
+    4300074: mesh_12
+    4300076: mesh_13
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

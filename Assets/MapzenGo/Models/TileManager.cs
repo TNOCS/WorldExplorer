@@ -6,6 +6,9 @@ using MapzenGo.Models.Factories;
 using MapzenGo.Models.Plugins;
 using UniRx;
 using UnityEngine;
+using Assets.Scripts;
+using Assets.Scripts.Classes;
+using System;
 
 namespace MapzenGo.Models
 {
@@ -15,7 +18,7 @@ namespace MapzenGo.Models
         [SerializeField] public float Longitude = 32.818442f;
         [SerializeField] public int Range = 3;
         [SerializeField] public int Zoom = 16;
-        [SerializeField] public float TileSize = 100;
+        [SerializeField] public float TileSize = 200;
 
         public string _mapzenUrl = "http://tile.mapzen.com/mapzen/vector/v1/{0}/{1}/{2}/{3}.{4}?api_key={5}";
         [SerializeField] public string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
@@ -54,23 +57,24 @@ namespace MapzenGo.Models
             transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
         }
 
-        public void UpdateView()
+        public void UpdateView(double lat, double lon)
         {
-            var v2 = GM.LatLonToMeters(Latitude, Longitude);
+            var v2 = GM.LatLonToMeters(lat, lon);
             var tile = GM.MetersToTile(v2, Zoom);
 
             CenterTms = tile;
             CenterInMercator = GM.TileBounds(CenterTms, Zoom).Center;
 
             LoadTiles(CenterTms, CenterInMercator);
-
+            Debug.Log(Zoom);
             var rect = GM.TileBounds(CenterTms, Zoom);
             transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
         }
 
         public virtual void Update()
         {
-            
+            // Do not delete (overridden).
+
         }
 
         private void InitLayers()
@@ -109,27 +113,26 @@ namespace MapzenGo.Models
 
         protected virtual IEnumerator CreateTile(Vector2d tileTms, Vector2d centerInMercator)
         {
+
             var rect = GM.TileBounds(tileTms, Zoom);
             var tile = new GameObject("tile " + tileTms.x + "-" + tileTms.y).AddComponent<Tile>();
-
             tile.Zoom = Zoom;
             tile.TileTms = tileTms;
             tile.TileCenter = rect.Center;
             tile.Material = MapMaterial;
             tile.Rect = GM.TileBounds(tileTms, Zoom);
-
             Tiles.Add(tileTms, tile);
             tile.transform.position = (rect.Center - centerInMercator).ToVector3();
             tile.transform.SetParent(TileHost, false);
+          
+
             LoadTile(tileTms, tile);
-            
             yield return null;
         }
 
         protected virtual void LoadTile(Vector2d tileTms, Tile tile)
         {
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
-            // Debug.Log(url);
             ObservableWWW.Get(url)
                 .Subscribe(
                     text => { ConstructTile(text, tile); }, //success

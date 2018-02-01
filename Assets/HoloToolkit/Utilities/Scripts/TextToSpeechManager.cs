@@ -3,7 +3,7 @@
 using System;
 using UnityEngine;
 
-#if WINDOWS_UWP
+#if !UNITY_EDITOR && UNITY_WSA
 using Windows.Foundation;
 using Windows.Media.SpeechSynthesis;
 using Windows.Storage.Streams;
@@ -62,10 +62,11 @@ namespace HoloToolkit.Unity
         private TextToSpeechVoice voice;
 
         // Member Variables
-        #if WINDOWS_UWP
+#if !UNITY_EDITOR && UNITY_WSA
         private SpeechSynthesizer synthesizer;
         private VoiceInformation voiceInfo;
-        #endif
+        private bool speechTextInQueue = false;
+#endif
 
         // Static Helper Methods
 
@@ -81,7 +82,7 @@ namespace HoloToolkit.Unity
         /// <returns>
         /// The converted float.
         /// </returns>
-        static private float BytesToFloat(byte firstByte, byte secondByte)
+        private static float BytesToFloat(byte firstByte, byte secondByte)
         {
             // Convert two bytes to one short (little endian)
             short s = (short)((secondByte << 8) | firstByte);
@@ -102,7 +103,7 @@ namespace HoloToolkit.Unity
         /// <returns>
         /// The converted int.
         /// </returns>
-        static private int BytesToInt(byte[] bytes, int offset = 0)
+        private static int BytesToInt(byte[] bytes, int offset = 0)
         {
             int value = 0;
             for (int i = 0; i < 4; i++)
@@ -130,7 +131,7 @@ namespace HoloToolkit.Unity
         /// <returns>
         /// The <see cref="AudioClip"/>.
         /// </returns>
-        static private AudioClip ToClip(string name, float[] audioData, int sampleCount, int frequency)
+        private static AudioClip ToClip(string name, float[] audioData, int sampleCount, int frequency)
         {
             // Create the audio clip
             var clip = AudioClip.Create(name, sampleCount, 1, frequency, false);
@@ -157,7 +158,7 @@ namespace HoloToolkit.Unity
         /// <returns>
         /// The Unity formatted audio data.
         /// </returns>
-        static private float[] ToUnityAudio(byte[] wavAudio, out int sampleCount, out int frequency)
+        private static float[] ToUnityAudio(byte[] wavAudio, out int sampleCount, out int frequency)
         {
             // Determine if mono or stereo
             int channelCount = wavAudio[22];     // Speech audio data is always mono but read actual header value for processing
@@ -215,7 +216,7 @@ namespace HoloToolkit.Unity
             Debug.LogFormat("Speech not supported in editor. \"{0}\"", text);
         }
 
-        #if WINDOWS_UWP
+#if !UNITY_EDITOR && UNITY_WSA
         /// <summary>
         /// Executes a function that generates a speech stream and then converts and plays it in Unity.
         /// </summary>
@@ -234,6 +235,7 @@ namespace HoloToolkit.Unity
             {
                 try
                 {
+                    speechTextInQueue = true;
                     // Need await, so most of this will be run as a new Task in its own thread.
                     // This is good since it frees up Unity to keep running anyway.
                     Task.Run(async () =>
@@ -304,11 +306,13 @@ namespace HoloToolkit.Unity
 
                             // Play audio
                             audioSource.Play();
+                            speechTextInQueue = false;
                         }, false);
                     });
                 }
                 catch (Exception ex)
                 {
+                    speechTextInQueue = false;
                     Debug.LogErrorFormat("Speech generation problem: \"{0}\"", ex.Message);
                 }
             }
@@ -317,7 +321,7 @@ namespace HoloToolkit.Unity
                 Debug.LogErrorFormat("Speech not initialized. \"{0}\"", text);
             }
         }
-        #endif
+#endif
 
         // MonoBehaviour Methods
         void Start()
@@ -329,10 +333,10 @@ namespace HoloToolkit.Unity
                     Debug.LogError("An AudioSource is required and should be assigned to 'Audio Source' in the inspector.");
                 }
                 else
-                { 
-                    #if WINDOWS_UWP
+                {
+#if !UNITY_EDITOR && UNITY_WSA
                     synthesizer = new SpeechSynthesizer();
-                    #endif
+#endif
                 }
             }
             catch (Exception ex)
@@ -356,11 +360,11 @@ namespace HoloToolkit.Unity
             if (string.IsNullOrEmpty(ssml)) { return; }
 
             // Pass to helper method
-            #if WINDOWS_UWP
+#if !UNITY_EDITOR && UNITY_WSA
             PlaySpeech(ssml, () => synthesizer.SynthesizeSsmlToStreamAsync(ssml));
-            #else
+#else
             LogSpeech(ssml);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -375,11 +379,53 @@ namespace HoloToolkit.Unity
             if (string.IsNullOrEmpty(text)) { return; }
 
             // Pass to helper method
-            #if WINDOWS_UWP
+#if !UNITY_EDITOR && UNITY_WSA
             PlaySpeech(text, ()=> synthesizer.SynthesizeTextToStreamAsync(text));
-            #else
+#else
             LogSpeech(text);
-            #endif
+#endif
+        }
+
+        /// <summary>
+        /// Returns info whether a text is submitted and being processed by PlaySpeech method
+        /// Handy for avoiding situations when a text is submitted, but audio clip is not yet ready because the audio source isn't playing yet.
+        /// Example: yield return new WaitWhile(() => textToSpeechManager.SpeechTextInQueue() || textToSpeechManager.IsSpeaking())
+        /// </summary>
+        /// <returns></returns>
+        public bool SpeechTextInQueue()
+        {
+#if !UNITY_EDITOR && UNITY_WSA
+            return speechTextInQueue;
+#else
+            return false;
+#endif
+        }
+
+        /// <summary>
+        /// Returns whether or not the AudioSource is actively playing.
+        /// </summary>
+        /// <returns>
+        /// True, if the AudioSource is playing. False, if the AudioSource is not playing or is null.
+        /// </returns>
+        public bool IsSpeaking()
+        {
+            if (audioSource != null)
+            {
+                return audioSource.isPlaying;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Stops text-to-speech playback.
+        /// </summary>
+        public void StopSpeaking()
+        {
+            if (IsSpeaking())
+            {
+                audioSource.Stop();
+            }
         }
 
         /// <summary>

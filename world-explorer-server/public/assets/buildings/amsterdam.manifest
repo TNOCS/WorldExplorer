@@ -1,0 +1,48 @@
+ManifestFileVersion: 0
+CRC: 1334324161
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 4074eeb983eebe4dd387e2bfe9765829
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: d27a9ed7ed5c7a459d780b0a0a375c27
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/ams-munttoren+gebouw+amsterdam.skp
+- Assets/ams-muziekgebouw_aan__t_ij.skp
+- Assets/ams-cs-5geplaatst.skp
+- Assets/ams-stadion_ge1.skp
+- Assets/ams-amsterdamsepoort.skp
+- Assets/ams-skpfile (2).skp
+- Assets/ams-pvf+pensioenen.skp
+- Assets/ams-vumc.skp
+- Assets/ams-berlage.skp
+- Assets/ams-van+gogh+museum.skp
+- Assets/ams-untitled.skp
+- Assets/ams-amsterdam-arena.skp
+- Assets/ams-amsterdam+nieuwe+doelenstraat+26.skp
+- Assets/ams-skpfile (3).skp
+- Assets/ams-hotel-amsterdam.skp
+- Assets/ams-skpfile.skp
+- Assets/ams-arena+twr+a.skp
+- Assets/ams-skpfile (1).skp
+- Assets/ams-rijksmuseum.skp
+Dependencies: []

@@ -47,12 +47,12 @@ static public class AssetBundleManager
             downloadingKeyNames.Add(keyName);
             while (!Caching.ready)
                 yield return null;
-
+            
             using (WWW www = WWW.LoadFromCacheOrDownload(url, version))
             {
                 yield return www;
-                if (www.error != null)
-                    throw new Exception("WWW download:" + www.error);
+                /*if (www.error != ull)
+                    throw new Exception("WWW download:" + www.error);*/
                 AssetBundleRef abRef = new AssetBundleRef(url, version);
                 abRef.assetBundle = www.assetBundle;
                 dictAssetBundleRefs.Add(keyName, abRef);

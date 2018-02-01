@@ -1,0 +1,142 @@
+fileFormatVersion: 2
+guid: 273d63ac78868b042b8fd56f84f67359
+timeCreated: 1436587960
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: Base
+    100002: Carrig
+    100004: Items
+    100006: Main
+    100008: //RootNode
+    100010: wheel.front.l
+    100012: wheel.front.l.001
+    100014: wheel.front.l.001_end
+    100016: wheel.front.l_end
+    100018: wheel.front.r
+    100020: wheel.front.r.001
+    100022: wheel.front.r.001_end
+    100024: wheel.front.r_end
+    100026: wheel.front.stear.l
+    100028: wheel.front.stear.l.001
+    100030: wheel.front.stear.r
+    100032: wheel.front.stear.r.001
+    100034: wheel.front.stear.track.l
+    100036: wheel.front.stear.track.l.001
+    100038: wheel.front.stear.track.l.001_end
+    100040: wheel.front.stear.track.l_end
+    100042: wheel.front.stear.track.r
+    100044: wheel.front.stear.track.r.001
+    100046: wheel.front.stear.track.r.001_end
+    100048: wheel.front.stear.track.r_end
+    100050: wheel.rear.l
+    100052: wheel.rear.l.001
+    100054: wheel.rear.l.001_end
+    100056: wheel.rear.l_end
+    100058: wheel.rear.r
+    100060: wheel.rear.r.001
+    100062: wheel.rear.r.001_end
+    100064: wheel.rear.r_end
+    100066: wheel.stear.control
+    400000: Base
+    400002: Carrig
+    400004: Items
+    400006: Main
+    400008: //RootNode
+    400010: wheel.front.l
+    400012: wheel.front.l.001
+    400014: wheel.front.l.001_end
+    400016: wheel.front.l_end
+    400018: wheel.front.r
+    400020: wheel.front.r.001
+    400022: wheel.front.r.001_end
+    400024: wheel.front.r_end
+    400026: wheel.front.stear.l
+    400028: wheel.front.stear.l.001
+    400030: wheel.front.stear.r
+    400032: wheel.front.stear.r.001
+    400034: wheel.front.stear.track.l
+    400036: wheel.front.stear.track.l.001
+    400038: wheel.front.stear.track.l.001_end
+    400040: wheel.front.stear.track.l_end
+    400042: wheel.front.stear.track.r
+    400044: wheel.front.stear.track.r.001
+    400046: wheel.front.stear.track.r.001_end
+    400048: wheel.front.stear.track.r_end
+    400050: wheel.rear.l
+    400052: wheel.rear.l.001
+    400054: wheel.rear.l.001_end
+    400056: wheel.rear.l_end
+    400058: wheel.rear.r
+    400060: wheel.rear.r.001
+    400062: wheel.rear.r.001_end
+    400064: wheel.rear.r_end
+    400066: wheel.stear.control
+    4300000: Main
+    4300002: Items
+    9500000: //RootNode
+    13700000: Items
+    13700002: Main
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: Base
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

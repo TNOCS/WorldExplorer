@@ -5,6 +5,16 @@ TagManager:
   serializedVersion: 2
   tags:
   - symbol
+  - uibutton
+  - spawnobject
+  - inventoryobject
+  - uistatic
+  - board
+  - collisionhandler
+  - boardobject
+  - newspawnobject
+  - poi
+  - boardbuilding
   layers:
   - Default
   - TransparentFX
@@ -14,7 +24,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Board
   - 
   - 
   - 
@@ -41,4 +51,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: TestSortingLayer
+    uniqueID: 1321637291
     locked: 0

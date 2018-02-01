@@ -1,0 +1,34 @@
+ManifestFileVersion: 0
+CRC: 3842762412
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: b980d229cd5bb8607cd52407f511a79e
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: d27a9ed7ed5c7a459d780b0a0a375c27
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/utrecht-biebutrechtnieuw1.skp
+- Assets/utrecht-kpntelcombuildingutrecht.skp
+- Assets/utrecht-domtorenjuist.skp
+- Assets/utrecht-domkerk_utrecht.skp
+- Assets/utrecht-hua+final+(1)+(1)+(1).skp
+Dependencies: []

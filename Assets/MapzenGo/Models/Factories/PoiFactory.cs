@@ -54,6 +54,7 @@ namespace MapzenGo.Models.Factories
             var go = new GameObject("Poi"); //Instantiate(_labelPrefab);
             var poi = go.AddComponent<Poi>();
             go.name = "poi-" + tile.name;
+            go.tag = "poi";
             //RJ added spriteRenderer
             var sprite = go.AddComponent<SpriteRenderer>();
             sprite.sprite = typeSettings.Sprite;
@@ -74,6 +75,9 @@ namespace MapzenGo.Models.Factories
             poi.Stick(target.transform);
             poi.transform.localScale = new Vector3(.2f, .2f, .2f);
             poi.transform.SetParent(target.transform, true);
+
+            var spriteRend = poi.GetComponent<SpriteRenderer>();
+            spriteRend.sortingOrder = -2;
 
             SetProperties(geo, poi, typeSettings);
             targetScript.Name = (poi.Name != null) ? poi.Name : poi.name;

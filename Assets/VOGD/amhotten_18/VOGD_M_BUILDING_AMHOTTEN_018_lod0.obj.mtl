@@ -1,0 +1,50 @@
+newmtl 0
+map_Kd D:/projects/SEM/projects/VOGD/dataset/models/flt/BUILDING/AMHOTTEN/VOGD_M_BUILDING_AMHOTTEN_018/VOGD_M_BUILDING_AMHOTTEN_018_lod0_diffuse0.png
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0 0 0
+Tr 1
+d 1
+Ns 10
+illum 2
+
+newmtl 1
+map_Kd D:/projects/SEM/projects/VOGD/dataset/models/flt/BUILDING/AMHOTTEN/VOGD_M_BUILDING_AMHOTTEN_018/VOGD_M_BUILDING_AMHOTTEN_018_lod0_diffuse1.png
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0 0 0
+Tr 1
+d 1
+Ns 10
+illum 2
+
+newmtl 2
+map_Kd D:/projects/SEM/projects/VOGD/dataset/models/flt/BUILDING/AMHOTTEN/VOGD_M_BUILDING_AMHOTTEN_018/VOGD_M_BUILDING_AMHOTTEN_018_lod0_diffuse2.png
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0 0 0
+Tr 1
+d 1
+Ns 10
+illum 2
+
+newmtl 3
+map_Kd D:/projects/SEM/projects/VOGD/dataset/models/flt/BUILDING/AMHOTTEN/VOGD_M_BUILDING_AMHOTTEN_018/VOGD_M_BUILDING_AMHOTTEN_018_lod0_diffuse3.png
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0 0 0
+Tr 1
+d 1
+Ns 10
+illum 2
+
+newmtl 4
+map_Kd D:/projects/SEM/projects/VOGD/dataset/models/flt/BUILDING/AMHOTTEN/VOGD_M_BUILDING_AMHOTTEN_018/VOGD_M_BUILDING_AMHOTTEN_018_lod0_diffuse4.png
+Ka 0.2 0.2 0.2
+Kd 1 1 1
+Ks 0 0 0
+Tr 1
+d 1
+Ns 10
+illum 2
+

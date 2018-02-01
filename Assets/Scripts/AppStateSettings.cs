@@ -10,24 +10,29 @@ using Symbols;
 using MapzenGo.Models.Factories;
 using Assets.Scripts.Plugins;
 using MapzenGo.Helpers;
-using HoloToolkit.Unity;
 
 namespace Assets.Scripts
 {
-    public class AppState : Singleton<AppState>
+    public class AppState : SingletonCustom<AppState>
     {
-        public const string ShowLayerSpeech = "Show ";
-        public const string HideLayerSpeech = "Show ";
-        public const string ToggleSpeech = "Toggle ";
         public GameObject World;
         public GameObject Terrain;
         public GameObject Table;
         public GameObject Board;
+        public GameObject BoardVisual;
         public GameObject Camera;
         public GameObject Map;
         public GameObject Layers;
         public GameObject Cursor;
-        public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
+        public GameObject UI;
+        public GameObject UIMain;
+
+        public Vector3 worldOffset;
+        public Vector3 scaleOffset;
+        public Vector3 rotationOffset;
+
+        //public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
+        public float[] mapScales = new float[] { 0.008f, 0.004f, 0.00286f, 0.00222f, 0.00182f, 0.00154f, 0.001332f };
         public Vector3 Center { get; set; }
         public TileManager TileManager { get; set; }
         public AppConfig Config { get; set; }
@@ -35,17 +40,12 @@ namespace Assets.Scripts
         public SpeechManager Speech { get; set; }
         public List<string> MapzenTags = new List<string>(new string[] { "buildings", "water", "roads", "pois", "landuse" });
         public SelectionHandler selectionHandler;
-        protected AppState() { } // guarantee this will be always a singleton only - can't use the constructor!
+        public UIInteraction uiInteraction;
+        protected AppState() { } // guarantee this will be always a singleton only - can't use the constructor!\
 
-        public void Awake()
+        protected void Awake()
         {
-            Speech = SpeechManager.Instance;
             selectionHandler = SelectionHandler.Instance;
-        }
-
-        public void Init()
-        {
-            MapzenTags.ForEach(k => Speech.AddKeyword(ToggleSpeech + k, () => ToggleMapzen(k)));
         }
 
         private void ToggleMapzen(string tag)
@@ -105,16 +105,19 @@ namespace Assets.Scripts
                 DestroyGeojsonLayer(l);
             });
 
-            foreach (var tl in Config.Layers)
-            {
-                if (tl.Type.ToLower() == "tilelayer")
-                {
-                    Speech.RemoveKeyword(ShowLayerSpeech + tl.VoiceCommand);
-                };
-            }
-
             DoDeleteAll(World);
             DoDeleteAll(Layers);
+
+            // Sets each spawned object inactive. Relevant objects are reactivated in CustomObjectsPlugin.cs during a map load.
+            foreach (SpawnedObject go in InventoryObjectInteraction.Instance.spawnedObjectsList)
+            {
+                go.obj.SetActive(false);
+            }
+
+            UIInteraction.Instance.MapPanel.SetActive(false);
+            UIInteraction.Instance.HandlerPanel.SetActive(false);
+            ObjectInteraction.Instance.CloseLabel();
+
             InitMap();
         }
 
@@ -130,25 +133,35 @@ namespace Assets.Scripts
 
             Table = new GameObject("Table"); // Empty game object
             Table.transform.position = new Vector3(0f, t.Position, 0f);
-            Table.transform.localScale = new Vector3(t.Size, t.Size, t.Size);
+            //Table.transform.localScale = new Vector3(t.Size, t.Size, t.Size);
+            Table.transform.localScale = new Vector3(1, 1, 1);
             Table.transform.SetParent(Terrain.transform, false);
 
             Board = GameObject.Find("Board"); // Although we could create the board in code, this way I can add buttons etc to the object in Unity.
-            Board.transform.position = new Vector3(0f, t.Position, 0f);
-            Board.transform.localScale = new Vector3(t.Size, t.Thickness, t.Size);
-            Board.transform.SetParent(Table.transform, true);
+            Board.AddComponent<BoardTapHandler>();
+            Board.transform.position = new Vector3(0f, 0f, 0f);
+            //Board.transform.localScale = new Vector3(t.Size *2, t.Thickness*2, t.Size*2);
 
-            // Add direction indicator
-            var di = Board.AddComponent<DirectionIndicator>();
-            di.DirectionIndicatorObject = Resources.Load<GameObject>("Components/DirectionalIndicator");
-            di.Cursor = Cursor;
+            Board.transform.localScale = new Vector3(1, 1, 1);
+            Board.transform.SetParent(Table.transform, false);
+
+            BoardVisual = GameObject.Find("BoardVisual");
+            BoardVisual.transform.SetParent(Table.transform, false);
 
             Map = new GameObject("Map");
             Map.transform.SetParent(Table.transform);
-            Map.transform.localPosition = new Vector3(0f, t.Thickness/2, 0f);
+            Map.transform.localPosition = new Vector3(0f, 0f, 0f);
             //Map.transform.localPosition = new Vector3(0f, (t.Thickness / 2) / t.Thickness + 0.01F, 0f);
 
-            Terrain.transform.position = new Vector3(Terrain.transform.position.x, t.Position, Terrain.transform.position.z);
+            UIMain = new GameObject("UIMain");
+            UIMain.transform.SetParent(Table.transform, false);
+
+            UI = GameObject.Find("UI");
+            UI.transform.SetParent(UIMain.transform, false);
+            UIMain.transform.localScale = new Vector3(2, 2, 2);
+            Terrain.transform.position = new Vector3(Terrain.transform.position.x, Terrain.transform.position.y - 2, Terrain.transform.position.z + 5);
+
+            BoardInteraction.Instance.terrain = Terrain;
 
             #endregion
             InitMap();
@@ -171,18 +184,54 @@ namespace Assets.Scripts
             var i = av.Range;
             if (i > mapScales.Length) i = mapScales.Length;
             var mapScale = mapScales[i - 1];
-            //Map.transform.localScale = new Vector3(mapScale, mapScale / Config.Table.Thickness, mapScale);
             Map.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
 
             World = new GameObject("World");
             World.transform.SetParent(Map.transform, false);
-            var gazeManager = World.AddComponent<HoloToolkit.Unity.GazeManager>();
-            gazeManager.MaxGazeDistance = 3f;
 
-            // Set user CenterInMercator to convert the cursor location to lat/lon
+            // Activate if you want to enable the ability to change tile ranges.
+            // Also requires you to activate the buttons in the hierachy.
+            // UIInteraction.Instance.SetTileRangeButtons(av.Range);
+
+            // Set users CenterInMercator to convert the cursor location to lat/lon
             var v2 = GM.LatLonToMeters(av.Lat, av.Lon);
             var tile = GM.MetersToTile(v2, av.Zoom);
             var centerTms = tile;
+
+            // Compound has no zoom level 19 .pngs.
+            if (av.Name == "Compound")
+            {
+                BoardInteraction.Instance.maxZoomLevel = 18;
+            }
+            else
+            {
+                BoardInteraction.Instance.maxZoomLevel = 19;
+            }
+
+            switch (av.Zoom)
+            {
+                case 15:
+                    mapScale = 0.001f;
+                    break;
+                case 16:
+                    mapScale = 0.002f;
+                    break;
+                case 17:
+                    mapScale = 0.004f;
+                    break;
+                case 18:
+                    mapScale = 0.008f;
+                    break;
+                case 19:
+                    mapScale = 0.016f;
+                    break;
+                case 20:
+                    mapScale = 0.032f;
+                    break;
+                default:
+                    break;
+            }
+
             SessionManager.Instance.me.CenterInMercator = GM.TileBounds(centerTms, av.Zoom).Center;
             SessionManager.Instance.me.Scale = mapScale / 2;
 
@@ -220,9 +269,9 @@ namespace Assets.Scripts
             #region FACTORIES
 
             #region defaultfactories
+
             var factories = new GameObject("Factories");
             factories.transform.SetParent(World.transform, false);
-
             if (av.Mapzen.Contains("buildings"))
             {
                 var buildings = new GameObject("BuildingFactory");
@@ -234,12 +283,11 @@ namespace Assets.Scripts
             {
                 var bagBuildings = new GameObject("BagBuildingFactory");
                 bagBuildings.transform.SetParent(factories.transform, false);
-                var bagBuildingFactory = bagBuildings.AddComponent<BagBuildingFactory>();
+                if (av.Zoom >= 17)
+                {
+                    var bagBuildingFactory = bagBuildings.AddComponent<BagBuildingFactory>();
+                }
             }
-
-            //var flatBuildings = new GameObject("FlatBuildingFactory");
-            //flatBuildings.transform.SetParent(factories.transform, false);
-            //var flatBuildingFactory = flatBuildings.AddComponent<FlatBuildingFactory>();
 
             if (av.Mapzen.Contains("roads"))
             {
@@ -288,8 +336,9 @@ namespace Assets.Scripts
                 models.transform.SetParent(factories.transform, false);
                 var modelFactory = models.AddComponent<ModelFactory>();
                 modelFactory.scale = Table.transform.localScale.x;
-                modelFactory.BundleURL = "http://134.221.20.226:3999/assets/buildings/eindhoven";
-                modelFactory.version = 6;
+                //modelFactory.BundleURL = "http://134.221.20.226:3999/assets/buildings/eindhoven";
+                modelFactory.BundleURL = "http://www.thomvdm.com/assets/buildings/eindhoven";
+                modelFactory.version = 21;
             }
 
             #endregion
@@ -301,10 +350,15 @@ namespace Assets.Scripts
             var tilePlugins = new GameObject("TilePlugins");
             tilePlugins.transform.SetParent(World.transform, false);
 
-            //var mapImage = new GameObject("MapImage");
-            //mapImage.transform.SetParent(tilePlugins.transform, false);
-            //var mapImagePlugin = mapImage.AddComponent<MapImagePlugin>();
-            //mapImagePlugin.TileService = MapImagePlugin.TileServices.Default;
+            var customObjects = new GameObject("CustomObjects");
+            customObjects.transform.SetParent(tilePlugins.transform, false);
+            var customObjectsPlugin = customObjects.AddComponent<CustomObjectPlugin>();
+
+            // Checks if VMG objects (which are only available in the Compound area) should be loaded.
+            if (av.Name == "Compound")
+            {
+                customObjectsPlugin.hasVMGObjects = true;
+            }
 
             var tileLayer = new GameObject("TileLayer");
             tileLayer.transform.SetParent(tilePlugins.transform, false);
@@ -329,31 +383,15 @@ namespace Assets.Scripts
                             tileLayerPlugin.tileLayers.Add(l);
                             break;
                     }
-
                 }
             });
 
-            foreach (var tl in Config.Layers.Where(k => { return k.Type.ToLower() == "tilelayer"; }))
-            {
-                Speech.AddKeyword(ShowLayerSpeech + tl.VoiceCommand, () =>
-                {
-                    if (tl.Group != null)
-                    {
-                        var ll = Config.Layers.Where(k => k.Type.ToLower() == "tilelayer" && k.Group == tl.Group).Select(k => k.Title);
-                        av.TileLayers = av.TileLayers.Where(k => !ll.Contains(k)).ToList();
-                        av.TileLayers.Add(tl.Title);
-                        ResetMap();
-                    }
-                });
-            }
             #endregion
+
         }
 
         public void DestroyGeojsonLayer(Layer l)
         {
-            Speech.RemoveKeyword(ShowLayerSpeech + l.VoiceCommand);
-            Speech.RemoveKeyword(HideLayerSpeech + l.VoiceCommand);
-
             if (l._refreshTimer != null)
             {
                 l._refreshTimer.Dispose();
@@ -365,17 +403,6 @@ namespace Assets.Scripts
         public void InitGeojsonLayer(Layer l)
         {
             AddGeojsonLayer(l);
-
-            Speech.AddKeyword(ShowLayerSpeech + l.VoiceCommand, () =>
-            {
-                AddGeojsonLayer(l);
-            });
-
-            Speech.AddKeyword(HideLayerSpeech + l.VoiceCommand, () =>
-            {
-                RemoveGeojsonLayer(l);
-            });
-
             if (l.Refresh > 0)
             {
                 var interval = l.Refresh * 1000;
@@ -428,19 +455,8 @@ namespace Assets.Scripts
 
         public void DoDeleteAll(GameObject Holder)
         {
-            //Holder.transform.DetachChildren();
             Destroy(Holder);
             return;
-            //while (Holder.transform.childCount > 0)
-            //{
-            //    var childs = Holder.transform.transform.childCount;
-            //    for (var i = 0; i <= childs - 1; i++)
-            //    {
-            //        var go = Holder.transform.transform.GetChild(i).gameObject;
-            //        DoDeleteAll(go);
-            //    }
-            //}
-            //Destroy(Holder);
         }
 
         protected void AddRectTransformToGameObject(GameObject go)

@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Assets.Scripts.Plugins;
+using HoloToolkit.Unity;
 
-public class SelectionHandler : Singleton<SelectionHandler>
+public class SelectionHandler : SingletonCustom<SelectionHandler>
 {
     private SessionManager session;
 

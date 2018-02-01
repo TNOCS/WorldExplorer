@@ -1,6 +1,6 @@
-﻿using Assets.Scripts.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.Classes
 {
@@ -16,6 +16,8 @@ namespace Assets.Scripts.Classes
             Range = json.GetInt("range");
             TileSize = json.GetInt("tileSize");
             Layers = new List<string>();
+            TerrainHeightsAvailable = json.GetBoolean("terrainHeightAvailable");
+
             if (json.HasField("layers"))
             {
                 var ll = json["layers"];
@@ -59,6 +61,7 @@ namespace Assets.Scripts.Classes
                 TileSize = TileSize,
                 Layers = Layers,
                 TileLayers = TileLayers,
+                TerrainHeightsAvailable = TerrainHeightsAvailable,
                 Mapzen = Mapzen
             };
         }
@@ -111,6 +114,7 @@ namespace Assets.Scripts.Classes
         public int Scale { get; set; }
         public int Range { get; set; }
         public int TileSize { get; set; }
+        public bool TerrainHeightsAvailable { get; set; }
         public List<string> Layers { get; set; }
         public List<string> TileLayers { get; set; }
         public List<string> Mapzen { get; set; }

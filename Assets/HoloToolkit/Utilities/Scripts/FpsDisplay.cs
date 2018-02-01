@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace HoloToolkit.Unity
 {
@@ -11,15 +12,19 @@ namespace HoloToolkit.Unity
     [RequireComponent(typeof(TextMesh))]
     public class FpsDisplay : MonoBehaviour
     {
-        [Tooltip("Reference to Text UI control where the FPS should be displayed.")]
+        [Tooltip("Reference to TextMesh component where the FPS should be displayed.")]
         [SerializeField]
         private TextMesh textMesh;
+
+        [Tooltip("Reference to uGUI text component where the FPS should be displayed.")]
+        [SerializeField]
+        private Text uGUIText;
 
         [Tooltip("How many frames should we consider into our average calculation?")]
         [SerializeField]
         private int frameRange = 60;
 
-        private int averageFps { get; set; }
+        private int averageFps;
 
         private int[] fpsBuffer;
         private int fpsBufferIndex;
@@ -48,14 +53,22 @@ namespace HoloToolkit.Unity
             UpdateFrameBuffer();
             CalculateFps();
 
-            UpdateTextDisplay(textMesh, averageFps);
+            UpdateTextDisplay(averageFps);
         }
 
         private void InitBuffer()
         {
-            textMesh = GetComponent<TextMesh>();
+            if (textMesh == null)
+            {
+                textMesh = GetComponent<TextMesh>();
+            }
 
-            if(frameRange <= 0)
+            if (uGUIText == null)
+            {
+                uGUIText = GetComponent<Text>();
+            }
+
+            if (frameRange <= 0)
             {
                 frameRange = 1;
             }
@@ -64,16 +77,26 @@ namespace HoloToolkit.Unity
             fpsBufferIndex = 0;
         }
 
-        private void UpdateTextDisplay(TextMesh text, int fps)
+        private void UpdateTextDisplay(int fps)
         {
-            text.text = StringsFrom00To99[Mathf.Clamp(fps, 0, 99)];
+            string displayString = StringsFrom00To99[Mathf.Clamp(fps, 0, 99)];
+
+            if (textMesh != null)
+            {
+                textMesh.text = displayString;
+            }
+
+            if (uGUIText != null)
+            {
+                uGUIText.text = displayString;
+            }
         }
 
         private void UpdateFrameBuffer()
         {
-            fpsBuffer[fpsBufferIndex++] = (int)(1f/Time.unscaledDeltaTime);
+            fpsBuffer[fpsBufferIndex++] = (int)(1f / Time.unscaledDeltaTime);
 
-            if(fpsBufferIndex >= frameRange)
+            if (fpsBufferIndex >= frameRange)
             {
                 fpsBufferIndex = 0;
             }
@@ -83,7 +106,7 @@ namespace HoloToolkit.Unity
         {
             int sum = 0;
 
-            for(int i = 0; i < frameRange; i++)
+            for (int i = 0; i < frameRange; i++)
             {
                 int fps = fpsBuffer[i];
                 sum += fps;

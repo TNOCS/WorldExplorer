@@ -1,0 +1,366 @@
+fileFormatVersion: 2
+guid: 9268fea3b5597a3438ddf4c863074155
+timeCreated: 1511262811
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: DUMMY
+    100002: mesh
+    100004: mesh_008
+    100006: mesh_009
+    100008: mesh_01
+    100010: mesh_01 1
+    100012: mesh_01 2
+    100014: mesh_01 3
+    100016: mesh_010
+    100018: mesh_02
+    100020: mesh_02 1
+    100022: mesh_02 2
+    100024: mesh_03
+    100026: mesh_03 1
+    100028: mesh_03 2
+    100030: mesh_04
+    100032: mesh_04 1
+    100034: mesh_04 2
+    100036: mesh_05
+    100038: mesh_05 1
+    100040: mesh_05 2
+    100042: mesh_06
+    100044: mesh_06 1
+    100046: mesh_06 2
+    100048: mesh_07
+    100050: mesh_07 1
+    100052: mesh_08
+    100054: mesh_08 1
+    100056: mesh_09
+    100058: mesh_09 1
+    100060: mesh_10
+    100062: mesh_10 1
+    100064: mesh_11
+    100066: mesh_11 1
+    100068: mesh_12
+    100070: mesh_12 1
+    100072: mesh_13
+    100074: mesh_13 1
+    100076: mesh_14
+    100078: mesh_14 1
+    100080: mesh_15
+    100082: mesh_15 1
+    100084: mesh_16
+    100086: mesh_16 1
+    100088: mesh_17
+    100090: mesh_18
+    100092: mesh_19
+    100094: mesh_20
+    100096: MINARET
+    100098: MINARET 1
+    100100: MINARET 2
+    100102: MINARET 3
+    100104: MINARET 4
+    100106: MINARET 5
+    100108: MINARET 6
+    100110: MINARET 7
+    100112: MINARET 8
+    100114: //RootNode
+    400000: DUMMY
+    400002: mesh
+    400004: mesh_008
+    400006: mesh_009
+    400008: mesh_01
+    400010: mesh_01 1
+    400012: mesh_01 2
+    400014: mesh_01 3
+    400016: mesh_010
+    400018: mesh_02
+    400020: mesh_02 1
+    400022: mesh_02 2
+    400024: mesh_03
+    400026: mesh_03 1
+    400028: mesh_03 2
+    400030: mesh_04
+    400032: mesh_04 1
+    400034: mesh_04 2
+    400036: mesh_05
+    400038: mesh_05 1
+    400040: mesh_05 2
+    400042: mesh_06
+    400044: mesh_06 1
+    400046: mesh_06 2
+    400048: mesh_07
+    400050: mesh_07 1
+    400052: mesh_08
+    400054: mesh_08 1
+    400056: mesh_09
+    400058: mesh_09 1
+    400060: mesh_10
+    400062: mesh_10 1
+    400064: mesh_11
+    400066: mesh_11 1
+    400068: mesh_12
+    400070: mesh_12 1
+    400072: mesh_13
+    400074: mesh_13 1
+    400076: mesh_14
+    400078: mesh_14 1
+    400080: mesh_15
+    400082: mesh_15 1
+    400084: mesh_16
+    400086: mesh_16 1
+    400088: mesh_17
+    400090: mesh_18
+    400092: mesh_19
+    400094: mesh_20
+    400096: MINARET
+    400098: MINARET 1
+    400100: MINARET 2
+    400102: MINARET 3
+    400104: MINARET 4
+    400106: MINARET 5
+    400108: MINARET 6
+    400110: MINARET 7
+    400112: MINARET 8
+    400114: //RootNode
+    2300000: mesh
+    2300002: mesh_008
+    2300004: mesh_009
+    2300006: mesh_01
+    2300008: mesh_01 1
+    2300010: mesh_01 2
+    2300012: mesh_01 3
+    2300014: mesh_010
+    2300016: mesh_02
+    2300018: mesh_02 1
+    2300020: mesh_02 2
+    2300022: mesh_03
+    2300024: mesh_03 1
+    2300026: mesh_03 2
+    2300028: mesh_04
+    2300030: mesh_04 1
+    2300032: mesh_04 2
+    2300034: mesh_05
+    2300036: mesh_05 1
+    2300038: mesh_05 2
+    2300040: mesh_06
+    2300042: mesh_06 1
+    2300044: mesh_06 2
+    2300046: mesh_07
+    2300048: mesh_07 1
+    2300050: mesh_08
+    2300052: mesh_08 1
+    2300054: mesh_09
+    2300056: mesh_09 1
+    2300058: mesh_10
+    2300060: mesh_10 1
+    2300062: mesh_11
+    2300064: mesh_11 1
+    2300066: mesh_12
+    2300068: mesh_12 1
+    2300070: mesh_13
+    2300072: mesh_13 1
+    2300074: mesh_14
+    2300076: mesh_14 1
+    2300078: mesh_15
+    2300080: mesh_15 1
+    2300082: mesh_16
+    2300084: mesh_16 1
+    2300086: mesh_17
+    2300088: mesh_18
+    2300090: mesh_19
+    2300092: mesh_20
+    2300094: MINARET
+    2300096: MINARET 1
+    2300098: MINARET 2
+    2300100: MINARET 3
+    2300102: MINARET 4
+    2300104: MINARET 5
+    2300106: MINARET 6
+    2300108: MINARET 7
+    2300110: MINARET 8
+    3300000: mesh
+    3300002: mesh_008
+    3300004: mesh_009
+    3300006: mesh_01
+    3300008: mesh_01 1
+    3300010: mesh_01 2
+    3300012: mesh_01 3
+    3300014: mesh_010
+    3300016: mesh_02
+    3300018: mesh_02 1
+    3300020: mesh_02 2
+    3300022: mesh_03
+    3300024: mesh_03 1
+    3300026: mesh_03 2
+    3300028: mesh_04
+    3300030: mesh_04 1
+    3300032: mesh_04 2
+    3300034: mesh_05
+    3300036: mesh_05 1
+    3300038: mesh_05 2
+    3300040: mesh_06
+    3300042: mesh_06 1
+    3300044: mesh_06 2
+    3300046: mesh_07
+    3300048: mesh_07 1
+    3300050: mesh_08
+    3300052: mesh_08 1
+    3300054: mesh_09
+    3300056: mesh_09 1
+    3300058: mesh_10
+    3300060: mesh_10 1
+    3300062: mesh_11
+    3300064: mesh_11 1
+    3300066: mesh_12
+    3300068: mesh_12 1
+    3300070: mesh_13
+    3300072: mesh_13 1
+    3300074: mesh_14
+    3300076: mesh_14 1
+    3300078: mesh_15
+    3300080: mesh_15 1
+    3300082: mesh_16
+    3300084: mesh_16 1
+    3300086: mesh_17
+    3300088: mesh_18
+    3300090: mesh_19
+    3300092: mesh_20
+    3300094: MINARET
+    3300096: MINARET 1
+    3300098: MINARET 2
+    3300100: MINARET 3
+    3300102: MINARET 4
+    3300104: MINARET 5
+    3300106: MINARET 6
+    3300108: MINARET 7
+    3300110: MINARET 8
+    4300000: MINARET
+    4300002: MINARET
+    4300004: MINARET
+    4300006: mesh_01
+    4300008: mesh_02
+    4300010: mesh_03
+    4300012: mesh_05
+    4300014: mesh_04
+    4300016: mesh_06
+    4300018: mesh_008
+    4300020: mesh_009
+    4300022: mesh_010
+    4300024: MINARET
+    4300026: mesh_12
+    4300028: mesh_13
+    4300030: mesh_14
+    4300032: mesh_15
+    4300034: mesh_16
+    4300036: mesh_01
+    4300038: mesh_01
+    4300040: mesh_02
+    4300042: mesh_03
+    4300044: mesh_04
+    4300046: mesh_05
+    4300048: mesh_06
+    4300050: mesh_07
+    4300052: mesh_08
+    4300054: mesh_09
+    4300056: mesh_10
+    4300058: mesh_11
+    4300060: mesh_09
+    4300062: mesh_10
+    4300064: mesh_11
+    4300066: mesh_01
+    4300068: mesh_02
+    4300070: mesh_03
+    4300072: mesh_04
+    4300074: mesh_12
+    4300076: mesh_13
+    4300078: mesh_14
+    4300080: mesh_05
+    4300082: mesh_06
+    4300084: mesh_07
+    4300086: mesh_08
+    4300088: mesh_15
+    4300090: mesh_16
+    4300092: mesh_17
+    4300094: mesh_18
+    4300096: mesh_19
+    4300098: mesh_20
+    4300100: mesh
+    4300102: MINARET
+    4300104: MINARET
+    4300106: MINARET
+    4300108: MINARET
+    4300110: MINARET
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,37 @@
+ManifestFileVersion: 0
+CRC: 836215576
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 76211824d4743493e910d6a05204d54e
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: d27a9ed7ed5c7a459d780b0a0a375c27
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/venlo-uwv.skp
+- Assets/venlo-romerhaus.skp
+- Assets/venlo+rathaus+neu.skp
+- Assets/venlo-station+venlo.skp
+- Assets/venlo-limburgsmuseum.skp
+- Assets/venlo-maasboulevard.skp
+- Assets/romerhuis.skp
+- Assets/venlo-hotel+wilhelmina.skp
+Dependencies: []

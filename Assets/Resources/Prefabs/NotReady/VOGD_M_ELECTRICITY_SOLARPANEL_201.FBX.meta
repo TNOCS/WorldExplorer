@@ -1,0 +1,372 @@
+fileFormatVersion: 2
+guid: ad322f1b8e21e8a498748bd7c0d745a6
+timeCreated: 1512034087
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: Box054
+    100002: Mesh_CH01
+    100004: Mesh_CH017
+    100006: Mesh_CH018
+    100008: Mesh_CH019
+    100010: Mesh_CH02
+    100012: Mesh_CH020
+    100014: Mesh_CH021
+    100016: Mesh_CH022
+    100018: Mesh_CH023
+    100020: Mesh_CH024
+    100022: Mesh_CH025
+    100024: Mesh_CH026
+    100026: Mesh_CH027
+    100028: Mesh_CH028
+    100030: Mesh_CH029
+    100032: Mesh_CH03
+    100034: Mesh_CH030
+    100036: Mesh_CH031
+    100038: Mesh_CH032
+    100040: Mesh_CH034
+    100042: Mesh_CH04
+    100044: Mesh_CH049
+    100046: Mesh_CH05
+    100048: Mesh_CH050
+    100050: Mesh_CH051
+    100052: Mesh_CH06
+    100054: Mesh_CH07
+    100056: Mesh_CH08
+    100058: Mesh_CH09
+    100060: Mesh_CH10
+    100062: Mesh_CH11
+    100064: Mesh_CH12
+    100066: Mesh_CH13
+    100068: Mesh_CH14
+    100070: Mesh_CH15
+    100072: Mesh_CH16
+    100074: METADATA
+    100076: Object001
+    100078: onder stel
+    100080: onder stel01
+    100082: onder stel02
+    100084: onder stel03
+    100086: onder stel04
+    100088: onder stel05
+    100090: onder stel06
+    100092: onder stel07
+    100094: onder stel08
+    100096: paneel
+    100098: paneel01
+    100100: paneel02
+    100102: paneel03
+    100104: paneel05
+    100106: paneel06
+    100108: paneel07
+    100110: paneel08
+    100112: paneel09
+    100114: Point001
+    100116: Point002
+    100118: Schanier
+    100120: //RootNode
+    400000: Box054
+    400002: Mesh_CH01
+    400004: Mesh_CH017
+    400006: Mesh_CH018
+    400008: Mesh_CH019
+    400010: Mesh_CH02
+    400012: Mesh_CH020
+    400014: Mesh_CH021
+    400016: Mesh_CH022
+    400018: Mesh_CH023
+    400020: Mesh_CH024
+    400022: Mesh_CH025
+    400024: Mesh_CH026
+    400026: Mesh_CH027
+    400028: Mesh_CH028
+    400030: Mesh_CH029
+    400032: Mesh_CH03
+    400034: Mesh_CH030
+    400036: Mesh_CH031
+    400038: Mesh_CH032
+    400040: Mesh_CH034
+    400042: Mesh_CH04
+    400044: Mesh_CH049
+    400046: Mesh_CH05
+    400048: Mesh_CH050
+    400050: Mesh_CH051
+    400052: Mesh_CH06
+    400054: Mesh_CH07
+    400056: Mesh_CH08
+    400058: Mesh_CH09
+    400060: Mesh_CH10
+    400062: Mesh_CH11
+    400064: Mesh_CH12
+    400066: Mesh_CH13
+    400068: Mesh_CH14
+    400070: Mesh_CH15
+    400072: Mesh_CH16
+    400074: METADATA
+    400076: Object001
+    400078: onder stel
+    400080: onder stel01
+    400082: onder stel02
+    400084: onder stel03
+    400086: onder stel04
+    400088: onder stel05
+    400090: onder stel06
+    400092: onder stel07
+    400094: onder stel08
+    400096: paneel
+    400098: paneel01
+    400100: paneel02
+    400102: paneel03
+    400104: paneel05
+    400106: paneel06
+    400108: paneel07
+    400110: paneel08
+    400112: paneel09
+    400114: Point001
+    400116: Point002
+    400118: Schanier
+    400120: //RootNode
+    2300000: Box054
+    2300002: Mesh_CH01
+    2300004: Mesh_CH017
+    2300006: Mesh_CH018
+    2300008: Mesh_CH019
+    2300010: Mesh_CH02
+    2300012: Mesh_CH020
+    2300014: Mesh_CH021
+    2300016: Mesh_CH022
+    2300018: Mesh_CH023
+    2300020: Mesh_CH024
+    2300022: Mesh_CH025
+    2300024: Mesh_CH026
+    2300026: Mesh_CH027
+    2300028: Mesh_CH028
+    2300030: Mesh_CH029
+    2300032: Mesh_CH03
+    2300034: Mesh_CH030
+    2300036: Mesh_CH031
+    2300038: Mesh_CH032
+    2300040: Mesh_CH034
+    2300042: Mesh_CH04
+    2300044: Mesh_CH049
+    2300046: Mesh_CH05
+    2300048: Mesh_CH050
+    2300050: Mesh_CH051
+    2300052: Mesh_CH06
+    2300054: Mesh_CH07
+    2300056: Mesh_CH08
+    2300058: Mesh_CH09
+    2300060: Mesh_CH10
+    2300062: Mesh_CH11
+    2300064: Mesh_CH12
+    2300066: Mesh_CH13
+    2300068: Mesh_CH14
+    2300070: Mesh_CH15
+    2300072: Mesh_CH16
+    2300074: Object001
+    2300076: onder stel
+    2300078: onder stel01
+    2300080: onder stel02
+    2300082: onder stel03
+    2300084: onder stel04
+    2300086: onder stel05
+    2300088: onder stel06
+    2300090: onder stel07
+    2300092: onder stel08
+    2300094: paneel
+    2300096: paneel01
+    2300098: paneel02
+    2300100: paneel03
+    2300102: paneel05
+    2300104: paneel06
+    2300106: paneel07
+    2300108: paneel08
+    2300110: paneel09
+    3300000: Box054
+    3300002: Mesh_CH01
+    3300004: Mesh_CH017
+    3300006: Mesh_CH018
+    3300008: Mesh_CH019
+    3300010: Mesh_CH02
+    3300012: Mesh_CH020
+    3300014: Mesh_CH021
+    3300016: Mesh_CH022
+    3300018: Mesh_CH023
+    3300020: Mesh_CH024
+    3300022: Mesh_CH025
+    3300024: Mesh_CH026
+    3300026: Mesh_CH027
+    3300028: Mesh_CH028
+    3300030: Mesh_CH029
+    3300032: Mesh_CH03
+    3300034: Mesh_CH030
+    3300036: Mesh_CH031
+    3300038: Mesh_CH032
+    3300040: Mesh_CH034
+    3300042: Mesh_CH04
+    3300044: Mesh_CH049
+    3300046: Mesh_CH05
+    3300048: Mesh_CH050
+    3300050: Mesh_CH051
+    3300052: Mesh_CH06
+    3300054: Mesh_CH07
+    3300056: Mesh_CH08
+    3300058: Mesh_CH09
+    3300060: Mesh_CH10
+    3300062: Mesh_CH11
+    3300064: Mesh_CH12
+    3300066: Mesh_CH13
+    3300068: Mesh_CH14
+    3300070: Mesh_CH15
+    3300072: Mesh_CH16
+    3300074: Object001
+    3300076: onder stel
+    3300078: onder stel01
+    3300080: onder stel02
+    3300082: onder stel03
+    3300084: onder stel04
+    3300086: onder stel05
+    3300088: onder stel06
+    3300090: onder stel07
+    3300092: onder stel08
+    3300094: paneel
+    3300096: paneel01
+    3300098: paneel02
+    3300100: paneel03
+    3300102: paneel05
+    3300104: paneel06
+    3300106: paneel07
+    3300108: paneel08
+    3300110: paneel09
+    4300000: onder stel
+    4300002: onder stel07
+    4300004: onder stel08
+    4300006: onder stel01
+    4300008: onder stel04
+    4300010: onder stel03
+    4300012: onder stel02
+    4300014: onder stel05
+    4300016: onder stel06
+    4300018: Mesh_CH034
+    4300020: Mesh_CH049
+    4300022: Mesh_CH050
+    4300024: Mesh_CH051
+    4300026: Box054
+    4300028: paneel
+    4300030: Mesh_CH01
+    4300032: Mesh_CH02
+    4300034: Mesh_CH03
+    4300036: Mesh_CH04
+    4300038: Mesh_CH05
+    4300040: Mesh_CH06
+    4300042: Mesh_CH07
+    4300044: Mesh_CH08
+    4300046: Mesh_CH09
+    4300048: Mesh_CH10
+    4300050: Mesh_CH11
+    4300052: Mesh_CH12
+    4300054: Mesh_CH13
+    4300056: Mesh_CH14
+    4300058: Mesh_CH15
+    4300060: Mesh_CH16
+    4300062: paneel06
+    4300064: paneel07
+    4300066: paneel02
+    4300068: paneel08
+    4300070: paneel01
+    4300072: paneel09
+    4300074: paneel05
+    4300076: paneel03
+    4300078: Mesh_CH017
+    4300080: Mesh_CH018
+    4300082: Mesh_CH019
+    4300084: Mesh_CH020
+    4300086: Mesh_CH021
+    4300088: Mesh_CH022
+    4300090: Mesh_CH023
+    4300092: Mesh_CH024
+    4300094: Mesh_CH025
+    4300096: Mesh_CH026
+    4300098: Mesh_CH027
+    4300100: Mesh_CH028
+    4300102: Mesh_CH029
+    4300104: Mesh_CH030
+    4300106: Mesh_CH031
+    4300108: Mesh_CH032
+    4300110: Object001
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

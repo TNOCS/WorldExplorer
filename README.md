@@ -1,6 +1,8 @@
 # WorldExplorer
 A Hololens application to increase your situational awareness. Using OpenStreetMap data, it renders the world. You can share a session with multiple users, editing layers of information. Even though we can share our world, different users can display different layers of information.
-Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worlds as hologram. [Video 1](https://youtu.be/dyVc-hZAiek), [Video 2](https://vimeo.com/187078876).
+Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worlds as hologram. [Video 1](https://youtu.be/dyVc-hZAiek), [Video 2](https://vimeo.com/187078876). 
+
+[Thom van de Moosdijk](http://www.thomvdm.com/tno) extended this project for his graduation at Fontys Hogeschool in Eindhoven, and especially improved the user interaction, and his final presentation can be seen [here](https://vimeo.com/253818533). We also gave a presentation at the [Innovation in Defence 2017](https://vimeo.com/253819446).
 
 ![Example](https://cloud.githubusercontent.com/assets/3140667/21022014/5d8de41e-bd7b-11e6-99f5-6e265df12726.png)
 

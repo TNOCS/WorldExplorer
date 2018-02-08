@@ -4,49 +4,66 @@ Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worl
 
 [Thom van de Moosdijk](http://www.thomvdm.com/tno) extended this project for his graduation at Fontys Hogeschool in Eindhoven, and especially improved the user interaction, and his final presentation can be seen [here](https://vimeo.com/253818533). We also gave a presentation at the [Innovation in Defence 2017](https://vimeo.com/253819446).
 
-![Example](https://cloud.githubusercontent.com/assets/3140667/21022014/5d8de41e-bd7b-11e6-99f5-6e265df12726.png)
-
 # Features
-- Render the world based on open data
-- Collaborative: users can join a session and share their world. Also, you can edit layers together.
-- Navigate the world using your browser: you can update your location using a web browser. See the [world-explorer-server](https://github.com/TNOCS/WorldExplorer/tree/master/world-explorer-server) for more information on this.
-- Show 3D models of the world
-- Voice commands
-  - switch to [NAMED_VIEW]: in the config.json, the views are defined
-  - toggle buildings | roads | water | [LAYER_NAME]: toggle the visibility of the buildings. etc.
-  - zoom in | out
-  - increase | decrease range: increase or decrease the displayed area
-  - move north | south | east | west | north east | etc. : move one tile in that direction
-  - show | hide commands: displays a HUD with some of these commands
-  - place: when an item is selected, places the item
-  - clear cache: clears the local cache
+- Render the world based on several datasets.
+- Collaboration between users around the work, allowing them to edit the maps together.
+- Navigation around the world, including multiple zoom levels.
+- Visualization of 3D buildings and objects.
+- Dynamic user interface and compass system.
+- Load buildings and objects based on JSON data.
+- Visualize terrain heights based on JSON data.
+- Voice commands.
+- Interaction:
+	- Place, move, copy, delete and edit objects.
+	- Move, scale and rotate the table.
+	- Zoom and pan to navigate on the map.
+	- Switch between bookmarked locations.
+	- An inventory system.
 
-# Lessons Learned / known issues
-Also see the [Lessons Learned](https://github.com/TNOCS/WorldExplorer/wiki/Lessons-Learned) section in the Wiki, which contains some tips to develop Hololens applications for Unity.
+![Example](https://cloud.githubusercontent.com/assets/3140667/21022014/5d8de41e-bd7b-11e6-99f5-6e265df12726.png)
+### Prerequisites
+Required software:
+- Unity v5.6 or higher. (Currently recommended: latest Unity 2017).
+- Visual Studio 2017.
+- Windows 10 Fall Creators Update.
 
-# Inspiring projects and HoloLens resources
-Looking for inspiration, check out [this page](https://github.com/TNOCS/WorldExplorer/wiki/Interesting-HoloLens-projects)
+Required hardware:
+- Microsoft HoloLens.
+- Clicker (suggested).
 
-# Build instructions
+## Getting Started - Development
+1. Open Unity (if there is a version mismatch warning, make sure there is a backup and automatically upgrade the project).
+2. Open the MainScene.scene.
 
-First, make sure that you can run the local tile server. See the build instructions in the [world-explorer-server](https://github.com/TNOCS/WorldExplorer/tree/master/world-explorer-server) folder.
+The `Managers` gameobject contains many script that allow for easy editing, debugging and adding voice commands.
 
-- Open project in Unity (for Hololens, of course). Currently, I'm using a Beta version of Unity, v5.5f03.
-- Import the MainScene from `Assets\Scenes`. Please check that the Main camera has a black solid color background.
-- Press CTRL-B (Build project), and:
-  - adjust the build settings (Windows Store project, SDK: Universal 10, Target device: Hololens, UWP: D3D, C# project).
-  - open the menu `Player Settings` and check that in `Other Settings`, the Virtual Reality SDK is set to Hololens.
-  - Run `build`: create a new Folder (I called it App - please do it too, as this folder should be ignored in Git), and let it run.
-- Open the newly created Visual Studio solution in the App folder, set the build to Release | x86 | Hololens Emulator (or device), and press Ctrl-F5
+The generation of buildings and objects are done through Factories.
+Interaction is called through the relevant InputHandlers.
+Interaction and user interface functionalities are performed through the relevant scripts in the Scripts/Interaction folder.
 
-NOTE: In Initialize.cs, we specify the config.json that is loaded. Please replace this with a version of your own, as the IP addresses of tile server and MQTT server will certainly not match yours!
+## Getting Started - Deploying to the HoloLens
+1. Press CTRL-B (Build Project).
+2. Add the current scene.
+3. Make sure the following settings are selected:
+	- `Universal Windows Platform`.
+	- Target device: `HoloLens`.
+	- Build Type: `D3D`.
+	- SDK: `Latest installed`.
+	- Build and run on: `Local machine`.
+	- Unity C# projects checked (for debugging purposes only).
+4. Make sure "Virtual Reality Supported" is checked under Player Settings.
+5. Press Build and select the App folder, and choose a name.
+6. Open the Visual Studio Solution in the created folder.
+7. Build as `Release`, `x86` and either to `Device` (when deploying over USB) or `Remote Machine` (when deploying over Wi-Fi). 
 
-# Creating asset bundles
+NOTE: In `initialize.cs`, the config.json is specified. Replace this with a version of your own if you want to edit anything related to the configuration.
+
+## Creating AssetBundles
 In order to show 3D models, you need to create an asset bundle that contains these models. Currently, I do the following:
 - Go to [3dwarehouse.sketchup.com](3dwarehouse.sketchup.com) and download your models
 - Create a new Unity project
 - Optionally, if you cannot open them in Unity, or the model has a terrain: Open them in Sketchup, e.g. to remove the underground (unlock the model), and save them as Sketchup 2015 project
-- Import the model into Unity (menu Assets|Import New Asset...): in the inspecter, underneath the image, specify a name for the asset bundle (e.g. buildings/eindhoven). If you don't specify the name, it won't be exported. Also note the geo location in the inspector, which should be used in the `assets.json` file in the `world-explorer-server` project folder.
+- Import the model into Unity (menu Assets|Import New Asset...): in the inspector, underneath the image, specify a name for the asset bundle (e.g. buildings/eindhoven). If you don't specify the name, it won't be exported. Also note the geo location in the inspector, which should be used in the `assets.json` file in the `world-explorer-server` project folder.
 - Optionally, change the model name, as this is how you load it from Unity: e.g. I only use lowercase names.
 - Import all models until you are done.
 - In the `Assets` folder, create a new folder named `AssetBundles` (the name used in the script below).
@@ -67,6 +84,56 @@ public class CreateAssetBundles
 #endif
 ```
 
-### Test internal services
-http://134.221.20.240:3999/gebouwen,pois,assets/17/67277/42716.json
-http://134.221.20.226:8089/bag/17/67277/42716.geojson
+## Configuration file
+[Pastebin](https://pastebin.com/ECm6yGM2)
+```
+userName : the user name for shared sessions.
+selectionColor : color of the cursor.
+tileServer : server that provided the tiles.
+heightServer : server that provides height data of each tile.
+vmgBuildingServer : server that provided JSON data of buildings in the german "virtuele missie gebieden" (german training grounds).
+vmgObjectServer : server that provided JSON data of objects in the german "virtuele missie gebieden" (german training grounds).
+mqttServer : the server used for MQTT connection between users.z
+mqttPort : the port used for the MQTT connection.
+initialView : the view loaded upon launch of application.
+sessionName : name of the Session.
+table : size and height of the table.
+```
+
+- `layers` are the layers used for the tile images.
+- `view` is the bookmark locations: 
+	- `Lat` and `Lon` can be changed to adjust the location. 
+	- Zoom levels can changed to adjust initial zoom level.
+	- `tileSize` and `range` can be changed to change the size of the tiles.
+	- `mapzen`, `layers` and `tileLayers` can be adjusted to enable or disable certain visualizations.
+	- `terrainHeightAvailable` should be enabled when terrain height data is available.
+
+## Adding inventory objects
+To add inventory objects.
+
+1. Import new object (.fbx preferred) into the Resources/Prefabs/Inventory map folder.
+2. Copy all components of any other inventory object to new object.
+3. Check if the scale is realistic.
+4. Add the object to the inventory in hierarchy as a new item (break prefab link). Make sure the name matches.
+
+## Additional notes
+- Button names should always end in ‘Btn’.
+- Buttons should always have the tag `uibutton`.
+- Objects with the tag `uistatic` are ignored by raycasts and other interactions.
+- The `Managers` object, or a child of this object, contains all singleton scripts. A few exceptions exist (like the `initialize.cs` on the `Main Camera`).
+
+- Most new custom scripts (exceptions are custom scripts that are direct extensions of used libraries/frameworks, like the `VMGFactory.cs` in the Factories folder) are categorized in the `Scripts` folder.
+
+**Interaction:**
+- InputHandler scripts handle direct user-input and communicate with relevant managers.
+- Interaction (`…Interaction.cs`) scripts perform the actions related to the input.
+- Manager (`…Manager.cs`) scripts handle any indirect functions caused by user input, like the adjustment of the UI.
+
+- Inventory items are saved under `Prefabs/Inventory`. When adding new items, make sure the components are identical to existing inventory items.
+- Sprite rendering is based on the ‘Order in Layer’ and range between 0 and 5. (Higher number = rendered on top of others).
+- If you want to add text in the scene, use the `3DTextPrefab` object in the project.
+
+
+## Authors
+* **Erik Vullings** (initial work) - *Initial work including generation of tiles, mqtt connection, integration of MapZenGo, buildings and objects, basic navigation.*
+* **Thom van de Moosdijk** (graduation project) - *Addition of interaction system, user interface and other enhancements.*

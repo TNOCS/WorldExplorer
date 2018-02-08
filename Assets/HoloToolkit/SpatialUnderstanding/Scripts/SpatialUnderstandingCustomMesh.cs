@@ -8,7 +8,7 @@ using UnityEngine;
 using HoloToolkit.Unity.SpatialMapping;
 
 #if UNITY_EDITOR || UNITY_WSA
-using UnityEngine.VR.WSA;
+
 #endif
 
 namespace HoloToolkit.Unity
@@ -215,9 +215,9 @@ namespace HoloToolkit.Unity
         {
             spatialUnderstanding = SpatialUnderstanding.Instance;
 #if UNITY_EDITOR || UNITY_WSA
-            if (gameObject.GetComponent<WorldAnchor>() == null)
+            if (gameObject.GetComponent<UnityEngine.XR.WSA.WorldAnchor>() == null)
             {
-                gameObject.AddComponent<WorldAnchor>();
+                gameObject.AddComponent<UnityEngine.XR.WSA.WorldAnchor>();
             }
 #endif
         }

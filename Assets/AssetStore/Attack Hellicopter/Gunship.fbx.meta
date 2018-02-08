@@ -14,16 +14,48 @@ labels:
 - shoot
 timeCreated: 18446744011573954816
 ModelImporter:
-  serializedVersion: 21
+  serializedVersion: 22
   fileIDToRecycleName:
+    100000: Back_Rotor
+    100002: //RootNode
+    100004: Gunship
+    100006: Hellfire_Missile
+    100008: Rotor
+    400000: Back_Rotor
+    400002: //RootNode
+    400004: Gunship
+    400006: Hellfire_Missile
+    400008: Rotor
+    2300000: Back_Rotor
+    2300002: Gunship
+    2300004: Hellfire_Missile
+    2300006: Rotor
+    3300000: Back_Rotor
+    3300002: Gunship
+    3300004: Hellfire_Missile
+    3300006: Rotor
     4300000: Gunship
     4300002: Rotor
     4300004: Back_Rotor
     4300006: Hellfire_Missile
+    7400000: Fly
+    11100000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gunship_material
+    second: {fileID: 2100000, guid: a675dd1e3bde5e94f96ff64aeb1971eb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Hellfire
+    second: {fileID: 2100000, guid: 142e650798fe1e44cb2ca25683a0d3f1, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -36,6 +68,7 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -88,6 +121,8 @@ ModelImporter:
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88

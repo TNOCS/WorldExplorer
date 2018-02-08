@@ -5,7 +5,7 @@ using HoloToolkit.Unity.InputModule;
 using UnityEngine;
 
 #if UNITY_EDITOR || UNITY_WSA
-using UnityEngine.VR.WSA;
+
 #endif
 
 namespace HoloToolkit.Unity
@@ -188,7 +188,7 @@ namespace HoloToolkit.Unity
 
 #if UNITY_EDITOR || UNITY_WSA
             // Place the plane at the desired depth in front of the user and billboard it to the gaze origin.
-            HolographicSettings.SetFocusPointForFrame(planePosition, -GazeNormal, velocity);
+            UnityEngine.XR.WSA.HolographicSettings.SetFocusPointForFrame(planePosition, -GazeNormal, velocity);
 #endif
         }
 
@@ -221,7 +221,7 @@ namespace HoloToolkit.Unity
             planePosition = gazeOrigin + (gazeDirection * currentPlaneDistance);
 
 #if UNITY_EDITOR || UNITY_WSA
-            HolographicSettings.SetFocusPointForFrame(planePosition, -gazeDirection, Vector3.zero);
+            UnityEngine.XR.WSA.HolographicSettings.SetFocusPointForFrame(planePosition, -gazeDirection, Vector3.zero);
 #endif
         }
 
@@ -241,7 +241,7 @@ namespace HoloToolkit.Unity
 
             planePosition = gazeOrigin + (gazeNormal * currentPlaneDistance);
 #if UNITY_EDITOR || UNITY_WSA
-            HolographicSettings.SetFocusPointForFrame(planePosition, -gazeNormal, Vector3.zero);
+            UnityEngine.XR.WSA.HolographicSettings.SetFocusPointForFrame(planePosition, -gazeNormal, Vector3.zero);
 #endif
         }
 

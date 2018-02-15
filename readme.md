@@ -1,8 +1,8 @@
 # WorldExplorer
-A HoloLens application that allows users to view and interact with automatically generated area's. The world is rendered using OpenStreepMapData, and shows the users the world on a squared table. Sessions can be shared with other users, allowing for collaboration anywhere in the world. 
-Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worlds as hologram. 
-[Video](https://vimeo.com/247794077)
-![Example](https://github.com/TNOCS/WorldExplorer/blob/ui-and-interaction/Assets/githubimage.png)
+A Hololens application to increase your situational awareness. Using OpenStreetMap data, it renders the world. You can share a session with multiple users, editing layers of information. Even though we can share our world, different users can display different layers of information.
+Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worlds as hologram. [Video 1](https://youtu.be/dyVc-hZAiek), [Video 2](https://vimeo.com/187078876). 
+
+[Thom van de Moosdijk](http://www.thomvdm.com/tno) extended this project for his graduation at Fontys Hogeschool in Eindhoven, and especially improved the user interaction, and his final presentation can be seen [here](https://vimeo.com/253818533). We also gave a presentation at the [Innovation in Defence 2017](https://vimeo.com/253819446).
 
 # Features
 - Render the world based on several datasets.
@@ -20,6 +20,7 @@ Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worl
 	- Switch between bookmarked locations.
 	- An inventory system.
 
+![Example](https://cloud.githubusercontent.com/assets/3140667/21022014/5d8de41e-bd7b-11e6-99f5-6e265df12726.png)
 ### Prerequisites
 Required software:
 - Unity v5.6 or higher. (Currently recommended: latest Unity 2017).

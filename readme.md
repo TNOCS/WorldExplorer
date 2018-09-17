@@ -23,7 +23,8 @@ Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worl
 ![Example](https://cloud.githubusercontent.com/assets/3140667/21022014/5d8de41e-bd7b-11e6-99f5-6e265df12726.png)
 ### Prerequisites
 Required software:
-- Unity v5.6 or higher. (Currently recommended: latest Unity 2017).
+- Unity 2017.4 LTS (Long Term Support) ![latest supported unity version for library MRTK](https://github.com/Microsoft/MixedRealityToolkit-Unity)
+- Unity component "Windows store IL2CPP Scripting backend" (option in unity installer)
 - Visual Studio 2017.
 - Windows 10 Fall Creators Update.
 

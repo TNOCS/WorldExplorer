@@ -24,13 +24,16 @@ Is it based on [MapzenGo](https://github.com/brnkhy/MapzenGo), to render 3D worl
 ### Prerequisites
 Required software:
 - Unity 2017.4 LTS (Long Term Support) ![latest supported unity version for library MRTK](https://github.com/Microsoft/MixedRealityToolkit-Unity)
-- Unity component "Windows store IL2CPP Scripting backend" (option in unity installer)
+- Unity component "Windows store .NET scripting backend" and "Windows store IL2CPP Scripting backend" (option in unity installer)
 - Visual Studio 2017.
 - Windows 10 Fall Creators Update.
 
 Required hardware:
 - Microsoft HoloLens.
 - Clicker (suggested).
+
+## Windows Store scripting backend (UWP)
+There are two scripting backends possible ".NET" and "IL2CPP". With the release of 2018.2, the support for the .NET scripting backend is deprecated. In unity the option generate "Unity C# projects" (debugging) is only avaliable with ".NET backend scripting". In later version of unity is olso possible to generate c# projects with "IL2CPP".
 
 ## Getting Started - Development
 1. Open Unity (if there is a version mismatch warning, make sure there is a backup and automatically upgrade the project).

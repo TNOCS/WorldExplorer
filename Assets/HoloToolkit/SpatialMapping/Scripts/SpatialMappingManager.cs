@@ -44,7 +44,6 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// <summary>
         /// Time when StartObserver() was called.
         /// </summary>
-        [HideInInspector]
         public float StartTime { get; private set; }
 
         /// <summary>
@@ -86,9 +85,9 @@ namespace HoloToolkit.Unity.SpatialMapping
         public event EventHandler<PropertyChangedEventArgsEx<SpatialMappingSource>> SourceChanged;
 
         // Called when the GameObject is first created.
-        protected  void Awake()
+        protected override void Awake()
         {
-           // base.Awake();
+            base.Awake();
 
             surfaceObserver = gameObject.GetComponent<SpatialMappingObserver>();
             Source = surfaceObserver;
@@ -210,9 +209,13 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// </summary>
         public void StartObserver()
         {
-#if UNITY_EDITOR || UNITY_UWP
-            // Allow observering if a device is present (Holographic Remoting)
-            if (!UnityEngine.XR.XRDevice.isPresent) return;
+#if UNITY_WSA
+            // Allow observing if a device is present (Holographic Remoting)
+#if UNITY_2017_2_OR_NEWER
+            if (!UnityEngine.XR.XRDevice.isPresent) { return; }
+#else
+            if (!UnityEngine.VR.VRDevice.isPresent) { return; }
+#endif
 #endif
             if (!IsObserverRunning())
             {
@@ -226,9 +229,13 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// </summary>
         public void StopObserver()
         {
-#if UNITY_EDITOR || UNITY_UWP
-            // Allow observering if a device is present (Holographic Remoting)
-            if (!UnityEngine.XR.XRDevice.isPresent) return;
+#if UNITY_WSA
+            // Allow observing if a device is present (Holographic Remoting)
+#if UNITY_2017_2_OR_NEWER
+            if (!UnityEngine.XR.XRDevice.isPresent) { return; }
+#else
+            if (!UnityEngine.VR.VRDevice.isPresent) { return; }
+#endif
 #endif
             if (IsObserverRunning())
             {

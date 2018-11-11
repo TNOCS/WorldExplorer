@@ -125,7 +125,9 @@ namespace HoloToolkit.Unity.InputModule
             Vector3 gazeHitPosition = GazeManager.Instance.HitInfo.point;
             Transform cameraTransform = CameraCache.Main.transform;
             Vector3 handPosition;
-            currentInputSource.TryGetPosition(currentInputSourceId, out handPosition);
+            // hkl currentInputSource.TryGetPosition(currentInputSourceId, out handPosition);
+            currentInputSource.TryGetGripPosition(currentInputSourceId, out handPosition);
+
 
             Vector3 pivotPosition = GetHandPivotPosition(cameraTransform);
             handRefDistance = Vector3.Magnitude(handPosition - pivotPosition);
@@ -190,8 +192,8 @@ namespace HoloToolkit.Unity.InputModule
         {
             Vector3 newHandPosition;
             Transform cameraTransform = CameraCache.Main.transform;
-            currentInputSource.TryGetPosition(currentInputSourceId, out newHandPosition);
-
+            // hkl currentInputSource.TryGetPosition(currentInputSourceId, out newHandPosition);
+            currentInputSource.TryGetGripPosition(currentInputSourceId, out newHandPosition);
             Vector3 pivotPosition = GetHandPivotPosition(cameraTransform);
 
             Vector3 newHandDirection = Vector3.Normalize(newHandPosition - pivotPosition);

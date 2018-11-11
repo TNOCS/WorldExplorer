@@ -13,7 +13,7 @@ using SimpleJSON;
 
 namespace MapzenGo.Models.Plugins
 {
-    public class TileLayerPlugin : Plugin
+    public class TileLayerPlugin : TilePlugin
     {
         /// <summary>
         /// Handles the spawning of tiles, as well as the terrain heights if the user has enabled them.
@@ -22,9 +22,14 @@ namespace MapzenGo.Models.Plugins
         public List<Layer> tileLayers;
         string objectJSONString;
 
-        public override void Create(Tile tile)
+        public override void GeoJsonDataLoaded(Tile tile)
         {
-            base.Create(tile);
+            throw new NotImplementedException();
+        }
+
+        public override void TileCreated(Tile tile)
+        {
+
             foreach (var tileLayer in tileLayers)
             {
                 var go = GameObject.CreatePrimitive(PrimitiveType.Quad).transform;

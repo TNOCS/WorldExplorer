@@ -37,8 +37,8 @@ namespace Assets.Scripts.Classes
             set
             {
                 if (selectionColor == value) return;
-                selectionColor = value;
-                UserMaterial = new Material(Shader.Find("HoloToolkit/Cursor"));
+                selectionColor = value;                 
+                UserMaterial = new Material(Shader.Find("MixedRealityToolkit/Cursor"));
                 UserMaterial.color = value;
             }
         }

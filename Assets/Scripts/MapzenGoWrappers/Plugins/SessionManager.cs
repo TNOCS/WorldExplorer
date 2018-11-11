@@ -70,7 +70,7 @@ namespace Assets.Scripts.Plugins
             me.Cursor.transform.Find("CursorOnHolograms").gameObject.GetComponent<Renderer>().material = me.UserMaterial;
             me.Cursor.transform.Find("CursorOnHolograms").GetComponent<MeshRenderer>().material = Resources.Load<Material>("ring_shadow");
 
-            UserMaterial = new Material(Shader.Find("HoloToolkit/Cursor"));
+            UserMaterial = new Material(Shader.Find("MixedRealityToolkit/Cursor"));
 
             var mtd = gameObject.AddComponent<UnityMainThreadDispatcher>();
             InitMqtt();
@@ -98,6 +98,7 @@ namespace Assets.Scripts.Plugins
 #else
             client = new MqttClient(appState.Config.MqttServer, int.Parse(appState.Config.MqttPort));
 #endif
+            // client = new MqttClient(appState.Config.MqttServer, int.Parse(appState.Config.MqttPort));
             try
             {
                 Debug.Log("Connecting to MQTT");
@@ -111,50 +112,57 @@ namespace Assets.Scripts.Plugins
 
             Debug.Log(string.Format("Client is connected to MQTT server: {0}:{1}", appState.Config.MqttServer, appState.Config.MqttPort));
             // register to message received 
-            client.MqttMsgPublishReceived += (sender, e) =>
+            client.MqttMsgPublishReceived += (sender, mqttMsg) =>
             {
+                // Invoke on GUI thread
                 UnityMainThreadDispatcher.Instance().Enqueue(() =>
                 {
-                    var msg = Encoding.UTF8.GetString(e.Message);
-                    var subtopic = e.Topic.Substring(topic.Length - 1);
-
-                    if (subtopic.StartsWith("presence/"))
-                    {
-                        UpdateUsersPresence(msg);
-                        return;
-                    }
-                    // Debug.Log(string.Format("Received message on topic {0}: {1}", subtopic, msg));
-                    switch (subtopic)
-                    {
-                        case "view":
-                            SetView(msg);
-                            break;
-                        case "zoomdirection":
-                            RescaleBoardObjects(msg);
-                            break;
-                        case "presence":
-                            Debug.Log("Presence selected");
-                            break;
-                        case "newobject":
-                            SetNewObject(msg);
-                            break;
-                        case "updateobject":
-                            SetExistingObject(msg);
-                            break;
-                        case "deleteobject":
-                            SetDeleteObject(msg);
-                            break;
-                        case "table":
-                            if (ShareTable)
-                            {
-                                SetTable(msg);
-                            }
-                            break;
-                    }
+                    var msg = Encoding.UTF8.GetString(mqttMsg.Message);
+                    var subtopic = mqttMsg.Topic.Substring(topic.Length - 1);
+                    ProcessMessage(subtopic, msg);
                     //GameObject _3dText = GameObject.Find("tbTemp");
                     //_3dText.GetComponent<TextMesh>().text = msg;
                 });
             };
+        }
+
+        public void ProcessMessage(string topic, string jsonMessage)
+        {
+           
+
+            if (topic.StartsWith("presence/"))
+            {
+                UpdateUsersPresence(jsonMessage);
+                return;
+            }
+            // Debug.Log(string.Format("Received message on topic {0}: {1}", subtopic, msg));
+            switch (topic)
+            {
+                case "view":
+                    SetView(jsonMessage);
+                    break;
+                case "zoomdirection":
+                    RescaleBoardObjects(jsonMessage);
+                    break;
+                case "presence":
+                    Debug.Log("Presence selected");
+                    break;
+                case "newobject":
+                    SetNewObject(jsonMessage);
+                    break;
+                case "updateobject":
+                    SetExistingObject(jsonMessage);
+                    break;
+                case "deleteobject":
+                    SetDeleteObject(jsonMessage);
+                    break;
+                case "table":
+                    if (ShareTable)
+                    {
+                        SetTable(jsonMessage);
+                    }
+                    break;
+            }
         }
 
 
@@ -590,7 +598,15 @@ namespace Assets.Scripts.Plugins
         protected void SendJsonMessage(string subtopic, string json, bool retain = true)
         {
             //Debug.Log(string.Format("Sending JSON message to topic {0}/{1}: {2}", sessionName, subtopic, json));
-            client.Publish(string.Format("{0}/{1}", sessionName, subtopic), Encoding.UTF8.GetBytes(json), uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, retain);
+            if (client.IsConnected)
+            {
+                client.Publish(string.Format("{0}/{1}", sessionName, subtopic), Encoding.UTF8.GetBytes(json), uPLibrary.Networking.M2Mqtt.Messages.MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, retain);
+            }
+            else
+            {
+                // Fake receive message
+                ProcessMessage(subtopic, json);
+            }
         }
     }
 }

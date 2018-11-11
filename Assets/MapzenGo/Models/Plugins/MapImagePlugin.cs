@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace MapzenGo.Models.Plugins
 {
-    public class MapImagePlugin : Plugin
+    public class MapImagePlugin : TilePlugin
     {
         public enum TileServices
         {
@@ -29,9 +29,12 @@ namespace MapzenGo.Models.Plugins
             "https://stamen-tiles.a.ssl.fastly.net/watercolor/"
         };
 
-        public override void Create(Tile tile)
+        
+
+
+        public override void TileCreated(Tile tile)
         {
-            base.Create(tile);
+
 
             var go = GameObject.CreatePrimitive(PrimitiveType.Quad).transform;
             go.name = "map";
@@ -59,6 +62,11 @@ namespace MapzenGo.Models.Plugins
                 {
                     Debug.Log(error);
                 });
+        }
+
+        public override void GeoJsonDataLoaded(Tile tile)
+        {
+            
         }
     }
 }

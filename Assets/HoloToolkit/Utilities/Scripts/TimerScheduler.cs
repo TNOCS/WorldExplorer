@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
-/*
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,7 +32,6 @@ namespace HoloToolkit.Unity
     /// </example>
     public sealed class TimerScheduler : Singleton<TimerScheduler>
     {
-        
         private struct TimerData
         {
             public Callback Callback;
@@ -62,11 +61,10 @@ namespace HoloToolkit.Unity
         private List<TimerIdPair> activeTimers;
         private int nextTimerId;
 
-        protected  void Awake()
+        protected override void Awake()
         {
-            // base.Awake();
+            base.Awake();
 
-            
             timers = new PriorityQueue<int, TimerData>();
             deferredTimers = new List<TimerData>(10);
             activeTimers = new List<TimerIdPair>(20);
@@ -242,4 +240,4 @@ namespace HoloToolkit.Unity
             return GetActiveTimerIndex(timerId.Id) > -1 || GetTimerDeferredIndex(timerId.Id) > -1;
         }
     }
-}*/
+}

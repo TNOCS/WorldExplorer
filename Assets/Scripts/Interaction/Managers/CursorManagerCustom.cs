@@ -2,13 +2,14 @@
 using HoloToolkit.Unity;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class CursorManagerCustom : Singleton<CursorManagerCustom>
 {
     /// <summary>
     /// Handles the users own cursor, including feedback through icons and color.
     /// </summary>
-    
+
     public GameObject Cursor;
     public GameObject CursorOnHolograms;
     public GameObject CursorVisual;
@@ -17,20 +18,46 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
     private GameObject NavigateTutorial;
     private GameObject CursorIcon;
 
+
+    public static void SetActiveRecursivelyExt(GameObject obj, bool state)
+    {
+        obj.SetActive(state);
+        foreach (Transform child in obj.transform)
+        {
+            SetActiveRecursivelyExt(child.gameObject, state);
+        }
+    }
+
     public void InitCursor()
     {
-        Cursor = GameObject.Find("Cursor");
-        CursorIcon = GameObject.Find("CursorIcon");
-        CursorOnHolograms = GameObject.Find("CursorOnHolograms");
-        InteractionPossibleIcon = GameObject.Find("InteractionPossibleIcon");
-        PlacementPossibleIcon = GameObject.Find("PlacementPossibleIcon");
+
+        Cursor = GameObject.Find("/Cursor");
+
+
+        CursorIcon = GameObject.Find("/Cursor/CursorVisualCube/CursorIcon");
+        CursorOnHolograms = GameObject.Find("/Cursor/CursorOnHolograms");
+        CursorVisual = GameObject.Find("/Cursor/CursorVisualCube"); ;
+        InteractionPossibleIcon = GameObject.Find("/Cursor/CursorVisualCube/CursorIcon/InteractionPossibleIcon");
+        PlacementPossibleIcon = GameObject.Find("/Cursor/CursorVisualCube/CursorIcon/PlacementPossibleIcon");
         NavigateTutorial = GameObject.Find("NavigateTutorial");
-
+        Assert.IsTrue(Cursor != null &&
+                     CursorIcon != null &&
+                     CursorOnHolograms != null &&
+                     InteractionPossibleIcon != null &&
+                     PlacementPossibleIcon != null &&
+                     CursorVisual != null &&
+                     NavigateTutorial != null, "Failed to initialize cursor objects");
         // The GameObject that shows current manipulating mode.
-        CursorVisual = Cursor.transform.GetChild(0).gameObject;
-        CursorIcon.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CursorIcons/Sprites/MoveBtn");
+                
+        if (CursorIcon != null) CursorIcon.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CursorIcons/Sprites/MoveBtn");
+        if (NavigateTutorial != null) NavigateTutorial.SetActive(false);
 
-        NavigateTutorial.SetActive(false);
+        if (Cursor != null)
+        {
+            // The ObjectCursor makes children of Cursor GameObject inactive based on state
+            // Therefore the GameObject.find  doesn't work (code above) is script is enabled at startup
+            Cursor.GetComponent<HoloToolkit.Unity.InputModule.ObjectCursor>().enabled = true;
+        }
     }
 
     private void Update()
@@ -202,7 +229,7 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
             // If the user is in the Info mode, the cursor should turn green when it hits building.
             if (currentMode == "InfoBtn")
             {
-                if (rayCastFocus.name.Contains(" Buildings"))
+                if (rayCastFocus.name.Contains("Buildings"))
                 {
                     InteractionPossible();
                 }

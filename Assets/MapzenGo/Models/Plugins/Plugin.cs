@@ -7,11 +7,10 @@ using UnityEngine;
 
 namespace MapzenGo.Models.Plugins
 {
-    public class Plugin : MonoBehaviour
+    public abstract class TilePlugin : MonoBehaviour
     {
-        public virtual void Create(Tile tile)
-        {
+        public abstract void TileCreated(Tile tile);
 
-        }
+        public abstract void GeoJsonDataLoaded(Tile tile);
     }
 }

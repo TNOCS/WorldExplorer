@@ -8,7 +8,7 @@ using UnityEngine;
 namespace HoloToolkit.Unity
 {
     /// <summary>
-    /// Renders the UI and handles update logic for HoloToolkit/Configure/Apply HoloLens Capability Settings.
+    /// Renders the UI and handles update logic for HoloToolkit/Configure/Apply Mixed Reality Capability Settings.
     /// </summary>
     public class CapabilitySettingsWindow : AutoConfigureWindow<PlayerSettings.WSACapability>
     {
@@ -143,7 +143,8 @@ namespace HoloToolkit.Unity
             Descriptions[PlayerSettings.WSACapability.PrivateNetworkClientServer] = "The Private Network Client Server capability provides inbound and outbound access to home and " +
                                                                                     "work networks through the firewall. This capability is typically used for games that " +
                                                                                     "communicate across the local area network (LAN), and for apps that share data across a variety " +
-                                                                                    "of local devices.\n\nNote: On Windows, this capability does not provide access to the Internet.";
+                                                                                    "of local devices.\n\nRequired when connecting the Unity Profiler to your app on the HoloLens" +
+                                                                                    "\n\nNote: On Windows, this capability does not provide access to the Internet.";
         }
 
         protected override void OnEnable()

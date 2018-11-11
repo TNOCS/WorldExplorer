@@ -46,7 +46,7 @@ namespace Assets.Scripts.Classes
             }
 
            //InitalView = new ViewState();
-            ActiveView = Views.FirstOrDefault(v => v.Name == json.GetString("initialView"));
+            ActiveView = Views.FirstOrDefault(v => v.Name == "Beach" /* hkl json.GetString("initialView") */);
             Table = new Table();
             Table.FromJson(json["table"]);
         }

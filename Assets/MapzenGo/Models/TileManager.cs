@@ -27,7 +27,7 @@ namespace MapzenGo.Models
         protected readonly string _mapzenFormat = "json";
         protected Transform TileHost;
 
-        private List<Plugin> _plugins;
+        private List<TilePlugin> _plugins;
 
         protected Dictionary<Vector2d, Tile> Tiles; //will use this later on
         protected Vector2d CenterTms; //tms tile coordinate
@@ -90,8 +90,8 @@ namespace MapzenGo.Models
 
         private void InitFactories()
         {
-            _plugins = new List<Plugin>();
-            foreach (var plugin in GetComponentsInChildren<Plugin>())
+            _plugins = new List<TilePlugin>();
+            foreach (var plugin in GetComponentsInChildren<TilePlugin>())
             {
                 _plugins.Add(plugin);
             }
@@ -132,6 +132,7 @@ namespace MapzenGo.Models
 
         protected virtual void LoadTile(Vector2d tileTms, Tile tile)
         {
+            _plugins.ForEach(plugin => plugin.TileCreated(tile));
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
 //            Debug.Log(url);
             ObservableWWW.Get(url)
@@ -152,11 +153,7 @@ namespace MapzenGo.Models
                 if (!tile) // checks if tile still exists and haven't destroyed yet
                     return;
                 tile.Data = mapData;
-
-                foreach (var factory in _plugins)
-                {
-                    factory.Create(tile);
-                }
+                _plugins.ForEach(plugin => plugin.GeoJsonDataLoaded(tile));
             });
         }
     }

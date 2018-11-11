@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MapzenGo.Models.Plugins
 {
-    public class _TerrainHeightPlugin : Plugin
+    public class _TerrainHeightPlugin : TilePlugin
     {
         public enum TileServices
         {
@@ -32,9 +32,15 @@ namespace MapzenGo.Models.Plugins
             "https://stamen-tiles.a.ssl.fastly.net/watercolor/"
         };
 
-        public override void Create(Tile tile)
+        public override void GeoJsonDataLoaded(Tile tile)
         {
-            base.Create(tile);
+            
+        }
+
+
+        public override void TileCreated(Tile tile)
+        {
+          
             var zoomtmp = 11;
             var tmsx = 1518;
             var tmsy = 858;

@@ -22,7 +22,7 @@ namespace MapzenGo.Models.Factories
             Query = (geo) => geo["geometry"]["type"].str == "Point" && geo["properties"].HasField("name");
         }
 
-        public override void Create(Tile tile)
+        public override void GeoJsonDataLoaded(Tile tile)
         {
             if (!(tile.Data.HasField(XmlTag) && tile.Data[XmlTag].HasField("features")))
                 return;

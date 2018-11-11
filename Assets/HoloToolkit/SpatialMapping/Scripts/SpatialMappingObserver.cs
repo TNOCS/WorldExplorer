@@ -5,8 +5,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-#if UNITY_EDITOR || UNITY_WSA
-
+#if UNITY_WSA
+#if UNITY_2017_2_OR_NEWER
+using UnityEngine.XR.WSA;
+#else
+using UnityEngine.VR.WSA;
+#endif
 #endif
 
 namespace HoloToolkit.Unity.SpatialMapping
@@ -68,7 +72,8 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// <summary>
         /// Indicates the current type of the observed volume
         /// </summary>
-        [SerializeField][Tooltip("The shape of the observation volume.")]
+        [SerializeField]
+        [Tooltip("The shape of the observation volume.")]
         private ObserverVolumeTypes observerVolumeType = ObserverVolumeTypes.AxisAlignedBox;
         public ObserverVolumeTypes ObserverVolumeType
         {
@@ -78,7 +83,7 @@ namespace HoloToolkit.Unity.SpatialMapping
             }
             set
             {
-                if(observerVolumeType != value)
+                if (observerVolumeType != value)
                 {
                     observerVolumeType = value;
                     SwitchObservedVolume();
@@ -86,17 +91,16 @@ namespace HoloToolkit.Unity.SpatialMapping
             }
         }
 
-#if UNITY_EDITOR || UNITY_WSA
+#if UNITY_WSA
         /// <summary>
         /// Our Surface Observer object for generating/updating Spatial Mapping data.
         /// </summary>
-        private UnityEngine.XR.WSA.SurfaceObserver observer;
+        private SurfaceObserver observer;
 
         /// <summary>
         /// A queue of surfaces that need their meshes created (or updated).
         /// </summary>
-        private readonly Queue<UnityEngine.XR.WSA.SurfaceId> surfaceWorkQueue = new Queue<UnityEngine.XR.WSA.SurfaceId>();
-#endif
+        private readonly Queue<SurfaceId> surfaceWorkQueue = new Queue<SurfaceId>();
 
         /// <summary>
         /// To prevent too many meshes from being generated at the same time, we will
@@ -104,6 +108,7 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// if a mesh creation request is in flight.
         /// </summary>
         private SurfaceObject? outstandingMeshRequest = null;
+#endif
 
         /// <summary>
         /// When surfaces are replaced or removed, rather than destroying them, we'll keep
@@ -117,7 +122,8 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// </summary>
         private float updateTime;
 
-        [SerializeField][Tooltip("The extents of the observation volume.")]
+        [SerializeField]
+        [Tooltip("The extents of the observation volume.")]
         private Vector3 extents = Vector3.one * 10.0f;
         public Vector3 Extents
         {
@@ -127,7 +133,7 @@ namespace HoloToolkit.Unity.SpatialMapping
             }
             set
             {
-                if(extents != value)
+                if (extents != value)
                 {
                     extents = value;
                     SwitchObservedVolume();
@@ -138,7 +144,8 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// <summary>
         /// The origin of the observation volume.
         /// </summary>
-        [SerializeField][Tooltip("The origin of the observation volume.")]
+        [SerializeField]
+        [Tooltip("The origin of the observation volume.")]
         private Vector3 origin = Vector3.zero;
         public Vector3 Origin
         {
@@ -148,7 +155,7 @@ namespace HoloToolkit.Unity.SpatialMapping
             }
             set
             {
-                if(origin != value)
+                if (origin != value)
                 {
                     origin = value;
                     SwitchObservedVolume();
@@ -157,9 +164,10 @@ namespace HoloToolkit.Unity.SpatialMapping
         }
 
         /// <summary>
-        /// The direction of the observed volume, if an oriented box is choosen.
+        /// The direction of the observed volume, if an oriented box is chosen.
         /// </summary>
-        [SerializeField][Tooltip("The direction of the observation volume.")]
+        [SerializeField]
+        [Tooltip("The direction of the observation volume.")]
         private Quaternion orientation = Quaternion.identity;
         public Quaternion Orientation
         {
@@ -169,11 +177,11 @@ namespace HoloToolkit.Unity.SpatialMapping
             }
             set
             {
-                if(orientation != value)
+                if (orientation != value)
                 {
                     orientation = value;
                     // Only needs to be changed if the corresponding mode is active.
-                    if(ObserverVolumeType == ObserverVolumeTypes.OrientedBox)
+                    if (ObserverVolumeType == ObserverVolumeTypes.OrientedBox)
                     {
                         SwitchObservedVolume();
                     }
@@ -188,7 +196,7 @@ namespace HoloToolkit.Unity.SpatialMapping
             ObserverState = ObserverStates.Stopped;
         }
 
-#if UNITY_EDITOR || UNITY_WSA
+#if UNITY_WSA
         /// <summary>
         /// Called once per frame.
         /// </summary>
@@ -200,12 +208,12 @@ namespace HoloToolkit.Unity.SpatialMapping
                 {
                     // We're using a simple first-in-first-out rule for requesting meshes, but a more sophisticated algorithm could prioritize
                     // the queue based on distance to the user or some other metric.
-                    UnityEngine.XR.WSA.SurfaceId surfaceID = surfaceWorkQueue.Dequeue();
+                    SurfaceId surfaceID = surfaceWorkQueue.Dequeue();
 
                     string surfaceName = ("Surface-" + surfaceID.handle);
 
                     SurfaceObject newSurface;
-                    UnityEngine.XR.WSA.WorldAnchor worldAnchor;
+                    WorldAnchor worldAnchor;
 
                     if (spareSurfaceObject == null)
                     {
@@ -217,7 +225,7 @@ namespace HoloToolkit.Unity.SpatialMapping
                             drawVisualMeshesOverride: false
                             );
 
-                        worldAnchor = newSurface.Object.AddComponent<UnityEngine.XR.WSA.WorldAnchor>();
+                        worldAnchor = newSurface.Object.AddComponent<WorldAnchor>();
                     }
                     else
                     {
@@ -234,11 +242,11 @@ namespace HoloToolkit.Unity.SpatialMapping
                         newSurface.ID = surfaceID.handle;
                         newSurface.Renderer.enabled = false;
 
-                        worldAnchor = newSurface.Object.GetComponent<UnityEngine.XR.WSA.WorldAnchor>();
+                        worldAnchor = newSurface.Object.GetComponent<WorldAnchor>();
                         Debug.Assert(worldAnchor != null);
                     }
 
-                    var surfaceData = new UnityEngine.XR.WSA.SurfaceData(
+                    var surfaceData = new SurfaceData(
                         surfaceID,
                         newSurface.Filter,
                         worldAnchor,
@@ -273,10 +281,10 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// </summary>
         public void StartObserving()
         {
-#if UNITY_EDITOR || UNITY_WSA
+#if UNITY_WSA
             if (observer == null)
             {
-                observer = new UnityEngine.XR.WSA.SurfaceObserver();
+                observer = new SurfaceObserver();
                 SwitchObservedVolume();
             }
 
@@ -297,7 +305,7 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// <remarks>Sets the Surface Observer state to ObserverStates.Stopped.</remarks>
         public void StopObserving()
         {
-#if UNITY_EDITOR || UNITY_WSA
+#if UNITY_WSA
             if (ObserverState == ObserverStates.Running)
             {
                 Debug.Log("Stopping the observer.");
@@ -314,7 +322,7 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// </summary>
         public void CleanupObserver()
         {
-#if UNITY_EDITOR || UNITY_WSA
+#if UNITY_WSA
             StopObserving();
 
             if (observer != null)
@@ -347,7 +355,7 @@ namespace HoloToolkit.Unity.SpatialMapping
         {
             bool originUpdated = false;
 
-#if UNITY_EDITOR || UNITY_WSA
+#if UNITY_WSA
             if (observer != null)
             {
                 Origin = origin;
@@ -363,10 +371,10 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// </summary>
         private void SwitchObservedVolume()
         {
-#if UNITY_EDITOR || UNITY_WSA
+#if UNITY_WSA
             if (observer == null)
             {
-              return;
+                return;
             }
 
             switch (observerVolumeType)
@@ -387,14 +395,14 @@ namespace HoloToolkit.Unity.SpatialMapping
 #endif
         }
 
-#if UNITY_EDITOR || UNITY_WSA
+#if UNITY_WSA
         /// <summary>
         /// Handles the SurfaceObserver's OnDataReady event.
         /// </summary>
         /// <param name="cookedData">Struct containing output data.</param>
         /// <param name="outputWritten">Set to true if output has been written.</param>
         /// <param name="elapsedCookTimeSeconds">Seconds between mesh cook request and propagation of this event.</param>
-        private void SurfaceObserver_OnDataReady(UnityEngine.XR.WSA.SurfaceData cookedData, bool outputWritten, float elapsedCookTimeSeconds)
+        private void SurfaceObserver_OnDataReady(SurfaceData cookedData, bool outputWritten, float elapsedCookTimeSeconds)
         {
             if (outstandingMeshRequest == null)
             {
@@ -457,7 +465,7 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// <param name="changeType">The type of change that occurred on the surface.</param>
         /// <param name="bounds">The bounds of the surface.</param>
         /// <param name="updateTime">The date and time at which the change occurred.</param>
-        private void SurfaceObserver_OnSurfaceChanged(UnityEngine.XR.WSA.SurfaceId id, UnityEngine.XR.WSA.SurfaceChange changeType, Bounds bounds, DateTime updateTime)
+        private void SurfaceObserver_OnSurfaceChanged(SurfaceId id, SurfaceChange changeType, Bounds bounds, DateTime updateTime)
         {
             // Verify that the client of the Surface Observer is expecting updates.
             if (ObserverState != ObserverStates.Running)
@@ -467,12 +475,12 @@ namespace HoloToolkit.Unity.SpatialMapping
 
             switch (changeType)
             {
-                case UnityEngine.XR.WSA.SurfaceChange.Added:
-                case UnityEngine.XR.WSA.SurfaceChange.Updated:
+                case SurfaceChange.Added:
+                case SurfaceChange.Updated:
                     surfaceWorkQueue.Enqueue(id);
                     break;
 
-                case UnityEngine.XR.WSA.SurfaceChange.Removed:
+                case SurfaceChange.Removed:
                     SurfaceObject? removedSurface = RemoveSurfaceIfFound(id.handle, destroyGameObject: false);
                     if (removedSurface != null)
                     {
@@ -485,7 +493,7 @@ namespace HoloToolkit.Unity.SpatialMapping
                     break;
             }
         }
-        private bool IsMatchingSurface(SurfaceObject surfaceObject, UnityEngine.XR.WSA.SurfaceData surfaceData)
+        private bool IsMatchingSurface(SurfaceObject surfaceObject, SurfaceData surfaceData)
         {
             return (surfaceObject.ID == surfaceData.id.handle)
                 && (surfaceObject.Filter == surfaceData.outputMesh)

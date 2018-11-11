@@ -48,9 +48,9 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
     private void SetObjects()
     {
         terrain = GameObject.Find("terrain");
-        originalTablePosition = terrain.transform.position;
-        originalTableRotation = terrain.transform.rotation;
-        originalTableScale = terrain.transform.localScale;
+        //originalTablePosition = terrain.transform.position;
+        //originalTableRotation = terrain.transform.rotation;
+        //originalTableScale = terrain.transform.localScale;
 
         boundingBoxInitial = Resources.Load("Textures/BoundingBoxInitial", typeof(Material)) as Material;
         boundingBoxSelected = Resources.Load("Textures/BoundingBoxSelected", typeof(Material)) as Material;
@@ -260,6 +260,7 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
     public void UpdateTableSize(NavigationEventData eventData, int direction)
     {
         // Size up.
+        
         if (eventData.CumulativeDelta.x >= 0)
         {
             if (terrain.transform.localScale.x < maximumScale && terrain.transform.localScale.y < maximumScale && terrain.transform.localScale.z < maximumScale)

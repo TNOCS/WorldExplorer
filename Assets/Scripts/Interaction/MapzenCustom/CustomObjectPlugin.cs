@@ -9,13 +9,18 @@ namespace MapzenGo.Models.Plugins
     /// Spawns placed objects and VMGObjects on each tile when they are initialized.
     /// </summary>
 
-    public class CustomObjectPlugin : Plugin
+    public class CustomObjectPlugin : TilePlugin
     {
         public bool hasVMGObjects = false;
 
-        public override void Create(Tile tile)
+        public override void GeoJsonDataLoaded(Tile tile)
         {
-            base.Create(tile);
+            
+        }
+
+        public override void TileCreated(Tile tile)
+        {
+            
 
             foreach (var spawnedObject in InventoryObjectInteraction.Instance.spawnedObjectsList)
             {

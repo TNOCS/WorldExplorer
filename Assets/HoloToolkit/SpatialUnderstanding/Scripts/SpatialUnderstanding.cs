@@ -49,7 +49,7 @@ namespace HoloToolkit.Unity
         }
 
         /// <summary>
-        /// Reference to the SpatialUnderstandingDLL class (wraps the understanding dll functions).
+        /// Reference to the SpatialUnderstandingDLL class (wraps the understanding DLL functions).
         /// </summary>
         public SpatialUnderstandingDll UnderstandingDLL { get; private set; }
         /// <summary>
@@ -82,7 +82,7 @@ namespace HoloToolkit.Unity
             }
         }
         /// <summary>
-        /// Indicates the the scanning statistics are still being processed.
+        /// Indicates the scanning statistics are still being processed.
         /// Request finish should not be called when this is true. 
         /// </summary>
         public bool ScanStatsReportStillWorking
@@ -117,9 +117,9 @@ namespace HoloToolkit.Unity
         private float timeSinceLastUpdate = 0.0f;
 
         // Functions
-        protected  void Awake()
+        protected override void Awake()
         {
-           // base.Awake();
+            base.Awake();
 
             // Cache references to required component
             UnderstandingDLL = new SpatialUnderstandingDll();

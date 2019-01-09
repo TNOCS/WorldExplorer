@@ -6,10 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using UniRx;
 using UnityEngine;
 using UnityEngine.Networking;
 using SimpleJSON;
+using System.Threading.Tasks;
+using System.Net;
 
 namespace MapzenGo.Models.Plugins
 {
@@ -69,14 +70,31 @@ namespace MapzenGo.Models.Plugins
                 rend.material = tile.Material;
 
                 var url = tileLayer.Url.Replace("{z}", tile.Zoom.ToString()).Replace("{x}", tile.TileTms.x.ToString()).Replace("{y}", tile.TileTms.y.ToString());
-                ObservableWWW.GetWWW(url).Subscribe(
-                    success =>
+                Task.Factory.StartNew<byte[]>(() =>
+                {
+                    WebClient wc = new WebClient();
+                    return wc.DownloadData(url);
+
+                }).ContinueWith((t) =>
+                {
+                    if (t.IsFaulted)
+                    {
+                        // faulted with exception
+                        Exception ex = t.Exception;
+                        while (ex is AggregateException && ex.InnerException != null)
+                            ex = ex.InnerException;
+                        Debug.LogError(ex.Message);
+                    }
+                    else if (t.IsCanceled)
+                    {
+
+                    }
+                    else
                     {
                         if (rend)
                         {
                             rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
-                            success.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
-
+                            ((Texture2D)rend.material.mainTexture).LoadImage(t.Result);
                             // Adds a shader that allows the mesh to be viewed from all sides. Only necessary when terrain is leveled.
                             if (BoardInteraction.Instance.terrainHeights)
                             {
@@ -89,12 +107,16 @@ namespace MapzenGo.Models.Plugins
                             }
 
                         }
-                    },
-                    error =>
-                    {
-                        Debug.Log(error + " loading url: " + url);
+                        if (rend)
+                        {
+                            rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
+                            rend.material.color = new Color(1f, 1f, 1f, 1f);
+                            ((Texture2D)rend.material.mainTexture).LoadImage(t.Result);
+                            //  t.Result.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
+                        }
                     }
-                );
+                }, TaskScheduler.FromCurrentSynchronizationContext());
+
 
             }
         }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UniRx;
 using UnityEngine;
 
 namespace MapzenGo.Models.Plugins
@@ -50,7 +49,7 @@ namespace MapzenGo.Models.Plugins
             // var url = "https://tile.mapzen.com/mapzen/terrain/v1/terrarium/" + tile.Zoom + "/" + tile.TileTms.x + "/" +
             //tile.TileTms.y + ".png?api_key=" + _key;
 
-            ObservableWWW.GetWWW(url).Subscribe(
+           /* HKL  ObservableWWW.GetWWW(url).Subscribe(
                 success =>
                 {
                     CreateMesh(tile, success);
@@ -58,7 +57,7 @@ namespace MapzenGo.Models.Plugins
                 error =>
                 {
                     Debug.Log(url + " - " + error);
-                });
+                }); */
         }
 
         private void CreateMesh(Tile tile, WWW terrarium)
@@ -69,7 +68,7 @@ namespace MapzenGo.Models.Plugins
             var tex = new Texture2D(256, 256);
             terrarium.LoadImageIntoTexture(tex);
 
-            ObservableWWW.GetWWW(url).Subscribe(
+            /* HKL ObservableWWW.GetWWW(url).Subscribe(
                 success =>
                 {
                     var go = new GameObject("TerrainHeight");
@@ -132,6 +131,7 @@ namespace MapzenGo.Models.Plugins
                 {
                     Debug.Log(error);
                 });
+                */
         }
 
         private float GetTerrariumHeight(Color c)

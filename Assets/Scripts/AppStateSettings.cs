@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Classes;
 using MapzenGo.Models.Plugins;
-using UniRx;
 using Symbols;
 using MapzenGo.Models.Factories;
 using Assets.Scripts.Plugins;
 using MapzenGo.Helpers;
+using System.Threading.Tasks;
+using System.Net;
+using System;
 
 namespace Assets.Scripts
 {
@@ -434,8 +436,25 @@ namespace Assets.Scripts
         {
             if (l._active) return;
             var av = Config.ActiveView;
-            ObservableWWW.GetWWW(l.Url).Subscribe(
-                success =>
+            Task.Factory.StartNew<string>(() =>
+            {
+                WebClient wc = new WebClient();
+                return wc.DownloadString(l.Url);
+            }).ContinueWith((t) =>
+            {
+                if (t.IsFaulted)
+                {
+                    // faulted with exception
+                    Exception ex = t.Exception;
+                    while (ex is AggregateException && ex.InnerException != null)
+                        ex = ex.InnerException;
+                    Debug.LogError(ex.Message);
+                }
+                else if (t.IsCanceled)
+                {
+
+                }
+                else
                 {
                     var layerObject = new GameObject(l.Title);
 
@@ -444,14 +463,14 @@ namespace Assets.Scripts
                     l._active = true;
 
                     var symbolFactory = layerObject.AddComponent<SymbolFactory>();
-                    symbolFactory.InitLayer(l, success.text, av.Zoom, av.Lat, av.Lon, av.TileSize, av.Range);
-                },
-                error =>
-                {
-                    Debug.Log(error);
+                    symbolFactory.InitLayer(l, t.Result, av.Zoom, av.Lat, av.Lon, av.TileSize, av.Range);
+
                 }
-            );
-        }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+        
+
+    }
 
         public void DoDeleteAll(GameObject Holder)
         {

@@ -379,16 +379,13 @@ public class UIManager : SingletonCustom<UIManager>
                 nameTxt.text = AppState.Instance.Config.UserName;
                 sessionNameTxt.text = "Session " + AppState.Instance.Config.SessionName;
                 string otherUsers = " ";
-                foreach (string user in SessionManager.Instance.userStrings)
+                foreach (var user in SessionManager.Instance.users)
                 {
-                    if (!otherUsers.Contains(user))
+                    if (!otherUsers.Contains(user.Name))
                     {
-                        otherUsers = otherUsers + user + "\n";
+                        otherUsers = otherUsers + user.Name + "\n";
                     }
-                    else
-                    {
-                        Debug.Log("Already contains " + user);
-                    }
+                    
                 }
 
                 otherUsersTxt.text = otherUsers;

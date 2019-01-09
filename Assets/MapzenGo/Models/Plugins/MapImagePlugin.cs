@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 using MapzenGo.Models.Plugins;
-using UniRx;
+
 using UnityEngine;
 
 namespace MapzenGo.Models.Plugins
@@ -47,21 +49,37 @@ namespace MapzenGo.Models.Plugins
             rend.material = tile.Material;
 
             var url = TileServiceUrls[(int)TileService] + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
-            
-            ObservableWWW.GetWWW(url).Subscribe(
-                success =>
+            Task.Factory.StartNew<byte[]>(() =>
+            {
+                WebClient wc = new WebClient();
+                return wc.DownloadData(url);
+                
+            }).ContinueWith((t) =>
+            {
+                if (t.IsFaulted)
+                {
+                    // faulted with exception
+                    Exception ex = t.Exception;
+                    while (ex is AggregateException && ex.InnerException != null)
+                        ex = ex.InnerException;
+                    Debug.LogError(ex.Message);
+                }
+                else if (t.IsCanceled)
+                {
+
+                }
+                else
                 {
                     if (rend)
                     {
                         rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
                         rend.material.color = new Color(1f, 1f, 1f, 1f);
-                        success.LoadImageIntoTexture((Texture2D) rend.material.mainTexture);
+                        ((Texture2D)rend.material.mainTexture).LoadImage(t.Result);
+                      //  t.Result.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
                     }
-                },
-                error =>
-                {
-                    Debug.Log(error);
-                });
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
         }
 
         public override void GeoJsonDataLoaded(Tile tile)

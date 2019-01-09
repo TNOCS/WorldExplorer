@@ -1,6 +1,7 @@
-﻿using System.IO;
-using MapzenGo.Helpers;
-using UniRx;
+﻿using System;
+using System.IO;
+using System.Net;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MapzenGo.Models
@@ -37,20 +38,41 @@ namespace MapzenGo.Models
             else
             {
                 var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
-                ObservableWWW.Get(url).Subscribe(
-                    success =>
+                Task.Factory.StartNew<byte[]>(() =>
+                {
+                    WebClient wc = new WebClient();
+                    byte[] data = wc.DownloadData(url);
+                    return data;
+                }).ContinueWith((t) =>
+                {
+                    if (t.IsFaulted)
                     {
+                        // faulted with exception
+                        Exception ex = t.Exception;
+                        while (ex is AggregateException && ex.InnerException != null)
+                            ex = ex.InnerException;
+                        
+                    }
+                    else if (t.IsCanceled)
+                    {
+                        
+                    }
+                    else
+                    {
+                        string text = System.Text.Encoding.Default.GetString(t.Result);
+                        // completed successfully
                         using (var sr = new StreamWriter(new FileStream(tilePath, FileMode.Create)))
                         {
-                            sr.Write(success);
+                            sr.Write(t.Result);
                         }
-                        ConstructTile(success, tile);
-                    },
-                    error =>
-                    {
-                        Debug.Log(error);
-                    });
+                        ConstructTile(text, tile);
+                        
+                    }
+                }, TaskScheduler.FromCurrentSynchronizationContext());
+
             }
         }
+
+        
     }
 }

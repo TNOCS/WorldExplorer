@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 using MapzenGo.Models;
-using UniRx;
+//using UniRx;
 using UnityEngine;
 
 
@@ -34,15 +37,32 @@ namespace MapzenGo.Helpers.Search
             if (namePlace != string.Empty && namePlaceСache != namePlace)
             {
                 namePlaceСache = namePlace;
-                ObservableWWW.Get(seachUrl + namePlace).Subscribe(
-                    success =>
+                Task.Factory.StartNew<string>(() =>
+                {
+                    WebClient wc = new WebClient();
+                    return wc.DownloadString(seachUrl + namePlace);
+
+                }).ContinueWith((t) =>
+                {
+                    if (t.IsFaulted)
                     {
-                        DataProcessing(success);
-                    },
-                    error =>
+                        // faulted with exception
+                        Exception ex = t.Exception;
+                        while (ex is AggregateException && ex.InnerException != null)
+                            ex = ex.InnerException;
+                        Debug.LogError(ex.Message);
+                    }
+                    else if (t.IsCanceled)
                     {
-                        Debug.Log(error);
-                    });
+
+                    }
+                    else
+                    {
+                        DataProcessing(t.Result);
+                    }
+                }, TaskScheduler.FromCurrentSynchronizationContext());
+
+
             }
         }
 

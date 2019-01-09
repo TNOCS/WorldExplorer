@@ -4,11 +4,12 @@ using System.Linq;
 using MapzenGo.Helpers;
 using MapzenGo.Models.Factories;
 using MapzenGo.Models.Plugins;
-using UniRx;
 using UnityEngine;
 using Assets.Scripts;
 using Assets.Scripts.Classes;
 using System;
+using System.Threading.Tasks;
+using System.Net;
 
 namespace MapzenGo.Models
 {
@@ -40,6 +41,11 @@ namespace MapzenGo.Models
 
             InitFactories();
             InitLayers();
+
+            if ((Latitude < -90.0) || (Latitude > 90.0) || (Longitude < -180.0) || (Longitude > 180.0))
+            {
+                Debug.LogError($"Invalid lat/lon coordinate (Lat:{Latitude} Lon:{Longitude}");
+            }
 
             var v2 = GM.LatLonToMeters(Latitude, Longitude);
             var tile = GM.MetersToTile(v2, Zoom);
@@ -134,27 +140,61 @@ namespace MapzenGo.Models
         {
             _plugins.ForEach(plugin => plugin.TileCreated(tile));
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
-//            Debug.Log(url);
-            ObservableWWW.Get(url)
-                .Subscribe(
-                    text => { ConstructTile(text, tile); }, //success
-                    exp => {
-                        Debug.Log("Error fetching -> " + url);
-                        Debug.LogError(exp.Message);
-                    }); //failure
+            Task.Factory.StartNew<string>(() =>
+            {
+                WebClient wc = new WebClient();
+                return wc.DownloadString(url);
+
+            }).ContinueWith((t) =>
+            {
+                if (t.IsFaulted)
+                {
+                    // faulted with exception
+                    Exception ex = t.Exception;
+                    while (ex is AggregateException && ex.InnerException != null)
+                        ex = ex.InnerException;
+                    Debug.LogError(ex.Message);
+                }
+                else if (t.IsCanceled)
+                {
+
+                }
+                else
+                {
+                    ConstructTile(t.Result, tile);
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
         }
 
-        protected void ConstructTile(string text, Tile tile)
+        protected void ConstructTile(string json, Tile tile)
         {
-            var heavyMethod = Observable.Start(() => new JSONObject(text));
-
-            heavyMethod.ObserveOnMainThread().Subscribe(mapData =>
+            Task.Factory.StartNew<JSONObject>(() =>
             {
-                if (!tile) // checks if tile still exists and haven't destroyed yet
-                    return;
-                tile.Data = mapData;
-                _plugins.ForEach(plugin => plugin.GeoJsonDataLoaded(tile));
-            });
+                return new JSONObject(json);
+            }).ContinueWith((t) =>
+            {
+                if (t.IsFaulted)
+                {
+                    // faulted with exception
+                    Exception ex = t.Exception;
+                    while (ex is AggregateException && ex.InnerException != null)
+                        ex = ex.InnerException;
+                    Debug.LogError(ex.Message);
+                }
+                else if (t.IsCanceled)
+                {
+
+                }
+                else
+                {
+                    if (!tile) // checks if tile still exists and haven't destroyed yet
+                        return;
+                    tile.Data = t.Result;
+                    _plugins.ForEach(plugin => plugin.GeoJsonDataLoaded(tile));
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+            
         }
     }
 }

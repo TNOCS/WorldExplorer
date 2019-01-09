@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using MapzenGo.Helpers;
 using MapzenGo.Models.Enums;
-using UniRx;
+//using UniRx;
 using UnityEngine;
 
 namespace MapzenGo.Models.Factories

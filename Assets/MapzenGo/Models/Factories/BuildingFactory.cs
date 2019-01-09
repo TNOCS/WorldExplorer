@@ -6,8 +6,7 @@ using MapzenGo.Models.Enums;
 using MapzenGo.Models.Settings;
 using TriangleNet;
 using TriangleNet.Geometry;
-using UniRx;
-using UniRx.Triggers;
+
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;

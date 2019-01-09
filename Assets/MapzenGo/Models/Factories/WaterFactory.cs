@@ -6,7 +6,6 @@ using MapzenGo.Helpers;
 using MapzenGo.Models.Settings;
 using TriangleNet;
 using TriangleNet.Geometry;
-using UniRx;
 using UnityEngine;
 
 namespace MapzenGo.Models.Factories

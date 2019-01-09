@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using MapzenGo.Helpers;
-using UniRx;
+
 using UnityEngine;
 
 namespace MapzenGo.Helpers.Search

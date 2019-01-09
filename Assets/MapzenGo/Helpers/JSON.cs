@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 /*
  * http://www.opensource.org/licenses/lgpl-2.1.php
@@ -211,9 +212,9 @@ public class JSONObject
             if (isNumber.IsMatch(str))
             {
 #if USEFLOAT
-                n = System.Convert.ToSingle(str);
+                n = System.Convert.ToSingle(str, CultureInfo.InvariantCulture);
 #else
-                n = System.Convert.ToDouble(str);
+                n = System.Convert.ToDouble(str, CultureInfo.InvariantCulture);
 #endif
                 type = Type.NUMBER;
             }

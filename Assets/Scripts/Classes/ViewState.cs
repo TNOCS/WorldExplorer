@@ -46,6 +46,15 @@ namespace Assets.Scripts.Classes
                     Mapzen.Add(ll[l].str);
                 }
             };
+
+            if ((Lat < -90.0) || (Lat > 90.0) || (Lon < -180.0) || (Lon > 180.0))
+            {
+                Debug.LogError($"Invalid lat/lon coordinate in config file (Lat:{Lat} Lon:{Lon})");
+            }
+            if ((Zoom < 0) || (Zoom > 19))
+            {
+                Debug.LogError($"Invalid zoom level {Zoom} in config file (must be in range [0..19])");
+            }
         }
 
         public ViewState Clone()

@@ -35,8 +35,23 @@ Required hardware:
 - Microsoft HoloLens.
 - Clicker (suggested).
 
-## Windows Store scripting backend (UWP)
-There are two scripting backends possible ".NET" and "IL2CPP". With the release of 2018.2, the support for the .NET scripting backend is deprecated. In unity the option generate "Unity C# projects" (debugging) is only avaliable with ".NET backend scripting". In later version of unity is olso possible to generate c# projects with "IL2CPP".
+# Mapzen
+
+The company Mapzen has shutdown its hosted APIs and all related support and services on February 1, 2018.  
+
+Alternatives are:
+
+- [Nextzen](https://mapzen.com/blog/long-term-support-mapzen-maps/) (A long-term support version of own own Tilezen)
+- [Mapbox](https://www.mapbox.com/maps/)
+- [OpenMapTiles](https://openmaptiles.org/)
+- [Thunderforest](https://thunderforest.com/docs/vector-maps-api/)
+- [MAPCAT](http://mapcat.com/)
+
+**Nextzen** - I was so lucky to get an api key for Nextzen. The url format for the geoJSON  is "https://tile.nextzen.org/tilezen/vector/v1/all/{zoom}/{x}/{y}.json?api_key=<key>". All layer types are returned, it not possible to request a section of the types (e.g. buildings, roads). A workaround is to use the proxy server 'world-explorer-server' provided in this project (this will download all layers and split them up into multiple layers). The new service returns also MultiPolygon, which are not parsed in current application.
+
+**OpenMapTiles** - The OpenMapTiles server implementation can be found on https://hub.docker.com/r/klokantech/openmaptiles-server/ To run the server use the docker command "docker run --rm -it -v c:/openmaptiles/data:/data -p 8080:80 klokantech/openmaptiles-server". Then open a webpage on http://localhost:8080/". After setup the geoJSON can be retrieved with "http://localhost:8080/data/v3/{zoom}/{x}/{y}.geojson". However this geoJSON format doesn't match the mapzen geoJSON format, and can therefore not be used in this application (without rewrite some code). 
+
+
 
 ## Getting Started - Development
 1. Open Unity (if there is a version mismatch warning, make sure there is a backup and automatically upgrade the project).

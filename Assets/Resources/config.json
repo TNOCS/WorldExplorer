@@ -1,9 +1,10 @@
 ﻿{
   "tileServer": "",
+  "http": null, 
+  "MapzenUrlFormat": "http://localhost:56367/api/VectorData/{layers}/{zoom}/{x}/{y}.json",
   "mqttServer": "localhost",
-  "mqttServer": "cool3.sensorlab.tno.nl",
-  "mqttPort": "8026",
-  "initialView": "Detail",
+  "mqttPort": "1883",
+  "initialView": "Moordrecht",
   "sessionName": "one",
   "table": {
     "size": 1.5,
@@ -16,6 +17,16 @@
       "url2": "http://134.221.20.239:8101/2102363017/{z}/{x}/{y}.png",
       "url": "http://d.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
       "voiceCommand": "street map",
+      "useTransparency": true,
+      "height": 0.9,
+      "type": "tilelayer",
+      "group": "baselayer"
+    },
+    {
+      "title": "OSM",
+      "url2": "http://134.221.20.239:8101/2102363017/{z}/{x}/{y}.png",
+      "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "voiceCommand": "osm",
       "useTransparency": true,
       "height": 0.9,
       "type": "tilelayer",
@@ -190,14 +201,28 @@
       "name": "Detail",
       "lat": 52.4587,
       "lon": 5.0431,
-      "zoom": 17,
-      "tileSize": 100,
-      "range": 4,
+      "zoom": 16,
+      "tileSize": 150,
+      "range": 2,
       "scale": 1,
       "mapzen": [ "buildings", "pois", "assets" ],
       "layers": [ "Symboltest" ],
-      "tileLayers": [ "TopoLayer" ]
+      "tileLayers": [ "Satellite" ]
     },
+    {
+      "name": "Moordrecht",
+      "lat": 51.986752,
+      "lon": 4.667880,
+      "zoom": 14,
+      "tileSize": 150,
+      "range": 2,
+      "scale": 1,
+      "mapzen": [ "buildings", "pois", "assets", "roads" ],
+      "layers": [ "Symboltest" ],
+      "tileLayers": [ "OSM" ]
+    },
+
+
     {
       "name": "Military",
       "lat": 52.144168,

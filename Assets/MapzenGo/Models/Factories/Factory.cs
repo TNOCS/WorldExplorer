@@ -27,8 +27,10 @@ namespace MapzenGo.Models.Factories
 
         public override void GeoJsonDataLoaded(Tile tile)
         {
-      
-            if (!(tile.Data.HasField(XmlTag) && tile.Data[XmlTag].HasField("features"))) return;
+            if (!(tile.Data.HasField(XmlTag) && tile.Data[XmlTag].HasField("features")))
+            {
+                return;
+            }
 
             if (MergeMeshes)
             {

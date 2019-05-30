@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using MapzenGo.Models;
 //using UniRx;
@@ -32,36 +33,14 @@ namespace MapzenGo.Helpers.Search
 #endif
         }
 
-        public void SearchInMapzen()
+        public async void SearchInMapzen()
         {
             if (namePlace != string.Empty && namePlaceСache != namePlace)
             {
                 namePlaceСache = namePlace;
-                Task.Factory.StartNew<string>(() =>
-                {
-                    WebClient wc = new WebClient();
-                    return wc.DownloadString(seachUrl + namePlace);
-
-                }).ContinueWith((t) =>
-                {
-                    if (t.IsFaulted)
-                    {
-                        // faulted with exception
-                        Exception ex = t.Exception;
-                        while (ex is AggregateException && ex.InnerException != null)
-                            ex = ex.InnerException;
-                        Debug.LogError(ex.Message);
-                    }
-                    else if (t.IsCanceled)
-                    {
-
-                    }
-                    else
-                    {
-                        DataProcessing(t.Result);
-                    }
-                }, TaskScheduler.FromCurrentSynchronizationContext());
-
+                var data = await NetworkUtil.DownloadStringAsync(CancellationToken.None, seachUrl + namePlace);
+                
+                DataProcessing(data);
 
             }
         }

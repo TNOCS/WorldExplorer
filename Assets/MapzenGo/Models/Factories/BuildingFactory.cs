@@ -57,8 +57,9 @@ namespace MapzenGo.Models.Factories
                     if (localMercPos.y < miny) miny = (float)localMercPos.y;
                     if (localMercPos.x > maxx) maxx = (float)localMercPos.x;
                     if (localMercPos.y > maxy) maxy = (float)localMercPos.y;
+                    var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+                    buildingCorners.Add(new Vector3((float)localMercPos.x, terrainHeight+200, (float)localMercPos.y));
 
-                    buildingCorners.Add(localMercPos.ToVector3());
                 }
 
                 var building = new GameObject("Building").AddComponent<Building>();
@@ -67,6 +68,7 @@ namespace MapzenGo.Models.Factories
 
 
                 var buildingCenter = ChangeToRelativePositions(buildingCorners);
+                buildingCenter.y = buildingCenter.y + buildingCorners[0].y;
                 building.transform.localPosition = buildingCenter;
 
                 SetProperties(geo, building, typeSettings);
@@ -94,20 +96,23 @@ namespace MapzenGo.Models.Factories
 
         protected override GameObject CreateLayer(Tile tile, List<JSONObject> items)
         {
-            var main = new GameObject("Buildings Layer");
+
+            var sw = new Stopwatch();
+            sw.Start();
+                var main = new GameObject("Buildings Layer");
             var finalList = new Dictionary<BuildingType, MeshData>();
             var openList = new Dictionary<BuildingType, MeshData>();
 
             foreach (var geo in items.Where(x => Query(x)))
             {
-                if (!geo["properties"].HasField("id")) continue;
-                var key = geo["properties"]["id"].ToString();
-                if (_active.Contains(key))
-                    continue;
+                //if (!geo["properties"].HasField("id")) continue;
+                //var key = geo["properties"]["id"].ToString();
+                //if (_active.Contains(key))
+                //    continue;
 
                 //to prevent duplicate buildings
-                _active.Add(key);
-                tile.Destroyed += (s, e) => { _active.Remove(key); };
+                //_active.Add(key);
+                //tile.Destroyed += (s, e) => { _active.Remove(key); };
 
                 var kind = geo["properties"].HasField("landuse_kind")
                 ? geo["properties"]["landuse_kind"].str.ConvertToBuildingType()
@@ -132,21 +137,24 @@ namespace MapzenGo.Models.Factories
                 {
                     var c = bb.list[i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = new Vector2((float)(dotMerc.x - tile.TileCenter.x), (float)(dotMerc.y - tile.TileCenter.y));
+                    var localMercPos = (dotMerc - tile.Rect.Center); ;
 
-                    if (localMercPos.x < minx) minx = localMercPos.x;
-                    if (localMercPos.y < miny) miny = localMercPos.y;
-                    if (localMercPos.x > maxx) maxx = localMercPos.x;
-                    if (localMercPos.y > maxy) maxy = localMercPos.y;
-
-                    buildingCorners.Add(localMercPos.ToVector3xz());
+                    if (localMercPos.x < minx) minx = (float)localMercPos.x;
+                    if (localMercPos.y < miny) miny = (float)localMercPos.y;
+                    if (localMercPos.x > maxx) maxx = (float)localMercPos.x;
+                    if (localMercPos.y > maxy) maxy = (float)localMercPos.y;
+                    var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+                    buildingCorners.Add(new Vector3((float)localMercPos.x, terrainHeight, (float)localMercPos.y));
+                    
                 }
 
                 //returns random height if real value not available
                 var height = GetHeights(geo, typeSettings.MinimumBuildingHeight, typeSettings.MaximumBuildingHeight);
                 var minHeight = GetMinHeight(geo);
+                
                 //create mesh, actually just to get vertice&indices
                 //filling last two parameters, horrible call yea
+                //Debug.Log("Create json with " + buildingCorners.Count + " of kind " + kind);
                 CreateMesh(buildingCorners, minHeight, height, typeSettings, openList[kind], new Vector2(minx, miny), new Vector2(maxx - minx, maxy - miny));
 
                 //unity cant handle more than 65k on single mesh
@@ -177,6 +185,8 @@ namespace MapzenGo.Models.Factories
             {
                 CreateGameObject(group.Key, group.Value, main);
             }
+            sw.Stop();
+            var t = sw.ElapsedMilliseconds;
             return main;
         }
 
@@ -232,6 +242,7 @@ namespace MapzenGo.Models.Factories
 
         private void CreateMesh(List<Vector3> corners, float min_height, float height, BuildingSettings typeSettings, MeshData data, Vector2 min, Vector2 size)
         {
+            //_useTriangulationNet = false;
             var vertsStartCount = _useTriangulationNet
                     ? CreateRoofTriangulation(corners, height, data)
                     : CreateRoofClass(corners, height, data);
@@ -242,6 +253,7 @@ namespace MapzenGo.Models.Factories
 
             if (typeSettings.IsVolumetric)
             {
+                // Why min_height? Seems is always zero (what is logical)
                 float d = 0f;
                 Vector3 v1;
                 Vector3 v2;
@@ -251,12 +263,13 @@ namespace MapzenGo.Models.Factories
                     v1 = data.Vertices[vertsStartCount + i - 1];
                     v2 = data.Vertices[vertsStartCount + i];
                     ind = data.Vertices.Count;
-                    data.Vertices.Add(v1);
-                    data.Vertices.Add(v2);
-                    data.Vertices.Add(new Vector3(v1.x, min_height, v1.z));
-                    data.Vertices.Add(new Vector3(v2.x, min_height, v2.z));
+                    data.Vertices.Add(v1); //roof
+                    data.Vertices.Add(v2); // roof
+                    data.Vertices.Add(new Vector3(v1.x, v1.y - height + min_height, v1.z)); //floor
+                    data.Vertices.Add(new Vector3(v2.x, v2.y - height + min_height, v2.z)); //floor
 
                     d = (v2 - v1).magnitude;
+                   
 
                     data.UV.Add(new Vector2(0, 0));
                     data.UV.Add(new Vector2(d, 0));
@@ -275,13 +288,13 @@ namespace MapzenGo.Models.Factories
                 v1 = data.Vertices[vertsStartCount];
                 v2 = data.Vertices[vertsStartCount + corners.Count - 1];
                 ind = data.Vertices.Count;
-                data.Vertices.Add(v1);
-                data.Vertices.Add(v2);
-                data.Vertices.Add(new Vector3(v1.x, min_height, v1.z));
-                data.Vertices.Add(new Vector3(v2.x, min_height, v2.z));
+                data.Vertices.Add(v1); // roof
+                data.Vertices.Add(v2); // roof
+                data.Vertices.Add(new Vector3(v1.x, v1.y - height +  min_height, v1.z)); // floor
+                data.Vertices.Add(new Vector3(v2.x, v2.y - height +  min_height, v2.z)); // floor
 
                 d = (v2 - v1).magnitude;
-
+           
                 data.UV.Add(new Vector2(0, 0));
                 data.UV.Add(new Vector2(d, 0));
                 data.UV.Add(new Vector2(0, height));
@@ -301,7 +314,7 @@ namespace MapzenGo.Models.Factories
         {
             var vertsStartCount = data.Vertices.Count;
             var tris = new Triangulator(corners);
-            data.Vertices.AddRange(corners.Select(x => new Vector3(x.x, height, x.z)).ToList());
+            data.Vertices.AddRange(corners.Select(x => new Vector3(x.x, x.y + height, x.z)).ToList());
             data.Indices.AddRange(tris.Triangulate().Select(x => vertsStartCount + x));
             return vertsStartCount;
         }
@@ -321,7 +334,7 @@ namespace MapzenGo.Models.Factories
             _mesh.Triangulate(inp);
 
             var vertsStartCount = data.Vertices.Count;
-            data.Vertices.AddRange(corners.Select(x => new Vector3(x.x, height, x.z)).ToList());
+            data.Vertices.AddRange(corners.Select(x => new Vector3(x.x, x.y + height, x.z)).ToList());
 
             foreach (var tri in _mesh.Triangles)
             {
@@ -335,6 +348,7 @@ namespace MapzenGo.Models.Factories
         private void CreateGameObject(BuildingType kind, MeshData data, GameObject main)
         {
             var go = new GameObject(kind + " Buildings");
+            //go.AddComponent<EnabledDisabled>();
             var mesh = go.AddComponent<MeshFilter>().mesh;
             go.AddComponent<MeshRenderer>();
             mesh.vertices = data.Vertices.ToArray();

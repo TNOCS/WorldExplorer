@@ -51,7 +51,7 @@ namespace MapzenGo.Models.Factories
             var mesh = landuse.GetComponent<MeshFilter>().mesh;
 
             SetProperties(geo, landuse, kind);
-            CreateMesh(inp, md);
+            CreateMesh(tile, inp, md);
 
             //I want object center to be in the middle of object, not at the corner of the tile
             var landuseCenter = ChangeToRelativePositions(md.Vertices);
@@ -102,7 +102,7 @@ namespace MapzenGo.Models.Factories
                     inp.AddSegment(i, (i + 1) % count);
                 }
 
-                CreateMesh(inp, _meshes[kind]);
+                CreateMesh(tile, inp, _meshes[kind]);
 
                 if (_meshes[kind].Vertices.Count > 64000)
                 {
@@ -144,7 +144,7 @@ namespace MapzenGo.Models.Factories
             landuse.GetComponent<MeshRenderer>().material = FactorySettings.GetSettingsFor<LanduseSettings>(kind).Material;
         }
 
-        private void CreateMesh(InputGeometry corners, MeshData meshdata)
+        private void CreateMesh(Tile tile, InputGeometry corners, MeshData meshdata)
         {
             var mesh = new TriangleNet.Mesh();
             mesh.Behavior.Algorithm = TriangulationAlgorithm.SweepLine;
@@ -152,7 +152,7 @@ namespace MapzenGo.Models.Factories
             mesh.Triangulate(corners);
 
             var vertsStartCount = meshdata.Vertices.Count;
-            meshdata.Vertices.AddRange(corners.Points.Select(x => new Vector3((float)x.X, 0, (float)x.Y)).ToList());
+            meshdata.Vertices.AddRange(corners.Points.Select(x => new Vector3((float)x.X, TerrainHeight.GetTerrainHeight(tile.gameObject, (float)x.x, (float)x.y), (float)x.Y)).ToList());
             meshdata.UV.AddRange(corners.Points.Select(x => new Vector2((float)x.X, (float)x.Y)).ToList());
             foreach (var tri in mesh.Triangles)
             {

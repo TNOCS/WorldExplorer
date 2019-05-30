@@ -125,8 +125,8 @@ namespace MapzenGo.Models.Factories
                     if (localMercPos.y < miny) miny = localMercPos.y;
                     if (localMercPos.x > maxx) maxx = localMercPos.x;
                     if (localMercPos.y > maxy) maxy = localMercPos.y;
-
-                    buildingCorners.Add(localMercPos.ToVector3xz());
+                    var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+                    buildingCorners.Add(new Vector3(localMercPos.x, terrainHeight, localMercPos.y));
                 }
                 
                 //create mesh, actually just to get vertice&indices
@@ -206,7 +206,7 @@ namespace MapzenGo.Models.Factories
         {
             var vertsStartCount = data.Vertices.Count;
             var tris = new Triangulator(corners);
-            data.Vertices.AddRange(corners.Select(x => new Vector3(x.x, 0, x.z)).ToList());
+            data.Vertices.AddRange(corners.Select(x => new Vector3(x.x, x.y, x.z)).ToList());
             data.Indices.AddRange(tris.Triangulate().Select(x => vertsStartCount + x));
             return vertsStartCount;
         }
@@ -226,7 +226,7 @@ namespace MapzenGo.Models.Factories
             _mesh.Triangulate(inp);
 
             var vertsStartCount = data.Vertices.Count;
-            data.Vertices.AddRange(corners.Select(x => new Vector3(x.x, 0, x.z)).ToList());
+            data.Vertices.AddRange(corners.Select(x => new Vector3(x.x, x.y, x.z)).ToList());
 
             foreach (var tri in _mesh.Triangles)
             {

@@ -67,7 +67,8 @@ namespace MapzenGo.Models.Factories
             var c = geo["geometry"]["coordinates"];
             var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
             var localMercPos = dotMerc - tile.Rect.Center;
-            go.transform.position = new Vector3((float)localMercPos.x, 30F, (float)localMercPos.y);
+            float terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+            go.transform.position = new Vector3((float)localMercPos.x, terrainHeight + 30F, (float)localMercPos.y);
             var target = new GameObject("poiTarget");
             var targetScript = target.AddComponent<targetForPoi>();
             target.transform.position = localMercPos.ToVector3();

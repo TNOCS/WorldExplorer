@@ -40,7 +40,8 @@ namespace MapzenGo.Models.Factories
                     var c = geo["geometry"]["coordinates"][i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
                     var localMercPos = dotMerc - tile.Rect.Center;
-                    roadEnds.Add(localMercPos.ToVector3());
+                    var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+                    roadEnds.Add(new Vector3((float)localMercPos.x, terrainHeight, (float)localMercPos.y));
                 }
 
                 CreateMesh(roadEnds, typeSettings, md);
@@ -78,7 +79,8 @@ namespace MapzenGo.Models.Factories
                         var seg = c[j];
                         var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
                         var localMercPos = dotMerc - tile.Rect.Center;
-                        roadEnds.Add(localMercPos.ToVector3());
+                        var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+                        roadEnds.Add(new Vector3((float)localMercPos.x, terrainHeight, (float)localMercPos.y));
                     }
 
                     SetProperties(geo, road);
@@ -133,7 +135,9 @@ namespace MapzenGo.Models.Factories
                         var c = geo["geometry"]["coordinates"][i];
                         var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
                         var localMercPos = dotMerc - tile.Rect.Center;
-                        roadEnds.Add(localMercPos.ToVector3());
+                        var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+                        roadEnds.Add(new Vector3((float)localMercPos.x, terrainHeight, (float)localMercPos.y));
+               
                     }
                     CreateMesh(roadEnds, settings, _meshes[kind]);
                     //yield return CreateRoadSegment(geo, roadEnds);
@@ -149,7 +153,9 @@ namespace MapzenGo.Models.Factories
                             var seg = c[j];
                             var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
                             var localMercPos = dotMerc - tile.Rect.Center;
-                            roadEnds.Add(localMercPos.ToVector3());
+                            var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+                            roadEnds.Add(new Vector3((float)localMercPos.x, terrainHeight, (float)localMercPos.y));
+                            //roadEnds.Add(localMercPos.ToVector3());
                         }
                         CreateMesh(roadEnds, settings, _meshes[kind]);
                     }

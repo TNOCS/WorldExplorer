@@ -52,7 +52,7 @@ namespace MapzenGo.Models.Factories
                     inp.AddSegment(i, (i + 1) % count);
                 }
                 
-                CreateMesh(inp, md);
+                CreateMesh(tile, inp, md);
             }
 
             mesh.vertices = md.Vertices.ToArray();
@@ -114,7 +114,7 @@ namespace MapzenGo.Models.Factories
                     
                     //create mesh, actually just to get vertice&indices
                     //filling last two parameters, horrible call yea
-                    CreateMesh(inp, meshes[kind]);
+                    CreateMesh(tile, inp, meshes[kind]);
 
                     //unity cant handle more than 65k on single mesh
                     //so we'll finish current and start a new one
@@ -134,7 +134,7 @@ namespace MapzenGo.Models.Factories
             return main;
         }
         
-        private void CreateMesh(InputGeometry corners, MeshData meshdata)
+        private void CreateMesh(Tile tile, InputGeometry corners, MeshData meshdata)
         {
             var mesh = new TriangleNet.Mesh();
             mesh.Behavior.Algorithm = TriangulationAlgorithm.SweepLine;
@@ -142,7 +142,7 @@ namespace MapzenGo.Models.Factories
             mesh.Triangulate(corners);
 
             var vertsStartCount = meshdata.Vertices.Count;
-            meshdata.Vertices.AddRange(corners.Points.Select(x => new Vector3((float)x.X, 0, (float)x.Y)).ToList());
+            meshdata.Vertices.AddRange(corners.Points.Select(x => new Vector3((float)x.X, TerrainHeight.GetTerrainHeight(tile.gameObject, x.X, x.Y), (float)x.Y)).ToList());
 
             foreach (var tri in mesh.Triangles)
             {

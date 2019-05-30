@@ -68,7 +68,9 @@ namespace MapzenGo.Models.Factories
                             var seg = c[j];
                             var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
                             var localMercPos = dotMerc - tile.Rect.Center;
-                            roadEnds.Add(localMercPos.ToVector3());
+                            var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+                            roadEnds.Add(new Vector3((float)localMercPos.x, terrainHeight, (float)localMercPos.y));
+                           // roadEnds.Add(localMercPos.ToVector3());
                         }
                         CreateMesh(roadEnds, typeSettings, md);
                         mesh.vertices = md.Vertices.ToArray();
@@ -92,7 +94,7 @@ namespace MapzenGo.Models.Factories
             go.AddComponent<MeshRenderer>();
             var md = new MeshData();
 
-            GetVertices(tile.Rect.Center, geoList, md);
+            GetVertices(tile, tile.Rect.Center, geoList, md);
             mesh.vertices = md.Vertices.ToArray();
             mesh.triangles = md.Indices.ToArray();
             mesh.SetUVs(0, md.UV);
@@ -103,7 +105,7 @@ namespace MapzenGo.Models.Factories
             return go;
         }
 
-        private void GetVertices(Vector2d tileMercPos, List<JSONObject> geoList, MeshData md)
+        private void GetVertices(Tile tile, Vector2d tileMercPos, List<JSONObject> geoList, MeshData md)
         {
             foreach (var geo in geoList.Where(x => Query(x)))
             {
@@ -121,7 +123,9 @@ namespace MapzenGo.Models.Factories
                         var c = geo["geometry"]["coordinates"][i];
                         var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
                         var localMercPos = dotMerc - tileMercPos;
-                        roadEnds.Add(localMercPos.ToVector3());
+                        var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+                        roadEnds.Add(new Vector3((float)localMercPos.x, terrainHeight, (float)localMercPos.y));
+                        //roadEnds.Add(localMercPos.ToVector3());
                     }
                     CreateMesh(roadEnds, settings, md);
                     //yield return CreateRoadSegment(geo, roadEnds);
@@ -137,7 +141,9 @@ namespace MapzenGo.Models.Factories
                             var seg = c[j];
                             var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
                             var localMercPos = dotMerc - tileMercPos;
-                            roadEnds.Add(localMercPos.ToVector3());
+                            var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+                            roadEnds.Add(new Vector3((float)localMercPos.x, terrainHeight, (float)localMercPos.y));
+                            //roadEnds.Add(localMercPos.ToVector3());
                         }
                         CreateMesh(roadEnds, settings, md);
                     }

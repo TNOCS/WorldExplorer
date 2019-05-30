@@ -379,6 +379,7 @@ namespace HoloToolkit.Unity
             GUILayout.FlexibleSpace();
             var previousLabelWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 105;
+                            #if !UNITY_2019_1_OR_NEWER
             bool generateReferenceProjects = EditorUserBuildSettings.wsaGenerateReferenceProjects;
             bool shouldGenerateProjects = EditorGUILayout.Toggle(useCSharpProjectsLabel, generateReferenceProjects);
 
@@ -386,7 +387,7 @@ namespace HoloToolkit.Unity
             {
                 EditorUserBuildSettings.wsaGenerateReferenceProjects = shouldGenerateProjects;
             }
-
+#endif
             EditorGUIUtility.labelWidth = previousLabelWidth;
 
             // Build Unity Player
@@ -1026,9 +1027,9 @@ namespace HoloToolkit.Unity
             GUILayout.EndVertical();
         }
 
-        #endregion // Methods
+#endregion // Methods
 
-        #region Utilities
+#region Utilities
 
         private void BuildAll(bool install = true)
         {
@@ -1218,9 +1219,9 @@ namespace HoloToolkit.Unity
             return string.Empty;
         }
 
-        #endregion
+#endregion
 
-        #region Device Portal Commands
+#region Device Portal Commands
 
         private static void OpenDevicePortal(DevicePortalConnections targetDevices)
         {
@@ -1507,6 +1508,6 @@ namespace HoloToolkit.Unity
             }
         }
 
-        #endregion
+#endregion
     }
 }

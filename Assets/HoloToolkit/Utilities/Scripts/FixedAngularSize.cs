@@ -80,9 +80,9 @@ namespace HoloToolkit.Unity
                     // disable this Behaviour so we don't get a DivideByZero
                     // error later on.
                     enabled = false;
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
                     Debug.LogWarning("The object and the camera are in the same position at Start(). The attached FixedAngularSize Behaviour is now disabled.");
-#endif // UNITY_EDITOR
+//#endif // UNITY_EDITOR
                 }
             }
             else

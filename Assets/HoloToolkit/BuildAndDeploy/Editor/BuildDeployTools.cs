@@ -257,9 +257,13 @@ namespace HoloToolkit.Unity
             // Before building, need to run a nuget restore to generate a json.lock file. Failing to do this breaks the build in VS RTM
             if (PlayerSettings.GetScriptingBackend(BuildTargetGroup.WSA) == ScriptingImplementation.WinRTDotNET &&
                 (!RestoreNugetPackages(nugetPath, storePath) ||
-                 !RestoreNugetPackages(nugetPath, storePath + "\\" + productName) ||
+                 !RestoreNugetPackages(nugetPath, storePath + "\\" + productName)))
+                                 #if !UNITY_2019_1_OR_NEWER
+                 ||
                  EditorUserBuildSettings.wsaGenerateReferenceProjects && !RestoreNugetPackages(nugetPath, assemblyCSharp) ||
-                 EditorUserBuildSettings.wsaGenerateReferenceProjects && restoreFirstPass && !RestoreNugetPackages(nugetPath, assemblyCSharpFirstPass)))
+                 EditorUserBuildSettings.wsaGenerateReferenceProjects && restoreFirstPass && !RestoreNugetPackages(nugetPath, assemblyCSharpFirstPass))
+#endif
+                // )
             {
                 Debug.LogError("Failed to restore nuget packages");
                 EditorUtility.ClearProgressBar();

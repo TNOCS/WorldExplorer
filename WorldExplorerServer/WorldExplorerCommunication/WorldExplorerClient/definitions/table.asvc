@@ -1,0 +1,18 @@
+{ 
+  "namespace": "eu.driver.model.worldexplorer",
+  "type": "record",
+  "doc": "The postion of board.",
+  "name": "Table",
+  "fields": [
+    { "name": "name", "type": "string" },
+	{ "name": "xpos", "type": "float" },
+	{ "name": "ypos", "type": "float" },
+	{ "name": "zpos", "type": "float" },
+	{ "name": "xrot", "type": "float" },
+	{ "name": "yrot", "type": "float" },
+	{ "name": "zrot", "type": "float" },
+	{ "name": "xscale", "type": "float" },
+	{ "name": "yscale", "type": "float" },
+	{ "name": "zscale", "type": "float" }
+  ]
+}

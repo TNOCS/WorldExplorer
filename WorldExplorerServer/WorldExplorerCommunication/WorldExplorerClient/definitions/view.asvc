@@ -1,0 +1,12 @@
+{ 
+  "namespace": "eu.driver.model.worldexplorer",
+  "type": "record",
+  "doc": "View state",
+  "name": "View",
+  "fields": [
+	{ "name": "lat", "type": "float" },
+	{ "name": "lon", "type": "float" },
+	{ "name": "zoom", "type": "int" },
+	{ "name": "range", "type": "int" }
+  ]
+}

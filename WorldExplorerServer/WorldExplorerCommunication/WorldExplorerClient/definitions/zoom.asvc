@@ -1,0 +1,18 @@
+{ 
+  "namespace": "eu.driver.model.worldexplorer",
+  "type": "record",
+  "doc": "Zoom",
+  "name": "Zoom",
+  "fields": [
+	{ 
+
+	  "name": "zoomdirection", 
+	  "type": {
+        "name": "Direction",
+		"namespace": "eu.driver.model.worldexplorer",
+        "type": "enum",
+        "symbols": [ "In", "Out" ]
+      }
+	}
+  ]
+}

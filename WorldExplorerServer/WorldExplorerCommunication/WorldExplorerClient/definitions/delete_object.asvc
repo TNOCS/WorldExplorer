@@ -1,0 +1,10 @@
+{ 
+  "namespace": "eu.driver.model.worldexplorer",
+  "type": "record",
+  "doc": "Delete item on board.",
+  "name": "DeleteObject",
+  "fields": [
+    { "name": "Name", "type": "string" },
+    { "name": "user", "type": "string" }
+  ]
+}

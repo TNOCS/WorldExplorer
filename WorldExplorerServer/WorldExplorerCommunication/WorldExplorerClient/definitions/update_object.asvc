@@ -1,0 +1,24 @@
+{ 
+  "namespace": "eu.driver.model.worldexplorer",
+  "type": "record",
+  "doc": "The cursor position on the board.",
+  "name": "UpdateObject",
+  "fields": [
+    { "name": "User", "type": "string" },
+    { "name": "Name", "type": "string" },
+	{ "name": "posX", "type": "float" },
+	{ "name": "posY", "type": "float" },
+	{ "name": "posZ", "type": "float" },
+	{ "name": "lat", "type": "double" },
+	{ "name": "lon", "type": "double" },
+	{ "name": "scaleX", "type": "float" },
+	{ "name": "scaleY", "type": "float" },
+	{ "name": "scaleZ", "type": "float" },
+	{ "name": "rotX", "type": "float" },
+	{ "name": "rotY", "type": "float" },
+	{ "name": "rotZ", "type": "float" },
+	{ "name": "centerPosX", "type": "float" },
+	{ "name": "centerPosY", "type": "float" },
+	{ "name": "centerPosZ", "type": "float" }
+  ]
+}

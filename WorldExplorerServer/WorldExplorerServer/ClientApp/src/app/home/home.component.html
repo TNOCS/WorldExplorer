@@ -1,0 +1,17 @@
+<h1>World Explorer QR Code</h1>
+
+<qrcode [qrdata]="qrdata" [size]="256" [level]="'M'"></qrcode>
+
+<br>
+
+
+  <label>
+    Server url: <input [(ngModel)]="qrdata" placeholder="name" style="width:400px">
+  </label>
+  <br>
+<app-ip-address></app-ip-address>
+  <br>
+  <button (click)="changeValue('http://192.168.1.9:56367/api/Configuration/default.json')">default</button>
+
+<app-signalr-client></app-signalr-client>
+

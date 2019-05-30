@@ -1,0 +1,19 @@
+{ 
+  "namespace": "eu.driver.model.worldexplorer",
+  "type": "record",
+  "doc": "The cursor position on the board.",
+  "name": "Presense",
+  "fields": [
+    { "name": "id", "type": "string" },
+    { "name": "name", "type": "string" },
+	{ "name": "xpos", "type": "float" },
+	{ "name": "ypos", "type": "float" },
+	{ "name": "zpos", "type": "float" },
+	{ "name": "xrot", "type": "float" },
+	{ "name": "yrot", "type": "float" },
+	{ "name": "zrot", "type": "float" },
+	{ "name": "r", "type": "int" },
+	{ "name": "g", "type": "int" },
+	{ "name": "b", "type": "int" }
+  ]
+}

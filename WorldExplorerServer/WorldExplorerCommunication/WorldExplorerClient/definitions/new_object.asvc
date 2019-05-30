@@ -1,0 +1,21 @@
+{ 
+  "namespace": "eu.driver.model.worldexplorer",
+  "type": "record",
+  "doc": "Create item on board.",
+  "name": "NewObject",
+  "fields": [
+    { "name": "Name", "type": "string" },
+    { "name": "prefabname", "type": "string" },
+	{ "name": "lat", "type": "double" },
+	{ "name": "lon", "type": "double" },
+	{ "name": "scaleX", "type": "float" },
+	{ "name": "scaleY", "type": "float" },
+	{ "name": "scaleZ", "type": "float" },
+	{ "name": "rotX", "type": "float" },
+	{ "name": "rotY", "type": "float" },
+	{ "name": "rotZ", "type": "float" },
+	{ "name": "centerPosX", "type": "float" },
+	{ "name": "centerPosY", "type": "float" },
+	{ "name": "centerPosZ", "type": "float" }
+  ]
+}

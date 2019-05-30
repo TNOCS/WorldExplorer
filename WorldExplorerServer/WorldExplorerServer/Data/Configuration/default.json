@@ -1,0 +1,220 @@
+{
+  "mqttServer": "localhost",
+  "mqttPort": "1883",
+  "initialView": "Moordrecht",
+  "sessionName": "one",
+  "table": {
+    "size": 1.5,
+    "height": 1.5,
+    "thickness": 0.2
+  },
+  "layers": {
+    "raster": [
+      {
+        "layerid": "OSM",
+        "voiceCommand": "street map",
+        "useTransparency": true,
+        "height": 0.9,
+        "group": "baselayer"
+      },
+      {
+        "layerid": "Satellite",
+        "voiceCommand": "satellite",
+        "useTransparency": true,
+        "height": 0.9,
+        "group": "baselayer"
+      }
+    ]
+  },
+  "layers1": [
+
+
+
+
+    {
+      "title": "Symboltest",
+      "url": "http://134.221.20.226:3999/test.json",
+      "IconUrl": "http://134.221.20.226:3999/test.json",
+      "voiceCommand": "symbol",
+      "useTransparency": true,
+      "height": 1.1,
+      "scale": 60,
+      "type": "geojson",
+      "Enabled": true
+    },
+    {
+      "title": "Police",
+      "url": "http://134.221.20.240:3000/api/layers/politie.actual",
+      "IconUrl": "http://134.221.20.240:3000/images/politie.png",
+      "voiceCommand": "police",
+      "useTransparency": true,
+      "height": 1.1,
+      "scale": 60,
+      "type": "geojson",
+      "Enabled": true
+    },
+
+    {
+      "title": "Ambulance",
+      "url": "http://134.221.20.240:3000/api/layers/ambulanceposten.actual",
+      "IconUrl": "http://134.221.20.240:3000/images/ambulanceposten.png",
+      "voiceCommand": "ambulance",
+      "useTransparency": true,
+      "height": 1.1,
+      "Refresh": 10,
+      "scale": 90,
+      "type": "geojson",
+      "Enabled": true
+    },
+
+    {
+      "title": "Gps",
+      "url": "http://217.169.227.210:3000/api/layers/gps.actual",
+      "Url1": "http://tnopresenter.nl/arnoud/test.json",
+      "IconUrl": "http://217.169.227.210:3000/images/gps/{role}.png",
+      "voiceCommand": "gps",
+      "useTransparency": true,
+      "Refresh": 10,
+      "scale": 120,
+      "height": 1.1,
+      "type": "geojson",
+      "Enabled": false
+    }
+  ],
+  "views": [
+    {
+      "name": "Kurhaus",
+      "lat": 52.111077,
+      "lon": 4.285591,
+      "zoom": 17,
+      "tileSize": 100,
+      "range": 3,
+      "scale": 1,
+      "mapzen": [ "buildings", "pois", "assets" ],
+      "geoJsonLayers": [],
+      "rasterLayers": [ "OSM" ]
+    },
+    {
+      "name": "Station",
+      "lat": 51.44228,
+      "lon": 5.48004,
+      "zoom": 17,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": [ "buildings", "water", "roads", "pois", "assets" ],
+      "geoJsonLayers": [],
+      "rasterLayers": [ "OSM" ]
+    },
+    {
+      "name": "School",
+      "lat": 51.480699,
+      "lon": 5.450737,
+      "zoom": 17,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": [ "buildings", "water", "roads", "pois" ],
+      "geoJsonLayers": [],
+      "rasterLayers": [ "OSM" ]
+    },
+    {
+      "name": "City center",
+      "lat": 51.438232,
+      "lon": 5.478346,
+      "zoom": 17,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": [ "buildings", "water", "roads", "pois", "assets" ],
+      "geoJsonLayers": [],
+      "rasterLayers": [ "OSM" ]
+    },
+    {
+      "name": "Lhasa",
+      "lat": 29.641547,
+      "lon": 91.112160,
+      "zoom": 14,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": [ "buildings", "water", "roads", "landuse", "pois" ],
+      "geoJsonLayers": [],
+      "rasterLayers": [ "OSM" ]
+    },
+    {
+      "name": "Caves",
+      "lat": 50.862444,
+      "lon": 5.828960,
+      "zoom": 14,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": [ "buildings", "water", "roads", "landuse", "pois" ],
+      "geoJsonLayers": [],
+      "rasterLayers": [ "OSM" ]
+    },
+    {
+      "name": "Venlo",
+      "lat": 51.355980,
+      "lon": 6.186556,
+      "zoom": 14,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": [ "buildings", "water", "roads", "landuse", "pois" ],
+      "geoJsonLayers": [ "Police", "Ambulance" ],
+      "rasterLayers": [ "OSM" ]
+    },
+    {
+      "name": "Water",
+      "lat": 52.453924,
+      "lon": 5.047512,
+      "zoom": 15,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": [ "buildings", "water", "roads", "landuse", "pois" ],
+      "geoJsonLayers": [ "Police", "Ambulance" ],
+      "rasterLayers": [ "OSM" ]
+    },
+    {
+      "name": "Detail",
+      "lat": 52.4587,
+      "lon": 5.0431,
+      "zoom": 16,
+      "tileSize": 150,
+      "range": 2,
+      "scale": 1,
+      "mapzen": [ "buildings", "pois", "assets" ],
+      "geoJsonLayers": [ "Symboltest" ],
+      "rasterLayers": [ "OSM" ]
+    },
+    {
+      "name": "Moordrecht",
+      "lat": 51.986752,
+      "lon": 4.667880,
+      "zoom": 14,
+      "tileSize": 150,
+      "range": 2,
+      "scale": 1,
+      "mapzen": [ "buildings", "pois", "assets", "roads" ],
+      "geoJsonLayers": [ "Symboltest" ],
+      "rasterLayers": [ "OSM" ]
+    },
+
+
+    {
+      "name": "Military",
+      "lat": 52.144168,
+      "lon": 5.337196,
+      "zoom": 16,
+      "tileSize": 100,
+      "range": 2,
+      "scale": 1,
+      "mapzen": [ "buildings", "water", "roads", "landuse", "water" ],
+      "geoJsonLayers": [ "Gps" ],
+      "rasterLayers": [ "OSM" ]
+    }
+  ]
+}

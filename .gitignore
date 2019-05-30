@@ -33,3 +33,19 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+WorldExplorerServer/Signalr2Server/SignalrServer/bin/
+WorldExplorerServer/Signalr2Server/SignalrServer/obj/
+WorldExplorerServer/WorldExplorerCommunication/M2MqttWorldExplorerClient/bin/
+WorldExplorerServer/WorldExplorerCommunication/M2MqttWorldExplorerClient/obj/
+WorldExplorerServer/WorldExplorerCommunication/StubWorldExplorerClient/bin/
+WorldExplorerServer/WorldExplorerCommunication/StubWorldExplorerClient/obj/
+WorldExplorerServer/WorldExplorerCommunication/UnitySignalrClient/bin/
+WorldExplorerServer/WorldExplorerCommunication/UnitySignalrClient/obj/
+WorldExplorerServer/WorldExplorerCommunication/UnityWorldExplorerClient/bin/
+WorldExplorerServer/WorldExplorerCommunication/UnityWorldExplorerClient/obj/
+WorldExplorerServer/WorldExplorerCommunication/WorldExplorerClient/bin/
+WorldExplorerServer/WorldExplorerCommunication/WorldExplorerClient/obj/
+WorldExplorerServer/WorldExplorerServer/Data/Mapzen/tiles/
+WorldExplorerServer/WorldExplorerServer/Data/QuantizedMesh/tiles/
+WorldExplorerServer/WorldExplorerServer/Data/raster/osm/tiles/
+WorldExplorerServer/WorldExplorerServer/tiles/geojson/

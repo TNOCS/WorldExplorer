@@ -1,0 +1,25 @@
+﻿{
+  "ServerName": "World Explorer 2019",
+  "WorldExplorer": {
+    "RasterLayers": [
+      {
+        "LayerId": "OSM",
+        "Description": "Open streetmap URL",
+        "Url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+      },
+      {
+        "LayerId": "CARTO",
+        "Description": "Carto",
+        "Url": "http: //d.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png"
+      },
+      {
+        "LayerId": "Satellite",
+        "Description": "Satellite",
+        "url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+      }
+
+    ]
+  }
+
+  
+}

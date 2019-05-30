@@ -1,0 +1,21 @@
+<linker>
+       <assembly fullname="UnityWorldExplorerClient_merged"> // the name of the assembly
+        <type fullname="*" preserve="all"/> // excludes all namespaces and classes in the assembly
+    </assembly>
+	
+	<assembly fullname="System">
+	  <type fullname="*" preserve="all"/> // excludes all namespaces and classes in the assembly
+    </assembly>
+	
+		<assembly fullname="System.Core">
+	  <type fullname="*" preserve="all"/> // excludes all namespaces and classes in the assembly
+    </assembly>
+	
+			<assembly fullname="System.Runtime.Serialization">
+	  <type fullname="*" preserve="all"/> // excludes all namespaces and classes in the assembly
+    </assembly>
+	
+				<assembly fullname="mscorlib">
+	  <type fullname="*" preserve="all"/> // excludes all namespaces and classes in the assembly
+    </assembly>
+</linker>

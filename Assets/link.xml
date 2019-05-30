@@ -1,0 +1,11 @@
+
+<!-- https://docs.microsoft.com/en-us/visualstudio/cross-platform/unity-scripting-upgrade?view=vs-2017 -->
+<linker>
+  <assembly fullname="System.Core">
+    <type fullname="System.Linq.Expressions.Interpreter.LightLambda" preserve="all" />
+  </assembly>
+   <assembly fullname="ZXing" preserve="all">
+      <type fullname="ZXing.*" preserve="all" />
+   
+   </assembly>
+</linker>

@@ -98,7 +98,7 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction>
                             {
                                 so.lat = cursorLatLon.x;
                                 so.lon = cursorLatLon.y;
-                                SessionManager.Instance.UpdateExistingObject(so);
+                               // HKL SessionManager.Instance.UpdateExistingObject(so);
                             }
                         }
                     }
@@ -111,7 +111,7 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction>
                         objectInFocus.tag = "spawnobject";
 
                         // Let other users know there is either a new or editted object.
-                        SessionManager.Instance.UpdateNewObject(spawnedObject);
+                        // HKLSessionManager.Instance.UpdateNewObject(spawnedObject);
                     }
 
                     objectInFocus.layer = 0;
@@ -149,7 +149,7 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction>
     {
         if (UIManager.Instance.currentMode == "RotateBtn")
         {
-            var rotationFactor = eventData.CumulativeDelta.x * rotationSensitivity;
+            var rotationFactor = eventData.NormalizedOffset.x * rotationSensitivity;
             go.transform.Rotate(new Vector3(0, -1 * rotationFactor, 0));
             UpdateObjectToOtherUsers(go);
         }
@@ -160,7 +160,7 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction>
     {
         if (UIManager.Instance.currentMode == "ScaleBtn" && go.GetComponent<PrefabObjectData>().scaleable)
         {
-            if (eventData.CumulativeDelta.x >= 0)
+            if (eventData.NormalizedOffset.x >= 0)
             {
                 if (go.transform.localScale.x < maximumScale && go.transform.localScale.y < maximumScale && go.transform.localScale.z < maximumScale)
                 {
@@ -168,7 +168,7 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction>
                 }
             }
 
-            if (eventData.CumulativeDelta.x <= 0)
+            if (eventData.NormalizedOffset.x <= 0)
             {
                 if (go.transform.localScale.x > minimumScale && go.transform.localScale.y > minimumScale && go.transform.localScale.z > minimumScale)
                 {
@@ -192,7 +192,7 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction>
             if (spawnedObject.obj == go)
             {
                 InventoryObjectInteraction.Instance.spawnedObjectsList.Remove(spawnedObject);
-                SessionManager.Instance.UpdateDeletedObject(spawnedObject);
+                // HKL SessionManager.Instance.UpdateDeletedObject(spawnedObject);
                 Destroy(go);
             }
         }
@@ -290,7 +290,7 @@ public class ObjectInteraction : SingletonCustom<ObjectInteraction>
         {
             if (spawnedObject.obj == go)
             {
-                SessionManager.Instance.UpdateExistingObject(spawnedObject);
+               // HKL SessionManager.Instance.UpdateExistingObject(spawnedObject);
             }
         }
     }

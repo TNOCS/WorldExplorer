@@ -6,7 +6,18 @@ namespace Assets.Scripts.Classes
 {
     public class ViewState
     {
-        public void FromJson(JSONObject json)
+        public ViewState()
+        {
+
+        }
+
+        public ViewState(List<RasterLayer> pRasterLayers, List<GeoJsonLayer> pGeoJsonLayers, JSONObject pJson)
+        {
+            FromJson(pRasterLayers, pGeoJsonLayers, pJson);
+
+        }
+
+        public void FromJson(List<RasterLayer> pRasterLayers, List<GeoJsonLayer> pGeoJsonLayers, JSONObject json)
         {
             Name = json.GetString("name");
             Lat = json.GetFloat("lat");
@@ -15,27 +26,48 @@ namespace Assets.Scripts.Classes
             Scale = json.GetInt("scale");
             Range = json.GetInt("range");
             TileSize = json.GetInt("tileSize");
-            Layers = new List<string>();
+            
             TerrainHeightsAvailable = json.GetBoolean("terrainHeightAvailable");
-
-            if (json.HasField("layers"))
+            GeoJsonLayers = new List<GeoJsonLayer>();
+            if (json.HasField("geoJsonLayers"))
             {
-                var ll = json["layers"];
+                var ll = json["geoJsonLayers"];
                 for (var l = 0; l < ll.Count; l++)
                 {
-                    Layers.Add(ll[l].str);
+                   
+                    var layer = pGeoJsonLayers.Find(x => x.LayerId == ll[l].str);
+                    if (layer != null)
+                    {
+                        GeoJsonLayers.Add(layer);
+                    }
+                    else
+                    {
+                        Debug.Log($"GeoJson layer name {ll[l].str} not found in config.");
+                    }
                 }
             };
 
-            TileLayers = new List<string>();
-            if (json.HasField("tileLayers"))
+            RasterTileLayers = new List<RasterLayer>();
+            if (json.HasField("rasterLayers"))
             {
-                var ll = json["tileLayers"];
+                var ll = json["rasterLayers"];
                 for (var l = 0; l < ll.Count; l++)
                 {
-                    TileLayers.Add(ll[l].str);
+                    var layer = pRasterLayers.Find(x => x.LayerId == ll[l].str);
+                    if (layer != null)
+                    {
+                        RasterTileLayers.Add(layer);
+                    } else
+                    {
+                        Debug.Log($"Failed to lookup raster layer name '{ll[l].str}' in view {Name}.");
+                    }
+                    
                 }
             };
+            if (RasterTileLayers.Count == 0)
+            {
+                Debug.LogError($"View {Name} has zero raster tile layers " );
+            }
 
             Mapzen = new List<string>();
             if (json.HasField("mapzen"))
@@ -68,8 +100,8 @@ namespace Assets.Scripts.Classes
                 Scale = Scale,
                 Range = Range,
                 TileSize = TileSize,
-                Layers = Layers,
-                TileLayers = TileLayers,
+                GeoJsonLayers = GeoJsonLayers,
+                RasterTileLayers = RasterTileLayers,
                 TerrainHeightsAvailable = TerrainHeightsAvailable,
                 Mapzen = Mapzen
             };
@@ -124,8 +156,8 @@ namespace Assets.Scripts.Classes
         public int Range { get; set; }
         public int TileSize { get; set; }
         public bool TerrainHeightsAvailable { get; set; }
-        public List<string> Layers { get; set; }
-        public List<string> TileLayers { get; set; }
+        public List<GeoJsonLayer> GeoJsonLayers { get; set; }
+        public List<RasterLayer> RasterTileLayers { get; set; }
         public List<string> Mapzen { get; set; }
     }
 }

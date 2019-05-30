@@ -61,30 +61,19 @@ namespace Assets.Scripts.Classes
 
         public override string ToString()
         {
+            return ""; // do not checkin
             return string.Format(@"id: {0}, name: {6}, selectedFeatureId: {1}, selectionColor: r: {2}, g: {3}, b: {4}, a: {5}",
-                    id, SelectedFeature.id, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a, Name);
+                    id, SelectedFeature.id, (selectionColor.r), selectionColor.g, selectionColor.b, selectionColor.a, Name);
         }
+
+
 
         public string CursorLocationToJSON()
         {
-            if (Cursor == null)
-            {
-                Debug.Log("Cursor is null, setting");
-                Cursor = GameObject.Find("Cursor");
-            }
-
-            // Offset to account for a repositioned world.
-            AppState.Instance.worldOffset = AppState.Instance.Terrain.transform.position;
-
-            var cursorPosition = (Cursor.transform.position - AppState.Instance.worldOffset);
-            float newScale;
-            newScale = Scale * GameObject.Find("terrain").transform.localScale.x;
-            var v0 = new Vector2d(cursorPosition.x / newScale, cursorPosition.z / newScale) + CenterInMercator;
-            //var v0 = new Vector2d(Cursor.transform.position.x / Scale, Cursor.transform.position.z / Scale) + CenterInMercator;
-            var v1 = GM.MetersToLatLon(v0);
+            var latlon = CursorManagerCustom.Instance.Cursor2LatLon();
 
             //Debug.Log(string.Format(@"""loc"":{{""lat"":{0},""lon"":{1}}}", v1.y, v1.x));
-            return string.Format(@"""loc"":{{""lat"":{0},""lon"":{1}}}", v1.y, v1.x);
+            return string.Format(@"""loc"":{{""lat"":{0},""lon"":{1}}}", latlon.y, latlon.x);
         }
 
         public Vector2d CursorLocationToVector2d()

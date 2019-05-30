@@ -6,15 +6,29 @@ namespace Assets.Scripts.Classes
 {
     public class AppConfig
     {
+        public enum MessageBusType
+        {
+            None = 0,
+            Mqtt = 1,
+            Kafka = 2,
+            SignalR = 3
+        }
         public void FromJson(JSONObject json)
         {
-            TileServer = json.GetString("tileServer");
+            // Mapzen (JSON vector data)
+            // Mapzen is now always accessed by World Explorer Proxy
+
+
+            //TileServer = json.GetString("tileServer");
             HeightServer = json.GetString("heightServer");
             MqttServer = json.GetString("mqttServer");
             MqttPort = json.GetString("mqttPort");
             ObjectServer = json.GetString("vmgObjectServer"); 
             SessionName = json.GetString("sessionName");
             UserName = json.GetString("userName", "John Doe");
+            MessageBus = (MessageBusType)json.GetInt("MessageBusType", 0);
+            KafkaBootstrapServer = json.GetString("KafkaBootstrapServer", "localhost:3501");
+            KafkaSchemaRegistryServer = json.GetString("KafkaSchemaRegistryServer", "localhost:3502");
             if (json.HasField("selectionColor"))
             {
                 var a = json["selectionColor"].GetFloat("a", 1);
@@ -27,35 +41,38 @@ namespace Assets.Scripts.Classes
                 SelectionColor = Color.yellow;
             }
 
-            Layers = new List<Layer>();
-            var ll = json["layers"];
-            for (var l = 0; l < ll.Count; l++)
-            {
-                var layer = new Layer();
-                layer.FromJson(ll[l]);
-                Layers.Add(layer);
-            }
+            RasterLayers = new List<RasterLayer>();
+            GeoJsonLayers = new List<GeoJsonLayer>();
+            var ll = json["layers"]["raster"];
+            if (ll != null) for (var l = 0; l < ll.Count; l++) RasterLayers.Add(new RasterLayer(ll[l]));
+
+            ll = json["layers"]["geojson"];
+            if (ll != null) for (var l = 0; l < ll.Count; l++) GeoJsonLayers.Add(new GeoJsonLayer(ll[l]));
+
 
             Views = new List<ViewState>();
             var vs = json["views"];
             for (var l = 0; l < vs.Count; l++)
             {
-                var view = new ViewState();
-                view.FromJson(vs[l]);
-                Views.Add(view);
+                Views.Add(new ViewState(RasterLayers, GeoJsonLayers, vs[l]));
             }
 
            //InitalView = new ViewState();
-            ActiveView = Views.FirstOrDefault(v => v.Name == "Beach" /* hkl json.GetString("initialView") */);
+            ActiveView = Views.FirstOrDefault(v => v.Name == json.GetString("initialView"));
             Table = new Table();
             Table.FromJson(json["table"]);
         }
 
-        public List<Layer> Layers { get; set; }
-        public string TileServer { get; set; }
+        public List<RasterLayer> RasterLayers { get; private set; }
+        public List<GeoJsonLayer> GeoJsonLayers { get; private set; }
+
         public string HeightServer { get; set; }
         public string MqttServer { get; set; }
         public string MqttPort { get; set; }
+
+        public string KafkaBootstrapServer { get; set; }
+        public string KafkaSchemaRegistryServer { get; set; }
+
         public string ObjectServer { get; set; }
         public List<ViewState> Views { get; set; }
         public Table Table { get; set; }
@@ -63,6 +80,8 @@ namespace Assets.Scripts.Classes
         public string SessionName { get; set; }
         public string UserName { get; set; }
         public Color SelectionColor { get; set; }
+        public MessageBusType MessageBus { get; set; }
+
 
     }
 }

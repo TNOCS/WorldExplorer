@@ -12,6 +12,10 @@ using MapzenGo.Helpers;
 using System.Threading.Tasks;
 using System.Net;
 using System;
+using UnityEngine.Events;
+using System.Text;
+using System.Net.Http;
+using System.Threading;
 
 namespace Assets.Scripts
 {
@@ -32,6 +36,9 @@ namespace Assets.Scripts
         public Vector3 worldOffset;
         public Vector3 scaleOffset;
         public Vector3 rotationOffset;
+        public Vector3 terrainOffset;
+
+        public UnityEvent m_ConfiguationLoadFailed;
 
         //public float[] mapScales = new float[] { 0.004f, 0.002f, 0.00143f, 0.00111f, 0.00091f, 0.00077f, 0.000666f };
         public float[] mapScales = new float[] { 0.008f, 0.004f, 0.00286f, 0.00222f, 0.00182f, 0.00154f, 0.001332f };
@@ -43,6 +50,13 @@ namespace Assets.Scripts
         public List<string> MapzenTags = new List<string>(new string[] { "buildings", "water", "roads", "pois", "landuse" });
         public SelectionHandler selectionHandler;
         public UIInteraction uiInteraction;
+
+
+        public string BaseUrlConfigurationServer { get; private set; }
+
+
+        private HttpClient httpClient = new HttpClient();
+
         protected AppState() { } // guarantee this will be always a singleton only - can't use the constructor!\
 
         protected void Awake()
@@ -64,77 +78,53 @@ namespace Assets.Scripts
             ResetMap();
         }
 
-        public void LoadConfig(string url)
+        private void DisplayLocalHostNotAllowedOnHololens()
         {
-            StartCoroutine(LoadConfiguration(url));
+            NotifyManager.Instance.AddMessage(NotifyManager.NotifyType.Error, $"Localhost will not work for hololens (only in unity editor).");
         }
 
-        public IEnumerator LoadConfiguration(string url)
+        public async void LoadConfigAsync(string pUrl)
         {
-            string json;
-
-            WWW www = new WWW(url);
-
-            while (!www.isDone) { yield return new WaitForSeconds(0.05F); ; }
-
-            if (!string.IsNullOrEmpty(www.error))
+            Debug.Log($"Load config async (thread id {Thread.CurrentThread.ManagedThreadId})");
+            if (String.IsNullOrEmpty(pUrl)) return;
+            bool isLocalHost = ((pUrl.IndexOf("localhost") != -1) || ((pUrl.IndexOf("127.0.0.1") != -1)));
+#if !UNITY_EDITOR && UNITY_WSA
+            if (isLocalHost)
             {
-                var targetFile = Resources.Load<TextAsset>("config");
-                json = targetFile.text;
+               DisplayLocalHostNotAllowedOnHololens();
             }
-            else
-            {
-                json = www.text;
-            }
+#endif
 
-            Config = new AppConfig();
-            Config.FromJson(new JSONObject(json));
-            yield return null;
+
+            int index = pUrl.IndexOf(@"/api/configuration/", StringComparison.InvariantCultureIgnoreCase);
+            BaseUrlConfigurationServer = (index == -1) ? pUrl : pUrl.Substring(0, index);
+            Debug.Log($"Configuration server is {BaseUrlConfigurationServer}");
+            string json; 
+            try
+            {
+                json = await httpClient.GetStringAsync(pUrl);
+            }
+            catch (Exception ex)
+            {
+                NotifyManager.Instance.AddMessage(NotifyManager.NotifyType.Error, $"Failed to download config at url {pUrl}, error: {ex.Message} (fallback to fixed config)");
+                Debug.Log($"Failed to download config at url {pUrl}, error: {ex.Message} (fallback to fixed config)");
+                json = Resources.Load<TextAsset>("config").text;
+            }
+            var cfg = new AppConfig();
+            cfg.FromJson(new JSONObject(json));
+            Debug.Log("Configuration file loaded.");
+            Config = cfg;
+            AddTerrain();
         }
 
-        public void ResetMap(ViewState view = null)
+        private void InitializeTable()
         {
-            if (view != null)
-            {
-                TileManager.Latitude = view.Lat;
-                TileManager.Longitude = view.Lon;
-                TileManager.Zoom = view.Zoom;
-                TileManager.Range = view.Range;
-            }
-
-            Config.Layers.ForEach(l =>
-            {
-                DestroyGeojsonLayer(l);
-            });
-
-            DoDeleteAll(World);
-            DoDeleteAll(Layers);
-
-            // Sets each spawned object inactive. Relevant objects are reactivated in CustomObjectsPlugin.cs during a map load.
-            foreach (SpawnedObject go in InventoryObjectInteraction.Instance.spawnedObjectsList)
-            {
-                go.obj.SetActive(false);
-            }
-
-            UIInteraction.Instance.MapPanel.SetActive(false);
-            UIInteraction.Instance.HandlerPanel.SetActive(false);
-            ObjectInteraction.Instance.CloseLabel();
-
-            InitMap();
-        }
-
-        public void AddTerrain()
-        {
-            var iv = Config.ActiveView;
-            var t = Config.Table;
-
-            #region create map & terrain
-
             Terrain = new GameObject("terrain");
-            Terrain.transform.position = new Vector3(0f, 0f, 0f);
-
+            Terrain.transform.position = new Vector3(0, 0, 0);
+            Terrain.transform.SetParent(GameObject.Find("Floor").transform, false);
+                       
             Table = new GameObject("Table"); // Empty game object
-            Table.transform.position = new Vector3(0f, t.Position, 0f);
+            Table.transform.position = new Vector3(0f, Config.Table.Position, 0f);
             //Table.transform.localScale = new Vector3(t.Size, t.Size, t.Size);
             Table.transform.localScale = new Vector3(1, 1, 1);
             Table.transform.SetParent(Terrain.transform, false);
@@ -164,9 +154,59 @@ namespace Assets.Scripts
             Terrain.transform.position = new Vector3(Terrain.transform.position.x, Terrain.transform.position.y - 2, Terrain.transform.position.z + 5);
 
             BoardInteraction.Instance.terrain = Terrain;
+        }
+
+
+
+        public void ResetMap(ViewState view = null)
+        {
+            if (view != null)
+            {
+                TileManager.Latitude = view.Lat;
+                TileManager.Longitude = view.Lon;
+                TileManager.Zoom = view.Zoom;
+                TileManager.Range = view.Range;
+            }
+
+            Config.GeoJsonLayers.ForEach(l =>
+            {
+                l.DestroyGeojsonLayer();
+            });
+
+            Destroy(World);
+            Destroy(Layers);
+
+            // Sets each spawned object inactive. Relevant objects are reactivated in CustomObjectsPlugin.cs during a map load.
+            foreach (SpawnedObject go in InventoryObjectInteraction.Instance.spawnedObjectsList)
+            {
+                go.obj.SetActive(false);
+            }
+
+            UIInteraction.Instance.MapPanel.SetActive(false);
+            UIInteraction.Instance.HandlerPanel.SetActive(false);
+            ObjectInteraction.Instance.CloseLabel();
+
+            InitMap();
+        }
+
+        public void AddTerrain()
+        {
+            Debug.Log("Creating the terrain model");
+            SessionManager.Instance.Init(AppState.Instance.Cursor);
+            var iv = Config.ActiveView;
+            var t = Config.Table;
+
+            #region create map & terrain
+
+            InitializeTable();
 
             #endregion
             InitMap();
+        }
+
+        private void ResetTable()
+        {
+
         }
 
         public void ClearCache()
@@ -201,14 +241,8 @@ namespace Assets.Scripts
             var centerTms = tile;
 
             // Compound has no zoom level 19 .pngs.
-            if (av.Name == "Compound")
-            {
-                BoardInteraction.Instance.maxZoomLevel = 18;
-            }
-            else
-            {
-                BoardInteraction.Instance.maxZoomLevel = 19;
-            }
+            BoardInteraction.Instance.maxZoomLevel = (av.Name == "Compound") ? 18 : 19;
+
 
             switch (av.Zoom)
             {
@@ -238,22 +272,18 @@ namespace Assets.Scripts
             SessionManager.Instance.me.Scale = mapScale / 2;
 
             // init map
-#if DEBUG
-            var tm = World.AddComponent<TileManager>();
-#else
-            var tm = World.AddComponent<TileManager>();
-            //Speech.AddKeyword("Clear tiles", () => { tm.ClearCache(); });
-            //tm._key = "vector-tiles-dB21RAF";
-            //tm._mapzenUrl = "http://134.221.20.226:3999/{0}/{1}/{2}/{3}.{4}";
-#endif
-            tm._mapzenUrl = "http://" + Config.TileServer + "/{0}/{1}/{2}/{3}.{4}"; // "http://169.254.80.80:10733/{0}/{1}/{2}/{3}.{4}";
+
+            // The TileManager components download vector tiles and displays them
+            var tm = World.AddComponent<TileManager>(); // Vector data (geojson layers)
+            // Mapzen data is always accessed by World Explorer Server (configure server to use other mapzen provider)
+            tm.BaseUrl = BaseUrlConfigurationServer;
             tm.Latitude = av.Lat;
             tm.Longitude = av.Lon;
             tm.Range = av.Range;
             tm.Zoom = av.Zoom;
             tm.TileSize = av.TileSize;
-
             TileManager = tm;
+
             #region UI
 
             var ui = new GameObject("UI"); // Placeholder (root element in UI tree)
@@ -273,6 +303,7 @@ namespace Assets.Scripts
             #region defaultfactories
 
             var factories = new GameObject("Factories");
+
             factories.transform.SetParent(World.transform, false);
             if (av.Mapzen.Contains("buildings"))
             {
@@ -343,11 +374,11 @@ namespace Assets.Scripts
                 modelFactory.version = 21;
             }
 
-            #endregion
+#endregion
 
-            #endregion
+#endregion
 
-            #region TILE PLUGINS
+#region TILE PLUGINS
 
             var tilePlugins = new GameObject("TilePlugins");
             tilePlugins.transform.SetParent(World.transform, false);
@@ -357,120 +388,36 @@ namespace Assets.Scripts
             var customObjectsPlugin = customObjects.AddComponent<CustomObjectPlugin>();
 
             // Checks if VMG objects (which are only available in the Compound area) should be loaded.
-            if (av.Name == "Compound")
-            {
-                customObjectsPlugin.hasVMGObjects = true;
-            }
+            customObjectsPlugin.hasVMGObjects = (av.Name == "Compound");
+
 
             var tileLayer = new GameObject("TileLayer");
             tileLayer.transform.SetParent(tilePlugins.transform, false);
             var tileLayerPlugin = tileLayer.AddComponent<TileLayerPlugin>();
-            tileLayerPlugin.tileLayers = Config.Layers.Where(k => { return av.TileLayers.Contains(k.Title) && k.Type.ToLower() == "tilelayer"; }).ToList();
+            tileLayerPlugin.ActiveView = av;
 
             Layers = new GameObject("Layers");
             Layers.transform.SetParent(Table.transform);
             Layers.transform.localPosition = new Vector3(0f, 0.5f, 0f);
             Layers.transform.localScale = new Vector3(mapScale, mapScale, mapScale);
-            av.Layers.ForEach(layer =>
-            {
-                var l = Config.Layers.FirstOrDefault(k => k.Title == layer);
-                if (l != null)
-                {
-                    switch (l.Type)
-                    {
-                        case "geojson":
-                            InitGeojsonLayer(l);
-                            break;
-                        case "tilelayer":
-                            tileLayerPlugin.tileLayers.Add(l);
-                            break;
-                    }
-                }
-            });
+            av.GeoJsonLayers.ForEach(x => x.InitGeojsonLayer());
 
-            #endregion
+
+#endregion
 
         }
 
-        public void DestroyGeojsonLayer(Layer l)
-        {
-            if (l._refreshTimer != null)
-            {
-                l._refreshTimer.Dispose();
-                l._refreshTimer = null;
-            }
-            if (l._active) RemoveGeojsonLayer(l);
-        }
 
-        public void InitGeojsonLayer(Layer l)
-        {
-            AddGeojsonLayer(l);
-            if (l.Refresh > 0)
-            {
-                var interval = l.Refresh * 1000;
-                l._refreshTimer = new System.Threading.Timer(RefreshLayer, l, interval, interval);
-            }
-        }
 
-        public void RefreshLayer(object d)
-        {
-            var l = (Layer)d;
 
-            if (l._active)
-            {
-                UnityMainThreadDispatcher.Instance().Enqueue(() =>
-                {
-                    RemoveGeojsonLayer(l);
-                    AddGeojsonLayer(l);
-                });
-            }
-        }
 
-        public void RemoveGeojsonLayer(Layer l)
-        {
-            Destroy(l._object);
-            l._active = false;
-        }
 
-        public void AddGeojsonLayer(Layer l)
-        {
-            if (l._active) return;
-            var av = Config.ActiveView;
-            Task.Factory.StartNew<string>(() =>
-            {
-                WebClient wc = new WebClient();
-                return wc.DownloadString(l.Url);
-            }).ContinueWith((t) =>
-            {
-                if (t.IsFaulted)
-                {
-                    // faulted with exception
-                    Exception ex = t.Exception;
-                    while (ex is AggregateException && ex.InnerException != null)
-                        ex = ex.InnerException;
-                    Debug.LogError(ex.Message);
-                }
-                else if (t.IsCanceled)
-                {
 
-                }
-                else
-                {
-                    var layerObject = new GameObject(l.Title);
 
-                    layerObject.transform.SetParent(Layers.transform, false);
-                    l._object = layerObject;
-                    l._active = true;
 
-                    var symbolFactory = layerObject.AddComponent<SymbolFactory>();
-                    symbolFactory.InitLayer(l, t.Result, av.Zoom, av.Lat, av.Lon, av.TileSize, av.Range);
+       
 
-                }
-            }, TaskScheduler.FromCurrentSynchronizationContext());
 
-        
-
-    }
 
         public void DoDeleteAll(GameObject Holder)
         {

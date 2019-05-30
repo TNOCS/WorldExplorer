@@ -124,8 +124,9 @@ namespace MapzenGo.Models.Factories
                     if (localMercPos.y < miny) miny = (float)localMercPos.y;
                     if (localMercPos.x > maxx) maxx = (float)localMercPos.x;
                     if (localMercPos.y > maxy) maxy = (float)localMercPos.y;
-
-                    buildingCorners.Add(localMercPos.ToVector3());
+                    var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+                    buildingCorners.Add(new Vector3((float)localMercPos.x, terrainHeight, (float)localMercPos.y));
+                    //buildingCorners.Add(localMercPos.ToVector3());
                 }
 
                 var building = new GameObject("Building").AddComponent<Building>();
@@ -202,8 +203,9 @@ namespace MapzenGo.Models.Factories
                     if (localMercPos.y < miny) miny = localMercPos.y;
                     if (localMercPos.x > maxx) maxx = localMercPos.x;
                     if (localMercPos.y > maxy) maxy = localMercPos.y;
-
-                    buildingCorners.Add(localMercPos.ToVector3xz());
+                    var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)localMercPos.x, (float)localMercPos.y);
+                    buildingCorners.Add(new Vector3((float)localMercPos.x, terrainHeight, (float)localMercPos.y));
+                    //buildingCorners.Add(localMercPos.ToVector3xz());
                 }
 
                 //returns random height if real value not available

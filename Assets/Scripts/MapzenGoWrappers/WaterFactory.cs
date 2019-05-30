@@ -10,7 +10,6 @@ public class WaterFactory : MapzenGo.Models.Factories.WaterFactory
         Order = 1;
         MergeMeshes = true;
         var rfs = ScriptableObject.CreateInstance("WaterFactorySettings") as WaterFactorySettings;
-
         rfs.DefaultWater = createWaterSettings(WaterType.Water, "Water");
         FactorySettings = rfs;
         base.Start();

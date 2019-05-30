@@ -68,7 +68,8 @@ public class SelectionHandler : SingletonCustom<SelectionHandler>
 
     public void addUser(User m)
     {
-        selection.Add(m, null);
+        if (!selection.ContainsKey(m))
+           selection.Add(m, null);
     }
 
     public GameObject GetSelectedObject(User me)

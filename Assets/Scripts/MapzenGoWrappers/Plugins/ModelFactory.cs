@@ -125,7 +125,8 @@ public class ModelFactory : Factory
         var c2 = geo["geometry"]["coordinates"];
         var dotMerc2 = GM.LatLonToMeters(c2[1].f, c2[0].f);
         var pos = dotMerc2 - tile.Rect.Center;
-        var go = Instantiate(bundle.LoadAsset(assetName), new Vector3((float)pos.x, 0F, (float)pos.y), Quaternion.identity) as GameObject;
+        var terrainHeight = TerrainHeight.GetTerrainHeight(tile.gameObject, (float)pos.x, (float)pos.y);
+        var go = Instantiate(bundle.LoadAsset(assetName), new Vector3((float)pos.x, terrainHeight, (float)pos.y), Quaternion.identity) as GameObject;
         if (go == null) throw new Exception("Error instantating object " + assetName);
         go.transform.localScale = new Vector3(scale, scale, scale);
         go.transform.SetParent(tile.transform, false);

@@ -238,7 +238,7 @@ public class UIManager : SingletonCustom<UIManager>
         UIInteraction.Instance.MapPanel.SetActive(false);
         UIInteraction.Instance.CloseInventory();
 
-        CurrentOverlayText.text = AppState.Instance.Config.ActiveView.Name.ToString();
+        CurrentOverlayText.text = AppState.Instance.Config?.ActiveView.Name.ToString() ?? "";
     }
 
     public void SetOriginalRotation()

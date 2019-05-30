@@ -88,7 +88,7 @@ namespace Symbols
         private GeoJson geoJson = new GeoJson();
         private AppState appState = AppState.Instance;
 
-        public Layer Layer { get; set; }
+        public GeoJsonLayer Layer { get; set; }
 
         public string baseUrl;
         #region tilemangerproperties
@@ -129,7 +129,7 @@ namespace Symbols
         /// <summary>
         /// Build the symbol layer
         /// </summary>
-        public void InitLayer(Layer layer, string geojson, int zoom, float lat, float lon, int tileSize, int range)
+        public void InitLayer(GeoJsonLayer layer, string geojson, int zoom, float lat, float lon, int tileSize, int range)
         {
             this.Layer = layer;
             this.geojson = geojson;
@@ -141,7 +141,7 @@ namespace Symbols
 
             if (string.IsNullOrEmpty(baseUrl))
             {
-                var uri = new Uri(Layer.Url);
+                var uri = new Uri(Layer.GeoJsonUrl());
                 baseUrl = uri.IsDefaultPort ? string.Format("http://{0}/", uri.Host) : string.Format("http://{0}:{1}/", uri.Host, uri.Port);
             }
 

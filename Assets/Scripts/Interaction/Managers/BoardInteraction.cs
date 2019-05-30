@@ -3,6 +3,7 @@ using Assets.Scripts;
 using Assets.Scripts.Plugins;
 using MapzenGo.Helpers;
 using HoloToolkit.Unity.InputModule;
+//using eu.driver.model.worldexplorer;
 
 public class BoardInteraction : SingletonCustom<BoardInteraction>
 {
@@ -86,29 +87,32 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
         var view = AppState.Instance.Config.ActiveView;
         var latLonv2 = Extensions.ToVector2(tappedPosition);
         view.SetView(latLonv2.x, latLonv2.y, view.Zoom, view.Range);
+        /* HKL_TEST
+       SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView, null);
+       */
+   }
 
-        SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView);
+   public void Zoom(int zoomDirection, Vector2d tappedPosition)
+   {
+       if (tableIsTilted)
+       {
+           ResetTableTilt();
+       }
+
+       var view = AppState.Instance.Config.ActiveView;
+       Vector2 latLonv2 = MapzenGo.Helpers.Extensions.ToVector2(tappedPosition);
+
+       // ZoomDirection 0 = out 1 = in
+       if (zoomDirection == 0 && view.Zoom > minZoomLevel)
+       {
+           view.Zoom -= 1;
+           view.SetView(latLonv2.x, latLonv2.y, view.Zoom, view.Range);
+
+           AppState.Instance.ResetMap(view);
+            /* HKL_TEST
+           SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView, Direction.Out);
+           */
     }
-
-    public void Zoom(int zoomDirection, Vector2d tappedPosition)
-    {
-        if (tableIsTilted)
-        {
-            ResetTableTilt();
-        }
-
-        var view = AppState.Instance.Config.ActiveView;
-        Vector2 latLonv2 = MapzenGo.Helpers.Extensions.ToVector2(tappedPosition);
-
-        // ZoomDirection 0 = out 1 = in
-        if (zoomDirection == 0 && view.Zoom > minZoomLevel)
-        {
-            view.Zoom -= 1;
-            view.SetView(latLonv2.x, latLonv2.y, view.Zoom, view.Range);
-
-            AppState.Instance.ResetMap(view);
-            SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView, "out");
-        }
 
         if (zoomDirection == 1 && view.Zoom < maxZoomLevel)
         {
@@ -116,7 +120,8 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
             view.SetView(latLonv2.x, latLonv2.y, view.Zoom, view.Range);
 
             AppState.Instance.ResetMap(view);
-            SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView, "in");
+             /* HKL_TEST
+            SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView, Direction.In); */
         }
     }
 
@@ -176,7 +181,9 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
         }
 
         UIManager.Instance.CurrentOverlayText.text = AppState.Instance.Config.ActiveView.Name.ToString();
-        SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView);
+        /* HKL_TEST
+        SessionManager.Instance.UpdateView(AppState.Instance.Config.ActiveView, null);
+        */
     }
 
     public void ResetTable()
@@ -185,13 +192,13 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
         terrain.transform.rotation = originalTableRotation;
         tableIsTilted = false;
 
-        SessionManager.Instance.UpdateTable();
+        // HKLSessionManager.Instance.UpdateTable();
     }
 
     public void ResetTableTilt()
     {
         terrain.transform.rotation = originalTableRotation;
-        SessionManager.Instance.UpdateTable();
+        // HKLSessionManager.Instance.UpdateTable();
     }
 
     public void StartManipulatingTable(GameObject go, string manipulationMode)
@@ -217,14 +224,14 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
         go.GetComponent<Renderer>().material = boundingBoxInitial;
         InputManager.Instance.OverrideFocusedObject = null;
         tableIsRotating = false;
-        SessionManager.Instance.UpdateTable();
+        // HKLSessionManager.Instance.UpdateTable();
     }
 
     public void UpdateTableRotation(NavigationEventData eventData)
     {
-        var rotationFactor = eventData.CumulativeDelta.x * rotationSensitivity;
+        var rotationFactor = eventData.NormalizedOffset.x * rotationSensitivity;
         terrain.transform.Rotate(new Vector3(0, -1 * rotationFactor, 0));
-        SessionManager.Instance.UpdateTable();
+        // HKLSessionManager.Instance.UpdateTable();
     }
 
     //public void UpdateTableTilt(ManipulationEventData eventData)
@@ -261,7 +268,7 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
     {
         // Size up.
         
-        if (eventData.CumulativeDelta.x >= 0)
+        if (eventData.NormalizedOffset.x >= 0)
         {
             if (terrain.transform.localScale.x < maximumScale && terrain.transform.localScale.y < maximumScale && terrain.transform.localScale.z < maximumScale)
             {
@@ -270,7 +277,7 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
         }
 
         // Size down.
-        if (eventData.CumulativeDelta.x <= 0)
+        if (eventData.NormalizedOffset.x <= 0)
         {
             if (terrain.transform.localScale.x > minimumScale && terrain.transform.localScale.y > minimumScale && terrain.transform.localScale.z > minimumScale)
             {
@@ -278,7 +285,7 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
             }
         }
 
-        SessionManager.Instance.UpdateTable();
+       // HKL SessionManager.Instance.UpdateTable();
     }
 
     //  public void IncreaseTiles()
@@ -357,6 +364,8 @@ public class BoardInteraction : SingletonCustom<BoardInteraction>
         view.Lat = (float)ll.x;
         view.Lon = (float)ll.y;
         AppState.Instance.ResetMap(view);
-        SessionManager.Instance.UpdateView(view);
+         /* HKL_TEST
+        SessionManager.Instance.UpdateView(view, null);
+        */
     }
 }

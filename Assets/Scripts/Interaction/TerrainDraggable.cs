@@ -98,7 +98,7 @@ namespace HoloToolkit.Unity.InputModule
             {
                 gameObject.GetComponent<Renderer>().material = BoardInteraction.Instance.boundingBoxSelected;
                 UpdateDragging();
-                SessionManager.Instance.UpdateTable();
+                // HKL SessionManager.Instance.UpdateTable();
             }
         }
 
@@ -302,7 +302,7 @@ namespace HoloToolkit.Unity.InputModule
                 return;
             }
 
-            if (!eventData.InputSource.SupportsInputInfo(eventData.SourceId, SupportedInputInfo.Position))
+            if (!eventData.InputSource.SupportsInputInfo(eventData.SourceId, SupportedInputInfo.PointerPosition))
             {
                 // The input source must provide positional data for this script to be usable
                 return;

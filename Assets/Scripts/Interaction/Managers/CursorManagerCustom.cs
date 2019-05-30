@@ -1,5 +1,8 @@
 ﻿using Assets.Scripts;
+using Assets.Scripts.Plugins;
 using HoloToolkit.Unity;
+using HoloToolkit.Unity.InputModule;
+using MapzenGo.Helpers;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -18,20 +21,16 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
     private GameObject NavigateTutorial;
     private GameObject CursorIcon;
 
-
-    public static void SetActiveRecursivelyExt(GameObject obj, bool state)
-    {
-        obj.SetActive(state);
-        foreach (Transform child in obj.transform)
-        {
-            SetActiveRecursivelyExt(child.gameObject, state);
-        }
-    }
+    private bool IsCursorInitialized = false;
 
     public void InitCursor()
     {
-
         Cursor = GameObject.Find("/Cursor");
+        if (Cursor != null)
+        {
+            if (Cursor.GetComponent<ObjectCursor>().isActiveAndEnabled)
+                Debug.Log("The ObjectCursor component must be disabled (will be enabled by this script)!");
+        }
 
 
         CursorIcon = GameObject.Find("/Cursor/CursorVisualCube/CursorIcon");
@@ -48,20 +47,22 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
                      CursorVisual != null &&
                      NavigateTutorial != null, "Failed to initialize cursor objects");
         // The GameObject that shows current manipulating mode.
-                
+
         if (CursorIcon != null) CursorIcon.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CursorIcons/Sprites/MoveBtn");
         if (NavigateTutorial != null) NavigateTutorial.SetActive(false);
 
         if (Cursor != null)
         {
             // The ObjectCursor makes children of Cursor GameObject inactive based on state
-            // Therefore the GameObject.find  doesn't work (code above) is script is enabled at startup
+            // Therefore the GameObject.find  doesn't work (code above) if the script is enabled at startup
             Cursor.GetComponent<HoloToolkit.Unity.InputModule.ObjectCursor>().enabled = true;
         }
+        IsCursorInitialized = true;
     }
 
     private void Update()
     {
+        if (!IsCursorInitialized) return;
         CursorVisualHandler();
 
         // Disables tutorial when user switches out of rotate or scale mode before the animation has ended.
@@ -73,6 +74,7 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
 
     public void SetCursorIcon(string currentMode)
     {
+        if (!IsCursorInitialized) return;
         CursorVisual.SetActive(true);
         CursorIcon.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CursorIcons/Sprites/" + currentMode);
 
@@ -84,6 +86,7 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
 
     private IEnumerator ShowTutorial()
     {
+        if (!IsCursorInitialized) yield return null;
         NavigateTutorial.SetActive(true);
         yield return new WaitForSeconds(8);
         NavigateTutorial.SetActive(false);
@@ -91,6 +94,7 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
 
     private void InteractionPossible()
     {
+        if (!IsCursorInitialized) return;
         CursorIcon.GetComponent<SpriteRenderer>().color = Color.green;
         InteractionPossibleIcon.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CursorIcons/Sprites/InteractionPossible");
         InteractionPossibleIcon.GetComponent<SpriteRenderer>().color = Color.green;
@@ -98,6 +102,7 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
 
     private void InteractionNotPossible()
     {
+        if (!IsCursorInitialized) return;
         CursorIcon.GetComponent<SpriteRenderer>().color = Color.red;
         InteractionPossibleIcon.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CursorIcons/Sprites/InteractionNotPossible");
         InteractionPossibleIcon.GetComponent<SpriteRenderer>().color = Color.red;
@@ -105,6 +110,7 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
 
     private void CursorVisualHandler()
     {
+        if (!IsCursorInitialized) return;
         if (RaycastManager.Instance.Raycast().collider != null)
         {
             // Disables cursor whenever not aimed at board or other relevant objects.
@@ -245,5 +251,24 @@ public class CursorManagerCustom : Singleton<CursorManagerCustom>
         {
             CursorVisual.SetActive(false);
         }
+    }
+
+    public Vector2d Cursor2LatLon()
+    {
+        if (Cursor == null)
+        {
+            Debug.Log("Cursor is null, setting");
+            Cursor = GameObject.Find("Cursor");
+        }
+
+        // Offset to account for a repositioned world.
+        AppState.Instance.worldOffset = AppState.Instance.Terrain.transform.position;
+
+        var cursorPosition = (Cursor.transform.position - AppState.Instance.worldOffset);
+        float newScale;
+        newScale = SessionManager.Instance.me.Scale * GameObject.Find("terrain").transform.localScale.x;
+        var v0 = new Vector2d(cursorPosition.x / newScale, cursorPosition.z / newScale) + SessionManager.Instance.me.CenterInMercator;
+        //var v0 = new Vector2d(Cursor.transform.position.x / Scale, Cursor.transform.position.z / Scale) + CenterInMercator;
+        return GM.MetersToLatLon(v0);
     }
 }
